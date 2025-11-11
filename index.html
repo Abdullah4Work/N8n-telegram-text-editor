@@ -13,10 +13,20 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        :root {
+            --primary-color: #4A90E2;
+            --primary-light: #5BA3F5;
+            --primary-lighter: #E8F4FD;
+            --text-primary: #2C3E50;
+            --text-secondary: #7F8C8D;
+            --border-color: #E1E8ED;
+            --background: #F7F9FC;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: var(--tg-theme-bg-color, #f5f5f5);
-            color: var(--tg-theme-text-color, #000000);
+            background: var(--background);
+            color: var(--text-primary);
             height: 100vh;
             display: flex;
             flex-direction: column;
@@ -24,33 +34,33 @@
         }
 
         .header {
-            background: linear-gradient(135deg, #0088cc 0%, #006699 100%);
+            background: linear-gradient(135deg, #4A90E2 0%, #5BA3F5 100%);
             color: white;
-            padding: 16px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 12px 16px;
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.15);
             flex-shrink: 0;
         }
 
         .header h1 {
-            font-size: 20px;
+            font-size: 17px;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .header .subtitle {
-            font-size: 13px;
+            font-size: 12px;
             opacity: 0.9;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             background: #4ade80;
             border-radius: 50%;
             display: inline-block;
@@ -64,29 +74,29 @@
 
         .audio-player {
             background: white;
-            margin: 16px;
-            padding: 16px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin: 12px 16px;
+            padding: 12px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             flex-shrink: 0;
         }
 
         .audio-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
         .audio-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #0088cc 0%, #006699 100%);
-            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #4A90E2 0%, #5BA3F5 100%);
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
+            font-size: 20px;
             flex-shrink: 0;
         }
 
@@ -96,45 +106,51 @@
         }
 
         .audio-name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
-            color: #000;
+            color: var(--text-primary);
             white-space: nowrap;
             overflow: hidden;
-            text-decoration: none;
+            text-overflow: ellipsis;
         }
 
         .audio-meta {
-            font-size: 12px;
-            color: #666;
+            font-size: 11px;
+            color: var(--text-secondary);
             margin-top: 2px;
         }
 
         .audio-controls {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-top: 12px;
+            gap: 10px;
+            margin-top: 10px;
         }
 
         .play-btn {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, #0088cc 0%, #006699 100%);
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #4A90E2 0%, #5BA3F5 100%);
             border: none;
             border-radius: 50%;
             color: white;
-            font-size: 20px;
+            font-size: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             flex-shrink: 0;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
         }
 
         .play-btn:active {
             transform: scale(0.95);
+        }
+
+        .play-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
         .progress-container {
@@ -144,50 +160,57 @@
             gap: 4px;
         }
 
+        /* ✅ إصلاح شريط التقدم - جعله LTR */
         .progress-bar {
             width: 100%;
             height: 4px;
-            background: #e0e0e0;
+            background: var(--primary-lighter);
             border-radius: 2px;
             position: relative;
             cursor: pointer;
+            direction: ltr; /* ✅ الحل */
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #0088cc 0%, #006699 100%);
+            background: linear-gradient(90deg, #4A90E2 0%, #5BA3F5 100%);
             border-radius: 2px;
             width: 0%;
             transition: width 0.1s linear;
+            direction: ltr; /* ✅ الحل */
         }
 
         .progress-time {
             display: flex;
             justify-content: space-between;
-            font-size: 11px;
-            color: #666;
+            font-size: 10px;
+            color: var(--text-secondary);
+            direction: ltr; /* ✅ عرض الوقت من اليسار لليمين */
         }
 
         .speed-control {
             display: flex;
             gap: 4px;
-            margin-top: 8px;
+            margin-top: 6px;
+            direction: ltr; /* الأزرار من اليسار لليمين */
         }
 
         .speed-btn {
-            padding: 4px 10px;
-            background: #f0f0f0;
-            border: 1px solid #e0e0e0;
-            border-radius: 12px;
-            font-size: 12px;
+            padding: 3px 8px;
+            background: var(--primary-lighter);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 11px;
             cursor: pointer;
             transition: all 0.2s;
+            color: var(--text-secondary);
+            font-weight: 500;
         }
 
         .speed-btn.active {
-            background: #0088cc;
+            background: var(--primary-color);
             color: white;
-            border-color: #0088cc;
+            border-color: var(--primary-color);
         }
 
         .content {
@@ -195,54 +218,58 @@
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            padding: 0 16px 16px;
+            padding: 0 16px 12px;
+            min-height: 0; /* ✅ مهم للـ flex */
         }
 
         .info-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 16px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            font-size: 13px;
+            background: linear-gradient(135deg, #E8F4FD 0%, #D6EBFF 100%);
+            color: var(--primary-color);
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 12px;
             line-height: 1.5;
             flex-shrink: 0;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            border: 1px solid rgba(74, 144, 226, 0.2);
         }
 
         .textarea-container {
-            flex: 1;
+            flex: 1; /* ✅ ياخذ كل المساحة المتبقية */
             display: flex;
             flex-direction: column;
             background: white;
-            border-radius: 16px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border-color);
+            min-height: 200px; /* ✅ حد أدنى */
         }
 
         textarea {
             flex: 1;
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             border: none;
             font-size: 15px;
             line-height: 1.7;
             resize: none;
             font-family: inherit;
             outline: none;
-            color: #000;
+            color: var(--text-primary);
         }
 
         textarea::placeholder {
-            color: #999;
+            color: #BDC3C7;
         }
 
         .footer {
-            padding: 12px 16px;
+            padding: 10px 16px;
             background: white;
-            border-top: 1px solid #e0e0e0;
+            border-top: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -251,21 +278,21 @@
 
         .stats {
             display: flex;
-            gap: 20px;
-            font-size: 13px;
+            gap: 16px;
+            font-size: 12px;
         }
 
         .stat {
             display: flex;
             align-items: center;
-            gap: 6px;
-            color: #666;
+            gap: 5px;
+            color: var(--text-secondary);
         }
 
         .stat-value {
             font-weight: 700;
-            color: #0088cc;
-            font-size: 15px;
+            color: var(--primary-color);
+            font-size: 14px;
         }
 
         .loading {
@@ -290,8 +317,8 @@
         .spinner {
             width: 48px;
             height: 48px;
-            border: 4px solid #e0e0e0;
-            border-top-color: #0088cc;
+            border: 4px solid var(--primary-lighter);
+            border-top-color: var(--primary-color);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
@@ -301,19 +328,19 @@
         }
 
         .loading-text {
-            color: #666;
-            font-size: 15px;
+            color: var(--text-secondary);
+            font-size: 14px;
         }
 
         .error {
-            background: #fee;
-            color: #c00;
-            padding: 16px;
-            border-radius: 12px;
+            background: #FEE;
+            color: #C00;
+            padding: 14px;
+            border-radius: 10px;
             margin: 16px;
             text-align: center;
-            font-size: 14px;
-            border: 1px solid #fcc;
+            font-size: 13px;
+            border: 1px solid #FCC;
         }
 
         .fade-in {
@@ -323,7 +350,7 @@
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(15px);
             }
             to {
                 opacity: 1;
@@ -334,13 +361,14 @@
         /* تحسينات للشاشات الصغيرة */
         @media (max-width: 360px) {
             .audio-name {
-                font-size: 13px;
+                font-size: 12px;
             }
             .stats {
                 gap: 12px;
             }
-            .stat {
-                font-size: 12px;
+            textarea {
+                font-size: 14px;
+                padding: 12px;
             }
         }
     </style>
@@ -377,7 +405,7 @@
             <audio id="audioElement" preload="metadata" style="display: none;"></audio>
             
             <div class="audio-controls">
-                <button class="play-btn" id="playBtn">▶️</button>
+                <button class="play-btn" id="playBtn" title="تشغيل">▶️</button>
                 <div class="progress-container">
                     <div class="progress-bar" id="progressBar">
                         <div class="progress-fill" id="progressFill"></div>
@@ -399,8 +427,8 @@
 
         <div class="content fade-in">
             <div class="info-card">
-                <span style="font-size: 20px;">💡</span>
-                <span>استمع للصوت ثم قم بتصحيح الأخطاء في النص أدناه</span>
+                <span style="font-size: 18px;">💡</span>
+                <span>استمع للصوت وصحح الأخطاء في النص</span>
             </div>
 
             <div class="textarea-container">
@@ -501,13 +529,13 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error('فشل تحميل البيانات');
+                    throw new Error('فشل تحميل البيانات من الخادم');
                 }
 
                 const data = await response.json();
 
                 if (!data.record) {
-                    throw new Error('البيانات غير صحيحة');
+                    throw new Error('البيانات المستلمة غير صحيحة');
                 }
 
                 const record = data.record;
@@ -516,6 +544,8 @@
                 if (record.text) {
                     textarea.value = record.text;
                     updateCounters();
+                } else {
+                    throw new Error('النص غير موجود في البيانات');
                 }
 
                 // تحميل معلومات الطلب
@@ -531,17 +561,17 @@
                         const duration = audioElement.duration;
                         totalTimeEl.textContent = formatTime(duration);
                         audioMeta.textContent = `${formatTime(duration)} • جاهز للتشغيل`;
+                        playBtn.disabled = false;
                     });
 
-                    audioElement.addEventListener('error', () => {
+                    audioElement.addEventListener('error', (e) => {
+                        console.error('Audio load error:', e);
                         audioMeta.textContent = '❌ فشل تحميل الصوت';
                         playBtn.disabled = true;
-                        playBtn.style.opacity = '0.5';
                     });
                 } else {
                     audioMeta.textContent = '⚠️ لا يوجد ملف صوتي';
                     playBtn.disabled = true;
-                    playBtn.style.opacity = '0.5';
                 }
 
                 // إظهار التطبيق
@@ -566,12 +596,19 @@
             if (isPlaying) {
                 audioElement.pause();
                 playBtn.textContent = '▶️';
+                playBtn.title = 'تشغيل';
                 isPlaying = false;
             } else {
-                audioElement.play();
+                audioElement.play().catch(err => {
+                    console.error('Play error:', err);
+                    tg.showAlert('⚠️ فشل تشغيل الصوت');
+                });
                 playBtn.textContent = '⏸';
+                playBtn.title = 'إيقاف مؤقت';
                 isPlaying = true;
             }
+
+            tg.HapticFeedback.impactOccurred('light');
         });
 
         audioElement.addEventListener('timeupdate', () => {
@@ -582,14 +619,36 @@
 
         audioElement.addEventListener('ended', () => {
             playBtn.textContent = '▶️';
+            playBtn.title = 'تشغيل';
+            isPlaying = false;
+            progressFill.style.width = '0%';
+            audioElement.currentTime = 0;
+        });
+
+        audioElement.addEventListener('pause', () => {
+            playBtn.textContent = '▶️';
+            playBtn.title = 'تشغيل';
             isPlaying = false;
         });
 
+        audioElement.addEventListener('play', () => {
+            playBtn.textContent = '⏸';
+            playBtn.title = 'إيقاف مؤقت';
+            isPlaying = true;
+        });
+
+        // ✅ إصلاح شريط التقدم - يعمل بشكل صحيح مع RTL
         progressBar.addEventListener('click', (e) => {
             if (!audioLoaded) return;
+            
             const rect = progressBar.getBoundingClientRect();
-            const percent = (e.clientX - rect.left) / rect.width;
+            // بما أن progress bar الآن LTR، نستخدم المنطق العادي
+            const clickX = e.clientX - rect.left;
+            const percent = clickX / rect.width;
+            
             audioElement.currentTime = percent * audioElement.duration;
+            
+            tg.HapticFeedback.impactOccurred('medium');
         });
 
         // Speed control
@@ -610,15 +669,23 @@
 
         // Keyboard shortcuts
         textarea.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + Enter للإرسال
             if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
                 e.preventDefault();
                 tg.MainButton.click();
+            }
+            
+            // Space للتشغيل/الإيقاف (فقط إذا كان focus على textarea وليس في بداية السطر)
+            if (e.key === ' ' && e.ctrlKey && audioLoaded) {
+                e.preventDefault();
+                playBtn.click();
             }
         });
 
         // Main button
         tg.MainButton.setText('إرسال التصحيح ✅');
-        tg.MainButton.color = '#0088cc';
+        tg.MainButton.color = '#4A90E2';
+        tg.MainButton.textColor = '#FFFFFF';
         tg.MainButton.show();
 
         tg.MainButton.onClick(() => {
@@ -630,36 +697,101 @@
             }
 
             if (text.length < 10) {
-                tg.showAlert('⚠️ النص قصير جداً');
+                tg.showAlert('⚠️ النص قصير جداً (أقل من 10 أحرف)');
                 return;
             }
 
             tg.MainButton.showProgress();
+            tg.MainButton.disable();
 
-            tg.sendData(JSON.stringify({
+            const data = {
                 type: 'text_correction',
                 id: binId,
                 text: text,
                 charCount: text.length,
                 wordCount: text.trim().split(/\s+/).length,
                 timestamp: new Date().toISOString()
-            }));
+            };
+
+            try {
+                tg.sendData(JSON.stringify(data));
+                
+                // النجاح
+                setTimeout(() => {
+                    tg.showAlert('✅ تم إرسال التصحيح بنجاح!', () => {
+                        tg.close();
+                    });
+                }, 100);
+                
+            } catch (error) {
+                tg.MainButton.hideProgress();
+                tg.MainButton.enable();
+                tg.showAlert('❌ حدث خطأ أثناء الإرسال: ' + error.message);
+            }
         });
 
         // Back button
         tg.BackButton.show();
         tg.BackButton.onClick(() => {
-            tg.showConfirm('هل تريد الخروج بدون حفظ التعديلات؟', (confirmed) => {
-                if (confirmed) {
-                    tg.close();
+            const originalText = textarea.defaultValue || '';
+            const currentText = textarea.value;
+            
+            if (originalText !== currentText && currentText.trim()) {
+                tg.showConfirm('هل تريد الخروج بدون حفظ التعديلات؟', (confirmed) => {
+                    if (confirmed) {
+                        tg.close();
+                    }
+                });
+            } else {
+                tg.close();
+            }
+        });
+
+        // Auto-save draft (كل 10 ثواني)
+        let autoSaveTimer;
+        textarea.addEventListener('input', () => {
+            clearTimeout(autoSaveTimer);
+            autoSaveTimer = setTimeout(() => {
+                try {
+                    localStorage.setItem(`draft_${binId}`, textarea.value);
+                } catch (e) {
+                    // تجاهل أخطاء localStorage
                 }
-            });
+            }, 10000);
+        });
+
+        // Load draft on start
+        window.addEventListener('load', () => {
+            try {
+                const draft = localStorage.getItem(`draft_${binId}`);
+                if (draft && draft !== textarea.value && draft.trim()) {
+                    tg.showConfirm('تم العثور على نسخة محفوظة. هل تريد استعادتها؟', (confirmed) => {
+                        if (confirmed) {
+                            textarea.value = draft;
+                            updateCounters();
+                        }
+                    });
+                }
+            } catch (e) {
+                // تجاهل
+            }
+        });
+
+        // Clear draft after successful send
+        window.addEventListener('beforeunload', () => {
+            try {
+                // لا نحذف الـ draft هنا - فقط بعد الإرسال الناجح
+            } catch (e) {
+                // تجاهل
+            }
         });
 
         // تحميل البيانات عند فتح الصفحة
         loadData();
 
-        console.log('🚀 App initialized');
+        console.log('🚀 Text Editor App v2.0');
+        console.log('📱 Telegram WebApp SDK:', tg.version);
+        console.log('🆔 Bin ID:', binId);
     </script>
 </body>
 </html>
