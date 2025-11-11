@@ -167,6 +167,23 @@
             max-height: 200px;
             overflow-y: auto;
         }
+
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #34C759;
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            text-align: center;
+            z-index: 2000;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -177,6 +194,7 @@
 
     <div id="error" class="error" style="display: none;"></div>
     <div id="debug" class="debug" style="display: none;"></div>
+    <div id="successMessage" class="success-message">✅ تم الإرسال بنجاح!</div>
 
     <div id="app" style="display: none; height: 100%; display: flex; flex-direction: column;">
         <div class="header">
@@ -216,7 +234,6 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.enableClosingConfirmation();
 
         const loadingEl = document.getElementById('loading');
         const errorEl = document.getElementById('error');
@@ -226,10 +243,14 @@
         const charCount = document.getElementById('charCount');
         const wordCount = document.getElementById('wordCount');
         const requestIdEl = document.getElementById('requestId');
+        const successMessage = document.getElementById('successMessage');
 
         const urlParams = new URLSearchParams(window.location.search);
         const binId = urlParams.get('bin');
-        const requestId = urlParams.get('id');
+        let requestId = urlParams.get('id');
+
+        console.log('🔧 Telegram Web App version:', tg.version);
+        console.log('📱 Platform:', tg.platform);
 
         function showError(message) {
             errorEl.textContent = message;
@@ -257,8 +278,6 @@
                     fullUrl: window.location.href
                 });
 
-                showDebug(`URL: ${window.location.href}\n\nbinId: ${binId}\nrequestId: ${requestId}`);
-
                 if (!binId) {
                     throw new Error('❌ معرف bin مفقود في الرابط');
                 }
@@ -277,22 +296,23 @@
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error('❌ Response error:', errorText);
-                    throw new Error(`خطأ ${response.status}: ${errorText}`);
+                    throw new Error(`خطأ ${response.status}`);
                 }
 
                 const data = await response.json();
                 console.log('✅ Data received:', data);
 
-                if (!data.record) {
-                    throw new Error('البيانات المستلمة غير صحيحة');
-                }
-
-                if (!data.record.text) {
+                if (!data.record || !data.record.text) {
                     throw new Error('النص غير موجود في البيانات');
                 }
 
+                // Update requestId if available
+                if (data.record.id) {
+                    requestId = data.record.id;
+                }
+
                 textarea.value = data.record.text;
-                requestIdEl.textContent = `ID: ${data.record.id || requestId || 'N/A'}`;
+                requestIdEl.textContent = `ID: ${requestId || 'N/A'}`;
                 updateCounters();
                 
                 loadingEl.classList.add('hidden');
@@ -306,7 +326,66 @@
             } catch (error) {
                 console.error('❌ Load error:', error);
                 showError(`❌ ${error.message}`);
-                showDebug(`Error: ${error.message}\n\nStack: ${error.stack}`);
+            }
+        }
+
+        // ✅ إرسال البيانات باستخدام JSONBin (حل بديل)
+        async function sendCorrectionToBot(correctedText) {
+            try {
+                console.log('📤 Sending correction...');
+                
+                // 1. تحديث الـ bin بالنص المُصحح
+                const updateResponse = await fetch(`https://api.jsonbin.io/v3/b/${binId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Master-Key': '$2a$10$LZzUrZstrWJsJROsgMvgeeoq0lC8lexDSW39z0hwNIxijF8y5jf7u'
+                    },
+                    body: JSON.stringify({
+                        text: correctedText,
+                        id: requestId,
+                        status: 'corrected',
+                        correctedAt: new Date().toISOString()
+                    })
+                });
+
+                if (!updateResponse.ok) {
+                    throw new Error('فشل في تحديث البيانات');
+                }
+
+                console.log('✅ Data updated in JSONBin');
+
+                // 2. إرسال إشعار للبوت عبر sendData (إذا كان مدعوماً)
+                try {
+                    if (tg.sendData) {
+                        tg.sendData(JSON.stringify({
+                            type: 'text_correction',
+                            id: requestId,
+                            binId: binId,
+                            text: correctedText,
+                            timestamp: new Date().toISOString()
+                        }));
+                        console.log('✅ Sent via tg.sendData()');
+                    } else {
+                        console.log('⚠️ tg.sendData() not supported, using alternative method');
+                    }
+                } catch (e) {
+                    console.log('⚠️ tg.sendData() failed:', e.message);
+                }
+
+                // 3. عرض رسالة نجاح
+                successMessage.style.display = 'block';
+                
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                    tg.close();
+                }, 2000);
+
+                return true;
+
+            } catch (error) {
+                console.error('❌ Send error:', error);
+                throw error;
             }
         }
 
@@ -318,7 +397,7 @@
         tg.MainButton.setText('إرسال التصحيح ✅');
         tg.MainButton.show();
 
-        tg.MainButton.onClick(function() {
+        tg.MainButton.onClick(async function() {
             const text = textarea.value.trim();
             
             if (!text) {
@@ -332,21 +411,32 @@
             }
 
             tg.MainButton.showProgress();
+            tg.MainButton.disable();
 
-            tg.sendData(JSON.stringify({
-                type: 'text_correction',
-                id: requestId,
-                text: text,
-                timestamp: new Date().toISOString()
-            }));
+            try {
+                await sendCorrectionToBot(text);
+                console.log('✅ Correction sent successfully');
+            } catch (error) {
+                console.error('❌ Failed to send:', error);
+                tg.showAlert('❌ حدث خطأ: ' + error.message);
+                tg.MainButton.hideProgress();
+                tg.MainButton.enable();
+            }
         });
 
-        tg.BackButton.show();
-        tg.BackButton.onClick(() => {
-            tg.showConfirm('هل تريد الخروج بدون حفظ؟', (ok) => {
-                if (ok) tg.close();
+        // Back button (only if supported)
+        if (tg.BackButton && tg.BackButton.show) {
+            tg.BackButton.show();
+            tg.BackButton.onClick(() => {
+                if (tg.showConfirm) {
+                    tg.showConfirm('هل تريد الخروج بدون حفظ؟', (ok) => {
+                        if (ok) tg.close();
+                    });
+                } else {
+                    tg.close();
+                }
             });
-        });
+        }
 
         console.log('🚀 App initialized');
     </script>
