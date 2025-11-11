@@ -206,12 +206,12 @@
 <body>
     <div id="loading" class="loading">
         <div class="spinner"></div>
-        <div class="loading-text">جاري التحميل...</div>
+        <div class="loading-text">جاري تحميل النص...</div>
     </div>
 
     <div id="error" class="error"></div>
 
-    <div id="app" style="display: none; height: 100%; display: flex; flex-direction: column;">
+    <div id="app" style="display: none;">
         <div class="header">
             <h1>✍️ تصحيح النص</h1>
             <div class="subtitle">
@@ -273,17 +273,21 @@
         const charCount = document.getElementById('charCount');
         const wordCount = document.getElementById('wordCount');
         const requestIdEl = document.getElementById('requestId');
+        const loadingText = loadingEl.querySelector('.loading-text');
 
         // Get parameters from URL
         const urlParams = new URLSearchParams(window.location.search);
-        const encodedText = urlParams.get('text');
-        const requestId = urlParams.get('id') || 'Unknown';
+        const binId = urlParams.get('bin');  // ✅ معرف JSONBin
+        let requestId = urlParams.get('id') || 'Unknown';
 
         // Show error function
         function showError(message) {
             errorEl.textContent = message;
             errorEl.classList.add('show');
             loadingEl.classList.add('hidden');
+            
+            // Also show telegram alert
+            tg.showAlert('❌ ' + message);
             
             setTimeout(() => {
                 errorEl.classList.remove('show');
@@ -300,38 +304,83 @@
             wordCount.textContent = words.toLocaleString('ar-EG');
             
             // Update button text with stats
-            tg.MainButton.setText(`إرسال (${chars} حرف)`);
+            tg.MainButton.setText(`إرسال (${chars.toLocaleString('ar-EG')} حرف)`);
         }
 
-        // Load text
-        try {
-            if (!encodedText) {
-                throw new Error('لم يتم إرسال نص للتعديل');
-            }
+        // ✅ Load text from JSONBin
+        async function loadText() {
+            try {
+                if (!binId) {
+                    throw new Error('لم يتم إرسال معرف النص (bin parameter missing)');
+                }
 
-            const decodedText = decodeURIComponent(encodedText);
-            
-            if (!decodedText || decodedText.length < 3) {
-                throw new Error('النص المرسل قصير جداً أو فارغ');
-            }
+                console.log('Loading from JSONBin:', binId);
+                loadingText.textContent = 'جاري تحميل النص من الخادم...';
 
-            textarea.value = decodedText;
-            requestIdEl.textContent = `ID: ${requestId}`;
-            updateCounters();
-            
-            // Show app
-            loadingEl.classList.add('hidden');
-            appEl.style.display = 'flex';
-            
-            // Focus textarea after a short delay
-            setTimeout(() => {
-                textarea.focus();
-            }, 300);
-            
-        } catch (error) {
-            showError(error.message);
-            console.error('Load error:', error);
+                // ✅ قراءة من JSONBin API
+                const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
+                    method: 'GET',
+                    headers: {
+                        'X-Master-Key': '$2a$10$LZzUrZstrWJsJROsgMvgeeoq0lC8lexDSW39z0hwNIxijF8y5jf7u'
+                    }
+                });
+
+                console.log('Response status:', response.status);
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('JSONBin error:', errorText);
+                    throw new Error(`فشل تحميل النص (Status: ${response.status})`);
+                }
+
+                const data = await response.json();
+                console.log('Data received:', data);
+
+                const textData = data.record;
+
+                if (!textData) {
+                    throw new Error('لم يتم العثور على البيانات (record is null)');
+                }
+
+                if (!textData.text) {
+                    throw new Error('لم يتم العثور على النص (text field is missing)');
+                }
+
+                const loadedText = textData.text;
+                
+                if (!loadedText || loadedText.length < 3) {
+                    throw new Error('النص المحمّل قصير جداً أو فارغ');
+                }
+
+                // Update request ID if available
+                if (textData.id) {
+                    requestId = textData.id;
+                }
+
+                // Set the text
+                textarea.value = loadedText;
+                requestIdEl.textContent = `ID: ${requestId}`;
+                updateCounters();
+                
+                // Show app
+                loadingEl.classList.add('hidden');
+                appEl.style.display = 'flex';
+                
+                // Focus textarea after a short delay
+                setTimeout(() => {
+                    textarea.focus();
+                }, 300);
+
+                console.log('✅ Text loaded successfully:', loadedText.length, 'chars');
+                
+            } catch (error) {
+                console.error('Load error:', error);
+                showError(error.message);
+            }
         }
+
+        // Load text when page loads
+        loadText();
 
         // Listen to textarea changes
         textarea.addEventListener('input', updateCounters);
@@ -372,13 +421,21 @@
 
             // Send data to bot
             try {
+                console.log('Sending data:', data);
                 tg.sendData(JSON.stringify(data));
                 
                 // Success feedback
                 tg.showAlert('✅ تم إرسال التصحيح بنجاح!', function() {
+                    // Clear draft
+                    try {
+                        localStorage.removeItem('draft_' + requestId);
+                    } catch (e) {
+                        console.warn('Could not clear draft:', e);
+                    }
                     tg.close();
                 });
             } catch (error) {
+                console.error('Send error:', error);
                 tg.MainButton.hideProgress();
                 tg.MainButton.enable();
                 tg.showAlert('❌ حدث خطأ أثناء الإرسال: ' + error.message);
@@ -388,18 +445,11 @@
         // Back Button
         tg.BackButton.show();
         tg.BackButton.onClick(function() {
-            const originalText = decodeURIComponent(encodedText || '');
-            const currentText = textarea.value;
-            
-            if (originalText !== currentText) {
-                tg.showConfirm('هل تريد الخروج بدون حفظ التعديلات؟', function(confirmed) {
-                    if (confirmed) {
-                        tg.close();
-                    }
-                });
-            } else {
-                tg.close();
-            }
+            tg.showConfirm('هل تريد الخروج بدون حفظ التعديلات؟', function(confirmed) {
+                if (confirmed) {
+                    tg.close();
+                }
+            });
         });
 
         // Keyboard shortcuts
@@ -436,34 +486,30 @@
             }, 5000);
         });
 
-        // Load draft on start
-        try {
-            const draft = localStorage.getItem('draft_' + requestId);
-            if (draft && draft !== textarea.value) {
-                tg.showConfirm('تم العثور على نسخة محفوظة. هل تريد استعادتها؟', function(confirmed) {
-                    if (confirmed) {
-                        textarea.value = draft;
-                        updateCounters();
-                    }
-                });
-            }
-        } catch (e) {
-            console.warn('Could not load draft:', e);
-        }
-
-        // Clear draft after successful send
-        window.addEventListener('beforeunload', function() {
+        // Load draft on start (after successful text load)
+        textarea.addEventListener('focus', function loadDraft() {
             try {
-                localStorage.removeItem('draft_' + requestId);
+                const draft = localStorage.getItem('draft_' + requestId);
+                if (draft && draft !== textarea.value) {
+                    tg.showConfirm('تم العثور على نسخة محفوظة. هل تريد استعادتها؟', function(confirmed) {
+                        if (confirmed) {
+                            textarea.value = draft;
+                            updateCounters();
+                        }
+                    });
+                }
             } catch (e) {
-                console.warn('Could not clear draft:', e);
+                console.warn('Could not load draft:', e);
             }
-        });
+            // Remove listener after first focus
+            textarea.removeEventListener('focus', loadDraft);
+        }, { once: true });
 
         // Log ready state
         console.log('Telegram Web App initialized');
         console.log('User data:', tg.initDataUnsafe);
         console.log('Request ID:', requestId);
+        console.log('Bin ID:', binId);
     </script>
 </body>
 </html>
