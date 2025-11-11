@@ -23,6 +23,7 @@
             --background: #F7F9FC;
             --danger: #E74C3C;
             --success: #27AE60;
+            --warning: #F39C12;
         }
 
         body {
@@ -35,12 +36,20 @@
             overflow: hidden;
         }
 
+        /* Header */
         .header {
             background: linear-gradient(135deg, #4A90E2 0%, #5BA3F5 100%);
             color: white;
             padding: 12px 16px;
             box-shadow: 0 2px 8px rgba(74, 144, 226, 0.15);
             flex-shrink: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .header.hidden-keyboard {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
         }
 
         .header h1 {
@@ -73,6 +82,7 @@
             50% { opacity: 0.5; }
         }
 
+        /* Audio Player - عادي */
         .audio-player {
             background: white;
             margin: 12px 16px;
@@ -80,8 +90,105 @@
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             flex-shrink: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        .audio-player.hidden-keyboard {
+            transform: translateY(-120%);
+            opacity: 0;
+            pointer-events: none;
+            margin: 0;
+            padding: 0;
+            max-height: 0;
+        }
+
+        /* Floating Audio Controls - عند فتح الكيبورد */
+        .floating-audio-controls {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 8px 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            display: none;
+            gap: 8px;
+            align-items: center;
+            border: 1px solid rgba(74, 144, 226, 0.2);
+        }
+
+        .floating-audio-controls.visible {
+            display: flex;
+            animation: slideInFromTop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideInFromTop {
+            from {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .floating-play-btn {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #4A90E2 0%, #5BA3F5 100%);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+        }
+
+        .floating-play-btn:active {
+            transform: scale(0.9);
+        }
+
+        .floating-speed-control {
+            display: flex;
+            gap: 4px;
+        }
+
+        .floating-speed-btn {
+            padding: 4px 7px;
+            background: var(--primary-lighter);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+            font-weight: 500;
+            min-width: 32px;
+            text-align: center;
+        }
+
+        .floating-speed-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .floating-time {
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            direction: ltr;
+        }
+
+        /* Audio Player عادي - التفاصيل */
         .audio-header {
             display: flex;
             align-items: center;
@@ -228,6 +335,7 @@
             font-weight: 600;
         }
 
+        /* Content Area */
         .content {
             flex: 1;
             display: flex;
@@ -235,6 +343,11 @@
             overflow: hidden;
             padding: 0 16px 12px;
             min-height: 0;
+            transition: padding 0.3s ease;
+        }
+
+        .content.keyboard-mode {
+            padding: 8px 12px 8px;
         }
 
         .info-card {
@@ -250,6 +363,48 @@
             align-items: center;
             gap: 8px;
             border: 1px solid rgba(74, 144, 226, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .info-card.hidden-keyboard {
+            transform: translateY(-60px);
+            opacity: 0;
+            margin: 0;
+            padding: 0;
+            max-height: 0;
+            pointer-events: none;
+        }
+
+        /* Grammar Check Button */
+        .grammar-check-btn {
+            background: linear-gradient(135deg, var(--success) 0%, #229954 100%);
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 10px;
+            transition: all 0.2s;
+            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+        }
+
+        .grammar-check-btn:active {
+            transform: scale(0.98);
+        }
+
+        .grammar-check-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .grammar-check-btn.checking {
+            background: linear-gradient(135deg, var(--warning) 0%, #E67E22 100%);
         }
 
         .text-actions {
@@ -305,6 +460,7 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
             border: 1px solid var(--border-color);
             min-height: 200px;
+            position: relative;
         }
 
         textarea {
@@ -324,6 +480,67 @@
             color: #BDC3C7;
         }
 
+        /* Grammar Suggestions */
+        .grammar-suggestions {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(255,255,255,0.98), rgba(255,255,255,0.95));
+            backdrop-filter: blur(5px);
+            border-top: 1px solid var(--border-color);
+            padding: 8px 12px;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .grammar-suggestions.visible {
+            display: block;
+        }
+
+        .suggestion-item {
+            background: #FFF9E6;
+            border: 1px solid #FFE4A3;
+            border-radius: 8px;
+            padding: 8px 10px;
+            margin-bottom: 6px;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .suggestion-text {
+            flex: 1;
+            color: var(--text-primary);
+        }
+
+        .suggestion-replace {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        /* Footer */
         .footer {
             padding: 10px 16px;
             background: white;
@@ -332,6 +549,13 @@
             justify-content: space-between;
             align-items: center;
             flex-shrink: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .footer.hidden-keyboard {
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
         }
 
         .stats {
@@ -353,6 +577,7 @@
             font-size: 14px;
         }
 
+        /* Loading & Error */
         .loading {
             position: fixed;
             top: 0;
@@ -432,6 +657,25 @@
                 padding: 6px 8px;
             }
         }
+
+        /* Desktop - لا تخفي شي */
+        @media (min-width: 769px) {
+            .header.hidden-keyboard,
+            .footer.hidden-keyboard,
+            .audio-player.hidden-keyboard,
+            .info-card.hidden-keyboard {
+                transform: none !important;
+                opacity: 1 !important;
+                pointer-events: auto !important;
+                margin: initial !important;
+                padding: initial !important;
+                max-height: none !important;
+            }
+            
+            .floating-audio-controls.visible {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -442,8 +686,19 @@
 
     <div id="error" class="error" style="display: none;"></div>
 
+    <!-- Floating Audio Controls (تظهر عند الكيبورد) -->
+    <div class="floating-audio-controls" id="floatingAudioControls">
+        <button class="floating-play-btn" id="floatingPlayBtn" title="تشغيل">▶️</button>
+        <div class="floating-time" id="floatingTime">0:00</div>
+        <div class="floating-speed-control">
+            <button class="floating-speed-btn" data-speed="0.75">0.75x</button>
+            <button class="floating-speed-btn active" data-speed="1">1x</button>
+            <button class="floating-speed-btn" data-speed="1.5">1.5x</button>
+        </div>
+    </div>
+
     <div id="app" style="display: none; height: 100%; display: flex; flex-direction: column;">
-        <div class="header">
+        <div class="header" id="header">
             <h1>
                 <span>✍️</span>
                 <span>تصحيح النص</span>
@@ -454,7 +709,7 @@
             </div>
         </div>
 
-        <div class="audio-player fade-in">
+        <div class="audio-player fade-in" id="audioPlayer">
             <div class="audio-header">
                 <div class="audio-icon">🎵</div>
                 <div class="audio-info">
@@ -482,26 +737,25 @@
                 <div class="speed-label">⚡ السرعة:</div>
                 <div class="speed-controls" id="speedControls">
                     <button class="speed-btn" data-speed="0.5">0.5x</button>
-                    <button class="speed-btn" data-speed="0.6">0.6x</button>
-                    <button class="speed-btn" data-speed="0.7">0.7x</button>
                     <button class="speed-btn" data-speed="0.75">0.75x</button>
-                    <button class="speed-btn" data-speed="0.8">0.8x</button>
-                    <button class="speed-btn" data-speed="0.9">0.9x</button>
                     <button class="speed-btn active" data-speed="1">1x</button>
-                    <button class="speed-btn" data-speed="1.1">1.1x</button>
                     <button class="speed-btn" data-speed="1.25">1.25x</button>
                     <button class="speed-btn" data-speed="1.5">1.5x</button>
-                    <button class="speed-btn" data-speed="1.75">1.75x</button>
                     <button class="speed-btn" data-speed="2">2x</button>
                 </div>
             </div>
         </div>
 
-        <div class="content fade-in">
-            <div class="info-card">
+        <div class="content fade-in" id="content">
+            <div class="info-card" id="infoCard">
                 <span style="font-size: 18px;">💡</span>
                 <span>استمع للصوت وصحح الأخطاء في النص</span>
             </div>
+
+            <button class="grammar-check-btn" id="grammarCheckBtn">
+                <span>✨</span>
+                <span>تصحيح الأخطاء الإملائية</span>
+            </button>
 
             <div class="text-actions">
                 <button class="action-btn copy" id="copyBtn">
@@ -526,10 +780,11 @@
                     autocomplete="off"
                     autocorrect="on"
                 ></textarea>
+                <div class="grammar-suggestions" id="grammarSuggestions"></div>
             </div>
         </div>
 
-        <div class="footer">
+        <div class="footer" id="footer">
             <div class="stats">
                 <div class="stat">
                     <span>📊</span>
@@ -560,20 +815,32 @@
         const wordCount = document.getElementById('wordCount');
         const requestIdEl = document.getElementById('requestId');
 
+        // Layout elements
+        const header = document.getElementById('header');
+        const footer = document.getElementById('footer');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const infoCard = document.getElementById('infoCard');
+        const content = document.getElementById('content');
+        const floatingAudioControls = document.getElementById('floatingAudioControls');
+
         // Audio elements
         const audioElement = document.getElementById('audioElement');
         const audioName = document.getElementById('audioName');
         const audioMeta = document.getElementById('audioMeta');
         const playBtn = document.getElementById('playBtn');
+        const floatingPlayBtn = document.getElementById('floatingPlayBtn');
         const progressBar = document.getElementById('progressBar');
         const progressFill = document.getElementById('progressFill');
         const currentTimeEl = document.getElementById('currentTime');
         const totalTimeEl = document.getElementById('totalTime');
+        const floatingTime = document.getElementById('floatingTime');
 
         // Action buttons
         const copyBtn = document.getElementById('copyBtn');
         const pasteBtn = document.getElementById('pasteBtn');
         const clearBtn = document.getElementById('clearBtn');
+        const grammarCheckBtn = document.getElementById('grammarCheckBtn');
+        const grammarSuggestions = document.getElementById('grammarSuggestions');
 
         // URL parameters
         const urlParams = new URLSearchParams(window.location.search);
@@ -581,7 +848,61 @@
 
         let isPlaying = false;
         let audioLoaded = false;
-        let originalBinId = binId; // للاحتفاظ بالـ ID الأصلي
+        let originalBinId = binId;
+        let isKeyboardOpen = false;
+        let currentGrammarErrors = [];
+
+        // 🎯 Keyboard Detection
+        function detectKeyboard() {
+            const isDesktop = window.innerWidth >= 769;
+            if (isDesktop) return; // لا تطبق على الكمبيوتر
+
+            let lastHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+            
+            function checkKeyboard() {
+                const currentHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+                const heightDiff = lastHeight - currentHeight;
+                
+                if (heightDiff > 150 && !isKeyboardOpen) {
+                    // الكيبورد فتح
+                    isKeyboardOpen = true;
+                    header.classList.add('hidden-keyboard');
+                    footer.classList.add('hidden-keyboard');
+                    audioPlayer.classList.add('hidden-keyboard');
+                    infoCard.classList.add('hidden-keyboard');
+                    content.classList.add('keyboard-mode');
+                    floatingAudioControls.classList.add('visible');
+                    tg.MainButton.hide();
+                } else if (heightDiff < -150 && isKeyboardOpen) {
+                    // الكيبورد اتقفل
+                    isKeyboardOpen = false;
+                    header.classList.remove('hidden-keyboard');
+                    footer.classList.remove('hidden-keyboard');
+                    audioPlayer.classList.remove('hidden-keyboard');
+                    infoCard.classList.remove('hidden-keyboard');
+                    content.classList.remove('keyboard-mode');
+                    floatingAudioControls.classList.remove('visible');
+                    tg.MainButton.show();
+                }
+                
+                lastHeight = currentHeight;
+            }
+
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', checkKeyboard);
+            } else {
+                window.addEventListener('resize', checkKeyboard);
+            }
+
+            // Detect focus
+            textarea.addEventListener('focus', () => {
+                setTimeout(checkKeyboard, 300);
+            });
+
+            textarea.addEventListener('blur', () => {
+                setTimeout(checkKeyboard, 300);
+            });
+        }
 
         function showError(message) {
             errorEl.textContent = `❌ ${message}`;
@@ -618,7 +939,6 @@
                     copyBtn.innerHTML = '<span>📋</span><span>نسخ</span>';
                 }, 2000);
             } catch (err) {
-                // Fallback للأجهزة القديمة
                 textarea.select();
                 document.execCommand('copy');
                 copyBtn.innerHTML = '<span>✅</span><span>تم النسخ</span>';
@@ -661,6 +981,111 @@
             }
         });
 
+        // ✨ Grammar Check - استخدام LanguageTool API المجاني
+        grammarCheckBtn.addEventListener('click', async () => {
+            const text = textarea.value.trim();
+            
+            if (!text) {
+                tg.showAlert('⚠️ الرجاء كتابة نص للتصحيح');
+                return;
+            }
+
+            if (text.length > 10000) {
+                tg.showAlert('⚠️ النص طويل جداً (أكثر من 10,000 حرف)');
+                return;
+            }
+
+            grammarCheckBtn.disabled = true;
+            grammarCheckBtn.classList.add('checking');
+            grammarCheckBtn.innerHTML = '<span>⏳</span><span>جاري الفحص...</span>';
+
+            try {
+                const response = await fetch('https://api.languagetool.org/v2/check', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams({
+                        text: text,
+                        language: 'ar',
+                        enabledOnly: 'false'
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('فشل الاتصال بخدمة التصحيح');
+                }
+
+                const data = await response.json();
+                currentGrammarErrors = data.matches || [];
+
+                if (currentGrammarErrors.length === 0) {
+                    tg.showAlert('✅ لم نجد أخطاء إملائية! النص ممتاز');
+                    grammarSuggestions.classList.remove('visible');
+                } else {
+                    displayGrammarSuggestions(currentGrammarErrors);
+                    tg.HapticFeedback.notificationOccurred('success');
+                }
+
+            } catch (error) {
+                console.error('Grammar check error:', error);
+                tg.showAlert('❌ حدث خطأ في التصحيح. حاول مرة أخرى');
+            } finally {
+                grammarCheckBtn.disabled = false;
+                grammarCheckBtn.classList.remove('checking');
+                grammarCheckBtn.innerHTML = '<span>✨</span><span>تصحيح الأخطاء الإملائية</span>';
+            }
+        });
+
+        function displayGrammarSuggestions(errors) {
+            grammarSuggestions.innerHTML = '';
+            
+            errors.slice(0, 5).forEach((error, index) => {
+                const item = document.createElement('div');
+                item.className = 'suggestion-item';
+                
+                const errorText = error.context.text.substring(
+                    error.context.offset,
+                    error.context.offset + error.context.length
+                );
+                
+                const replacement = error.replacements[0]?.value || '';
+                
+                item.innerHTML = `
+                    <div class="suggestion-text">
+                        <strong>${errorText}</strong> → ${replacement}
+                        <br><small>${error.message}</small>
+                    </div>
+                    <button class="suggestion-replace" data-index="${index}">تطبيق</button>
+                `;
+                
+                grammarSuggestions.appendChild(item);
+            });
+
+            grammarSuggestions.classList.add('visible');
+
+            // Handle replace buttons
+            document.querySelectorAll('.suggestion-replace').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(e.target.dataset.index);
+                    const error = currentGrammarErrors[index];
+                    const replacement = error.replacements[0]?.value || '';
+                    
+                    const text = textarea.value;
+                    const before = text.substring(0, error.offset);
+                    const after = text.substring(error.offset + error.length);
+                    
+                    textarea.value = before + replacement + after;
+                    updateCounters();
+                    
+                    tg.HapticFeedback.impactOccurred('medium');
+                    
+                    // إعادة الفحص
+                    grammarCheckBtn.click();
+                });
+            });
+        }
+
         // تحميل البيانات
         async function loadData() {
             if (!binId) {
@@ -690,7 +1115,7 @@
                 // تحميل النص
                 if (record.text) {
                     textarea.value = record.text;
-                    textarea.defaultValue = record.text; // للمقارنة لاحقاً
+                    textarea.defaultValue = record.text;
                     updateCounters();
                 } else {
                     throw new Error('النص غير موجود في البيانات');
@@ -710,16 +1135,19 @@
                         totalTimeEl.textContent = formatTime(duration);
                         audioMeta.textContent = `${formatTime(duration)} • جاهز للتشغيل`;
                         playBtn.disabled = false;
+                        floatingPlayBtn.disabled = false;
                     });
 
                     audioElement.addEventListener('error', (e) => {
                         console.error('Audio load error:', e);
                         audioMeta.textContent = '❌ فشل تحميل الصوت';
                         playBtn.disabled = true;
+                        floatingPlayBtn.disabled = true;
                     });
                 } else {
                     audioMeta.textContent = '⚠️ لا يوجد ملف صوتي';
                     playBtn.disabled = true;
+                    floatingPlayBtn.disabled = true;
                 }
 
                 // إظهار التطبيق
@@ -737,8 +1165,8 @@
             }
         }
 
-        // Audio controls
-        playBtn.addEventListener('click', () => {
+        // Audio controls - Regular & Floating
+        function togglePlayPause() {
             if (!audioLoaded) return;
 
             if (isPlaying) {
@@ -751,17 +1179,24 @@
             }
 
             tg.HapticFeedback.impactOccurred('light');
-        });
+        }
+
+        playBtn.addEventListener('click', togglePlayPause);
+        floatingPlayBtn.addEventListener('click', togglePlayPause);
 
         audioElement.addEventListener('timeupdate', () => {
             const progress = (audioElement.currentTime / audioElement.duration) * 100;
             progressFill.style.width = `${progress}%`;
-            currentTimeEl.textContent = formatTime(audioElement.currentTime);
+            const time = formatTime(audioElement.currentTime);
+            currentTimeEl.textContent = time;
+            floatingTime.textContent = time;
         });
 
         audioElement.addEventListener('ended', () => {
             playBtn.textContent = '▶️';
+            floatingPlayBtn.textContent = '▶️';
             playBtn.title = 'تشغيل';
+            floatingPlayBtn.title = 'تشغيل';
             isPlaying = false;
             progressFill.style.width = '0%';
             audioElement.currentTime = 0;
@@ -769,13 +1204,17 @@
 
         audioElement.addEventListener('pause', () => {
             playBtn.textContent = '▶️';
+            floatingPlayBtn.textContent = '▶️';
             playBtn.title = 'تشغيل';
+            floatingPlayBtn.title = 'تشغيل';
             isPlaying = false;
         });
 
         audioElement.addEventListener('play', () => {
             playBtn.textContent = '⏸';
+            floatingPlayBtn.textContent = '⏸';
             playBtn.title = 'إيقاف مؤقت';
+            floatingPlayBtn.title = 'إيقاف مؤقت';
             isPlaying = true;
         });
 
@@ -791,27 +1230,31 @@
             tg.HapticFeedback.impactOccurred('medium');
         });
 
-        // Speed control
-        document.querySelectorAll('.speed-btn').forEach(btn => {
+        // Speed control - Regular & Floating
+        function changeSpeed(speed) {
+            audioElement.playbackRate = speed;
+            
+            document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.floating-speed-btn').forEach(b => b.classList.remove('active'));
+            
+            document.querySelectorAll(`[data-speed="${speed}"]`).forEach(b => b.classList.add('active'));
+            
+            tg.HapticFeedback.impactOccurred('light');
+        }
+
+        document.querySelectorAll('.speed-btn, .floating-speed-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 const speed = parseFloat(btn.dataset.speed);
-                audioElement.playbackRate = speed;
-                
-                document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                
-                tg.HapticFeedback.impactOccurred('light');
+                changeSpeed(speed);
             });
         });
 
         // Text area events
         textarea.addEventListener('input', updateCounters);
 
-        // ✅ إصلاح مشكلة webAppDataInvalid
-        // بدلاً من إرسال النص مباشرة، نحفظه في JSONBin أولاً
+        // Save corrected text
         async function saveCorrectedText(correctedText) {
             try {
-                // إنشاء bin جديد للنص المصحح
                 const response = await fetch('https://api.jsonbin.io/v3/b', {
                     method: 'POST',
                     headers: {
@@ -833,12 +1276,7 @@
                 }
 
                 const data = await response.json();
-                const newBinId = data.metadata.id;
-
-                console.log('✅ Text saved to bin:', newBinId);
-
-                // إرسال فقط الـ ID (صغير جداً - لن يفشل)
-                return newBinId;
+                return data.metadata.id;
 
             } catch (error) {
                 console.error('Save error:', error);
@@ -869,10 +1307,8 @@
             tg.MainButton.disable();
 
             try {
-                // ✅ حفظ النص في JSONBin أولاً
                 const correctedBinId = await saveCorrectedText(text);
 
-                // ✅ إرسال فقط الـ ID (صغير - لن يفشل أبداً)
                 const dataToSend = {
                     type: 'text_correction',
                     correctedBinId: correctedBinId,
@@ -884,9 +1320,7 @@
 
                 tg.sendData(JSON.stringify(dataToSend));
                 
-                // النجاح
                 setTimeout(() => {
-                    // مسح الـ draft
                     try {
                         localStorage.removeItem(`draft_${binId}`);
                     } catch (e) {}
@@ -947,10 +1381,11 @@
             } catch (e) {}
         });
 
-        // تحميل البيانات
+        // Initialize
+        detectKeyboard();
         loadData();
 
-        console.log('🚀 Text Editor App v3.0');
+        console.log('🚀 Text Editor App v4.0 - Keyboard Optimized');
         console.log('📱 Telegram WebApp SDK:', tg.version);
         console.log('🆔 Bin ID:', binId);
     </script>
