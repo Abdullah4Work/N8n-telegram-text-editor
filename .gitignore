@@ -1,0 +1,30 @@
+# 🔐 Secrets & Environment
+config.js
+.env
+.env.local
+.env.*.local
+
+# 📦 Dependencies
+node_modules/
+
+# 🗄️ Database
+*.sql
+*.sqlite
+
+# 🖥️ OS Files
+.DS_Store
+Thumbs.db
+
+# 📝 Editor
+.vscode/
+.idea/
+
+# 🚀 Build
+dist/
+build/
+
+# 🔑 Temporary
+tmp/
+temp/
+*.tmp
+*.log
