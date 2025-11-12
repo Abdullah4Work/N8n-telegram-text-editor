@@ -716,7 +716,6 @@
     </div>
 
     <div class="container">
-        <!-- الخطوة 1: رفع الصوت -->
         <div class="step-content active" data-step="1">
             <div class="step-header">
                 <div class="step-title">
@@ -724,7 +723,7 @@
                     <span>رفع الملف الصوتي</span>
                 </div>
                 <div class="step-description">
-                    ارفع الملف الصوتي الذي تريد تحويله إلى فيديو
+                    ارفع الملف الصوتي الذي تريد تحويله إلى فيديو. يدعم التطبيق صيغ MP3, WAV, OGG, M4A
                 </div>
             </div>
 
@@ -746,7 +745,6 @@
             </div>
         </div>
 
-        <!-- الخطوة 2: تصحيح النص -->
         <div class="step-content" data-step="2">
             <div class="step-header">
                 <div class="step-title">
@@ -796,7 +794,6 @@
             </div>
         </div>
 
-        <!-- الخطوة 3: اختيار القالب -->
         <div class="step-content" data-step="3">
             <div class="step-header">
                 <div class="step-title">
@@ -804,7 +801,7 @@
                     <span>اختر القالب</span>
                 </div>
                 <div class="step-description">
-                    اختر شكل القالب الذي يناسب محتواك
+                    اختر شكل القالب الذي يناسب محتواك، ثم اختر اللون المناسب
                 </div>
             </div>
 
@@ -824,7 +821,6 @@
             </div>
         </div>
 
-        <!-- الخطوة 4: لون السلسلة -->
         <div class="step-content" data-step="4">
             <div class="step-header">
                 <div class="step-title">
@@ -851,7 +847,6 @@
             <div class="colors-grid" id="seriesColorsGrid"></div>
         </div>
 
-        <!-- الخطوة 5: معلومات الفيديو -->
         <div class="step-content" data-step="5">
             <div class="step-header">
                 <div class="step-title">
@@ -928,7 +923,6 @@
             </div>
         </div>
 
-        <!-- الخطوة 6: المراجعة -->
         <div class="step-content" data-step="6">
             <div class="step-header">
                 <div class="step-title">
@@ -1051,9 +1045,7 @@
             title: '',
             mainSeries: '',
             subSeries: '',
-            finalSeries: '',
-            preloadedData: null,
-            isPreloaded: false
+            finalSeries: ''
         };
 
         const progressSteps = document.querySelectorAll('.progress-step');
@@ -1088,68 +1080,6 @@
         const mainSeriesCount = document.getElementById('mainSeriesCount');
         const subSeriesCount = document.getElementById('subSeriesCount');
         const finalSeriesCount = document.getElementById('finalSeriesCount');
-
-        // ==================== جلب البيانات المحملة ====================
-        async function loadPreloadedData() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const binId = urlParams.get('bin');
-            
-            if (!binId) {
-                console.log('❌ لا يوجد bin في الرابط');
-                return false;
-            }
-
-            try {
-                showLoading('جاري تحميل البيانات...', 'الرجاء الانتظار');
-                console.log('🔄 Loading data from bin:', binId);
-
-                const response = await fetch(`${CONFIG.JSONBIN.BASE_URL}/${binId}/latest`, {
-                    headers: {
-                        'X-Access-Key': CONFIG.JSONBIN.API_KEY
-                    }
-                });
-
-                if (!response.ok) throw new Error('فشل تحميل البيانات');
-
-                const data = await response.json();
-                console.log('✅ Data loaded:', data);
-
-                formData.preloadedData = data.record;
-                formData.isPreloaded = true;
-                formData.audioFileName = data.record.audio_file_name || 'ملف صوتي';
-                formData.audioDuration = data.record.audio_time || 0;
-                formData.text = data.record.transcript_txt || '';
-                formData.transcriptWithTimes = data.record['Transcript (with times)'] || [];
-
-                uploadArea.style.display = 'none';
-                fileInfo.classList.add('visible');
-                fileName.textContent = formData.audioFileName;
-                fileMeta.textContent = `مدة: ${formatTime(formData.audioDuration)}`;
-
-                textEditor.value = formData.text;
-                textEditor.disabled = false;
-                textEditor.placeholder = 'راجع النص وصححه حسب الحاجة';
-                updateTextStats();
-
-                currentStep = 2;
-                updateProgress();
-                hideLoading();
-                
-                tg.HapticFeedback.notificationOccurred('success');
-                tg.showPopup({
-                    title: '✅ تم التحميل',
-                    message: 'تم تحميل البيانات بنجاح!',
-                    buttons: [{type: 'ok'}]
-                });
-
-                return true;
-            } catch (error) {
-                console.error('❌ Error loading data:', error);
-                hideLoading();
-                tg.showAlert('⚠️ فشل تحميل البيانات');
-                return false;
-            }
-        }
 
         function showLoading(text, subtext = '') {
             loadingText.textContent = text;
@@ -1289,7 +1219,7 @@
             let isValid = false;
             switch(currentStep) {
                 case 1:
-                    isValid = formData.audioFile !== null || formData.isPreloaded;
+                    isValid = formData.audioFile !== null;
                     break;
                 case 2:
                     isValid = formData.text.trim().length > 0;
@@ -1312,7 +1242,7 @@
         }
 
         async function nextStep() {
-            if (currentStep === 1 && formData.audioFile && !formData.isPreloaded) {
+            if (currentStep === 1 && formData.audioFile) {
                 startBackgroundTranscription();
                 currentStep = 2;
                 updateProgress();
@@ -1341,12 +1271,19 @@
         btnNext.addEventListener('click', nextStep);
         btnBack.addEventListener('click', prevStep);
 
-        uploadArea.addEventListener('click', () => audioInput.click());
+        uploadArea.addEventListener('click', () => {
+            audioInput.click();
+        });
+
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadArea.classList.add('dragover');
         });
-        uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('dragover'));
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.classList.remove('dragover');
@@ -1373,10 +1310,10 @@
             formData.audioFile = file;
             formData.audioFileName = file.name;
             formData.audioFileSize = file.size;
-            formData.isPreloaded = false;
 
             uploadArea.style.display = 'none';
             fileInfo.classList.add('visible');
+            
             fileName.textContent = file.name;
             fileMeta.textContent = `${formatFileSize(file.size)} • جاري التحميل...`;
 
@@ -1389,6 +1326,10 @@
                 formData.audioDuration = audio.duration;
                 fileMeta.textContent = `${formatFileSize(file.size)} • ${formatTime(audio.duration)}`;
             });
+
+            audio.addEventListener('error', () => {
+                fileMeta.textContent = `${formatFileSize(file.size)} • جاهز`;
+            });
         }
 
         removeFile.addEventListener('click', () => {
@@ -1398,7 +1339,6 @@
             formData.audioDuration = 0;
             formData.audioUrl = '';
             formData.transcriptId = '';
-            formData.isPreloaded = false;
             uploadArea.style.display = 'block';
             fileInfo.classList.remove('visible');
             audioInput.value = '';
@@ -1408,53 +1348,50 @@
 
         async function startBackgroundTranscription() {
             try {
-                textEditor.placeholder = '⏳ جاري تفريغ الصوت...';
+                textEditor.placeholder = '⏳ جاري تفريغ الصوت في الخلفية...';
                 textEditor.disabled = true;
 
-                console.log('🔄 Uploading audio to AssemblyAI...');
+                console.log('🔄 Starting audio upload via Worker...');
 
-                // رفع الصوت مباشرة لـ AssemblyAI
-                const uploadResponse = await fetch(CONFIG.ASSEMBLYAI.UPLOAD_URL, {
+                const audioBlob = formData.audioFile;
+                
+                const uploadResponse = await fetch(CONFIG.BACKEND.BASE_URL + CONFIG.BACKEND.ENDPOINTS.UPLOAD_AUDIO, {
                     method: 'POST',
-                    headers: {
-                        'authorization': CONFIG.ASSEMBLYAI.API_KEY
-                    },
-                    body: formData.audioFile
+                    body: audioBlob
                 });
 
-                if (!uploadResponse.ok) throw new Error('فشل رفع الملف');
+                if (!uploadResponse.ok) {
+                    const errorText = await uploadResponse.text();
+                    throw new Error('فشل رفع الملف الصوتي: ' + errorText);
+                }
 
                 const uploadData = await uploadResponse.json();
                 formData.audioUrl = uploadData.upload_url;
 
-                console.log('✅ Audio uploaded:', formData.audioUrl);
+                console.log('✅ Audio uploaded via Worker:', formData.audioUrl);
 
-                // طلب التفريغ
-                const transcriptResponse = await fetch(CONFIG.ASSEMBLYAI.TRANSCRIPT_URL, {
+                const transcriptResponse = await fetch(CONFIG.BACKEND.BASE_URL + CONFIG.BACKEND.ENDPOINTS.REQUEST_TRANSCRIPT, {
                     method: 'POST',
-                    headers: {
-                        'authorization': CONFIG.ASSEMBLYAI.API_KEY,
-                        'content-type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        audio_url: formData.audioUrl,
-                        language_code: 'ar'
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ audio_url: formData.audioUrl })
                 });
 
-                if (!transcriptResponse.ok) throw new Error('فشل طلب التفريغ');
+                if (!transcriptResponse.ok) {
+                    const errorText = await transcriptResponse.text();
+                    throw new Error('فشل طلب التفريغ: ' + errorText);
+                }
 
                 const transcriptData = await transcriptResponse.json();
                 formData.transcriptId = transcriptData.id;
 
-                console.log('✅ Transcription started:', formData.transcriptId);
+                console.log('✅ Transcription started via Worker:', formData.transcriptId);
                 pollTranscriptionInBackground(formData.transcriptId);
 
             } catch (error) {
-                console.error('Transcription error:', error);
+                console.error('Background transcription error:', error);
                 textEditor.placeholder = '❌ فشل التفريغ - يمكنك كتابة النص يدوياً';
                 textEditor.disabled = false;
-                tg.showAlert('⚠️ فشل تفريغ الصوت');
+                tg.showAlert('⚠️ فشل تفريغ الصوت، يمكنك كتابة النص يدوياً');
             }
         }
 
@@ -1465,47 +1402,46 @@
             const checkStatus = async () => {
                 try {
                     const statusResponse = await fetch(
-                        `${CONFIG.ASSEMBLYAI.TRANSCRIPT_URL}/${transcriptId}`,
-                        {
-                            headers: {
-                                'authorization': CONFIG.ASSEMBLYAI.API_KEY
-                            }
-                        }
+                        CONFIG.BACKEND.BASE_URL + CONFIG.BACKEND.ENDPOINTS.TRANSCRIPT_STATUS + '/' + transcriptId
                     );
 
-                    if (!statusResponse.ok) throw new Error('فشل التحقق من الحالة');
+                    if (!statusResponse.ok) {
+                        throw new Error('فشل التحقق من حالة التفريغ');
+                    }
 
                     const statusData = await statusResponse.json();
-                    console.log('Status:', statusData.status);
+                    console.log('Transcription status:', statusData.status);
 
                     if (statusData.status === 'completed') {
                         formData.text = statusData.text || '';
                         formData.transcriptWithTimes = statusData.words || [];
                         textEditor.value = formData.text;
                         textEditor.disabled = false;
-                        textEditor.placeholder = 'راجع النص وصححه';
+                        textEditor.placeholder = 'راجع النص وصححه حسب الحاجة';
                         updateTextStats();
                         validateCurrentStep();
                         tg.HapticFeedback.notificationOccurred('success');
                         tg.showPopup({
                             title: '✅ تم التفريغ',
-                            message: 'تم تفريغ الصوت بنجاح!',
+                            message: 'تم تفريغ الصوت بنجاح! راجع النص',
                             buttons: [{type: 'ok'}]
                         });
                     } else if (statusData.status === 'error') {
-                        throw new Error('فشل التفريغ');
+                        throw new Error('فشل التفريغ: ' + (statusData.error || 'خطأ غير معروف'));
                     } else {
                         attempts++;
-                        if (attempts >= maxAttempts) throw new Error('انتهت المهلة');
+                        if (attempts >= maxAttempts) {
+                            throw new Error('انتهت مهلة التفريغ');
+                        }
                         const progress = Math.min(attempts * 2, 98);
                         textEditor.placeholder = `⏳ جاري التفريغ... ${progress}%`;
                         setTimeout(checkStatus, 5000);
                     }
                 } catch (error) {
-                    console.error('Polling error:', error);
-                    textEditor.placeholder = '❌ فشل التفريغ';
+                    console.error('Background polling error:', error);
+                    textEditor.placeholder = '❌ فشل التفريغ - يمكنك كتابة النص يدوياً';
                     textEditor.disabled = false;
-                    tg.showAlert('⚠️ حدث خطأ في التفريغ');
+                    tg.showAlert('⚠️ حدث خطأ في التفريغ، يمكنك كتابة النص يدوياً');
                 }
             };
 
@@ -1580,7 +1516,7 @@
 
         function updateReview() {
             document.getElementById('reviewAudioName').textContent = formData.audioFileName || '-';
-            document.getElementById('reviewAudioSize').textContent = formData.audioFileSize ? formatFileSize(formData.audioFileSize) : 'غير معروف';
+            document.getElementById('reviewAudioSize').textContent = formData.audioFileSize ? formatFileSize(formData.audioFileSize) : '-';
             const words = formData.text.trim().split(/\s+/).length;
             document.getElementById('reviewWordCount').textContent = words.toLocaleString('ar');
             document.getElementById('reviewCharCount').textContent = formData.text.length.toLocaleString('ar');
@@ -1589,7 +1525,12 @@
             const selectedColor = formData.colorData;
             document.getElementById('reviewColor').textContent = selectedColor ? selectedColor.name : '-';
             const colorDiv = document.createElement('div');
-            colorDiv.style.cssText = 'width:20px;height:20px;background:'+formData.seriesColor+';border-radius:4px;display:inline-block;vertical-align:middle';
+            colorDiv.style.width = '20px';
+            colorDiv.style.height = '20px';
+            colorDiv.style.background = formData.seriesColor;
+            colorDiv.style.borderRadius = '4px';
+            colorDiv.style.display = 'inline-block';
+            colorDiv.style.verticalAlign = 'middle';
             document.getElementById('reviewSeriesColor').innerHTML = '';
             document.getElementById('reviewSeriesColor').appendChild(colorDiv);
             document.getElementById('reviewTitle').textContent = formData.title || '-';
@@ -1620,26 +1561,24 @@
                     mainSeries: formData.mainSeries,
                     subSeries: formData.subSeries,
                     finalSeries: formData.finalSeries,
-                    timestamp: new Date().toISOString(),
-                    isPreloaded: formData.isPreloaded,
-                    preloadedData: formData.preloadedData
+                    timestamp: new Date().toISOString()
                 };
 
-                console.log('📤 Sending data to JSONBin...');
+                console.log('📤 Sending data via Worker:', dataToSend);
 
-                const binResponse = await fetch(`${CONFIG.JSONBIN.BASE_URL}`, {
+                const binResponse = await fetch(CONFIG.BACKEND.BASE_URL + CONFIG.BACKEND.ENDPOINTS.SAVE_DATA, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Access-Key': CONFIG.JSONBIN.API_KEY
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dataToSend)
                 });
 
-                if (!binResponse.ok) throw new Error('فشل حفظ البيانات');
+                if (!binResponse.ok) {
+                    const errorText = await binResponse.text();
+                    throw new Error('فشل حفظ البيانات: ' + errorText);
+                }
 
                 const binData = await binResponse.json();
-                console.log('✅ Data saved to bin:', binData.metadata.id);
+                console.log('✅ Data saved via Worker to bin:', binData.metadata.id);
 
                 tg.sendData(JSON.stringify({
                     type: 'video_creation',
@@ -1648,7 +1587,7 @@
                 }));
 
                 hideLoading();
-                tg.showAlert('✅ تم الإرسال بنجاح!', () => {
+                tg.showAlert('✅ تم الإرسال بنجاح! جاري معالجة الفيديو...', () => {
                     tg.close();
                 });
                 
@@ -1659,20 +1598,19 @@
             }
         }
 
-        async function init() {
+        function init() {
             console.log('🚀 Initializing app...');
             console.log('CONFIG:', CONFIG ? 'Loaded ✅' : 'NOT FOUND ❌');
             
+            fetch(CONFIG.BACKEND.BASE_URL + CONFIG.BACKEND.ENDPOINTS.HEALTH)
+                .then(res => res.json())
+                .then(data => console.log('✅ Worker Health Check:', data))
+                .catch(err => console.error('❌ Worker Health Check Failed:', err));
+            
             initializeTemplates();
             initializeSeriesColors();
-            
-            const hasPreloadedData = await loadPreloadedData();
-            
-            if (!hasPreloadedData) {
-                updateProgress();
-            }
-            
-            console.log('✅ App initialized');
+            updateProgress();
+            console.log('✅ App initialized successfully');
         }
 
         if (document.readyState === 'loading') {
@@ -1682,6 +1620,7 @@
         }
 
         console.log('📱 Telegram WebApp SDK:', tg.version);
+        console.log('🔒 Using secure Cloudflare Worker proxy');
     </script>
 </body>
 </html>
