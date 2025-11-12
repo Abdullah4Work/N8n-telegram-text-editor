@@ -1092,6 +1092,7 @@
         }
 
         function formatTime(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00';
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${mins}:${secs.toString().padStart(2, '0')}`;
@@ -1219,6 +1220,7 @@
             switch(currentStep) {
                 case 1:
                     isValid = formData.audioFile !== null;
+                    console.log('Step 1 validation:', isValid, 'audioFile:', formData.audioFile);
                     break;
                 case 2:
                     isValid = formData.text.trim().length > 0;
@@ -1238,10 +1240,13 @@
                     break;
             }
             btnNext.disabled = !isValid;
+            console.log('Validation result:', isValid, 'Button disabled:', btnNext.disabled);
         }
 
         async function nextStep() {
+            console.log('Next step clicked, current:', currentStep);
             if (currentStep === 1 && formData.audioFile) {
+                console.log('Starting background transcription...');
                 startBackgroundTranscription();
                 currentStep = 2;
                 updateProgress();
@@ -1270,14 +1275,20 @@
         btnNext.addEventListener('click', nextStep);
         btnBack.addEventListener('click', prevStep);
 
-        uploadArea.addEventListener('click', () => audioInput.click());
+        uploadArea.addEventListener('click', () => {
+            console.log('Upload area clicked');
+            audioInput.click();
+        });
+
         uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
             uploadArea.classList.add('dragover');
         });
+
         uploadArea.addEventListener('dragleave', () => {
             uploadArea.classList.remove('dragover');
         });
+
         uploadArea.addEventListener('drop', (e) => {
             e.preventDefault();
             uploadArea.classList.remove('dragover');
@@ -1286,30 +1297,53 @@
                 handleAudioFile(files[0]);
             }
         });
+
         audioInput.addEventListener('change', (e) => {
+            console.log('Audio input changed');
             if (e.target.files.length > 0) {
                 handleAudioFile(e.target.files[0]);
             }
         });
 
         function handleAudioFile(file) {
+            console.log('Handling audio file:', file.name, file.size);
+            
             if (file.size > CONFIG.APP.MAX_FILE_SIZE) {
                 tg.showAlert('⚠️ الملف كبير جداً! الحد الأقصى 50 MB');
                 return;
             }
+
+            // تعيين الملف فوراً
             formData.audioFile = file;
             formData.audioFileName = file.name;
             formData.audioFileSize = file.size;
+
+            // إخفاء منطقة الرفع وإظهار معلومات الملف
+            uploadArea.style.display = 'none';
+            fileInfo.classList.add('visible');
+            
+            // تحديث UI مباشرة
+            fileName.textContent = file.name;
+            fileMeta.textContent = `${formatFileSize(file.size)} • جاري التحميل...`;
+
+            console.log('File set, validating...');
+            // تفعيل الزر فوراً!
+            validateCurrentStep();
+            
+            tg.HapticFeedback.notificationOccurred('success');
+
+            // محاولة الحصول على المدة (اختياري)
             const audio = new Audio();
             audio.src = URL.createObjectURL(file);
             audio.addEventListener('loadedmetadata', () => {
                 formData.audioDuration = audio.duration;
-                fileName.textContent = file.name;
                 fileMeta.textContent = `${formatFileSize(file.size)} • ${formatTime(audio.duration)}`;
-                uploadArea.style.display = 'none';
-                fileInfo.classList.add('visible');
-                validateCurrentStep();
-                tg.HapticFeedback.notificationOccurred('success');
+                console.log('Audio duration loaded:', audio.duration);
+            });
+
+            audio.addEventListener('error', (e) => {
+                console.error('Audio metadata load error:', e);
+                fileMeta.textContent = `${formatFileSize(file.size)} • جاهز`;
             });
         }
 
@@ -1554,12 +1588,12 @@
         }
 
         function init() {
+            console.log('🚀 Initializing app...');
+            console.log('CONFIG:', CONFIG ? 'Loaded ✅' : 'NOT FOUND ❌');
             initializeTemplates();
             initializeSeriesColors();
             updateProgress();
-            console.log('🚀 Video Creator v3.0 - Fixed');
-            console.log('📱 Telegram SDK:', tg.version);
-            console.log('🔧 Config loaded:', !!CONFIG);
+            console.log('✅ App initialized successfully');
         }
 
         if (document.readyState === 'loading') {
@@ -1567,6 +1601,8 @@
         } else {
             init();
         }
+
+        console.log('📱 Telegram WebApp SDK:', tg.version);
     </script>
 </body>
 </html>
