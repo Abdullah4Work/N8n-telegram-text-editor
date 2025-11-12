@@ -1220,7 +1220,6 @@
             switch(currentStep) {
                 case 1:
                     isValid = formData.audioFile !== null;
-                    console.log('Step 1 validation:', isValid, 'audioFile:', formData.audioFile);
                     break;
                 case 2:
                     isValid = formData.text.trim().length > 0;
@@ -1240,13 +1239,10 @@
                     break;
             }
             btnNext.disabled = !isValid;
-            console.log('Validation result:', isValid, 'Button disabled:', btnNext.disabled);
         }
 
         async function nextStep() {
-            console.log('Next step clicked, current:', currentStep);
             if (currentStep === 1 && formData.audioFile) {
-                console.log('Starting background transcription...');
                 startBackgroundTranscription();
                 currentStep = 2;
                 updateProgress();
@@ -1276,7 +1272,6 @@
         btnBack.addEventListener('click', prevStep);
 
         uploadArea.addEventListener('click', () => {
-            console.log('Upload area clicked');
             audioInput.click();
         });
 
@@ -1299,7 +1294,6 @@
         });
 
         audioInput.addEventListener('change', (e) => {
-            console.log('Audio input changed');
             if (e.target.files.length > 0) {
                 handleAudioFile(e.target.files[0]);
             }
@@ -1313,36 +1307,27 @@
                 return;
             }
 
-            // تعيين الملف فوراً
             formData.audioFile = file;
             formData.audioFileName = file.name;
             formData.audioFileSize = file.size;
 
-            // إخفاء منطقة الرفع وإظهار معلومات الملف
             uploadArea.style.display = 'none';
             fileInfo.classList.add('visible');
             
-            // تحديث UI مباشرة
             fileName.textContent = file.name;
             fileMeta.textContent = `${formatFileSize(file.size)} • جاري التحميل...`;
 
-            console.log('File set, validating...');
-            // تفعيل الزر فوراً!
             validateCurrentStep();
-            
             tg.HapticFeedback.notificationOccurred('success');
 
-            // محاولة الحصول على المدة (اختياري)
             const audio = new Audio();
             audio.src = URL.createObjectURL(file);
             audio.addEventListener('loadedmetadata', () => {
                 formData.audioDuration = audio.duration;
                 fileMeta.textContent = `${formatFileSize(file.size)} • ${formatTime(audio.duration)}`;
-                console.log('Audio duration loaded:', audio.duration);
             });
 
-            audio.addEventListener('error', (e) => {
-                console.error('Audio metadata load error:', e);
+            audio.addEventListener('error', () => {
                 fileMeta.textContent = `${formatFileSize(file.size)} • جاهز`;
             });
         }
@@ -1365,34 +1350,43 @@
             try {
                 textEditor.placeholder = '⏳ جاري تفريغ الصوت في الخلفية...';
                 textEditor.disabled = true;
-                const formDataToSend = new FormData();
-                formDataToSend.append('file', formData.audioFile);
-                const uploadResponse = await fetch(CONFIG.ASSEMBLYAI.UPLOAD_URL, {
+
+                console.log('🔄 Starting audio upload via Worker...');
+
+                const audioBlob = formData.audioFile;
+                
+                const uploadResponse = await fetch(CONFIG.BACKEND.BASE_URL + CONFIG.BACKEND.ENDPOINTS.UPLOAD_AUDIO, {
                     method: 'POST',
-                    headers: { 'Authorization': CONFIG.ASSEMBLYAI.API_KEY },
-                    body: formDataToSend
+                    body: audioBlob
                 });
-                if (!uploadResponse.ok) throw new Error('فشل رفع الملف الصوتي');
+
+                if (!uploadResponse.ok) {
+                    const errorText = await uploadResponse.text();
+                    throw new Error('فشل رفع الملف الصوتي: ' + errorText);
+                }
+
                 const uploadData = await uploadResponse.json();
                 formData.audioUrl = uploadData.upload_url;
-                console.log('✅ Audio uploaded:', formData.audioUrl);
-                const transcriptResponse = await fetch(CONFIG.ASSEMBLYAI.TRANSCRIPT_URL, {
+
+                console.log('✅ Audio uploaded via Worker:', formData.audioUrl);
+
+                const transcriptResponse = await fetch(CONFIG.BACKEND.BASE_URL + CONFIG.BACKEND.ENDPOINTS.REQUEST_TRANSCRIPT, {
                     method: 'POST',
-                    headers: {
-                        'Authorization': CONFIG.ASSEMBLYAI.API_KEY,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        audio_url: formData.audioUrl,
-                        language_code: CONFIG.ASSEMBLYAI.LANGUAGE_CODE,
-                        ...CONFIG.ASSEMBLYAI.SETTINGS
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ audio_url: formData.audioUrl })
                 });
-                if (!transcriptResponse.ok) throw new Error('فشل طلب التفريغ');
+
+                if (!transcriptResponse.ok) {
+                    const errorText = await transcriptResponse.text();
+                    throw new Error('فشل طلب التفريغ: ' + errorText);
+                }
+
                 const transcriptData = await transcriptResponse.json();
                 formData.transcriptId = transcriptData.id;
-                console.log('✅ Transcription started:', formData.transcriptId);
+
+                console.log('✅ Transcription started via Worker:', formData.transcriptId);
                 pollTranscriptionInBackground(formData.transcriptId);
+
             } catch (error) {
                 console.error('Background transcription error:', error);
                 textEditor.placeholder = '❌ فشل التفريغ - يمكنك كتابة النص يدوياً';
@@ -1404,14 +1398,20 @@
         async function pollTranscriptionInBackground(transcriptId) {
             const maxAttempts = 60;
             let attempts = 0;
+
             const checkStatus = async () => {
                 try {
-                    const statusResponse = await fetch(`${CONFIG.ASSEMBLYAI.TRANSCRIPT_URL}/${transcriptId}`, {
-                        headers: { 'Authorization': CONFIG.ASSEMBLYAI.API_KEY }
-                    });
-                    if (!statusResponse.ok) throw new Error('فشل التحقق من حالة التفريغ');
+                    const statusResponse = await fetch(
+                        CONFIG.BACKEND.BASE_URL + CONFIG.BACKEND.ENDPOINTS.TRANSCRIPT_STATUS + '/' + transcriptId
+                    );
+
+                    if (!statusResponse.ok) {
+                        throw new Error('فشل التحقق من حالة التفريغ');
+                    }
+
                     const statusData = await statusResponse.json();
                     console.log('Transcription status:', statusData.status);
+
                     if (statusData.status === 'completed') {
                         formData.text = statusData.text || '';
                         formData.transcriptWithTimes = statusData.words || [];
@@ -1430,7 +1430,9 @@
                         throw new Error('فشل التفريغ: ' + (statusData.error || 'خطأ غير معروف'));
                     } else {
                         attempts++;
-                        if (attempts >= maxAttempts) throw new Error('انتهت مهلة التفريغ');
+                        if (attempts >= maxAttempts) {
+                            throw new Error('انتهت مهلة التفريغ');
+                        }
                         const progress = Math.min(attempts * 2, 98);
                         textEditor.placeholder = `⏳ جاري التفريغ... ${progress}%`;
                         setTimeout(checkStatus, 5000);
@@ -1442,6 +1444,7 @@
                     tg.showAlert('⚠️ حدث خطأ في التفريغ، يمكنك كتابة النص يدوياً');
                 }
             };
+
             checkStatus();
         }
 
@@ -1538,6 +1541,7 @@
 
         async function submitForm() {
             showLoading('جاري الإرسال...', 'الرجاء الانتظار');
+            
             try {
                 const dataToSend = {
                     type: 'video_creation',
@@ -1559,27 +1563,34 @@
                     finalSeries: formData.finalSeries,
                     timestamp: new Date().toISOString()
                 };
-                console.log('📤 Sending data:', dataToSend);
-                const binResponse = await fetch(CONFIG.JSONBIN.BASE_URL + '/b', {
+
+                console.log('📤 Sending data via Worker:', dataToSend);
+
+                const binResponse = await fetch(CONFIG.BACKEND.BASE_URL + CONFIG.BACKEND.ENDPOINTS.SAVE_DATA, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-Master-Key': CONFIG.JSONBIN.API_KEY
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dataToSend)
                 });
-                if (!binResponse.ok) throw new Error('فشل حفظ البيانات');
+
+                if (!binResponse.ok) {
+                    const errorText = await binResponse.text();
+                    throw new Error('فشل حفظ البيانات: ' + errorText);
+                }
+
                 const binData = await binResponse.json();
-                console.log('✅ Data saved to bin:', binData.metadata.id);
+                console.log('✅ Data saved via Worker to bin:', binData.metadata.id);
+
                 tg.sendData(JSON.stringify({
                     type: 'video_creation',
                     binId: binData.metadata.id,
                     timestamp: new Date().toISOString()
                 }));
+
                 hideLoading();
                 tg.showAlert('✅ تم الإرسال بنجاح! جاري معالجة الفيديو...', () => {
                     tg.close();
                 });
+                
             } catch (error) {
                 console.error('Submit error:', error);
                 hideLoading();
@@ -1590,6 +1601,12 @@
         function init() {
             console.log('🚀 Initializing app...');
             console.log('CONFIG:', CONFIG ? 'Loaded ✅' : 'NOT FOUND ❌');
+            
+            fetch(CONFIG.BACKEND.BASE_URL + CONFIG.BACKEND.ENDPOINTS.HEALTH)
+                .then(res => res.json())
+                .then(data => console.log('✅ Worker Health Check:', data))
+                .catch(err => console.error('❌ Worker Health Check Failed:', err));
+            
             initializeTemplates();
             initializeSeriesColors();
             updateProgress();
@@ -1603,6 +1620,7 @@
         }
 
         console.log('📱 Telegram WebApp SDK:', tg.version);
+        console.log('🔒 Using secure Cloudflare Worker proxy');
     </script>
 </body>
 </html>
