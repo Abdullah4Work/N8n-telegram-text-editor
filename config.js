@@ -12,6 +12,12 @@ const CONFIG = {
         }
     },
 
+    // ⭐ إضافة JSONBIN للقراءة المباشرة
+    JSONBIN: {
+        BASE_URL: 'https://api.jsonbin.io/v3/b',
+        // ملاحظة: API_KEY سيتم تحميله من GitHub Secrets عبر deploy.yml
+    },
+
     APP: {
         WEB_APP_URL: 'https://abdullah4work.github.io/N8n-telegram-text-editor/',
         MAX_FILE_SIZE: 52428800, // 50 MB
