@@ -1,4 +1,4 @@
-name: Deploy
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -11,12 +11,17 @@ jobs:
     environment: github-pages
     
     steps:
-      - uses: actions/checkout@v3
+      - name: 📥 Checkout Code
+        uses: actions/checkout@v3
 
-      - name: Create config.js
+      - name: 🔧 Create config.js from Secrets
         run: |
           cat > config.js << 'EOF'
+          // Auto-generated Configuration from GitHub Secrets
+          // Generated: $(date)
+          
           const CONFIG = {
+              // AssemblyAI API Configuration
               ASSEMBLYAI: {
                   API_KEY: '${{ secrets.ASSEMBLYAI_API_KEY }}',
                   UPLOAD_URL: '${{ secrets.ASSEMBLYAI_UPLOAD_URL }}',
@@ -26,13 +31,27 @@ jobs:
                       speaker_labels: true,
                       punctuate: true,
                       format_text: true,
-                      language_code: 'ar'
+                      language_code: 'ar',
+                      disfluencies: false
                   }
               },
+
+              // JSONBin API Configuration
               JSONBIN: {
                   API_KEY: '${{ secrets.JSONBIN_API_KEY }}',
                   BASE_URL: '${{ secrets.JSONBIN_BASE_URL }}'
               },
+
+              // Database Configuration (for API)
+              DATABASE: {
+                  API_URL: 'https://your-api-worker.workers.dev',
+                  ENDPOINTS: {
+                      GET_TEMPLATES: '/api/templates',
+                      SAVE_VIDEO: '/api/save-video'
+                  }
+              },
+
+              // Web App Configuration
               APP: {
                   WEB_APP_URL: '${{ secrets.WEB_APP_URL }}',
                   MAX_FILE_SIZE: 52428800,
@@ -40,27 +59,52 @@ jobs:
                   MAX_TEXT_LENGTH: 100000,
                   AUTO_SAVE_INTERVAL: 30000
               },
+
+              // Telegram Configuration
               TELEGRAM: {
                   USER_ID: '${{ secrets.TELEGRAM_USER_ID }}'
               },
+
+              // Templates Configuration
               TEMPLATES: {
                   COUNT: 4,
                   COLORS_PER_TEMPLATE: 4,
                   TOTAL_IMAGES: 16
               },
+
+              // Series Colors
               SERIES_COLORS: [
                   '#667eea', '#f5576c', '#4facfe', '#43e97b',
                   '#fa709a', '#feca57', '#ff6348', '#2c3e50'
               ]
           };
+
           if (typeof module !== 'undefined' && module.exports) {
               module.exports = CONFIG;
           }
+
+          if (typeof Object.freeze === 'function') {
+              Object.freeze(CONFIG);
+          }
           EOF
 
-      - name: Deploy to GitHub Pages
+      - name: 📝 Verify config.js
+        run: |
+          echo "✅ config.js created successfully"
+          ls -lh config.js
+
+      - name: 🚀 Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
+          publish_branch: gh-pages
           force_orphan: true
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: '🚀 Deploy from ${{ github.sha }}'
+
+      - name: ✅ Deployment Complete
+        run: |
+          echo "🎉 Deployment completed!"
+          echo "🌐 URL: ${{ secrets.WEB_APP_URL }}"
