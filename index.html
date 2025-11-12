@@ -973,7 +973,6 @@
 
                 console.log('📥 Loading data from JSONBin via Worker');
                 console.log('Bin ID:', binId);
-                console.log('Worker URL:', CONFIG.BACKEND.BASE_URL);
                 
                 const workerUrl = `${CONFIG.BACKEND.BASE_URL}/get-bin/${binId}`;
                 console.log('Full URL:', workerUrl);
@@ -986,7 +985,6 @@
                 });
 
                 console.log('Response status:', response.status);
-                console.log('Response ok:', response.ok);
 
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({}));
@@ -997,54 +995,58 @@
                 const responseData = await response.json();
                 console.log('✅ Raw response data:', responseData);
 
-                // ⭐ الحل الجذري - معالجة كل السيناريوهات المحتملة
+                // معالجة البيانات من JSONBin
                 let loadedData = null;
                 
                 if (responseData.success && responseData.record) {
-                    // السيناريو 1: { success: true, record: {...} }
                     loadedData = responseData.record;
                 } else if (responseData.record) {
-                    // السيناريو 2: { record: {...} }
                     loadedData = responseData.record;
                 } else if (responseData.data) {
-                    // السيناريو 3: { data: {...} }
                     loadedData = responseData.data;
-                } else if (responseData.ID) {
-                    // السيناريو 4: البيانات مباشرة { ID: ..., user_id: ... }
-                    loadedData = responseData;
                 } else {
-                    // السيناريو 5: أي object موجود
                     loadedData = responseData;
                 }
 
                 console.log('Processed data:', loadedData);
 
-                // التحقق من وجود البيانات الأساسية
                 if (!loadedData || typeof loadedData !== 'object') {
                     console.error('Invalid data structure:', loadedData);
                     throw new Error('تنسيق البيانات غير صحيح');
                 }
 
-                if (!loadedData.ID && !loadedData.user_id) {
-                    console.error('Missing required fields. Available keys:', Object.keys(loadedData));
-                    throw new Error('البيانات لا تحتوي على الحقول المطلوبة (ID أو user_id)');
-                }
+                // ⭐ تحويل البيانات من التنسيق الفعلي إلى التنسيق المطلوب
+                // البيانات تأتي: { text, id, timestamp, audioUrl }
+                // نحتاج: { ID, user_id, transcript_txt, ... }
+                
+                initialData = {
+                    ID: loadedData.id || loadedData.ID || null,
+                    user_id: loadedData.user_id || '',
+                    audio_file_id: loadedData.audio_file_id || '',
+                    audio_file_name: loadedData.audio_file_name || '',
+                    audio_time: loadedData.audio_time || 0,
+                    'Transcript (with times)': loadedData['Transcript (with times)'] || loadedData.Transcript || [],
+                    transcript_txt: loadedData.text || loadedData.transcript_txt || '',
+                    audioUrl: loadedData.audioUrl || '',
+                    created_at: loadedData.timestamp || loadedData.created_at || new Date().toISOString(),
+                    status: loadedData.status || 'in_progress',
+                    CurrentStep: loadedData.CurrentStep || 1
+                };
 
-                initialData = loadedData;
-                console.log('✅ Initial data set:', initialData);
+                console.log('✅ Initial data transformed:', initialData);
 
                 // Fill formData with initial data
-                formData.ID = initialData.ID || null;
+                formData.ID = initialData.ID;
                 formData.Google_DriveID = initialData.Google_DriveID || null;
                 formData.user_id = initialData.user_id || '';
                 formData.audio_file_id = initialData.audio_file_id || '';
                 formData.audio_file_name = initialData.audio_file_name || '';
                 formData.audio_time = initialData.audio_time || 0;
-                formData.Transcript = initialData['Transcript (with times)'] || initialData.Transcript || [];
+                formData.Transcript = initialData['Transcript (with times)'] || [];
                 formData.transcript_txt = initialData.transcript_txt || '';
-                formData.created_at = initialData.created_at || new Date().toISOString();
-                formData.status = initialData.status || 'in_progress';
-                formData.CurrentStep = initialData.CurrentStep || 1;
+                formData.created_at = initialData.created_at;
+                formData.status = initialData.status;
+                formData.CurrentStep = initialData.CurrentStep;
                 
                 console.log('FormData populated:', {
                     ID: formData.ID,
