@@ -1,25 +1,20 @@
+// ✅ آمن 100% - لا يوجد API Keys هنا!
 const CONFIG = {
-    ASSEMBLYAI: {
-        API_KEY: 'f2003911af294ef09fc055bd7372c8f1',
-        UPLOAD_URL: 'https://api.assemblyai.com/v2/upload',
-        TRANSCRIPT_URL: 'https://api.assemblyai.com/v2/transcript',
-        LANGUAGE_CODE: 'ar',
-        SETTINGS: {
-            speaker_labels: true,
-            punctuate: true,
-            format_text: true,
-            language_code: 'ar'
+    // استخدام Worker بدل الـ APIs مباشرة
+    BACKEND: {
+        BASE_URL: 'https://n8n-video-worker.abdullah27623.workers.dev',
+        ENDPOINTS: {
+            UPLOAD_AUDIO: '/upload-audio',
+            REQUEST_TRANSCRIPT: '/request-transcript',
+            TRANSCRIPT_STATUS: '/transcript-status',
+            SAVE_DATA: '/save-data',
+            HEALTH: '/health'
         }
-    },
-
-    JSONBIN: {
-        API_KEY: '$2a$10$LZzUrZstrWJsJROsgMvgeeoq0lC8lexDSW39z0hwNIxijF8y5jf7u',
-        BASE_URL: 'https://api.jsonbin.io/v3'
     },
 
     APP: {
         WEB_APP_URL: 'https://abdullah4work.github.io/N8n-telegram-text-editor/',
-        MAX_FILE_SIZE: 52428800,
+        MAX_FILE_SIZE: 52428800, // 50 MB
         ALLOWED_AUDIO_FORMATS: ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/m4a', 'audio/flac', 'audio/mp3'],
         MAX_TEXT_LENGTH: 100000,
         AUTO_SAVE_INTERVAL: 30000
@@ -151,6 +146,9 @@ const CONFIG = {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = CONFIG;
 }
+
 if (typeof Object.freeze === 'function') {
     Object.freeze(CONFIG);
 }
+
+console.log('✅ CONFIG loaded securely via Worker');
