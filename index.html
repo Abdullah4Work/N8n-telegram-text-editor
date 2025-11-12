@@ -876,7 +876,11 @@
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
-        tg.enableClosingConfirmation();
+        
+        // Only enable closing confirmation if supported
+        if (tg.version >= 6.2) {
+            tg.enableClosingConfirmation();
+        }
 
         const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor';
 
@@ -965,54 +969,76 @@
                 
                 const binId = getUrlParameter('bin');
                 if (!binId) {
-                    throw new Error('لم يتم العثور على معرف البيانات');
+                    throw new Error('لم يتم العثور على معرف البيانات في الرابط');
                 }
 
-                console.log('📥 Loading data from JSONBin:', binId);
+                console.log('📥 Loading data from JSONBin via Worker:', binId);
                 
-                const response = await fetch(`${CONFIG.JSONBIN.BASE_URL}/${binId}/latest`, {
+                // استخدام Worker API لجلب البيانات من JSONBin بشكل آمن
+                const response = await fetch(`${CONFIG.BACKEND.BASE_URL}/get-bin/${binId}`, {
                     method: 'GET',
                     headers: {
-                        'X-Master-Key': CONFIG.JSONBIN.API_KEY
+                        'Content-Type': 'application/json'
                     }
                 });
 
                 if (!response.ok) {
-                    throw new Error('فشل تحميل البيانات من JSONBin');
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('❌ Worker API error:', errorData);
+                    throw new Error(errorData.error || 'فشل تحميل البيانات من الخادم');
                 }
 
                 const data = await response.json();
-                initialData = data.record;
+                initialData = data.record || data.data || data;
                 
                 console.log('✅ Data loaded successfully:', initialData);
 
+                // التحقق من وجود البيانات الأساسية
+                if (!initialData || !initialData.ID) {
+                    throw new Error('البيانات المحملة غير صحيحة أو فارغة');
+                }
+
                 // Fill formData with initial data
-                formData.ID = initialData.ID || null;
+                formData.ID = initialData.ID;
                 formData.Google_DriveID = initialData.Google_DriveID || null;
                 formData.user_id = initialData.user_id || '';
                 formData.audio_file_id = initialData.audio_file_id || '';
                 formData.audio_file_name = initialData.audio_file_name || '';
                 formData.audio_time = initialData.audio_time || 0;
-                formData.Transcript = initialData.Transcript || initialData['Transcript (with times)'] || [];
+                formData.Transcript = initialData['Transcript (with times)'] || initialData.Transcript || [];
                 formData.transcript_txt = initialData.transcript_txt || '';
                 formData.created_at = initialData.created_at || new Date().toISOString();
+                formData.status = initialData.status || 'in_progress';
+                formData.CurrentStep = initialData.CurrentStep || 1;
                 
                 // Load text into editor
-                textEditor.value = formData.transcript_txt;
-                formData.corrected_full_text = formData.transcript_txt;
-                updateTextStats();
+                if (formData.transcript_txt) {
+                    textEditor.value = formData.transcript_txt;
+                    formData.corrected_full_text = formData.transcript_txt;
+                    updateTextStats();
+                } else {
+                    textEditor.placeholder = 'لا يوجد نص مفرغ. يمكنك كتابة النص يدوياً';
+                }
                 
                 hideLoading();
                 validateCurrentStep();
                 
                 tg.HapticFeedback.notificationOccurred('success');
                 
+                console.log('✅ Form ready with data');
+                
             } catch (error) {
                 console.error('❌ Error loading data:', error);
                 hideLoading();
-                tg.showAlert('❌ حدث خطأ في تحميل البيانات: ' + error.message, () => {
-                    tg.close();
-                });
+                
+                // Show user-friendly error
+                const errorMsg = error.message || 'حدث خطأ غير متوقع';
+                
+                if (tg.showAlert) {
+                    tg.showAlert('❌ ' + errorMsg);
+                } else {
+                    alert('❌ ' + errorMsg);
+                }
             }
         }
 
@@ -1040,7 +1066,10 @@
 
         function selectTemplate(template) {
             document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
-            document.querySelector(`[data-template-id="${template.id}"]`).classList.add('selected');
+            const selectedCard = document.querySelector(`[data-template-id="${template.id}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+            }
             formData.template_id = template.id;
             formData.template_name = template.name;
             loadTemplateColors(template.colors);
@@ -1063,7 +1092,10 @@
 
         function selectColor(color) {
             document.querySelectorAll('#colorsGrid .color-option').forEach(o => o.classList.remove('selected'));
-            colorsGrid.querySelector(`[data-color-id="${color.id}"]`).classList.add('selected');
+            const selectedColor = colorsGrid.querySelector(`[data-color-id="${color.id}"]`);
+            if (selectedColor) {
+                selectedColor.classList.add('selected');
+            }
             formData.color_id = color.id;
             formData.color_name = color.name;
             validateCurrentStep();
@@ -1091,7 +1123,10 @@
 
         function selectSeriesColor(color) {
             document.querySelectorAll('#seriesColorsGrid .color-option').forEach(o => o.classList.remove('selected'));
-            seriesColorsGrid.querySelector(`[data-series-color="${color}"]`).classList.add('selected');
+            const selectedColor = seriesColorsGrid.querySelector(`[data-series-color="${color}"]`);
+            if (selectedColor) {
+                selectedColor.classList.add('selected');
+            }
             formData.series_color = color;
             seriesPreviewText.style.color = color;
             validateCurrentStep();
@@ -1231,21 +1266,30 @@
                 validateCurrentStep();
                 tg.HapticFeedback.impactOccurred('medium');
             } catch (err) {
-                tg.showAlert('⚠️ لم نتمكن من اللصق');
+                if (tg.showAlert) {
+                    tg.showAlert('⚠️ لم نتمكن من اللصق');
+                }
             }
         });
 
         clearBtn.addEventListener('click', () => {
             if (textEditor.value.trim()) {
-                tg.showConfirm('هل تريد حذف النص؟', (confirmed) => {
-                    if (confirmed) {
-                        textEditor.value = '';
-                        formData.corrected_full_text = '';
-                        updateTextStats();
-                        validateCurrentStep();
-                        tg.HapticFeedback.impactOccurred('heavy');
-                    }
-                });
+                if (tg.showConfirm) {
+                    tg.showConfirm('هل تريد حذف النص؟', (confirmed) => {
+                        if (confirmed) {
+                            textEditor.value = '';
+                            formData.corrected_full_text = '';
+                            updateTextStats();
+                            validateCurrentStep();
+                            tg.HapticFeedback.impactOccurred('heavy');
+                        }
+                    });
+                } else if (confirm('هل تريد حذف النص؟')) {
+                    textEditor.value = '';
+                    formData.corrected_full_text = '';
+                    updateTextStats();
+                    validateCurrentStep();
+                }
             }
         });
 
@@ -1338,10 +1382,11 @@
 
                 if (!response.ok) {
                     const errorText = await response.text();
-                    throw new Error('فشل إرسال البيانات: ' + errorText);
+                    console.error('❌ Webhook error:', errorText);
+                    throw new Error('فشل إرسال البيانات إلى الخادم');
                 }
 
-                const result = await response.json();
+                const result = await response.json().catch(() => ({ success: true }));
                 console.log('✅ Data sent successfully to n8n:', result);
 
                 // Send confirmation to Telegram
@@ -1353,26 +1398,38 @@
                 }));
 
                 hideLoading();
-                tg.showAlert('✅ تم الإرسال بنجاح! جاري معالجة الفيديو...', () => {
+                
+                if (tg.showAlert) {
+                    tg.showAlert('✅ تم الإرسال بنجاح! جاري معالجة الفيديو...', () => {
+                        tg.close();
+                    });
+                } else {
+                    alert('✅ تم الإرسال بنجاح!');
                     tg.close();
-                });
+                }
                 
             } catch (error) {
                 console.error('❌ Submit error:', error);
                 hideLoading();
-                tg.showAlert('❌ حدث خطأ: ' + error.message);
+                
+                if (tg.showAlert) {
+                    tg.showAlert('❌ حدث خطأ: ' + error.message);
+                } else {
+                    alert('❌ حدث خطأ: ' + error.message);
+                }
             }
         }
 
         function init() {
             console.log('🚀 Initializing app...');
             console.log('CONFIG:', CONFIG ? 'Loaded ✅' : 'NOT FOUND ❌');
+            console.log('Telegram WebApp version:', tg.version);
             
             initializeTemplates();
             initializeSeriesColors();
             updateProgress();
             
-            // Load initial data from JSONBin
+            // Load initial data from JSONBin via Worker
             loadInitialData();
             
             console.log('✅ App initialized successfully');
@@ -1386,6 +1443,7 @@
 
         console.log('📱 Telegram WebApp SDK:', tg.version);
         console.log('🔗 N8N Webhook URL:', N8N_WEBHOOK_URL);
+        console.log('🔧 Worker API URL:', CONFIG.BACKEND.BASE_URL);
     </script>
 </body>
 </html>
