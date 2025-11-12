@@ -1,6 +1,17 @@
-// ✅ آمن 100% - جميع المفاتيح تأتي من GitHub Secrets
+// ✅ آمن 100% - لا يوجد API Keys هنا!
 const CONFIG = {
-    // إعدادات التطبيق
+    // استخدام Worker بدل الـ APIs مباشرة
+    BACKEND: {
+        BASE_URL: 'https://n8n-video-worker.abdullah27623.workers.dev',
+        ENDPOINTS: {
+            UPLOAD_AUDIO: '/upload-audio',
+            REQUEST_TRANSCRIPT: '/request-transcript',
+            TRANSCRIPT_STATUS: '/transcript-status',
+            SAVE_DATA: '/save-data',
+            HEALTH: '/health'
+        }
+    },
+
     APP: {
         WEB_APP_URL: 'https://abdullah4work.github.io/N8n-telegram-text-editor/',
         MAX_FILE_SIZE: 52428800, // 50 MB
@@ -9,25 +20,10 @@ const CONFIG = {
         AUTO_SAVE_INTERVAL: 30000
     },
 
-    // معلومات Telegram (من GitHub Secrets)
     TELEGRAM: {
-        USER_ID: '7432377194' // سيتم تحديثه من TELEGRAM_USER_ID
+        USER_ID: '7432377194'
     },
 
-    // AssemblyAI (من GitHub Secrets)
-    ASSEMBLYAI: {
-        API_KEY: '', // سيتم تحديثه من ASSEMBLYAI_API_KEY
-        UPLOAD_URL: 'https://api.assemblyai.com/v2/upload',
-        TRANSCRIPT_URL: 'https://api.assemblyai.com/v2/transcript'
-    },
-
-    // JSONBin (من GitHub Secrets)
-    JSONBIN: {
-        API_KEY: '', // سيتم تحديثه من JSONBIN_API_KEY
-        BASE_URL: 'https://api.jsonbin.io/v3/b'
-    },
-
-    // قوالب الفيديو
     TEMPLATES: [
         {
             id: 1,
@@ -135,7 +131,6 @@ const CONFIG = {
         }
     ],
 
-    // ألوان السلسلة الرئيسية
     SERIES_COLORS: [
         { name: 'أزرق بنفسجي', value: '#667eea' },
         { name: 'أحمر وردي', value: '#f5576c' },
@@ -148,32 +143,12 @@ const CONFIG = {
     ]
 };
 
-// 🔐 تحديث المتغيرات من GitHub Secrets (يتم استبدالها أثناء Build)
-if (typeof TELEGRAM_USER_ID !== 'undefined') {
-    CONFIG.TELEGRAM.USER_ID = TELEGRAM_USER_ID;
-}
-if (typeof ASSEMBLYAI_API_KEY !== 'undefined') {
-    CONFIG.ASSEMBLYAI.API_KEY = ASSEMBLYAI_API_KEY;
-}
-if (typeof ASSEMBLYAI_UPLOAD_URL !== 'undefined') {
-    CONFIG.ASSEMBLYAI.UPLOAD_URL = ASSEMBLYAI_UPLOAD_URL;
-}
-if (typeof ASSEMBLYAI_TRANSCRIPT_URL !== 'undefined') {
-    CONFIG.ASSEMBLYAI.TRANSCRIPT_URL = ASSEMBLYAI_TRANSCRIPT_URL;
-}
-if (typeof JSONBIN_API_KEY !== 'undefined') {
-    CONFIG.JSONBIN.API_KEY = JSONBIN_API_KEY;
-}
-if (typeof JSONBIN_BASE_URL !== 'undefined') {
-    CONFIG.JSONBIN.BASE_URL = JSONBIN_BASE_URL;
-}
-if (typeof WEB_APP_URL !== 'undefined') {
-    CONFIG.APP.WEB_APP_URL = WEB_APP_URL;
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = CONFIG;
 }
 
-// تجميد الكائن لمنع التعديل
 if (typeof Object.freeze === 'function') {
     Object.freeze(CONFIG);
 }
 
-console.log('✅ CONFIG loaded securely from GitHub Secrets');
+console.log('✅ CONFIG loaded securely via Worker');
