@@ -1045,7 +1045,10 @@
             title: '',
             mainSeries: '',
             subSeries: '',
-            finalSeries: ''
+            finalSeries: '',
+            // بيانات محملة مسبقاً
+            preloadedData: null,
+            isPreloaded: false
         };
 
         const progressSteps = document.querySelectorAll('.progress-step');
@@ -1080,6 +1083,78 @@
         const mainSeriesCount = document.getElementById('mainSeriesCount');
         const subSeriesCount = document.getElementById('subSeriesCount');
         const finalSeriesCount = document.getElementById('finalSeriesCount');
+
+        // ==================== دالة جلب البيانات المحملة ====================
+        async function loadPreloadedData() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const binId = urlParams.get('bin');
+            
+            if (!binId) {
+                console.log('❌ لا يوجد bin في الرابط - سيتم طلب رفع ملف');
+                return false;
+            }
+
+            try {
+                showLoading('جاري تحميل البيانات...', 'الرجاء الانتظار');
+                console.log('🔄 Loading data from bin:', binId);
+
+                const response = await fetch(`${CONFIG.JSONBIN_BASE_URL}/${binId}/latest`, {
+                    headers: {
+                        'X-Access-Key': CONFIG.JSONBIN_API_KEY
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('فشل تحميل البيانات');
+                }
+
+                const data = await response.json();
+                console.log('✅ Data loaded:', data);
+
+                // تخزين البيانات المحملة
+                formData.preloadedData = data.record;
+                formData.isPreloaded = true;
+
+                // ملء البيانات
+                formData.audioFileName = data.record.audio_file_name || 'ملف صوتي';
+                formData.audioFileSize = 0; // غير معروف من البيانات
+                formData.audioDuration = data.record.audio_time || 0;
+                formData.text = data.record.transcript_txt || '';
+                formData.transcriptWithTimes = data.record['Transcript (with times)'] || [];
+
+                // عرض معلومات الملف
+                uploadArea.style.display = 'none';
+                fileInfo.classList.add('visible');
+                fileName.textContent = formData.audioFileName;
+                fileMeta.textContent = `مدة: ${formatTime(formData.audioDuration)}`;
+
+                // ملء النص
+                textEditor.value = formData.text;
+                textEditor.disabled = false;
+                textEditor.placeholder = 'راجع النص وصححه حسب الحاجة';
+                updateTextStats();
+
+                // الانتقال للخطوة 2 مباشرة
+                currentStep = 2;
+                updateProgress();
+
+                hideLoading();
+                tg.HapticFeedback.notificationOccurred('success');
+                tg.showPopup({
+                    title: '✅ تم التحميل',
+                    message: 'تم تحميل البيانات بنجاح! راجع النص وأكمل باقي الخطوات',
+                    buttons: [{type: 'ok'}]
+                });
+
+                return true;
+
+            } catch (error) {
+                console.error('❌ Error loading preloaded data:', error);
+                hideLoading();
+                tg.showAlert('⚠️ فشل تحميل البيانات. الرجاء رفع ملف صوتي جديد');
+                return false;
+            }
+        }
 
         function showLoading(text, subtext = '') {
             loadingText.textContent = text;
@@ -1219,7 +1294,7 @@
             let isValid = false;
             switch(currentStep) {
                 case 1:
-                    isValid = formData.audioFile !== null;
+                    isValid = formData.audioFile !== null || formData.isPreloaded;
                     break;
                 case 2:
                     isValid = formData.text.trim().length > 0;
@@ -1242,7 +1317,7 @@
         }
 
         async function nextStep() {
-            if (currentStep === 1 && formData.audioFile) {
+            if (currentStep === 1 && formData.audioFile && !formData.isPreloaded) {
                 startBackgroundTranscription();
                 currentStep = 2;
                 updateProgress();
@@ -1310,6 +1385,7 @@
             formData.audioFile = file;
             formData.audioFileName = file.name;
             formData.audioFileSize = file.size;
+            formData.isPreloaded = false;
 
             uploadArea.style.display = 'none';
             fileInfo.classList.add('visible');
@@ -1339,6 +1415,7 @@
             formData.audioDuration = 0;
             formData.audioUrl = '';
             formData.transcriptId = '';
+            formData.isPreloaded = false;
             uploadArea.style.display = 'block';
             fileInfo.classList.remove('visible');
             audioInput.value = '';
@@ -1516,7 +1593,7 @@
 
         function updateReview() {
             document.getElementById('reviewAudioName').textContent = formData.audioFileName || '-';
-            document.getElementById('reviewAudioSize').textContent = formData.audioFileSize ? formatFileSize(formData.audioFileSize) : '-';
+            document.getElementById('reviewAudioSize').textContent = formData.audioFileSize ? formatFileSize(formData.audioFileSize) : 'غير معروف';
             const words = formData.text.trim().split(/\s+/).length;
             document.getElementById('reviewWordCount').textContent = words.toLocaleString('ar');
             document.getElementById('reviewCharCount').textContent = formData.text.length.toLocaleString('ar');
@@ -1561,7 +1638,9 @@
                     mainSeries: formData.mainSeries,
                     subSeries: formData.subSeries,
                     finalSeries: formData.finalSeries,
-                    timestamp: new Date().toISOString()
+                    timestamp: new Date().toISOString(),
+                    isPreloaded: formData.isPreloaded,
+                    preloadedData: formData.preloadedData
                 };
 
                 console.log('📤 Sending data via Worker:', dataToSend);
@@ -1598,10 +1677,11 @@
             }
         }
 
-        function init() {
+        async function init() {
             console.log('🚀 Initializing app...');
             console.log('CONFIG:', CONFIG ? 'Loaded ✅' : 'NOT FOUND ❌');
             
+            // فحص صحة Worker
             fetch(CONFIG.BACKEND.BASE_URL + CONFIG.BACKEND.ENDPOINTS.HEALTH)
                 .then(res => res.json())
                 .then(data => console.log('✅ Worker Health Check:', data))
@@ -1609,7 +1689,15 @@
             
             initializeTemplates();
             initializeSeriesColors();
-            updateProgress();
+            
+            // محاولة تحميل البيانات المحملة مسبقاً
+            const hasPreloadedData = await loadPreloadedData();
+            
+            if (!hasPreloadedData) {
+                // إذا لم تكن هناك بيانات محملة، ابدأ من الخطوة 1
+                updateProgress();
+            }
+            
             console.log('✅ App initialized successfully');
         }
 
