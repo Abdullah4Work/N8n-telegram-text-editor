@@ -18,22 +18,20 @@ jobs:
         run: |
           cat > config.js << 'EOF'
           const CONFIG = {
-              ASSEMBLYAI: {
-                  API_KEY: '${{ secrets.ASSEMBLYAI_API_KEY }}',
-                  UPLOAD_URL: '${{ secrets.ASSEMBLYAI_UPLOAD_URL }}',
-                  TRANSCRIPT_URL: '${{ secrets.ASSEMBLYAI_TRANSCRIPT_URL }}',
-                  LANGUAGE_CODE: 'ar',
-                  SETTINGS: {
-                      speaker_labels: true,
-                      punctuate: true,
-                      format_text: true,
-                      language_code: 'ar'
+              BACKEND: {
+                  BASE_URL: 'https://n8n-video-worker.abdullah27623.workers.dev',
+                  ENDPOINTS: {
+                      UPLOAD_AUDIO: '/upload-audio',
+                      REQUEST_TRANSCRIPT: '/request-transcript',
+                      TRANSCRIPT_STATUS: '/transcript-status',
+                      SAVE_DATA: '/save-data',
+                      HEALTH: '/health'
                   }
               },
 
               JSONBIN: {
-                  API_KEY: '${{ secrets.JSONBIN_API_KEY }}',
-                  BASE_URL: '${{ secrets.JSONBIN_BASE_URL }}'
+                  BASE_URL: '${{ secrets.JSONBIN_BASE_URL }}',
+                  API_KEY: '${{ secrets.JSONBIN_API_KEY }}'
               },
 
               APP: {
@@ -48,7 +46,6 @@ jobs:
                   USER_ID: '${{ secrets.TELEGRAM_USER_ID }}'
               },
 
-              // Templates - Hard-coded (ليست بيانات حساسة)
               TEMPLATES: [
                 {
                   id: 1,
@@ -156,7 +153,6 @@ jobs:
                 }
               ],
 
-              // Series Colors
               SERIES_COLORS: [
                   { name: 'أزرق بنفسجي', value: '#667eea' },
                   { name: 'أحمر وردي', value: '#f5576c' },
@@ -175,6 +171,7 @@ jobs:
           if (typeof Object.freeze === 'function') {
               Object.freeze(CONFIG);
           }
+          console.log('✅ CONFIG loaded with JSONBIN support');
           EOF
 
       - name: 🚀 Deploy to GitHub Pages
