@@ -871,105 +871,50 @@
         </button>
     </div>
 
+    <script src="config.js"></script>
+    
     <script>
-        // Configuration
-        const CONFIG = {
-            WEBHOOK_URL: 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor',
-            JSONBIN_API_URL: 'https://api.jsonbin.io/v3/b',
-            TEMPLATES: [
-                {
-                    id: 'modern',
-                    name: 'عصري',
-                    icon: '🎯',
-                    gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                    data: { style: 'modern' },
-                    colors: [
-                        { id: 'blue', name: 'أزرق', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
-                        { id: 'green', name: 'أخضر', gradient: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)' },
-                        { id: 'orange', name: 'برتقالي', gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' },
-                        { id: 'purple', name: 'بنفسجي', gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)' }
-                    ]
-                },
-                {
-                    id: 'elegant',
-                    name: 'أنيق',
-                    icon: '✨',
-                    gradient: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)',
-                    data: { style: 'elegant' },
-                    colors: [
-                        { id: 'gold', name: 'ذهبي', gradient: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)' },
-                        { id: 'rose', name: 'وردي', gradient: 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)' },
-                        { id: 'mint', name: 'نعناعي', gradient: 'linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%)' },
-                        { id: 'sunset', name: 'غروب', gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' }
-                    ]
-                },
-                {
-                    id: 'minimal',
-                    name: 'بسيط',
-                    icon: '⚡',
-                    gradient: 'linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%)',
-                    data: { style: 'minimal' },
-                    colors: [
-                        { id: 'gray', name: 'رمادي', gradient: 'linear-gradient(135deg, #e0e0e0 0%, #f5f5f5 100%)' },
-                        { id: 'dark', name: 'داكن', gradient: 'linear-gradient(135deg, #434343 0%, #000000 100%)' },
-                        { id: 'light', name: 'فاتح', gradient: 'linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%)' },
-                        { id: 'beige', name: 'بيج', gradient: 'linear-gradient(135deg, #f5f5dc 0%, #dcdcdc 100%)' }
-                    ]
-                },
-                {
-                    id: 'vibrant',
-                    name: 'حيوي',
-                    icon: '🌈',
-                    gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
-                    data: { style: 'vibrant' },
-                    colors: [
-                        { id: 'rainbow', name: 'قوس قزح', gradient: 'linear-gradient(135deg, #fa709a 0%, #fee140 100%)' },
-                        { id: 'neon', name: 'نيون', gradient: 'linear-gradient(135deg, #30cfd0 0%, #330867 100%)' },
-                        { id: 'fire', name: 'ناري', gradient: 'linear-gradient(135deg, #ff0844 0%, #ffb199 100%)' },
-                        { id: 'ocean', name: 'محيطي', gradient: 'linear-gradient(135deg, #2af598 0%, #009efd 100%)' }
-                    ]
-                }
-            ],
-            SERIES_COLORS: [
-                { name: 'بنفسجي', value: '#667eea' },
-                { name: 'أخضر', value: '#11998e' },
-                { name: 'وردي', value: '#f093fb' },
-                { name: 'أزرق', value: '#4facfe' },
-                { name: 'برتقالي', value: '#fa709a' },
-                { name: 'أحمر', value: '#f5576c' },
-                { name: 'ذهبي', value: '#fcb69f' },
-                { name: 'فيروزي', value: '#30cfd0' }
-            ]
-        };
-
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.enableClosingConfirmation();
+
+        const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor';
 
         let currentStep = 1;
         const totalSteps = 5;
         let initialData = null;
         
         const formData = {
-            binId: '',
+            ID: null,
+            Google_DriveID: null,
             user_id: '',
             audio_file_id: '',
             audio_file_name: '',
             audio_time: 0,
-            transcript_with_times: [],
+            Transcript: [],
+            'Transcript Corrected': [],
             transcript_txt: '',
             corrected_full_text: '',
-            template: null,
-            templateData: null,
-            color: null,
-            colorData: null,
-            seriesColor: '#667eea',
+            image_file_id: null,
+            image_file_name: null,
+            portrait_image_file_id: null,
             title: '',
             series: '',
             subSeries: '',
             finalSeries: '',
-            status: 'pending',
-            currentStep: 1
+            status: 'in_progress',
+            CurrentStep: 1,
+            Video_Id: null,
+            caption: null,
+            created_at: null,
+            updated_at: new Date().toISOString(),
+            description: null,
+            tags: null,
+            template_id: null,
+            template_name: null,
+            color_id: null,
+            color_name: null,
+            series_color: '#667eea'
         };
 
         const progressSteps = document.querySelectorAll('.progress-step');
@@ -1023,32 +968,34 @@
                     throw new Error('لم يتم العثور على معرف البيانات');
                 }
 
-                console.log('Loading data from bin:', binId);
+                console.log('📥 Loading data from JSONBin:', binId);
                 
-                const response = await fetch(`${CONFIG.JSONBIN_API_URL}/${binId}/latest`, {
+                const response = await fetch(`${CONFIG.JSONBIN.BASE_URL}/${binId}/latest`, {
                     method: 'GET',
                     headers: {
-                        'X-Master-Key': '$2a$10$your_api_key_here'
+                        'X-Master-Key': CONFIG.JSONBIN.API_KEY
                     }
                 });
 
                 if (!response.ok) {
-                    throw new Error('فشل تحميل البيانات');
+                    throw new Error('فشل تحميل البيانات من JSONBin');
                 }
 
                 const data = await response.json();
                 initialData = data.record;
                 
-                console.log('Loaded data:', initialData);
+                console.log('✅ Data loaded successfully:', initialData);
 
-                // Fill form with initial data
-                formData.binId = binId;
+                // Fill formData with initial data
+                formData.ID = initialData.ID || null;
+                formData.Google_DriveID = initialData.Google_DriveID || null;
                 formData.user_id = initialData.user_id || '';
                 formData.audio_file_id = initialData.audio_file_id || '';
                 formData.audio_file_name = initialData.audio_file_name || '';
                 formData.audio_time = initialData.audio_time || 0;
-                formData.transcript_with_times = initialData.transcript_with_times || [];
+                formData.Transcript = initialData.Transcript || initialData['Transcript (with times)'] || [];
                 formData.transcript_txt = initialData.transcript_txt || '';
+                formData.created_at = initialData.created_at || new Date().toISOString();
                 
                 // Load text into editor
                 textEditor.value = formData.transcript_txt;
@@ -1061,7 +1008,7 @@
                 tg.HapticFeedback.notificationOccurred('success');
                 
             } catch (error) {
-                console.error('Error loading data:', error);
+                console.error('❌ Error loading data:', error);
                 hideLoading();
                 tg.showAlert('❌ حدث خطأ في تحميل البيانات: ' + error.message, () => {
                     tg.close();
@@ -1070,6 +1017,10 @@
         }
 
         function initializeTemplates() {
+            if (!CONFIG || !CONFIG.TEMPLATES) {
+                console.error('❌ CONFIG.TEMPLATES not found');
+                return;
+            }
             templatesGrid.innerHTML = '';
             CONFIG.TEMPLATES.forEach(template => {
                 const card = document.createElement('div');
@@ -1090,8 +1041,8 @@
         function selectTemplate(template) {
             document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
             document.querySelector(`[data-template-id="${template.id}"]`).classList.add('selected');
-            formData.template = template.id;
-            formData.templateData = template.data;
+            formData.template_id = template.id;
+            formData.template_name = template.name;
             loadTemplateColors(template.colors);
             validateCurrentStep();
             tg.HapticFeedback.impactOccurred('light');
@@ -1113,13 +1064,17 @@
         function selectColor(color) {
             document.querySelectorAll('#colorsGrid .color-option').forEach(o => o.classList.remove('selected'));
             colorsGrid.querySelector(`[data-color-id="${color.id}"]`).classList.add('selected');
-            formData.color = color.id;
-            formData.colorData = color;
+            formData.color_id = color.id;
+            formData.color_name = color.name;
             validateCurrentStep();
             tg.HapticFeedback.impactOccurred('light');
         }
 
         function initializeSeriesColors() {
+            if (!CONFIG || !CONFIG.SERIES_COLORS) {
+                console.error('❌ CONFIG.SERIES_COLORS not found');
+                return;
+            }
             seriesColorsGrid.innerHTML = '';
             CONFIG.SERIES_COLORS.forEach((colorObj, index) => {
                 const option = document.createElement('div');
@@ -1131,13 +1086,13 @@
                 option.addEventListener('click', () => selectSeriesColor(colorObj.value));
                 seriesColorsGrid.appendChild(option);
             });
-            formData.seriesColor = CONFIG.SERIES_COLORS[0].value;
+            formData.series_color = CONFIG.SERIES_COLORS[0].value;
         }
 
         function selectSeriesColor(color) {
             document.querySelectorAll('#seriesColorsGrid .color-option').forEach(o => o.classList.remove('selected'));
             seriesColorsGrid.querySelector(`[data-series-color="${color}"]`).classList.add('selected');
-            formData.seriesColor = color;
+            formData.series_color = color;
             seriesPreviewText.style.color = color;
             validateCurrentStep();
             tg.HapticFeedback.impactOccurred('light');
@@ -1185,10 +1140,10 @@
                     isValid = formData.corrected_full_text.trim().length > 0;
                     break;
                 case 2:
-                    isValid = formData.template !== null && formData.color !== null;
+                    isValid = formData.template_id !== null && formData.color_id !== null;
                     break;
                 case 3:
-                    isValid = formData.seriesColor !== null;
+                    isValid = formData.series_color !== null;
                     break;
                 case 4:
                     isValid = formData.title.trim() && formData.series.trim() && 
@@ -1211,7 +1166,7 @@
             
             if (currentStep < totalSteps) {
                 currentStep++;
-                formData.currentStep = currentStep;
+                formData.CurrentStep = currentStep;
                 updateProgress();
                 tg.HapticFeedback.impactOccurred('light');
             }
@@ -1220,7 +1175,7 @@
         function prevStep() {
             if (currentStep > 1) {
                 currentStep--;
-                formData.currentStep = currentStep;
+                formData.CurrentStep = currentStep;
                 updateProgress();
                 tg.HapticFeedback.impactOccurred('light');
             }
@@ -1231,6 +1186,18 @@
 
         textEditor.addEventListener('input', () => {
             formData.corrected_full_text = textEditor.value;
+            
+            // Create corrected transcript with times
+            if (formData.Transcript && formData.Transcript.length > 0) {
+                const correctedWords = formData.corrected_full_text.split(/\s+/);
+                formData['Transcript Corrected'] = formData.Transcript.map((item, index) => {
+                    return {
+                        ...item,
+                        text: correctedWords[index] || item.text
+                    };
+                });
+            }
+            
             updateTextStats();
             validateCurrentStep();
         });
@@ -1300,16 +1267,15 @@
             document.getElementById('reviewWordCount').textContent = words.toLocaleString('ar');
             document.getElementById('reviewCharCount').textContent = formData.corrected_full_text.length.toLocaleString('ar');
             
-            const selectedTemplate = CONFIG.TEMPLATES.find(t => t.id === formData.template);
+            const selectedTemplate = CONFIG.TEMPLATES.find(t => t.id === formData.template_id);
             document.getElementById('reviewTemplate').textContent = selectedTemplate ? selectedTemplate.name : '-';
             
-            const selectedColor = formData.colorData;
-            document.getElementById('reviewColor').textContent = selectedColor ? selectedColor.name : '-';
+            document.getElementById('reviewColor').textContent = formData.color_name || '-';
             
             const colorDiv = document.createElement('div');
             colorDiv.style.width = '20px';
             colorDiv.style.height = '20px';
-            colorDiv.style.background = formData.seriesColor;
+            colorDiv.style.background = formData.series_color;
             colorDiv.style.borderRadius = '4px';
             colorDiv.style.display = 'inline-block';
             colorDiv.style.verticalAlign = 'middle';
@@ -1326,32 +1292,43 @@
             showLoading('جاري الإرسال...', 'الرجاء الانتظار');
             
             try {
+                // Prepare data matching database schema
                 const dataToSend = {
-                    binId: formData.binId,
+                    ID: formData.ID,
+                    Google_DriveID: formData.Google_DriveID,
                     user_id: formData.user_id,
                     audio_file_id: formData.audio_file_id,
                     audio_file_name: formData.audio_file_name,
                     audio_time: formData.audio_time,
-                    transcript_with_times: formData.transcript_with_times,
+                    'Transcript (with times)': formData.Transcript,
+                    'Transcript Corrected (with times)': formData['Transcript Corrected'],
                     transcript_txt: formData.transcript_txt,
                     corrected_full_text: formData.corrected_full_text,
-                    template: formData.template,
-                    templateData: formData.templateData,
-                    color: formData.color,
-                    colorData: formData.colorData,
-                    seriesColor: formData.seriesColor,
+                    image_file_id: formData.image_file_id,
+                    image_file_name: formData.image_file_name,
+                    portrait_image_file_id: formData.portrait_image_file_id,
                     title: formData.title,
                     series: formData.series,
                     subSeries: formData.subSeries,
                     finalSeries: formData.finalSeries,
                     status: 'completed',
-                    currentStep: 5,
-                    completed_at: new Date().toISOString()
+                    CurrentStep: 5,
+                    Video_Id: formData.Video_Id,
+                    caption: formData.caption,
+                    created_at: formData.created_at,
+                    updated_at: new Date().toISOString(),
+                    description: formData.description,
+                    tags: formData.tags,
+                    template_id: formData.template_id,
+                    template_name: formData.template_name,
+                    color_id: formData.color_id,
+                    color_name: formData.color_name,
+                    series_color: formData.series_color
                 };
 
-                console.log('📤 Sending data to webhook:', dataToSend);
+                console.log('📤 Sending data to n8n webhook:', dataToSend);
 
-                const response = await fetch(CONFIG.WEBHOOK_URL, {
+                const response = await fetch(N8N_WEBHOOK_URL, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -1365,12 +1342,12 @@
                 }
 
                 const result = await response.json();
-                console.log('✅ Data sent successfully:', result);
+                console.log('✅ Data sent successfully to n8n:', result);
 
-                // Send data to Telegram
+                // Send confirmation to Telegram
                 tg.sendData(JSON.stringify({
                     type: 'video_completed',
-                    binId: formData.binId,
+                    id: formData.ID,
                     status: 'completed',
                     timestamp: new Date().toISOString()
                 }));
@@ -1381,7 +1358,7 @@
                 });
                 
             } catch (error) {
-                console.error('Submit error:', error);
+                console.error('❌ Submit error:', error);
                 hideLoading();
                 tg.showAlert('❌ حدث خطأ: ' + error.message);
             }
@@ -1389,6 +1366,7 @@
 
         function init() {
             console.log('🚀 Initializing app...');
+            console.log('CONFIG:', CONFIG ? 'Loaded ✅' : 'NOT FOUND ❌');
             
             initializeTemplates();
             initializeSeriesColors();
@@ -1407,6 +1385,7 @@
         }
 
         console.log('📱 Telegram WebApp SDK:', tg.version);
+        console.log('🔗 N8N Webhook URL:', N8N_WEBHOOK_URL);
     </script>
 </body>
 </html>
