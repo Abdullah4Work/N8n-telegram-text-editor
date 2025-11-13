@@ -171,6 +171,106 @@
             line-height: 1.6;
         }
 
+        /* Audio Player Styles */
+        .audio-player-section {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .audio-player {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .audio-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .play-pause-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .play-pause-btn:active {
+            transform: scale(0.95);
+        }
+
+        .audio-progress {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .speed-controls {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .speed-btn {
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .speed-btn:active {
+            transform: scale(0.95);
+        }
+
+        .speed-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
         .text-editor-wrapper {
             flex: 1;
             display: flex;
@@ -282,6 +382,27 @@
             justify-content: center;
             font-size: 32px;
             position: relative;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .template-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(0,0,0,0.3), rgba(0,0,0,0.1));
+        }
+
+        .template-number {
+            position: relative;
+            z-index: 2;
+            color: white;
+            font-weight: 700;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.5);
         }
 
         .template-check {
@@ -297,6 +418,7 @@
             justify-content: center;
             color: white;
             font-size: 16px;
+            z-index: 3;
         }
 
         .template-card.selected .template-check {
@@ -333,18 +455,21 @@
 
         .colors-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
         }
 
         .color-option {
-            aspect-ratio: 1;
+            aspect-ratio: 16/9;
             border-radius: 12px;
             border: 3px solid var(--border);
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
             overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
 
         .color-option:active {
@@ -364,6 +489,104 @@
             display: flex;
         }
 
+        /* Template Preview Modal */
+        .template-preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .template-preview-modal.visible {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .preview-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .preview-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .close-preview {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: none;
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preview-images {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .preview-image-wrapper {
+            text-align: center;
+        }
+
+        .preview-image-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .preview-image {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Series Color with Hex Picker */
         .series-color-preview {
             background: white;
             border-radius: 12px;
@@ -383,6 +606,89 @@
         .preview-hint {
             font-size: 12px;
             color: var(--text-secondary);
+        }
+
+        .recommended-color-section {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .recommended-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--success);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .color-picker-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            border: 3px solid var(--border);
+            cursor: pointer;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .color-picker-preview:active {
+            transform: scale(0.95);
+        }
+
+        .color-picker-input-wrapper {
+            flex: 1;
+        }
+
+        .color-picker-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-weight: 600;
+            direction: ltr;
+        }
+
+        .color-picker-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .series-colors-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .series-color-option {
+            aspect-ratio: 1;
+            border-radius: 12px;
+            border: 3px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .series-color-option:active {
+            transform: scale(0.95);
+        }
+
+        .series-color-option.selected {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
         }
 
         .form-group {
@@ -578,6 +884,26 @@
         <div class="loading-subtext" id="loadingSubtext"></div>
     </div>
 
+    <!-- Template Preview Modal -->
+    <div class="template-preview-modal" id="templatePreviewModal">
+        <div class="preview-content">
+            <div class="preview-header">
+                <div class="preview-title">معاينة القالب</div>
+                <button class="close-preview" id="closePreview">×</button>
+            </div>
+            <div class="preview-images">
+                <div class="preview-image-wrapper">
+                    <div class="preview-image-label">الصورة الأفقية (Landscape)</div>
+                    <img src="" alt="Landscape Preview" class="preview-image" id="landscapePreview">
+                </div>
+                <div class="preview-image-wrapper">
+                    <div class="preview-image-label">الصورة العمودية (Portrait)</div>
+                    <img src="" alt="Portrait Preview" class="preview-image" id="portraitPreview">
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="progress-wrapper">
         <div class="progress-steps">
             <div class="progress-line">
@@ -615,7 +941,39 @@
                     <span>تصحيح النص</span>
                 </div>
                 <div class="step-description">
-                    راجع النص المفرغ من الصوت وصححه حسب الحاجة
+                    استمع للمقطع الصوتي وصحح النص المفرغ
+                </div>
+            </div>
+
+            <!-- Audio Player -->
+            <div class="audio-player-section">
+                <div class="audio-player">
+                    <audio id="audioElement" style="display: none;"></audio>
+                    
+                    <div class="audio-controls">
+                        <button class="play-pause-btn" id="playPauseBtn">
+                            ▶️
+                        </button>
+                        <div class="audio-progress">
+                            <div class="progress-bar" id="progressBar">
+                                <div class="progress-fill" id="progressFill"></div>
+                            </div>
+                            <div class="time-display">
+                                <span id="currentTime">0:00</span>
+                                <span id="duration">0:00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="speed-controls">
+                        <button class="speed-btn" data-speed="0.25">0.25x</button>
+                        <button class="speed-btn" data-speed="0.5">0.5x</button>
+                        <button class="speed-btn" data-speed="0.75">0.75x</button>
+                        <button class="speed-btn active" data-speed="1">1x</button>
+                        <button class="speed-btn" data-speed="1.25">1.25x</button>
+                        <button class="speed-btn" data-speed="1.5">1.5x</button>
+                        <button class="speed-btn" data-speed="2">2x</button>
+                    </div>
                 </div>
             </div>
 
@@ -662,21 +1020,21 @@
             <div class="step-header">
                 <div class="step-title">
                     <span>🎨</span>
-                    <span>اختر القالب</span>
+                    <span>اختر القالب واللون</span>
                 </div>
                 <div class="step-description">
-                    اختر شكل القالب الذي يناسب محتواك، ثم اختر اللون المناسب
+                    اختر القالب المناسب ثم اختر اللون
                 </div>
             </div>
 
             <div class="section-title">
                 <span>📐</span>
-                <span>اختر القالب</span>
+                <span>القوالب المتاحة</span>
             </div>
 
             <div class="templates-grid" id="templatesGrid"></div>
 
-            <div class="colors-section">
+            <div class="colors-section" id="colorsSection" style="display: none;">
                 <div class="section-title">
                     <span>🎨</span>
                     <span>اختر اللون</span>
@@ -693,23 +1051,43 @@
                     <span>لون السلسلة الرئيسية</span>
                 </div>
                 <div class="step-description">
-                    اختر اللون الذي سيظهر به اسم السلسلة الرئيسية في الفيديو
+                    اختر اللون المناسب لاسم السلسلة الرئيسية
                 </div>
             </div>
 
             <div class="series-color-preview">
-                <div class="preview-text" id="seriesPreviewText" style="color: #667eea;">
+                <div class="preview-text" id="seriesPreviewText">
                     السلسلة الرئيسية
                 </div>
                 <div class="preview-hint">معاينة اللون المختار</div>
             </div>
 
-            <div class="section-title">
-                <span>🎨</span>
-                <span>اختر اللون</span>
+            <div class="recommended-color-section">
+                <div class="recommended-label">
+                    <span>⭐</span>
+                    <span>اللون الموصى به للقالب المختار</span>
+                </div>
+                <div class="color-picker-wrapper">
+                    <div class="color-picker-preview" id="colorPickerPreview"></div>
+                    <div class="color-picker-input-wrapper">
+                        <input 
+                            type="text" 
+                            class="color-picker-input" 
+                            id="colorPickerInput"
+                            placeholder="#000000"
+                            maxlength="7"
+                            pattern="^#[0-9A-Fa-f]{6}$"
+                        >
+                    </div>
+                </div>
             </div>
 
-            <div class="colors-grid" id="seriesColorsGrid"></div>
+            <div class="section-title">
+                <span>🎨</span>
+                <span>أو اختر من الألوان الجاهزة</span>
+            </div>
+
+            <div class="series-colors-grid" id="seriesColorsGrid"></div>
         </div>
 
         <!-- Step 4: Video Information -->
@@ -871,6 +1249,272 @@
         </button>
     </div>
 
+    <script>
+        // ⭐ TEMPLATES DATA FROM MySQL
+        const TEMPLATES_DATA = [
+            {
+                id: 1,
+                name: "القالب 1",
+                colors: [
+                    {
+                        id: 1,
+                        name: "original",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1OhcXo9hpCBbVK8rtX68s91PWm3ufspQ8",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=15PLpIMuEx4_WffgVlaEueXseDCfZyfto",
+                        series_color: "#b9d780",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    },
+                    {
+                        id: 2,
+                        name: "green",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1Vh8X4SWAMl65_V8RGrIO6KOb_V11AhR2",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=1lZxBToJj2AL5HIl3Ee5f_Yh9h8nvP5c7",
+                        series_color: "#b9d780",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    },
+                    {
+                        id: 3,
+                        name: "brown",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1kUHbWAGz9h2IVrlceS1mfVyqktotK-NE",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=15kfP0R0TZbkezlC9jHg8PdIFUgVxY9Tf",
+                        series_color: "#b9d780",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    },
+                    {
+                        id: 4,
+                        name: "purple",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1m6ftwpbUpDRYylxYHGjuSFkU6nSRFanU",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=1-Fgs9gCA9zckJXznBE3AGgVJzZndBIjv",
+                        series_color: "#b9d780",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    },
+                    {
+                        id: 5,
+                        name: "blue",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1SqZH4ei3Difj1pjxwasdfPFoL600WThr",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=1ktVYgv8-0VrlShjcNIG3DEbSoAQZYc-3",
+                        series_color: "#b9d780",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                name: "القالب 2",
+                colors: [
+                    {
+                        id: 1,
+                        name: "original",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1cSldR1_6W_r_h4j1oIgNER2vn42hUjkY",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=141zHAG5VS6PamqL_LYDVLzfzcNGGkDng",
+                        series_color: "#b9d780",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    },
+                    {
+                        id: 2,
+                        name: "blue",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1Mid30-PS57fhJuWPutfb6jwR1QMjKRUr",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=1Bgz9T0a5Ynu-8JMleGGwh3t-nM8L0XSD",
+                        series_color: "#b9d780",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                name: "القالب 3",
+                colors: [
+                    {
+                        id: 1,
+                        name: "original",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1sstL2nz3LqTFQH18oQuWOxJOxS2VPJYw",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=1UQ9FW34vaf7Z7uFHNZ_6pPdSjEOuKVvp",
+                        series_color: "#b9d780",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    },
+                    {
+                        id: 2,
+                        name: "blue",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1MtsjLM0PtSA2YPKfddWnTKm2Lk4KIdTj",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=1Odqc8g6KdeyjjYm1KeLytCpuRyywvbMt",
+                        series_color: "#b9d780",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    },
+                    {
+                        id: 3,
+                        name: "orange",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1dvJc-xLL_qn6OAcCNBrjnKNWAc3GeqZH",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=18fUeGxUEt_sjrazS3yI3IBEd3srAm-jc",
+                        series_color: "#b9d780",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    },
+                    {
+                        id: 4,
+                        name: "green",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1X-kuR8BC5qGfiVx-VBaQHlH8PUGlp5wh",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=1hWbIdGsFA9Zs8fjYb83ugnyd07f8l-kn",
+                        series_color: "#b9d780",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    },
+                    {
+                        id: 5,
+                        name: "purple",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1BgPDdNGiFKyXH809kTCLLu2HTBBY3i3s",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=1hCWKWdPdLQoT3qbfHKqeJfd2MV36VT88",
+                        series_color: "#b9d780",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    }
+                ]
+            },
+            {
+                id: 4,
+                name: "القالب 4",
+                colors: [
+                    {
+                        id: 1,
+                        name: "original",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1YHPD-fKvHgWLxqMc_JMgDDEHbyLcy_qb",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=1Jp4S29FlR4X8tqv5Bm3grU7if7DElKmF",
+                        series_color: "#ff9e00",
+                        subseries_color: "#9fde14",
+                        finalseries_color: "#fcf84e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    },
+                    {
+                        id: 2,
+                        name: "blue",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=14op-KfFzrLCti5sBypv3ES7SiJg6N9E-",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=1ofbaUyVMGcWEa32AYSZeBqcfNRQKMOnA",
+                        series_color: "#ff9e00",
+                        subseries_color: "#9fde14",
+                        finalseries_color: "#fcf84e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    },
+                    {
+                        id: 3,
+                        name: "orange",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1sHbD022NaSlq1v_kEirSnr2rEGMGTqEx",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=1Jp4S29FlR4X8tqv5Bm3grU7if7DElKmF",
+                        series_color: "#ff9e00",
+                        subseries_color: "#9fde14",
+                        finalseries_color: "#fcf84e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    }
+                ]
+            },
+            {
+                id: 5,
+                name: "القالب 5",
+                colors: [
+                    {
+                        id: 1,
+                        name: "original",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1L6Pj1_rSGggYZ7fv4RE91CA22VUot0Vg",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=1oGS1mSCnu-GK_3u_J4pUqsEO4HLpiRq8",
+                        series_color: "#ffffff",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    },
+                    {
+                        id: 2,
+                        name: "green",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1X46qV4OGD9KFG2ipuW5f9bhlu8VBgdsh",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=1OtZamDZVM0VfGf9NRsTdAGfjo_TtLRv6",
+                        series_color: "#ffffff",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    },
+                    {
+                        id: 3,
+                        name: "blue",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1UoSQaam5toVGwUK61EhKqRg_VRwe_gtf",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=1dhQN1cFe9PeLAJtz3xANxutDS4_DTCox",
+                        series_color: "#ffffff",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    },
+                    {
+                        id: 4,
+                        name: "orange",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=143tkdil0_varINJ0v14RSVvE0xt-zji9",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=1pg-vB9TOU48qeiQv2XjRzlMEH3dPWp9V",
+                        series_color: "#ffffff",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    },
+                    {
+                        id: 5,
+                        name: "brown",
+                        landscape_image: "https://drive.google.com/uc?export=download&id=1r5IBlbNJet1Ocl0txcz_Z0JQjiv4aJHo",
+                        portrait_image: "https://drive.google.com/uc?export=download&id=1ZN9kR3a9ojGBVBMsZc-Fa6r4NiHnISGC",
+                        series_color: "#ffffff",
+                        subseries_color: "#ebbd27",
+                        finalseries_color: "#fce74e",
+                        title_color: "#ffffff",
+                        caption_color: "#ffffff"
+                    }
+                ]
+            }
+        ];
+
+        const SERIES_COLORS = [
+            { name: "بنفسجي", value: "#667eea" },
+            { name: "أزرق", value: "#4299e1" },
+            { name: "أخضر", value: "#48bb78" },
+            { name: "أصفر", value: "#ecc94b" },
+            { name: "برتقالي", value: "#ed8936" },
+            { name: "أحمر", value: "#f56565" },
+            { name: "وردي", value: "#ed64a6" },
+            { name: "رمادي", value: "#718096" }
+        ];
+    </script>
     <script src="config.js"></script>
     
     <script>
@@ -886,6 +1530,9 @@
         let currentStep = 1;
         const totalSteps = 5;
         let initialData = null;
+        let selectedTemplate = null;
+        let selectedColor = null;
+        let audioElement = document.getElementById('audioElement');
         
         const formData = {
             ID: null,
@@ -894,13 +1541,13 @@
             audio_file_id: '',
             audio_file_name: '',
             audio_time: 0,
+            audioUrl: '',
             Transcript: [],
             'Transcript Corrected': [],
             transcript_txt: '',
             corrected_full_text: '',
-            image_file_id: null,
-            image_file_name: null,
-            portrait_image_file_id: null,
+            landscape_image_url: null,
+            portrait_image_url: null,
             title: '',
             series: '',
             subSeries: '',
@@ -917,7 +1564,11 @@
             template_name: null,
             color_id: null,
             color_name: null,
-            series_color: '#667eea'
+            series_color: '#b9d780',
+            subseries_color: '#ebbd27',
+            finalseries_color: '#fce74e',
+            title_color: '#ffffff',
+            caption_color: '#ffffff'
         };
 
         const progressSteps = document.querySelectorAll('.progress-step');
@@ -936,8 +1587,11 @@
         const clearBtn = document.getElementById('clearBtn');
         const templatesGrid = document.getElementById('templatesGrid');
         const colorsGrid = document.getElementById('colorsGrid');
+        const colorsSection = document.getElementById('colorsSection');
         const seriesColorsGrid = document.getElementById('seriesColorsGrid');
         const seriesPreviewText = document.getElementById('seriesPreviewText');
+        const colorPickerPreview = document.getElementById('colorPickerPreview');
+        const colorPickerInput = document.getElementById('colorPickerInput');
         const titleInput = document.getElementById('titleInput');
         const mainSeriesInput = document.getElementById('mainSeriesInput');
         const subSeriesInput = document.getElementById('subSeriesInput');
@@ -946,6 +1600,18 @@
         const mainSeriesCount = document.getElementById('mainSeriesCount');
         const subSeriesCount = document.getElementById('subSeriesCount');
         const finalSeriesCount = document.getElementById('finalSeriesCount');
+        const templatePreviewModal = document.getElementById('templatePreviewModal');
+        const closePreview = document.getElementById('closePreview');
+        const landscapePreview = document.getElementById('landscapePreview');
+        const portraitPreview = document.getElementById('portraitPreview');
+
+        // Audio Player Controls
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const currentTimeDisplay = document.getElementById('currentTime');
+        const durationDisplay = document.getElementById('duration');
+        const speedBtns = document.querySelectorAll('.speed-btn');
 
         function showLoading(text, subtext = '') {
             loadingText.textContent = text;
@@ -995,7 +1661,6 @@
                 const responseData = await response.json();
                 console.log('✅ Raw response data:', responseData);
 
-                // معالجة البيانات من JSONBin
                 let loadedData = null;
                 
                 if (responseData.success && responseData.record) {
@@ -1014,10 +1679,6 @@
                     console.error('Invalid data structure:', loadedData);
                     throw new Error('تنسيق البيانات غير صحيح');
                 }
-
-                // ⭐ تحويل البيانات من التنسيق الفعلي إلى التنسيق المطلوب
-                // البيانات تأتي: { text, id, timestamp, audioUrl }
-                // نحتاج: { ID, user_id, transcript_txt, ... }
                 
                 initialData = {
                     ID: loadedData.id || loadedData.ID || null,
@@ -1025,9 +1686,9 @@
                     audio_file_id: loadedData.audio_file_id || '',
                     audio_file_name: loadedData.audio_file_name || '',
                     audio_time: loadedData.audio_time || 0,
+                    audioUrl: loadedData.audioUrl || '',
                     'Transcript (with times)': loadedData['Transcript (with times)'] || loadedData.Transcript || [],
                     transcript_txt: loadedData.text || loadedData.transcript_txt || '',
-                    audioUrl: loadedData.audioUrl || '',
                     created_at: loadedData.timestamp || loadedData.created_at || new Date().toISOString(),
                     status: loadedData.status || 'in_progress',
                     CurrentStep: loadedData.CurrentStep || 1
@@ -1035,13 +1696,13 @@
 
                 console.log('✅ Initial data transformed:', initialData);
 
-                // Fill formData with initial data
                 formData.ID = initialData.ID;
                 formData.Google_DriveID = initialData.Google_DriveID || null;
                 formData.user_id = initialData.user_id || '';
                 formData.audio_file_id = initialData.audio_file_id || '';
                 formData.audio_file_name = initialData.audio_file_name || '';
                 formData.audio_time = initialData.audio_time || 0;
+                formData.audioUrl = initialData.audioUrl || '';
                 formData.Transcript = initialData['Transcript (with times)'] || [];
                 formData.transcript_txt = initialData.transcript_txt || '';
                 formData.created_at = initialData.created_at;
@@ -1051,8 +1712,15 @@
                 console.log('FormData populated:', {
                     ID: formData.ID,
                     user_id: formData.user_id,
-                    has_transcript: formData.transcript_txt.length > 0
+                    has_transcript: formData.transcript_txt.length > 0,
+                    audioUrl: formData.audioUrl
                 });
+
+                // Load audio
+                if (formData.audioUrl) {
+                    audioElement.src = formData.audioUrl;
+                    console.log('✅ Audio loaded');
+                }
 
                 // Load text into editor
                 if (formData.transcript_txt) {
@@ -1087,19 +1755,65 @@
             }
         }
 
-        function initializeTemplates() {
-            if (!CONFIG || !CONFIG.TEMPLATES) {
-                console.error('❌ CONFIG.TEMPLATES not found');
-                return;
+        // Audio Player Functions
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
+        playPauseBtn.addEventListener('click', () => {
+            if (audioElement.paused) {
+                audioElement.play();
+                playPauseBtn.textContent = '⏸️';
+            } else {
+                audioElement.pause();
+                playPauseBtn.textContent = '▶️';
             }
+        });
+
+        audioElement.addEventListener('loadedmetadata', () => {
+            durationDisplay.textContent = formatTime(audioElement.duration);
+        });
+
+        audioElement.addEventListener('timeupdate', () => {
+            const percent = (audioElement.currentTime / audioElement.duration) * 100;
+            progressFill.style.width = `${percent}%`;
+            currentTimeDisplay.textContent = formatTime(audioElement.currentTime);
+        });
+
+        audioElement.addEventListener('ended', () => {
+            playPauseBtn.textContent = '▶️';
+        });
+
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const percent = (e.clientX - rect.left) / rect.width;
+            audioElement.currentTime = percent * audioElement.duration;
+        });
+
+        speedBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const speed = parseFloat(btn.dataset.speed);
+                audioElement.playbackRate = speed;
+                speedBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                tg.HapticFeedback.impactOccurred('light');
+            });
+        });
+
+        function initializeTemplates() {
             templatesGrid.innerHTML = '';
-            CONFIG.TEMPLATES.forEach(template => {
+            TEMPLATES_DATA.forEach((template, index) => {
                 const card = document.createElement('div');
                 card.className = 'template-card';
                 card.dataset.templateId = template.id;
+                
+                const firstColorImage = template.colors[0].landscape_image;
+                
                 card.innerHTML = `
-                    <div class="template-preview" style="background: ${template.gradient};">
-                        <span>${template.icon}</span>
+                    <div class="template-preview" style="background-image: url('${firstColorImage}');">
+                        <div class="template-number">${index + 1}</div>
                         <div class="template-check">✓</div>
                     </div>
                     <div class="template-name">${template.name}</div>
@@ -1115,11 +1829,16 @@
             if (selectedCard) {
                 selectedCard.classList.add('selected');
             }
+            
+            selectedTemplate = template;
             formData.template_id = template.id;
             formData.template_name = template.name;
+            
             loadTemplateColors(template.colors);
+            colorsSection.style.display = 'block';
+            
             validateCurrentStep();
-            tg.HapticFeedback.impactOccurred('light');
+            tg.HapticFeedback.impactOccurred('medium');
         }
 
         function loadTemplateColors(colors) {
@@ -1128,7 +1847,7 @@
                 const option = document.createElement('div');
                 option.className = 'color-option';
                 option.dataset.colorId = color.id;
-                option.style.background = color.gradient;
+                option.style.backgroundImage = `url('${color.landscape_image}')`;
                 option.innerHTML = '<div class="template-check">✓</div>';
                 option.addEventListener('click', () => selectColor(color));
                 colorsGrid.appendChild(option);
@@ -1137,46 +1856,104 @@
 
         function selectColor(color) {
             document.querySelectorAll('#colorsGrid .color-option').forEach(o => o.classList.remove('selected'));
-            const selectedColor = colorsGrid.querySelector(`[data-color-id="${color.id}"]`);
-            if (selectedColor) {
-                selectedColor.classList.add('selected');
+            const selectedColorEl = colorsGrid.querySelector(`[data-color-id="${color.id}"]`);
+            if (selectedColorEl) {
+                selectedColorEl.classList.add('selected');
             }
+            
+            selectedColor = color;
             formData.color_id = color.id;
             formData.color_name = color.name;
+            formData.landscape_image_url = color.landscape_image;
+            formData.portrait_image_url = color.portrait_image;
+            formData.series_color = color.series_color;
+            formData.subseries_color = color.subseries_color;
+            formData.finalseries_color = color.finalseries_color;
+            formData.title_color = color.title_color;
+            formData.caption_color = color.caption_color;
+            
+            // Show preview modal
+            landscapePreview.src = color.landscape_image;
+            portraitPreview.src = color.portrait_image;
+            templatePreviewModal.classList.add('visible');
+            
             validateCurrentStep();
-            tg.HapticFeedback.impactOccurred('light');
+            tg.HapticFeedback.impactOccurred('medium');
         }
 
-        function initializeSeriesColors() {
-            if (!CONFIG || !CONFIG.SERIES_COLORS) {
-                console.error('❌ CONFIG.SERIES_COLORS not found');
-                return;
+        closePreview.addEventListener('click', () => {
+            templatePreviewModal.classList.remove('visible');
+        });
+
+        templatePreviewModal.addEventListener('click', (e) => {
+            if (e.target === templatePreviewModal) {
+                templatePreviewModal.classList.remove('visible');
             }
+        });
+
+        function initializeSeriesColors() {
+            // Set recommended color from selected template
+            if (selectedColor) {
+                colorPickerInput.value = selectedColor.series_color;
+                colorPickerPreview.style.background = selectedColor.series_color;
+                seriesPreviewText.style.color = selectedColor.series_color;
+                formData.series_color = selectedColor.series_color;
+            }
+
             seriesColorsGrid.innerHTML = '';
-            CONFIG.SERIES_COLORS.forEach((colorObj, index) => {
+            SERIES_COLORS.forEach((colorObj, index) => {
                 const option = document.createElement('div');
-                option.className = 'color-option';
-                if (index === 0) option.classList.add('selected');
+                option.className = 'series-color-option';
                 option.dataset.seriesColor = colorObj.value;
                 option.style.background = colorObj.value;
                 option.innerHTML = '<div class="template-check">✓</div>';
                 option.addEventListener('click', () => selectSeriesColor(colorObj.value));
                 seriesColorsGrid.appendChild(option);
             });
-            formData.series_color = CONFIG.SERIES_COLORS[0].value;
         }
 
         function selectSeriesColor(color) {
-            document.querySelectorAll('#seriesColorsGrid .color-option').forEach(o => o.classList.remove('selected'));
-            const selectedColor = seriesColorsGrid.querySelector(`[data-series-color="${color}"]`);
-            if (selectedColor) {
-                selectedColor.classList.add('selected');
+            document.querySelectorAll('#seriesColorsGrid .series-color-option').forEach(o => o.classList.remove('selected'));
+            const selectedColorEl = seriesColorsGrid.querySelector(`[data-series-color="${color}"]`);
+            if (selectedColorEl) {
+                selectedColorEl.classList.add('selected');
             }
+            
             formData.series_color = color;
             seriesPreviewText.style.color = color;
+            colorPickerInput.value = color;
+            colorPickerPreview.style.background = color;
+            
             validateCurrentStep();
             tg.HapticFeedback.impactOccurred('light');
         }
+
+        colorPickerPreview.addEventListener('click', () => {
+            colorPickerInput.focus();
+            colorPickerInput.select();
+        });
+
+        colorPickerInput.addEventListener('input', (e) => {
+            let value = e.target.value;
+            
+            if (!value.startsWith('#')) {
+                value = '#' + value;
+            }
+            
+            value = value.substring(0, 7);
+            
+            if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                formData.series_color = value;
+                seriesPreviewText.style.color = value;
+                colorPickerPreview.style.background = value;
+                
+                document.querySelectorAll('#seriesColorsGrid .series-color-option').forEach(o => {
+                    o.classList.remove('selected');
+                });
+            }
+            
+            e.target.value = value;
+        });
 
         function updateProgress() {
             const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
@@ -1207,6 +1984,10 @@
             } else {
                 btnNext.innerHTML = '<span>التالي</span><span>→</span>';
                 btnNext.className = 'nav-btn btn-next';
+            }
+            
+            if (currentStep === 3) {
+                initializeSeriesColors();
             }
             
             validateCurrentStep();
@@ -1355,9 +2136,7 @@
             document.getElementById('reviewWordCount').textContent = words.toLocaleString('ar');
             document.getElementById('reviewCharCount').textContent = formData.corrected_full_text.length.toLocaleString('ar');
             
-            const selectedTemplate = CONFIG.TEMPLATES.find(t => t.id === formData.template_id);
-            document.getElementById('reviewTemplate').textContent = selectedTemplate ? selectedTemplate.name : '-';
-            
+            document.getElementById('reviewTemplate').textContent = formData.template_name || '-';
             document.getElementById('reviewColor').textContent = formData.color_name || '-';
             
             const colorDiv = document.createElement('div');
@@ -1391,9 +2170,8 @@
                     'Transcript Corrected (with times)': formData['Transcript Corrected'],
                     transcript_txt: formData.transcript_txt,
                     corrected_full_text: formData.corrected_full_text,
-                    image_file_id: formData.image_file_id,
-                    image_file_name: formData.image_file_name,
-                    portrait_image_file_id: formData.portrait_image_file_id,
+                    landscape_image_url: formData.landscape_image_url,
+                    portrait_image_url: formData.portrait_image_url,
                     title: formData.title,
                     series: formData.series,
                     subSeries: formData.subSeries,
@@ -1410,7 +2188,11 @@
                     template_name: formData.template_name,
                     color_id: formData.color_id,
                     color_name: formData.color_name,
-                    series_color: formData.series_color
+                    series_color: formData.series_color,
+                    subseries_color: formData.subseries_color,
+                    finalseries_color: formData.finalseries_color,
+                    title_color: formData.title_color,
+                    caption_color: formData.caption_color
                 };
 
                 console.log('📤 Sending data to n8n webhook:', dataToSend);
@@ -1464,11 +2246,10 @@
 
         function init() {
             console.log('🚀 Initializing app...');
-            console.log('CONFIG:', CONFIG ? 'Loaded ✅' : 'NOT FOUND ❌');
+            console.log('CONFIG:', typeof CONFIG !== 'undefined' ? 'Loaded ✅' : 'NOT FOUND ❌');
             console.log('Telegram WebApp version:', tg.version);
             
             initializeTemplates();
-            initializeSeriesColors();
             updateProgress();
             
             loadInitialData();
@@ -1484,7 +2265,7 @@
 
         console.log('📱 Telegram WebApp SDK:', tg.version);
         console.log('🔗 N8N Webhook URL:', N8N_WEBHOOK_URL);
-        console.log('🔧 Worker API URL:', CONFIG.BACKEND.BASE_URL);
+        console.log('🔧 Worker API URL:', typeof CONFIG !== 'undefined' ? CONFIG.BACKEND.BASE_URL : 'Not configured');
     </script>
 </body>
 </html>
