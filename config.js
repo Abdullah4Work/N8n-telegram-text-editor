@@ -8,6 +8,8 @@ const CONFIG = {
             REQUEST_TRANSCRIPT: '/request-transcript',
             TRANSCRIPT_STATUS: '/transcript-status',
             SAVE_DATA: '/save-data',
+            AI_CORRECT: '/ai-correct', // ⭐ جديد
+            GET_BIN: '/get-bin', // ⭐ للقراءة من JSONBin
             HEALTH: '/health'
         }
     },
@@ -16,6 +18,26 @@ const CONFIG = {
     JSONBIN: {
         BASE_URL: 'https://api.jsonbin.io/v3/b',
         // ملاحظة: API_KEY سيتم تحميله من GitHub Secrets عبر deploy.yml
+    },
+
+    // ⭐ إعدادات Google Gemini AI
+    AI: {
+        PROVIDER: 'google-gemini',
+        MODEL: 'gemini-2.0-flash-exp', // ⭐ النموذج الجديد
+        // API Key سيتم جلبه من Environment Variables في Worker
+        // الاسم في Cloudflare Worker Environment: GOOGLE_AI_STUDIO_API
+        MAX_TOKENS: 8000,
+        TEMPERATURE: 0.3,
+        CORRECTION_PROMPT: `أنت مصحح نصوص عربية محترف. مهمتك تصحيح النص المفرغ من الصوت.
+
+قواعد التصحيح:
+1. صحح الأخطاء الإملائية والنحوية
+2. أضف علامات الترقيم المناسبة
+3. حافظ على المعنى الأصلي تماماً
+4. لا تضف أو تحذف معلومات
+5. أرجع النص المصحح فقط بدون أي مقدمات أو تعليقات
+
+النص المطلوب تصحيحه:`
     },
 
     APP: {
@@ -149,12 +171,33 @@ const CONFIG = {
     ]
 };
 
+// تجميد الكائن لمنع التعديل
+if (typeof Object.freeze === 'function') {
+    Object.freeze(CONFIG);
+    Object.freeze(CONFIG.BACKEND);
+    Object.freeze(CONFIG.BACKEND.ENDPOINTS);
+    Object.freeze(CONFIG.AI); // ⭐ تجميد إعدادات AI
+    Object.freeze(CONFIG.JSONBIN);
+    Object.freeze(CONFIG.APP);
+    Object.freeze(CONFIG.TELEGRAM);
+    CONFIG.TEMPLATES.forEach(template => Object.freeze(template));
+    CONFIG.SERIES_COLORS.forEach(color => Object.freeze(color));
+}
+
+// للاستخدام في Node.js
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = CONFIG;
 }
 
-if (typeof Object.freeze === 'function') {
-    Object.freeze(CONFIG);
-}
+console.log('✅ CONFIG loaded securely with AI support via Worker');
+console.log('🤖 AI Model:', CONFIG.AI.MODEL);
+console.log('🔒 API Keys are stored safely in Worker Environment Variables');
+```
 
-console.log('✅ CONFIG loaded securely via Worker');
+---
+
+## 🔐 **ملاحظات مهمة:**
+
+### 1️⃣ **في Cloudflare Worker يجب إضافة:**
+```
+Environment Variable Name: GOOGLE_AI_STUDIO_API
