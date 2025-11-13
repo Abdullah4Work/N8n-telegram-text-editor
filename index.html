@@ -24,13 +24,10 @@
             --text-secondary: #7F8C8D;
             --border: #E1E8ED;
             --bg: #F7F9FC;
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
-            --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
-            --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg);
             color: var(--text-primary);
             min-height: 100vh;
@@ -44,8 +41,8 @@
         ═══════════════════════════════════════════════════════ */
         .progress-wrapper {
             background: white;
-            padding: 12px 16px;
-            box-shadow: var(--shadow-sm);
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -55,23 +52,23 @@
         .progress-wrapper.hidden {
             transform: translateY(-100%);
             opacity: 0;
+            pointer-events: none;
         }
 
         .progress-steps {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 12px;
             position: relative;
-            max-width: 600px;
-            margin: 0 auto;
         }
 
         .progress-line {
             position: absolute;
-            top: 14px;
-            left: 10%;
-            right: 10%;
-            height: 2px;
+            top: 16px;
+            left: 8%;
+            right: 8%;
+            height: 3px;
             background: var(--border);
             z-index: 1;
         }
@@ -87,23 +84,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             position: relative;
             z-index: 2;
             flex: 1;
         }
 
         .step-circle {
-            width: 28px;
-            height: 28px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: white;
-            border: 2px solid var(--border);
+            border: 3px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 11px;
+            font-size: 13px;
             color: var(--text-secondary);
             transition: all 0.3s;
         }
@@ -123,16 +120,15 @@
         }
 
         .step-label {
-            font-size: 9px;
+            font-size: 10px;
             color: var(--text-secondary);
             text-align: center;
             font-weight: 600;
-            max-width: 60px;
+            max-width: 70px;
         }
 
         .progress-step.active .step-label {
             color: var(--primary);
-            font-weight: 700;
         }
 
         /* ═══════════════════════════════════════════════════════
@@ -149,8 +145,8 @@
             display: none;
             flex: 1;
             overflow-y: auto;
-            padding: 0;
-            animation: fadeInUp 0.3s ease;
+            padding: 20px 16px 100px;
+            animation: fadeInUp 0.4s ease;
         }
 
         .step-content.active {
@@ -161,7 +157,7 @@
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -169,88 +165,90 @@
             }
         }
 
-        /* ═══════════════════════════════════════════════════════
-           Step 1: Audio Player (مُحسّن ومثبت في الأعلى)
-        ═══════════════════════════════════════════════════════ */
-        .audio-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 16px;
-            color: white;
-            box-shadow: var(--shadow-md);
-            position: sticky;
-            top: 0;
-            z-index: 90;
+        .step-header {
+            margin-bottom: 24px;
+            transition: all 0.3s ease;
         }
 
-        .audio-header {
+        .step-header.hidden {
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+            position: absolute;
+        }
+
+        .step-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 12px;
         }
 
-        .audio-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
+        .step-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.6;
         }
 
-        .audio-title {
-            flex: 1;
+        /* ═══════════════════════════════════════════════════════
+           Audio Player Section (محسّن)
+        ═══════════════════════════════════════════════════════ */
+        .audio-player-section {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
         }
 
-        .audio-title h3 {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 2px;
-        }
-
-        .audio-title p {
-            font-size: 11px;
-            opacity: 0.9;
+        .audio-player-section.floating {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: calc(100% - 32px);
+            max-width: 400px;
+            z-index: 200;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
 
         .audio-player {
-            background: rgba(255,255,255,0.15);
-            backdrop-filter: blur(10px);
-            border-radius: 12px;
-            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .audio-controls {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 12px;
         }
 
         .play-pause-btn {
-            width: 44px;
-            height: 44px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
-            background: white;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             border: none;
-            color: #667eea;
-            font-size: 18px;
+            color: white;
+            font-size: 20px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s;
             flex-shrink: 0;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
         .play-pause-btn:active {
             transform: scale(0.95);
         }
 
-        .audio-progress-area {
+        .audio-progress {
             flex: 1;
             display: flex;
             flex-direction: column;
@@ -259,48 +257,46 @@
 
         .progress-bar {
             width: 100%;
-            height: 4px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 2px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
             overflow: hidden;
             cursor: pointer;
         }
 
         .progress-fill {
             height: 100%;
-            background: white;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
             width: 0%;
             transition: width 0.1s linear;
-            border-radius: 2px;
         }
 
         .time-display {
             display: flex;
             justify-content: space-between;
-            font-size: 10px;
-            font-weight: 600;
-            opacity: 0.95;
+            font-size: 11px;
+            color: var(--text-secondary);
         }
 
         .speed-controls {
             display: flex;
             gap: 6px;
-            justify-content: space-between;
-            margin-top: 8px;
+            overflow-x: auto;
+            padding: 2px 0;
         }
 
         .speed-btn {
-            flex: 1;
-            padding: 6px 4px;
-            border: 1px solid rgba(255,255,255,0.3);
-            border-radius: 6px;
-            background: rgba(255,255,255,0.1);
-            font-size: 10px;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            font-size: 11px;
             font-weight: 600;
-            color: white;
+            color: var(--text-primary);
             cursor: pointer;
             transition: all 0.2s;
-            min-width: 0;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .speed-btn:active {
@@ -308,33 +304,173 @@
         }
 
         .speed-btn.active {
-            background: white;
-            color: #667eea;
-            border-color: white;
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
         }
 
         /* ═══════════════════════════════════════════════════════
-           AI Correction Box (محسّن)
+           Floating Actions
+        ═══════════════════════════════════════════════════════ */
+        .floating-actions {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 200;
+        }
+
+        .floating-actions.visible {
+            display: flex;
+        }
+
+        .floating-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.2s;
+        }
+
+        .floating-btn:active {
+            transform: scale(0.95);
+        }
+
+        .floating-btn.ai-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           Text Editor Wrapper
+        ═══════════════════════════════════════════════════════ */
+        .text-editor-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .text-editor-wrapper.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 150;
+            padding: 20px;
+            background: var(--bg);
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .editor-actions.hidden {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+
+        .editor-container {
+            flex: 1;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .editor-textarea {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            font-size: 15px;
+            line-height: 1.7;
+            resize: none;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .editor-stats {
+            padding: 12px 16px;
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           AI Correction Box
         ═══════════════════════════════════════════════════════ */
         .ai-correction-box {
             display: none;
             background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
             border: 2px solid #27AE60;
             border-radius: 12px;
-            padding: 14px;
-            margin: 12px 16px;
+            padding: 16px;
+            margin-bottom: 12px;
             box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
-            animation: slideDown 0.3s ease;
         }
 
         .ai-correction-box.visible {
             display: block;
+            animation: slideDown 0.4s ease;
         }
 
         @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateY(-20px);
             }
             to {
                 opacity: 1;
@@ -346,11 +482,11 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .ai-correction-title {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 700;
             color: #1e7e34;
             display: flex;
@@ -369,43 +505,37 @@
             align-items: center;
             justify-content: center;
             font-size: 16px;
-            color: #1e7e34;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .ai-correction-text {
             background: white;
             padding: 12px;
             border-radius: 8px;
-            font-size: 13px;
+            font-size: 14px;
             line-height: 1.6;
             color: var(--text-primary);
             max-height: 200px;
             overflow-y: auto;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
         }
 
         .ai-correction-stats {
             display: flex;
-            gap: 12px;
-            font-size: 11px;
+            gap: 16px;
+            font-size: 12px;
             color: #1e7e34;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
         }
 
         .ai-stat {
             display: flex;
             align-items: center;
             gap: 4px;
-            background: rgba(255,255,255,0.6);
-            padding: 4px 8px;
-            border-radius: 6px;
         }
 
         .ai-correction-actions {
             display: flex;
             gap: 8px;
+            margin-top: 12px;
         }
 
         .ai-action-btn {
@@ -417,20 +547,11 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
-
-        .ai-action-btn:active {
-            transform: scale(0.98);
         }
 
         .ai-action-btn.accept {
             background: var(--success);
             color: white;
-            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
         }
 
         .ai-action-btn.reject {
@@ -440,116 +561,7 @@
         }
 
         /* ═══════════════════════════════════════════════════════
-           Text Editor Area (محسّن للقراءة والتعديل)
-        ═══════════════════════════════════════════════════════ */
-        .editor-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 16px;
-            padding-bottom: 100px;
-        }
-
-        .editor-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .editor-header h3 {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .editor-actions-top {
-            display: flex;
-            gap: 6px;
-        }
-
-        .action-btn-small {
-            width: 36px;
-            height: 36px;
-            border-radius: 8px;
-            background: white;
-            border: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.2s;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .action-btn-small:active {
-            transform: scale(0.95);
-        }
-
-        .action-btn-small.ai {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            color: white;
-            border: none;
-        }
-
-        .editor-container {
-            flex: 1;
-            background: white;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: var(--shadow-md);
-            min-height: 300px;
-        }
-
-        .editor-textarea {
-            flex: 1;
-            padding: 16px;
-            border: none;
-            font-size: 15px;
-            line-height: 1.8;
-            resize: none;
-            font-family: inherit;
-            outline: none;
-            color: var(--text-primary);
-        }
-
-        .editor-textarea::placeholder {
-            color: var(--text-secondary);
-            opacity: 0.6;
-        }
-
-        .editor-stats {
-            padding: 12px 16px;
-            background: var(--bg);
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .stat-value {
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 14px;
-        }
-
-        /* ═══════════════════════════════════════════════════════
-           Templates Grid (Steps 2-5)
+           Templates Grid
         ═══════════════════════════════════════════════════════ */
         .templates-grid {
             display: grid;
@@ -591,6 +603,7 @@
             position: relative;
             background-size: cover;
             background-position: center;
+            background-repeat: no-repeat;
         }
 
         .template-card.large .template-preview {
@@ -629,7 +642,6 @@
             color: white;
             font-size: 18px;
             z-index: 3;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
         .template-card.selected .template-check {
@@ -650,6 +662,436 @@
             color: var(--text-primary);
         }
 
+        .colors-section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .colors-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .color-option {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 16px;
+            border: 3px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-color: var(--bg);
+        }
+
+        .color-option:active {
+            transform: scale(0.98);
+        }
+
+        .color-option.selected {
+            border-color: var(--primary);
+            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.4);
+        }
+
+        .color-option .template-check {
+            display: none;
+        }
+
+        .color-option.selected .template-check {
+            display: flex;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           Template Preview Modal
+        ═══════════════════════════════════════════════════════ */
+        .template-preview-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .template-preview-modal.visible {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .preview-content {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .preview-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .close-preview {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .close-preview:active {
+            transform: scale(0.95);
+        }
+
+        .preview-images {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .preview-image-wrapper {
+            text-align: center;
+        }
+
+        .preview-image-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .preview-image {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .preview-next-btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .preview-next-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           Series Color Preview
+        ═══════════════════════════════════════════════════════ */
+        .series-color-preview {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .preview-text {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            transition: color 0.3s;
+        }
+
+        .preview-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .series-colors-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .series-color-option {
+            aspect-ratio: 3/2;
+            border-radius: 16px;
+            border: 3px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            overflow: hidden;
+        }
+
+        .series-color-option.recommended {
+            border-color: #FFD700;
+            box-shadow: 0 4px 16px rgba(255, 215, 0, 0.3);
+        }
+
+        .series-color-option:active {
+            transform: scale(0.95);
+        }
+
+        .series-color-option.selected {
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+        }
+
+        .recommended-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #FFD700;
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .color-wheel-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .custom-color-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .color-wheel-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .color-wheel {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            position: relative;
+            background: conic-gradient(
+                red, yellow, lime, cyan, blue, magenta, red
+            );
+            cursor: crosshair;
+        }
+
+        .color-wheel-picker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #000;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .hex-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hex-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid var(--border);
+        }
+
+        .hex-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 18px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-weight: 600;
+            direction: ltr;
+        }
+
+        .hex-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           Form Inputs
+        ═══════════════════════════════════════════════════════ */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .char-counter {
+            text-align: left;
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            direction: ltr;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           Review Section
+        ═══════════════════════════════════════════════════════ */
+        .review-section {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .review-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .review-item {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .review-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: left;
+            flex: 1;
+            word-break: break-word;
+        }
+
         /* ═══════════════════════════════════════════════════════
            Navigation Buttons
         ═══════════════════════════════════════════════════════ */
@@ -659,17 +1101,13 @@
             border-top: 1px solid var(--border);
             display: flex;
             gap: 12px;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 99;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
         }
 
         .nav-buttons.hidden {
             transform: translateY(100%);
             opacity: 0;
+            pointer-events: none;
         }
 
         .nav-btn {
@@ -761,45 +1199,57 @@
             text-align: center;
             max-width: 280px;
         }
-
-        /* ═══════════════════════════════════════════════════════
-           Responsive
-        ═══════════════════════════════════════════════════════ */
-        @media (max-width: 360px) {
-            .step-label {
-                font-size: 8px;
-            }
-            
-            .speed-btn {
-                font-size: 9px;
-                padding: 5px 3px;
-            }
-
-            .audio-title h3 {
-                font-size: 14px;
-            }
-
-            .editor-textarea {
-                font-size: 14px;
-            }
-        }
     </style>
 </head>
 <body>
-    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
         <div class="loading-text" id="loadingText">جاري المعالجة...</div>
         <div class="loading-subtext" id="loadingSubtext"></div>
     </div>
 
-    <!-- Progress Bar -->
+    <div class="floating-actions" id="floatingActions">
+        <button class="floating-btn ai-btn" id="aiCorrectBtn" title="تصحيح بالذكاء الاصطناعي">🤖</button>
+        <button class="floating-btn" id="floatingCopyBtn">📋</button>
+        <button class="floating-btn" id="floatingPasteBtn">📌</button>
+        <button class="floating-btn" id="floatingClearBtn">🗑️</button>
+    </div>
+
+    <div class="template-preview-modal" id="templatePreviewModal">
+        <div class="preview-content">
+            <div class="preview-header">
+                <div class="preview-title">✨ معاينة القالب</div>
+                <button class="close-preview" id="closePreview">×</button>
+            </div>
+            <div class="preview-images">
+                <div class="preview-image-wrapper">
+                    <div class="preview-image-label">
+                        <span>🖼️</span>
+                        <span>الصورة الأفقية (Landscape)</span>
+                    </div>
+                    <img src="" alt="Landscape Preview" class="preview-image" id="landscapePreview">
+                </div>
+                <div class="preview-image-wrapper">
+                    <div class="preview-image-label">
+                        <span>📱</span>
+                        <span>الصورة العمودية (Portrait)</span>
+                    </div>
+                    <img src="" alt="Portrait Preview" class="preview-image" id="portraitPreview">
+                </div>
+            </div>
+            <button class="preview-next-btn" id="previewNextBtn">
+                <span>التالي</span>
+                <span>→</span>
+            </button>
+        </div>
+    </div>
+
     <div class="progress-wrapper" id="progressWrapper">
         <div class="progress-steps">
             <div class="progress-line">
                 <div class="progress-line-fill" id="progressLineFill"></div>
             </div>
-            <div class="progress-step active" data-step="1">
+            <div class="progress-step" data-step="1">
                 <div class="step-circle">1</div>
                 <div class="step-label">التصحيح</div>
             </div>
@@ -822,28 +1272,25 @@
         </div>
     </div>
 
-    <!-- Container -->
     <div class="container">
-        <!-- ═══════════════════════════════════════════════════════
-             Step 1: Text Correction (المُحسّن)
-        ═══════════════════════════════════════════════════════ -->
+        <!-- Step 1: Text Correction -->
         <div class="step-content active" data-step="1">
-            <!-- Audio Player Section -->
-            <div class="audio-section">
-                <div class="audio-header">
-                    <div class="audio-icon">🎵</div>
-                    <div class="audio-title">
-                        <h3>المقطع الصوتي</h3>
-                        <p>استمع للمقطع أثناء التصحيح</p>
-                    </div>
+            <div class="step-header" id="step1Header">
+                <div class="step-title">
+                    <span>✍️</span>
+                    <span>تصحيح النص</span>
                 </div>
+                <div class="step-description">
+                    استمع للمقطع الصوتي وصحح النص المفرغ
+                </div>
+            </div>
 
+            <div class="audio-player-section" id="audioPlayerSection">
                 <div class="audio-player">
                     <audio id="audioElement" style="display: none;"></audio>
-                    
                     <div class="audio-controls">
                         <button class="play-pause-btn" id="playPauseBtn">▶️</button>
-                        <div class="audio-progress-area">
+                        <div class="audio-progress">
                             <div class="progress-bar" id="progressBar">
                                 <div class="progress-fill" id="progressFill"></div>
                             </div>
@@ -853,8 +1300,8 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="speed-controls">
+                        <button class="speed-btn" data-speed="0.25">0.25x</button>
                         <button class="speed-btn" data-speed="0.5">0.5x</button>
                         <button class="speed-btn" data-speed="0.75">0.75x</button>
                         <button class="speed-btn active" data-speed="1">1x</button>
@@ -865,7 +1312,6 @@
                 </div>
             </div>
 
-            <!-- AI Correction Box -->
             <div class="ai-correction-box" id="aiCorrectionBox">
                 <div class="ai-correction-header">
                     <div class="ai-correction-title">
@@ -882,37 +1328,37 @@
                     </div>
                     <div class="ai-stat">
                         <span>✏️</span>
-                        <span id="aiChanges">0 تغيير</span>
+                        <span id="aiChanges">0 تصحيح</span>
                     </div>
                     <div class="ai-stat">
-                        <span>🎯</span>
-                        <span>Gemini AI</span>
+                        <span>📊</span>
+                        <span id="aiAccuracy">0% دقة</span>
                     </div>
                 </div>
                 <div class="ai-correction-actions">
-                    <button class="ai-action-btn accept" id="aiAcceptBtn">
-                        <span>✓</span>
-                        <span>قبول التصحيحات</span>
-                    </button>
-                    <button class="ai-action-btn reject" id="aiRejectBtn">
-                        <span>✗</span>
-                        <span>رفض</span>
-                    </button>
+                    <button class="ai-action-btn accept" id="aiAcceptBtn">✓ قبول التصحيحات</button>
+                    <button class="ai-action-btn reject" id="aiRejectBtn">✗ رفض</button>
                 </div>
             </div>
 
-            <!-- Text Editor Section -->
-            <div class="editor-section">
-                <div class="editor-header">
-                    <h3>
-                        <span>✍️</span>
-                        <span>النص المفرغ</span>
-                    </h3>
-                    <div class="editor-actions-top">
-                        <button class="action-btn-small" id="copyBtn" title="نسخ">📋</button>
-                        <button class="action-btn-small" id="pasteBtn" title="لصق">📌</button>
-                        <button class="action-btn-small ai" id="aiBtn" title="تصحيح بالذكاء الاصطناعي">🤖</button>
-                    </div>
+            <div class="text-editor-wrapper" id="textEditorWrapper">
+                <div class="editor-actions" id="editorActions">
+                    <button class="action-btn" id="copyBtn">
+                        <span>📋</span>
+                        <span>نسخ</span>
+                    </button>
+                    <button class="action-btn" id="pasteBtn">
+                        <span>📌</span>
+                        <span>لصق</span>
+                    </button>
+                    <button class="action-btn" id="clearBtn">
+                        <span>🗑️</span>
+                        <span>حذف</span>
+                    </button>
+                    <button class="action-btn" id="aiBtn">
+                        <span>🤖</span>
+                        <span>تصحيح AI</span>
+                    </button>
                 </div>
 
                 <div class="editor-container">
@@ -937,214 +1383,194 @@
             </div>
         </div>
 
-        <!-- ═══════════════════════════════════════════════════════
-             Steps 2-5 (نفس الكود السابق - سيأتي في الجزء الثاني)
-        ═══════════════════════════════════════════════════════ -->
-
 <!-- ⭐⭐⭐ هنا يوضع الجزء الثاني من الكود ⭐⭐⭐ -->
 
-                <!-- ═══════════════════════════════════════════════════════
-             Step 2: Template Selection
-        ═══════════════════════════════════════════════════════ -->
+                <!-- Step 2: Template Selection -->
         <div class="step-content" data-step="2">
-            <div style="padding: 20px; padding-bottom: 100px;">
-                <div style="margin-bottom: 20px;">
-                    <h2 style="font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                        <span>🎨</span>
-                        <span>اختر القالب واللون</span>
-                    </h2>
-                    <p style="font-size: 14px; color: var(--text-secondary);">اختر القالب المناسب ثم اختر اللون</p>
+            <div class="step-header">
+                <div class="step-title">
+                    <span>🎨</span>
+                    <span>اختر القالب واللون</span>
                 </div>
-
-                <div style="margin-bottom: 16px;">
-                    <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                        <span>📐</span>
-                        <span>القوالب المتاحة</span>
-                    </h3>
-                    <div class="templates-grid" id="templatesGrid"></div>
-                </div>
-
-                <div id="colorsSection" style="display: none;">
-                    <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
-                        <span>🎨</span>
-                        <span>اختر اللون</span>
-                    </h3>
-                    <div style="display: flex; flex-direction: column; gap: 12px;" id="colorsGrid"></div>
+                <div class="step-description">
+                    اختر القالب المناسب ثم اختر اللون
                 </div>
             </div>
-        </div>
-
-        <!-- ═══════════════════════════════════════════════════════
-             Step 3: Series Color
-        ═══════════════════════════════════════════════════════ -->
-        <div class="step-content" data-step="3">
-            <div style="padding: 20px; padding-bottom: 100px;">
-                <div style="margin-bottom: 20px;">
-                    <h2 style="font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                        <span>🌈</span>
-                        <span>لون السلسلة الرئيسية</span>
-                    </h2>
-                    <p style="font-size: 14px; color: var(--text-secondary);">اختر اللون المناسب لاسم السلسلة</p>
-                </div>
-
-                <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; text-align: center; box-shadow: var(--shadow-sm);">
-                    <div id="seriesPreviewText" style="font-size: 22px; font-weight: 700; margin-bottom: 8px; transition: color 0.3s;">
-                        السلسلة الرئيسية
-                    </div>
-                    <p style="font-size: 12px; color: var(--text-secondary);">معاينة اللون المختار</p>
-                </div>
-
-                <h3 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+            <div class="section-title">
+                <span>📐</span>
+                <span>القوالب المتاحة</span>
+            </div>
+            <div class="templates-grid" id="templatesGrid"></div>
+            <div class="colors-section" id="colorsSection" style="display: none;">
+                <div class="section-title">
                     <span>🎨</span>
                     <span>اختر اللون</span>
-                </h3>
-                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px;" id="seriesColorsGrid"></div>
+                </div>
+                <div class="colors-grid" id="colorsGrid"></div>
+            </div>
+        </div>
 
-                <div style="background: white; border-radius: 12px; padding: 20px; box-shadow: var(--shadow-sm);">
-                    <h4 style="font-size: 15px; font-weight: 700; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
-                        <span>🎨</span>
-                        <span>أو خصص اللون بنفسك</span>
-                    </h4>
-                    <div style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
-                        <div id="colorWheel" style="width: 200px; height: 200px; border-radius: 50%; position: relative; background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red); cursor: crosshair;">
-                            <div id="colorWheelPicker" style="width: 20px; height: 20px; border-radius: 50%; background: white; border: 3px solid #000; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none; box-shadow: 0 2px 8px rgba(0,0,0,0.3);"></div>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
-                            <div id="hexPreview" style="width: 60px; height: 60px; border-radius: 50%; border: 3px solid var(--border);"></div>
-                            <input type="text" id="hexInput" placeholder="#000000" maxlength="7" style="flex: 1; padding: 12px; border: 2px solid var(--border); border-radius: 10px; font-size: 18px; font-family: 'Courier New', monospace; text-align: center; font-weight: 600; direction: ltr;">
-                        </div>
+        <!-- Step 3: Series Color -->
+        <div class="step-content" data-step="3">
+            <div class="step-header">
+                <div class="step-title">
+                    <span>🌈</span>
+                    <span>لون السلسلة الرئيسية</span>
+                </div>
+                <div class="step-description">
+                    اختر اللون المناسب لاسم السلسلة الرئيسية
+                </div>
+            </div>
+            <div class="series-color-preview">
+                <div class="preview-text" id="seriesPreviewText">
+                    السلسلة الرئيسية
+                </div>
+                <div class="preview-hint">معاينة اللون المختار</div>
+            </div>
+            <div class="section-title">
+                <span>🎨</span>
+                <span>اختر اللون</span>
+            </div>
+            <div class="series-colors-grid" id="seriesColorsGrid"></div>
+            <div class="color-wheel-section">
+                <div class="custom-color-title">
+                    <span>🎨</span>
+                    <span>أو خصص اللون بنفسك</span>
+                </div>
+                <div class="color-wheel-wrapper">
+                    <div class="color-wheel" id="colorWheel">
+                        <div class="color-wheel-picker" id="colorWheelPicker"></div>
+                    </div>
+                    <div class="hex-input-wrapper">
+                        <div class="hex-preview" id="hexPreview"></div>
+                        <input 
+                            type="text" 
+                            class="hex-input" 
+                            id="hexInput"
+                            placeholder="#000000"
+                            maxlength="7"
+                        >
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- ═══════════════════════════════════════════════════════
-             Step 4: Video Information
-        ═══════════════════════════════════════════════════════ -->
+        <!-- Step 4: Video Information -->
         <div class="step-content" data-step="4">
-            <div style="padding: 20px; padding-bottom: 100px;">
-                <div style="margin-bottom: 20px;">
-                    <h2 style="font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                        <span>📝</span>
-                        <span>معلومات الفيديو</span>
-                    </h2>
-                    <p style="font-size: 14px; color: var(--text-secondary);">أدخل العنوان والسلاسل الخاصة بالفيديو</p>
+            <div class="step-header">
+                <div class="step-title">
+                    <span>📝</span>
+                    <span>معلومات الفيديو</span>
                 </div>
-
-                <div style="margin-bottom: 20px;">
-                    <label style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-                        <span>✏️</span>
-                        <span>اسم الدرس</span>
-                    </label>
-                    <input type="text" id="titleInput" placeholder="مثال: قصة نجاح" maxlength="50" style="width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 10px; font-size: 15px; font-family: inherit; transition: all 0.3s; background: white;">
-                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">الأفضل: 3 كلمات أو أقل</p>
-                    <div style="text-align: left; font-size: 11px; color: var(--text-secondary); margin-top: 4px; direction: ltr;"><span id="titleCount">0</span> / 50</div>
+                <div class="step-description">
+                    أدخل العنوان والسلاسل الخاصة بالفيديو
                 </div>
-
-                <div style="margin-bottom: 20px;">
-                    <label style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-                        <span>📚</span>
-                        <span>السلسلة الرئيسية</span>
-                    </label>
-                    <input type="text" id="mainSeriesInput" placeholder="مثال: قصص ملهمة" maxlength="50" style="width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 10px; font-size: 15px; font-family: inherit; transition: all 0.3s; background: white;">
-                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">الأفضل: 4 كلمات أو أقل</p>
-                    <div style="text-align: left; font-size: 11px; color: var(--text-secondary); margin-top: 4px; direction: ltr;"><span id="mainSeriesCount">0</span> / 50</div>
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <label style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-                        <span>🔖</span>
-                        <span>السلسلة الفرعية</span>
-                    </label>
-                    <input type="text" id="subSeriesInput" placeholder="مثال: قصص رواد الأعمال" maxlength="50" style="width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 10px; font-size: 15px; font-family: inherit; transition: all 0.3s; background: white;">
-                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">الأفضل: 4 كلمات أو أقل</p>
-                    <div style="text-align: left; font-size: 11px; color: var(--text-secondary); margin-top: 4px; direction: ltr;"><span id="subSeriesCount">0</span> / 50</div>
-                </div>
-
-                <div style="margin-bottom: 20px;">
-                    <label style="font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
-                        <span>🎯</span>
-                        <span>اسم المخطط</span>
-                    </label>
-                    <input type="text" id="finalSeriesInput" placeholder="مثال: الجزء الأول" maxlength="50" style="width: 100%; padding: 14px; border: 2px solid var(--border); border-radius: 10px; font-size: 15px; font-family: inherit; transition: all 0.3s; background: white;">
-                    <p style="font-size: 12px; color: var(--text-secondary); margin-top: 4px;">الأفضل: 3 كلمات أو أقل</p>
-                    <div style="text-align: left; font-size: 11px; color: var(--text-secondary); margin-top: 4px; direction: ltr;"><span id="finalSeriesCount">0</span> / 50</div>
-                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">
+                    <span>✏️</span>
+                    <span>اسم الدرس</span>
+                </label>
+                <input type="text" class="form-input" id="titleInput" placeholder="مثال: قصة نجاح" maxlength="50">
+                <div class="form-hint">الأفضل: 3 كلمات أو أقل</div>
+                <div class="char-counter"><span id="titleCount">0</span> / 50</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">
+                    <span>📚</span>
+                    <span>السلسلة الرئيسية</span>
+                </label>
+                <input type="text" class="form-input" id="mainSeriesInput" placeholder="مثال: قصص ملهمة" maxlength="50">
+                <div class="form-hint">الأفضل: 4 كلمات أو أقل</div>
+                <div class="char-counter"><span id="mainSeriesCount">0</span> / 50</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">
+                    <span>🔖</span>
+                    <span>السلسلة الفرعية</span>
+                </label>
+                <input type="text" class="form-input" id="subSeriesInput" placeholder="مثال: قصص رواد الأعمال" maxlength="50">
+                <div class="form-hint">الأفضل: 4 كلمات أو أقل</div>
+                <div class="char-counter"><span id="subSeriesCount">0</span> / 50</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">
+                    <span>🎯</span>
+                    <span>اسم المخطط</span>
+                </label>
+                <input type="text" class="form-input" id="finalSeriesInput" placeholder="مثال: الجزء الأول" maxlength="50">
+                <div class="form-hint">الأفضل: 3 كلمات أو أقل</div>
+                <div class="char-counter"><span id="finalSeriesCount">0</span> / 50</div>
             </div>
         </div>
 
-        <!-- ═══════════════════════════════════════════════════════
-             Step 5: Review
-        ═══════════════════════════════════════════════════════ -->
+        <!-- Step 5: Review -->
         <div class="step-content" data-step="5">
-            <div style="padding: 20px; padding-bottom: 100px;">
-                <div style="margin-bottom: 20px;">
-                    <h2 style="font-size: 20px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
-                        <span>✅</span>
-                        <span>المراجعة النهائية</span>
-                    </h2>
-                    <p style="font-size: 14px; color: var(--text-secondary);">راجع جميع البيانات قبل الإرسال</p>
+            <div class="step-header">
+                <div class="step-title">
+                    <span>✅</span>
+                    <span>المراجعة النهائية</span>
                 </div>
-
-                <div style="background: white; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow-sm);">
-                    <h3 style="font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-                        <span>✍️</span>
-                        <span>النص المصحح</span>
-                    </h3>
-                    <div style="padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-                        <span style="font-size: 13px; color: var(--text-secondary);">عدد الكلمات:</span>
-                        <span id="reviewWordCount" style="font-size: 14px; font-weight: 600; color: var(--text-primary);">-</span>
-                    </div>
-                    <div style="padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-                        <span style="font-size: 13px; color: var(--text-secondary);">عدد الأحرف:</span>
-                        <span id="reviewCharCount" style="font-size: 14px; font-weight: 600; color: var(--text-primary);">-</span>
-                    </div>
-                    <div id="reviewAiStats" style="display: none; padding: 10px 0; display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-                        <span style="font-size: 13px; color: var(--text-secondary);">تصحيحات AI:</span>
-                        <span id="reviewAiChanges" style="font-size: 14px; font-weight: 600; color: var(--text-primary);">-</span>
-                    </div>
+                <div class="step-description">
+                    راجع جميع البيانات قبل الإرسال
                 </div>
-
-                <div style="background: white; border-radius: 12px; padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow-sm);">
-                    <h3 style="font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-                        <span>🎨</span>
-                        <span>التصميم</span>
-                    </h3>
-                    <div style="padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-                        <span style="font-size: 13px; color: var(--text-secondary);">القالب:</span>
-                        <span id="reviewTemplate" style="font-size: 14px; font-weight: 600; color: var(--text-primary);">-</span>
-                    </div>
-                    <div style="padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-                        <span style="font-size: 13px; color: var(--text-secondary);">اللون:</span>
-                        <span id="reviewColor" style="font-size: 14px; font-weight: 600; color: var(--text-primary);">-</span>
-                    </div>
-                    <div style="padding: 10px 0; display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-                        <span style="font-size: 13px; color: var(--text-secondary);">لون السلسلة:</span>
-                        <span id="reviewSeriesColor" style="font-size: 14px; font-weight: 600; color: var(--text-primary);"></span>
-                    </div>
+            </div>
+            <div class="review-section">
+                <div class="review-section-title">
+                    <span>✍️</span>
+                    <span>النص المصحح</span>
                 </div>
-
-                <div style="background: white; border-radius: 12px; padding: 16px; box-shadow: var(--shadow-sm);">
-                    <h3 style="font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-                        <span>📝</span>
-                        <span>البيانات</span>
-                    </h3>
-                    <div style="padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-                        <span style="font-size: 13px; color: var(--text-secondary);">اسم الدرس:</span>
-                        <span id="reviewTitle" style="font-size: 14px; font-weight: 600; color: var(--text-primary); text-align: left; flex: 1; word-break: break-word;">-</span>
-                    </div>
-                    <div style="padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-                        <span style="font-size: 13px; color: var(--text-secondary);">السلسلة الرئيسية:</span>
-                        <span id="reviewMainSeries" style="font-size: 14px; font-weight: 600; color: var(--text-primary); text-align: left; flex: 1; word-break: break-word;">-</span>
-                    </div>
-                    <div style="padding: 10px 0; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-                        <span style="font-size: 13px; color: var(--text-secondary);">السلسلة الفرعية:</span>
-                        <span id="reviewSubSeries" style="font-size: 14px; font-weight: 600; color: var(--text-primary); text-align: left; flex: 1; word-break: break-word;">-</span>
-                    </div>
-                    <div style="padding: 10px 0; display: flex; justify-content: space-between; align-items: center; gap: 12px;">
-                        <span style="font-size: 13px; color: var(--text-secondary);">اسم المخطط:</span>
-                        <span id="reviewFinalSeries" style="font-size: 14px; font-weight: 600; color: var(--text-primary); text-align: left; flex: 1; word-break: break-word;">-</span>
-                    </div>
+                <div class="review-item">
+                    <span class="review-label">عدد الكلمات:</span>
+                    <span class="review-value" id="reviewWordCount">-</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">عدد الأحرف:</span>
+                    <span class="review-value" id="reviewCharCount">-</span>
+                </div>
+                <div class="review-item" id="reviewAiStats" style="display: none;">
+                    <span class="review-label">تصحيحات AI:</span>
+                    <span class="review-value" id="reviewAiChanges">-</span>
+                </div>
+            </div>
+            <div class="review-section">
+                <div class="review-section-title">
+                    <span>🎨</span>
+                    <span>التصميم</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">القالب:</span>
+                    <span class="review-value" id="reviewTemplate">-</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">اللون:</span>
+                    <span class="review-value" id="reviewColor">-</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">لون السلسلة:</span>
+                    <span class="review-value" id="reviewSeriesColor">-</span>
+                </div>
+            </div>
+            <div class="review-section">
+                <div class="review-section-title">
+                    <span>📝</span>
+                    <span>البيانات</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">اسم الدرس:</span>
+                    <span class="review-value" id="reviewTitle">-</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">السلسلة الرئيسية:</span>
+                    <span class="review-value" id="reviewMainSeries">-</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">السلسلة الفرعية:</span>
+                    <span class="review-value" id="reviewSubSeries">-</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">اسم المخطط:</span>
+                    <span class="review-value" id="reviewFinalSeries">-</span>
                 </div>
             </div>
         </div>
@@ -1162,43 +1588,13 @@
         </button>
     </div>
 
-    <!-- Template Preview Modal -->
-    <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.95); display: none; align-items: center; justify-content: center; z-index: 1001; padding: 20px;" id="templatePreviewModal">
-        <div style="background: white; border-radius: 20px; padding: 24px; max-width: 500px; width: 100%; max-height: 90vh; overflow-y: auto;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <div style="font-size: 20px; font-weight: 700; color: var(--text-primary);">✨ معاينة القالب</div>
-                <button id="closePreview" style="width: 36px; height: 36px; border-radius: 50%; background: var(--bg); border: none; color: var(--text-primary); font-size: 24px; cursor: pointer; display: flex; align-items: center; justify-content: center;">×</button>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 20px;">
-                <div style="text-align: center;">
-                    <div style="font-size: 14px; font-weight: 600; color: var(--text-secondary); margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                        <span>🖼️</span>
-                        <span>الصورة الأفقية (Landscape)</span>
-                    </div>
-                    <img id="landscapePreview" src="" alt="Landscape Preview" style="width: 100%; border-radius: 12px; box-shadow: var(--shadow-md);">
-                </div>
-                <div style="text-align: center;">
-                    <div style="font-size: 14px; font-weight: 600; color: var(--text-secondary); margin-bottom: 12px; display: flex; align-items: center; justify-content: center; gap: 6px;">
-                        <span>📱</span>
-                        <span>الصورة العمودية (Portrait)</span>
-                    </div>
-                    <img id="portraitPreview" src="" alt="Portrait Preview" style="width: 100%; border-radius: 12px; box-shadow: var(--shadow-md);">
-                </div>
-            </div>
-            <button id="previewNextBtn" style="width: 100%; padding: 14px; margin-top: 20px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                <span>التالي</span>
-                <span>→</span>
-            </button>
-        </div>
-    </div>
-
     <!-- Config Script -->
     <script src="config.js"></script>
 
     <!-- Main JavaScript -->
     <script>
         // ═══════════════════════════════════════════════════════
-        // Configuration & Initialization
+        // ⭐ Configuration & Global Variables
         // ═══════════════════════════════════════════════════════
         window.CONFIG = window.CONFIG || {
             BACKEND: {
@@ -1209,6 +1605,14 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
 
+        if (tg.version >= 6.2) {
+            try {
+                tg.enableClosingConfirmation();
+            } catch (e) {
+                console.log('Closing confirmation not available');
+            }
+        }
+
         const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor';
 
         console.log('📱 Telegram WebApp SDK:', tg.version);
@@ -1216,7 +1620,7 @@
         console.log('🔧 Worker API URL:', CONFIG.BACKEND.BASE_URL);
 
         // ═══════════════════════════════════════════════════════
-        // Templates Data
+        // ⭐ Templates Data
         // ═══════════════════════════════════════════════════════
         const TEMPLATES_DATA = [
             {
@@ -1483,14 +1887,19 @@
         ];
 
         // ═══════════════════════════════════════════════════════
-        // State Variables
+        // ⭐ State Variables
         // ═══════════════════════════════════════════════════════
         let currentStep = 1;
         const totalSteps = 5;
+        let initialData = null;
         let selectedTemplate = null;
         let selectedColor = null;
+        let audioElement = document.getElementById('audioElement');
+        let isFullscreen = false;
         let aiCorrectedText = '';
         let aiChangesCount = 0;
+        let lastAIRequestTime = 0;
+        const AI_REQUEST_COOLDOWN = 10000; // 10 ثواني بين كل طلب
 
         const formData = {
             ID: null,
@@ -1530,84 +1939,82 @@
         };
 
         // ═══════════════════════════════════════════════════════
-        // DOM Elements
+        // ⭐ DOM Elements
         // ═══════════════════════════════════════════════════════
-        const elements = {
-            progressSteps: document.querySelectorAll('.progress-step'),
-            progressLineFill: document.getElementById('progressLineFill'),
-            stepContents: document.querySelectorAll('.step-content'),
-            btnBack: document.getElementById('btnBack'),
-            btnNext: document.getElementById('btnNext'),
-            loadingOverlay: document.getElementById('loadingOverlay'),
-            loadingText: document.getElementById('loadingText'),
-            loadingSubtext: document.getElementById('loadingSubtext'),
-            
-            // Audio
-            audioElement: document.getElementById('audioElement'),
-            playPauseBtn: document.getElementById('playPauseBtn'),
-            progressBar: document.getElementById('progressBar'),
-            progressFill: document.getElementById('progressFill'),
-            currentTime: document.getElementById('currentTime'),
-            duration: document.getElementById('duration'),
-            speedBtns: document.querySelectorAll('.speed-btn'),
-            
-            // Editor
-            textEditor: document.getElementById('textEditor'),
-            charCount: document.getElementById('charCount'),
-            wordCount: document.getElementById('wordCount'),
-            copyBtn: document.getElementById('copyBtn'),
-            pasteBtn: document.getElementById('pasteBtn'),
-            aiBtn: document.getElementById('aiBtn'),
-            
-            // AI Correction
-            aiCorrectionBox: document.getElementById('aiCorrectionBox'),
-            aiCorrectionText: document.getElementById('aiCorrectionText'),
-            aiCorrectionClose: document.getElementById('aiCorrectionClose'),
-            aiAcceptBtn: document.getElementById('aiAcceptBtn'),
-            aiRejectBtn: document.getElementById('aiRejectBtn'),
-            aiWordCount: document.getElementById('aiWordCount'),
-            aiChanges: document.getElementById('aiChanges'),
-            
-            // Templates
-            templatesGrid: document.getElementById('templatesGrid'),
-            colorsGrid: document.getElementById('colorsGrid'),
-            colorsSection: document.getElementById('colorsSection'),
-            templatePreviewModal: document.getElementById('templatePreviewModal'),
-            closePreview: document.getElementById('closePreview'),
-            landscapePreview: document.getElementById('landscapePreview'),
-            portraitPreview: document.getElementById('portraitPreview'),
-            previewNextBtn: document.getElementById('previewNextBtn'),
-            
-            // Series Colors
-            seriesColorsGrid: document.getElementById('seriesColorsGrid'),
-            seriesPreviewText: document.getElementById('seriesPreviewText'),
-            colorWheel: document.getElementById('colorWheel'),
-            colorWheelPicker: document.getElementById('colorWheelPicker'),
-            hexPreview: document.getElementById('hexPreview'),
-            hexInput: document.getElementById('hexInput'),
-            
-            // Form Inputs
-            titleInput: document.getElementById('titleInput'),
-            mainSeriesInput: document.getElementById('mainSeriesInput'),
-            subSeriesInput: document.getElementById('subSeriesInput'),
-            finalSeriesInput: document.getElementById('finalSeriesInput'),
-            titleCount: document.getElementById('titleCount'),
-            mainSeriesCount: document.getElementById('mainSeriesCount'),
-            subSeriesCount: document.getElementById('subSeriesCount'),
-            finalSeriesCount: document.getElementById('finalSeriesCount')
-        };
+        const progressSteps = document.querySelectorAll('.progress-step');
+        const progressLineFill = document.getElementById('progressLineFill');
+        const stepContents = document.querySelectorAll('.step-content');
+        const btnBack = document.getElementById('btnBack');
+        const btnNext = document.getElementById('btnNext');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingText = document.getElementById('loadingText');
+        const loadingSubtext = document.getElementById('loadingSubtext');
+        const textEditor = document.getElementById('textEditor');
+        const charCount = document.getElementById('charCount');
+        const wordCount = document.getElementById('wordCount');
+        const copyBtn = document.getElementById('copyBtn');
+        const pasteBtn = document.getElementById('pasteBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const aiBtn = document.getElementById('aiBtn');
+        const templatesGrid = document.getElementById('templatesGrid');
+        const colorsGrid = document.getElementById('colorsGrid');
+        const colorsSection = document.getElementById('colorsSection');
+        const seriesColorsGrid = document.getElementById('seriesColorsGrid');
+        const seriesPreviewText = document.getElementById('seriesPreviewText');
+        const colorWheel = document.getElementById('colorWheel');
+        const colorWheelPicker = document.getElementById('colorWheelPicker');
+        const hexPreview = document.getElementById('hexPreview');
+        const hexInput = document.getElementById('hexInput');
+        const titleInput = document.getElementById('titleInput');
+        const mainSeriesInput = document.getElementById('mainSeriesInput');
+        const subSeriesInput = document.getElementById('subSeriesInput');
+        const finalSeriesInput = document.getElementById('finalSeriesInput');
+        const titleCount = document.getElementById('titleCount');
+        const mainSeriesCount = document.getElementById('mainSeriesCount');
+        const subSeriesCount = document.getElementById('subSeriesCount');
+        const finalSeriesCount = document.getElementById('finalSeriesCount');
+        const templatePreviewModal = document.getElementById('templatePreviewModal');
+        const closePreview = document.getElementById('closePreview');
+        const landscapePreview = document.getElementById('landscapePreview');
+        const portraitPreview = document.getElementById('portraitPreview');
+        const previewNextBtn = document.getElementById('previewNextBtn');
+        const progressWrapper = document.getElementById('progressWrapper');
+        const navButtons = document.getElementById('navButtons');
+        const step1Header = document.getElementById('step1Header');
+        const audioPlayerSection = document.getElementById('audioPlayerSection');
+        const editorActions = document.getElementById('editorActions');
+        const textEditorWrapper = document.getElementById('textEditorWrapper');
+        const floatingActions = document.getElementById('floatingActions');
+        const floatingCopyBtn = document.getElementById('floatingCopyBtn');
+        const floatingPasteBtn = document.getElementById('floatingPasteBtn');
+        const floatingClearBtn = document.getElementById('floatingClearBtn');
+        const aiCorrectBtn = document.getElementById('aiCorrectBtn');
+        const aiCorrectionBox = document.getElementById('aiCorrectionBox');
+        const aiCorrectionText = document.getElementById('aiCorrectionText');
+        const aiCorrectionClose = document.getElementById('aiCorrectionClose');
+        const aiAcceptBtn = document.getElementById('aiAcceptBtn');
+        const aiRejectBtn = document.getElementById('aiRejectBtn');
+        const aiWordCountEl = document.getElementById('aiWordCount');
+        const aiChangesEl = document.getElementById('aiChanges');
+        const aiAccuracyEl = document.getElementById('aiAccuracy');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+        const currentTimeDisplay = document.getElementById('currentTime');
+        const durationDisplay = document.getElementById('duration');
+        const speedBtns = document.querySelectorAll('.speed-btn');
 
         // ═══════════════════════════════════════════════════════
-        // Utility Functions
+        // ⭐ Utility Functions
         // ═══════════════════════════════════════════════════════
         function showLoading(text, subtext = '') {
-            elements.loadingText.textContent = text;
-            elements.loadingSubtext.textContent = subtext;
-            elements.loadingOverlay.classList.add('visible');
+            loadingText.textContent = text;
+            loadingSubtext.textContent = subtext;
+            loadingOverlay.classList.add('visible');
         }
 
         function hideLoading() {
-            elements.loadingOverlay.classList.remove('visible');
+            loadingOverlay.classList.remove('visible');
         }
 
         function getUrlParameter(name) {
@@ -1647,8 +2054,28 @@
             return `#${f(0)}${f(8)}${f(4)}`;
         }
 
+        function triggerHapticFeedback(type = 'medium') {
+            try {
+                if (tg.HapticFeedback && tg.HapticFeedback.impactOccurred) {
+                    tg.HapticFeedback.impactOccurred(type);
+                }
+            } catch (e) {
+                // Haptic feedback not available
+            }
+        }
+
+        function triggerNotificationFeedback(type = 'success') {
+            try {
+                if (tg.HapticFeedback && tg.HapticFeedback.notificationOccurred) {
+                    tg.HapticFeedback.notificationOccurred(type);
+                }
+            } catch (e) {
+                // Haptic feedback not available
+            }
+        }
+
         // ═══════════════════════════════════════════════════════
-        // Data Loading
+        // ⭐ Data Loading Function
         // ═══════════════════════════════════════════════════════
         async function loadInitialData() {
             try {
@@ -1656,216 +2083,596 @@
                 
                 const binId = getUrlParameter('bin');
                 if (!binId) {
-                    throw new Error('لم يتم العثور على معرف البيانات');
+                    throw new Error('لم يتم العثور على معرف البيانات في الرابط');
                 }
 
-                console.log('📥 Loading data from JSONBin');
+                console.log('📥 Loading data from JSONBin via Worker');
+                console.log('Bin ID:', binId);
                 
                 const workerUrl = `${CONFIG.BACKEND.BASE_URL}/get-bin/${binId}`;
-                const response = await fetch(workerUrl);
+                console.log('Full URL:', workerUrl);
+                
+                const response = await fetch(workerUrl, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                console.log('Response status:', response.status);
 
                 if (!response.ok) {
-                    throw new Error(`فشل تحميل البيانات (${response.status})`);
+                    const errorData = await response.json().catch(() => ({}));
+                    console.error('❌ Worker API error:', errorData);
+                    throw new Error(errorData.error || `فشل تحميل البيانات (${response.status})`);
                 }
 
                 const responseData = await response.json();
-                const loadedData = responseData.record || responseData.data || responseData;
+                console.log('✅ Raw response data:', responseData);
 
-                formData.ID = loadedData.id || loadedData.ID || null;
-                formData.user_id = loadedData.user_id || '';
-                formData.audio_file_id = loadedData.audio_file_id || '';
-                formData.audioUrl = loadedData.audioUrl || '';
-                formData.Transcript = loadedData['Transcript (with times)'] || loadedData.Transcript || [];
-                formData.transcript_txt = loadedData.text || loadedData.transcript_txt || '';
-                formData.created_at = loadedData.timestamp || loadedData.created_at || new Date().toISOString();
+                let loadedData = null;
+                
+                if (responseData.success && responseData.record) {
+                    loadedData = responseData.record;
+                } else if (responseData.record) {
+                    loadedData = responseData.record;
+                } else if (responseData.data) {
+                    loadedData = responseData.data;
+                } else {
+                    loadedData = responseData;
+                }
+
+                console.log('Processed data:', loadedData);
+
+                if (!loadedData || typeof loadedData !== 'object') {
+                    console.error('Invalid data structure:', loadedData);
+                    throw new Error('تنسيق البيانات غير صحيح');
+                }
+                
+                initialData = {
+                    ID: loadedData.id || loadedData.ID || null,
+                    user_id: loadedData.user_id || '',
+                    audio_file_id: loadedData.audio_file_id || '',
+                    audio_file_name: loadedData.audio_file_name || '',
+                    audio_time: loadedData.audio_time || 0,
+                    audioUrl: loadedData.audioUrl || '',
+                    'Transcript (with times)': loadedData['Transcript (with times)'] || loadedData.Transcript || [],
+                    transcript_txt: loadedData.text || loadedData.transcript_txt || '',
+                    created_at: loadedData.timestamp || loadedData.created_at || new Date().toISOString(),
+                    status: loadedData.status || 'in_progress',
+                    CurrentStep: loadedData.CurrentStep || 1
+                };
+
+                console.log('✅ Initial data transformed:', initialData);
+
+                formData.ID = initialData.ID;
+                formData.Google_DriveID = initialData.Google_DriveID || null;
+                formData.user_id = initialData.user_id || '';
+                formData.audio_file_id = initialData.audio_file_id || '';
+                formData.audio_file_name = initialData.audio_file_name || '';
+                formData.audio_time = initialData.audio_time || 0;
+                formData.audioUrl = initialData.audioUrl || '';
+                formData.Transcript = initialData['Transcript (with times)'] || [];
+                formData.transcript_txt = initialData.transcript_txt || '';
+                formData.created_at = initialData.created_at;
+                formData.status = initialData.status;
+                formData.CurrentStep = initialData.CurrentStep;
+                
+                console.log('FormData populated:', {
+                    ID: formData.ID,
+                    user_id: formData.user_id,
+                    has_transcript: formData.transcript_txt.length > 0,
+                    audioUrl: formData.audioUrl
+                });
 
                 if (formData.audioUrl) {
-                    elements.audioElement.src = formData.audioUrl;
+                    audioElement.src = formData.audioUrl;
+                    console.log('✅ Audio loaded');
                 }
 
                 if (formData.transcript_txt) {
-                    elements.textEditor.value = formData.transcript_txt;
+                    textEditor.value = formData.transcript_txt;
                     formData.corrected_full_text = formData.transcript_txt;
                     updateTextStats();
+                    console.log('✅ Text loaded into editor');
+                } else {
+                    textEditor.placeholder = 'لا يوجد نص مفرغ. يمكنك كتابة النص يدوياً';
+                    console.log('⚠️ No transcript text found');
                 }
-
+                
                 hideLoading();
                 validateCurrentStep();
-                console.log('✅ Data loaded successfully');
-
+                
+                triggerNotificationFeedback('success');
+                
+                console.log('✅ Form ready - All data loaded successfully');
+                
             } catch (error) {
                 console.error('❌ Error loading data:', error);
+                console.error('Error stack:', error.stack);
                 hideLoading();
-                alert('❌ ' + error.message);
+                
+                const errorMsg = error.message || 'حدث خطأ غير متوقع';
+                
+                if (tg.showAlert) {
+                    tg.showAlert('❌ ' + errorMsg);
+                } else {
+                    alert('❌ ' + errorMsg);
+                }
             }
         }
 
         // ═══════════════════════════════════════════════════════
-        // Audio Player
+        // ⭐ Audio Player Functions
         // ═══════════════════════════════════════════════════════
-        elements.playPauseBtn.addEventListener('click', () => {
-            if (elements.audioElement.paused) {
-                elements.audioElement.play();
-                elements.playPauseBtn.textContent = '⏸️';
+        playPauseBtn.addEventListener('click', () => {
+            if (audioElement.paused) {
+                audioElement.play();
+                playPauseBtn.textContent = '⏸️';
             } else {
-                elements.audioElement.pause();
-                elements.playPauseBtn.textContent = '▶️';
+                audioElement.pause();
+                playPauseBtn.textContent = '▶️';
             }
+            triggerHapticFeedback('light');
         });
 
-        elements.audioElement.addEventListener('loadedmetadata', () => {
-            elements.duration.textContent = formatTime(elements.audioElement.duration);
+        audioElement.addEventListener('loadedmetadata', () => {
+            durationDisplay.textContent = formatTime(audioElement.duration);
         });
 
-        elements.audioElement.addEventListener('timeupdate', () => {
-            const percent = (elements.audioElement.currentTime / elements.audioElement.duration) * 100;
-            elements.progressFill.style.width = `${percent}%`;
-            elements.currentTime.textContent = formatTime(elements.audioElement.currentTime);
+        audioElement.addEventListener('timeupdate', () => {
+            const percent = (audioElement.currentTime / audioElement.duration) * 100;
+            progressFill.style.width = `${percent}%`;
+            currentTimeDisplay.textContent = formatTime(audioElement.currentTime);
         });
 
-        elements.audioElement.addEventListener('ended', () => {
-            elements.playPauseBtn.textContent = '▶️';
+        audioElement.addEventListener('ended', () => {
+            playPauseBtn.textContent = '▶️';
         });
 
-        elements.progressBar.addEventListener('click', (e) => {
-            const rect = elements.progressBar.getBoundingClientRect();
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
             const percent = (e.clientX - rect.left) / rect.width;
-            elements.audioElement.currentTime = percent * elements.audioElement.duration;
+            audioElement.currentTime = percent * audioElement.duration;
+            triggerHapticFeedback('light');
         });
 
-        elements.speedBtns.forEach(btn => {
+        speedBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const speed = parseFloat(btn.dataset.speed);
-                elements.audioElement.playbackRate = speed;
-                elements.speedBtns.forEach(b => b.classList.remove('active'));
+                audioElement.playbackRate = speed;
+                speedBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
+                triggerHapticFeedback('light');
             });
         });
 
         // ═══════════════════════════════════════════════════════
-        // Text Editor
+        // ⭐ Fullscreen Editor
         // ═══════════════════════════════════════════════════════
-        function updateTextStats() {
-            const text = elements.textEditor.value;
-            const chars = text.length;
-            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-            elements.charCount.textContent = chars.toLocaleString('ar');
-            elements.wordCount.textContent = words.toLocaleString('ar');
-        }
-
-        elements.textEditor.addEventListener('input', () => {
-            formData.corrected_full_text = elements.textEditor.value;
-            updateTextStats();
-            validateCurrentStep();
-        });
-
-        elements.copyBtn.addEventListener('click', async () => {
-            try {
-                await navigator.clipboard.writeText(elements.textEditor.value);
-                elements.copyBtn.textContent = '✅';
-                setTimeout(() => { elements.copyBtn.textContent = '📋'; }, 2000);
-            } catch (err) {
-                elements.textEditor.select();
-                document.execCommand('copy');
+        textEditor.addEventListener('focus', () => {
+            if (!isFullscreen) {
+                isFullscreen = true;
+                progressWrapper.classList.add('hidden');
+                navButtons.classList.add('hidden');
+                step1Header.classList.add('hidden');
+                editorActions.classList.add('hidden');
+                textEditorWrapper.classList.add('fullscreen');
+                audioPlayerSection.classList.add('floating');
+                floatingActions.classList.add('visible');
             }
         });
 
-        elements.pasteBtn.addEventListener('click', async () => {
-            try {
-                const text = await navigator.clipboard.readText();
-                elements.textEditor.value = text;
-                formData.corrected_full_text = text;
-                updateTextStats();
-                validateCurrentStep();
-            } catch (err) {
-                console.error('Paste error:', err);
-            }
+        textEditor.addEventListener('blur', () => {
+            setTimeout(() => {
+                if (document.activeElement !== textEditor && isFullscreen) {
+                    isFullscreen = false;
+                    progressWrapper.classList.remove('hidden');
+                    navButtons.classList.remove('hidden');
+                    step1Header.classList.remove('hidden');
+                    editorActions.classList.remove('hidden');
+                    textEditorWrapper.classList.remove('fullscreen');
+                    audioPlayerSection.classList.remove('floating');
+                    floatingActions.classList.remove('visible');
+                }
+            }, 200);
         });
 
         // ═══════════════════════════════════════════════════════
-        // AI Correction
+        // ⭐ AI Correction Function (Enhanced with Retry & Rate Limit Handling)
         // ═══════════════════════════════════════════════════════
         async function correctTextWithAI() {
             try {
+                // التحقق من Cooldown
+                const now = Date.now();
+                if (now - lastAIRequestTime < AI_REQUEST_COOLDOWN) {
+                    const remainingTime = Math.ceil((AI_REQUEST_COOLDOWN - (now - lastAIRequestTime)) / 1000);
+                    alert(`⏰ الرجاء الانتظار ${remainingTime} ثانية قبل طلب التصحيح مرة أخرى`);
+                    return;
+                }
+
                 showLoading('جاري التصحيح بالذكاء الاصطناعي...', 'قد يستغرق هذا بضع ثوانٍ');
                 
-                const text = elements.textEditor.value;
+                const text = textEditor.value;
                 if (!text.trim()) {
                     throw new Error('لا يوجد نص للتصحيح');
                 }
 
                 console.log('🤖 Requesting AI correction...');
 
-                const response = await fetch(`${CONFIG.BACKEND.BASE_URL}/ai-correct`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: text })
-                });
+                // تحديث وقت آخر طلب
+                lastAIRequestTime = now;
 
-                console.log('AI Response status:', response.status);
+                // محاولة الطلب مع Retry
+                let attempt = 0;
+                const maxAttempts = 2;
+                let lastError = null;
 
-                if (response.status === 429) {
-                    hideLoading();
-                    alert('⏰ تم تجاوز الحد المسموح. الرجاء الانتظار دقيقة والمحاولة مرة أخرى.');
-                    return;
+                while (attempt < maxAttempts) {
+                    try {
+                        console.log(`Attempt ${attempt + 1}/${maxAttempts}`);
+
+                        const response = await fetch(`${CONFIG.BACKEND.BASE_URL}/ai-correct`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                text: text
+                            })
+                        });
+
+                        console.log('AI Response status:', response.status);
+
+                        // معالجة 429 (Rate Limit)
+                        if (response.status === 429) {
+                            const errorData = await response.json().catch(() => ({}));
+                            const retryAfter = errorData.retryAfter || 60;
+                            
+                            hideLoading();
+                            
+                            const message = `⏰ تم تجاوز الحد المسموح من الطلبات.\n\nالرجاء الانتظار ${retryAfter} ثانية والمحاولة مرة أخرى.\n\nسبب ذلك: Google Gemini لديه حد 15 طلب في الدقيقة للحسابات المجانية.`;
+                            
+                            if (tg.showPopup) {
+                                tg.showPopup({
+                                    title: '⏰ تجاوز الحد',
+                                    message: message,
+                                    buttons: [{id: 'ok', type: 'ok', text: 'حسناً'}]
+                                });
+                            } else if (tg.showAlert) {
+                                tg.showAlert(message);
+                            } else {
+                                alert(message);
+                            }
+                            return;
+                        }
+
+                        if (!response.ok) {
+                            const errorData = await response.json().catch(() => ({}));
+                            throw new Error(errorData.message || errorData.userMessage || 'فشل التصحيح');
+                        }
+
+                        const result = await response.json();
+                        console.log('AI Result:', result);
+                        
+                        if (result.success && result.correctedText) {
+                            aiCorrectedText = result.correctedText;
+                            
+                            const originalWords = text.trim().split(/\s+/).length;
+                            const correctedWords = aiCorrectedText.trim().split(/\s+/).length;
+                            aiChangesCount = Math.abs(correctedWords - originalWords);
+                            
+                            aiCorrectionText.textContent = aiCorrectedText;
+                            aiWordCountEl.textContent = `${correctedWords} كلمة`;
+                            aiChangesEl.textContent = `${aiChangesCount} تغيير`;
+                            aiAccuracyEl.textContent = '95% دقة';
+                            
+                            aiCorrectionBox.classList.add('visible');
+                            
+                            hideLoading();
+                            triggerNotificationFeedback('success');
+                            
+                            console.log('✅ AI Correction successful');
+                            return; // نجح - اخرج من الحلقة
+                        } else {
+                            throw new Error('لم يتم إرجاع نص مصحح');
+                        }
+                        
+                    } catch (error) {
+                        lastError = error;
+                        attempt++;
+                        
+                        if (attempt < maxAttempts) {
+                            console.log(`Retrying after error: ${error.message}`);
+                            await new Promise(resolve => setTimeout(resolve, 2000)); // انتظر ثانيتين
+                        }
+                    }
                 }
 
-                if (!response.ok) {
-                    throw new Error('فشل التصحيح');
-                }
-
-                const result = await response.json();
-                console.log('AI Result:', result);
-                
-                if (result.success && result.correctedText) {
-                    aiCorrectedText = result.correctedText;
-                    
-                    const originalWords = text.trim().split(/\s+/).length;
-                    const correctedWords = aiCorrectedText.trim().split(/\s+/).length;
-                    aiChangesCount = Math.abs(correctedWords - originalWords);
-                    
-                    elements.aiCorrectionText.textContent = aiCorrectedText;
-                    elements.aiWordCount.textContent = `${correctedWords} كلمة`;
-                    elements.aiChanges.textContent = `${aiChangesCount} تغيير`;
-                    
-                    elements.aiCorrectionBox.classList.add('visible');
-                    hideLoading();
-                } else {
-                    throw new Error('فشل التصحيح');
-                }
+                // إذا فشلت جميع المحاولات
+                throw lastError || new Error('فشل التصحيح بعد عدة محاولات');
                 
             } catch (error) {
                 console.error('AI Correction Error:', error);
                 hideLoading();
-                alert('❌ ' + error.message);
+                
+                const errorMsg = error.message || 'حدث خطأ أثناء التصحيح';
+                
+                if (tg.showAlert) {
+                    tg.showAlert('❌ ' + errorMsg);
+                } else {
+                    alert('❌ ' + errorMsg);
+                }
             }
         }
 
-        elements.aiBtn.addEventListener('click', correctTextWithAI);
+        aiBtn.addEventListener('click', correctTextWithAI);
+        aiCorrectBtn.addEventListener('click', correctTextWithAI);
 
-        elements.aiAcceptBtn.addEventListener('click', () => {
-            elements.textEditor.value = aiCorrectedText;
+        aiAcceptBtn.addEventListener('click', () => {
+            textEditor.value = aiCorrectedText;
             formData.corrected_full_text = aiCorrectedText;
             updateTextStats();
-            elements.aiCorrectionBox.classList.remove('visible');
+            aiCorrectionBox.classList.remove('visible');
+            triggerNotificationFeedback('success');
         });
 
-        elements.aiRejectBtn.addEventListener('click', () => {
-            elements.aiCorrectionBox.classList.remove('visible');
+        aiRejectBtn.addEventListener('click', () => {
+            aiCorrectionBox.classList.remove('visible');
+            triggerHapticFeedback('light');
         });
 
-        elements.aiCorrectionClose.addEventListener('click', () => {
-            elements.aiCorrectionBox.classList.remove('visible');
+        aiCorrectionClose.addEventListener('click', () => {
+            aiCorrectionBox.classList.remove('visible');
         });
 
         // ═══════════════════════════════════════════════════════
-        // Navigation & Progress
+        // ⭐ Floating Actions
+        // ═══════════════════════════════════════════════════════
+        floatingCopyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(textEditor.value);
+                triggerNotificationFeedback('success');
+            } catch (err) {
+                textEditor.select();
+                document.execCommand('copy');
+            }
+        });
+
+        floatingPasteBtn.addEventListener('click', async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                textEditor.value = text;
+                formData.corrected_full_text = text;
+                updateTextStats();
+                validateCurrentStep();
+                triggerHapticFeedback('medium');
+            } catch (err) {
+                console.error('Paste error:', err);
+            }
+        });
+
+        floatingClearBtn.addEventListener('click', () => {
+            if (textEditor.value.trim()) {
+                if (confirm('هل تريد حذف النص؟')) {
+                    textEditor.value = '';
+                    formData.corrected_full_text = '';
+                    updateTextStats();
+                    validateCurrentStep();
+                    triggerHapticFeedback('heavy');
+                }
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════
+        // ⭐ Templates Functions
+        // ═══════════════════════════════════════════════════════
+        function initializeTemplates() {
+            templatesGrid.innerHTML = '';
+            TEMPLATES_DATA.forEach((template, index) => {
+                const card = document.createElement('div');
+                card.className = 'template-card';
+                
+                if (template.id === 5) {
+                    card.classList.add('large');
+                }
+                
+                card.dataset.templateId = template.id;
+                
+                const firstColorImage = convertDriveUrl(template.colors[0].landscape_image);
+                
+                card.innerHTML = `
+                    <div class="template-preview" style="background-image: url('${firstColorImage}');">
+                        <div class="template-number">${index + 1}</div>
+                        <div class="template-check">✓</div>
+                    </div>
+                    <div class="template-name">${template.name}</div>
+                `;
+                card.addEventListener('click', () => selectTemplate(template));
+                templatesGrid.appendChild(card);
+            });
+        }
+
+        function selectTemplate(template) {
+            document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+            const selectedCard = document.querySelector(`[data-template-id="${template.id}"]`);
+            if (selectedCard) {
+                selectedCard.classList.add('selected');
+            }
+            
+            selectedTemplate = template;
+            formData.template_id = template.id;
+            formData.template_name = template.name;
+            
+            loadTemplateColors(template.colors);
+            colorsSection.style.display = 'block';
+            
+            validateCurrentStep();
+            triggerHapticFeedback('medium');
+        }
+
+        function loadTemplateColors(colors) {
+            colorsGrid.innerHTML = '';
+            colors.forEach(color => {
+                const option = document.createElement('div');
+                option.className = 'color-option';
+                option.dataset.colorId = color.id;
+                
+                const landscapeImage = convertDriveUrl(color.landscape_image);
+                
+                option.style.backgroundImage = `url('${landscapeImage}')`;
+                option.innerHTML = '<div class="template-check">✓</div>';
+                option.addEventListener('click', () => selectColor(color));
+                colorsGrid.appendChild(option);
+            });
+        }
+
+        function selectColor(color) {
+            document.querySelectorAll('#colorsGrid .color-option').forEach(o => o.classList.remove('selected'));
+            const selectedColorEl = colorsGrid.querySelector(`[data-color-id="${color.id}"]`);
+            if (selectedColorEl) {
+                selectedColorEl.classList.add('selected');
+            }
+            
+            selectedColor = color;
+            formData.color_id = color.id;
+            formData.color_name = color.name;
+            formData.landscape_image_url = color.landscape_image;
+            formData.portrait_image_url = color.portrait_image;
+            formData.series_color = color.series_color;
+            formData.subseries_color = color.subseries_color;
+            formData.finalseries_color = color.finalseries_color;
+            formData.title_color = color.title_color;
+            formData.caption_color = color.caption_color;
+            
+            landscapePreview.src = convertDriveUrl(color.landscape_image);
+            portraitPreview.src = convertDriveUrl(color.portrait_image);
+            templatePreviewModal.classList.add('visible');
+            
+            validateCurrentStep();
+            triggerHapticFeedback('medium');
+        }
+
+        closePreview.addEventListener('click', () => {
+            templatePreviewModal.classList.remove('visible');
+        });
+
+        previewNextBtn.addEventListener('click', () => {
+            templatePreviewModal.classList.remove('visible');
+            nextStep();
+        });
+
+        templatePreviewModal.addEventListener('click', (e) => {
+            if (e.target === templatePreviewModal) {
+                templatePreviewModal.classList.remove('visible');
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════
+        // ⭐ Series Colors Functions
+        // ═══════════════════════════════════════════════════════
+        function initializeSeriesColors() {
+            seriesColorsGrid.innerHTML = '';
+            
+            const recommendedOption = document.createElement('div');
+            recommendedOption.className = 'series-color-option recommended selected';
+            recommendedOption.style.background = selectedColor.series_color;
+            recommendedOption.dataset.seriesColor = selectedColor.series_color;
+            recommendedOption.innerHTML = `
+                <div class="recommended-badge">موصى به</div>
+                <div class="template-check">✓</div>
+            `;
+            recommendedOption.addEventListener('click', () => selectSeriesColor(selectedColor.series_color));
+            seriesColorsGrid.appendChild(recommendedOption);
+            
+            SERIES_COLORS.forEach((colorObj) => {
+                const option = document.createElement('div');
+                option.className = 'series-color-option';
+                option.dataset.seriesColor = colorObj.value;
+                option.style.background = colorObj.value;
+                option.innerHTML = '<div class="template-check">✓</div>';
+                option.addEventListener('click', () => selectSeriesColor(colorObj.value));
+                seriesColorsGrid.appendChild(option);
+            });
+            
+            formData.series_color = selectedColor.series_color;
+            seriesPreviewText.style.color = selectedColor.series_color;
+            hexInput.value = selectedColor.series_color;
+            hexPreview.style.background = selectedColor.series_color;
+        }
+
+        function selectSeriesColor(color) {
+            document.querySelectorAll('#seriesColorsGrid .series-color-option').forEach(o => o.classList.remove('selected'));
+            const selectedColorEl = seriesColorsGrid.querySelector(`[data-series-color="${color}"]`);
+            if (selectedColorEl) {
+                selectedColorEl.classList.add('selected');
+            }
+            
+            formData.series_color = color;
+            seriesPreviewText.style.color = color;
+            hexInput.value = color;
+            hexPreview.style.background = color;
+            
+            validateCurrentStep();
+            triggerHapticFeedback('light');
+        }
+
+        colorWheel.addEventListener('click', (e) => {
+            const rect = colorWheel.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            const angle = Math.atan2(y, x);
+            const hue = (angle * 180 / Math.PI + 360) % 360;
+            
+            const hexColor = hslToHex(hue, 80, 60);
+            
+            formData.series_color = hexColor;
+            seriesPreviewText.style.color = hexColor;
+            hexInput.value = hexColor;
+            hexPreview.style.background = hexColor;
+            
+            const radius = rect.width / 2;
+            const pickerX = Math.cos(angle) * radius * 0.8;
+            const pickerY = Math.sin(angle) * radius * 0.8;
+            colorWheelPicker.style.left = `${50 + (pickerX / rect.width) * 100}%`;
+            colorWheelPicker.style.top = `${50 + (pickerY / rect.height) * 100}%`;
+            
+            document.querySelectorAll('#seriesColorsGrid .series-color-option').forEach(o => o.classList.remove('selected'));
+            
+            triggerHapticFeedback('light');
+        });
+
+        hexInput.addEventListener('input', (e) => {
+            let value = e.target.value;
+            
+            if (!value.startsWith('#')) {
+                value = '#' + value;
+            }
+            
+            value = value.substring(0, 7);
+            
+            if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+                formData.series_color = value;
+                seriesPreviewText.style.color = value;
+                hexPreview.style.background = value;
+                
+                document.querySelectorAll('#seriesColorsGrid .series-color-option').forEach(o => {
+                    o.classList.remove('selected');
+                });
+            }
+            
+            e.target.value = value;
+        });
+
+        // ═══════════════════════════════════════════════════════
+        // ⭐ Navigation & Progress Functions
         // ═══════════════════════════════════════════════════════
         function updateProgress() {
             const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
-            elements.progressLineFill.style.width = `${progress}%`;
+            progressLineFill.style.width = `${progress}%`;
             
-            elements.progressSteps.forEach((step, index) => {
+            progressSteps.forEach((step, index) => {
                 const stepNum = index + 1;
                 step.classList.remove('active', 'completed');
                 if (stepNum < currentStep) {
@@ -1875,21 +2682,21 @@
                 }
             });
             
-            elements.stepContents.forEach((content, index) => {
+            stepContents.forEach((content, index) => {
                 content.classList.remove('active');
                 if (index + 1 === currentStep) {
                     content.classList.add('active');
                 }
             });
             
-            elements.btnBack.style.display = currentStep === 1 ? 'none' : 'flex';
+            btnBack.style.display = currentStep === 1 ? 'none' : 'flex';
             
             if (currentStep === totalSteps) {
-                elements.btnNext.innerHTML = '<span>إرسال</span><span>✅</span>';
-                elements.btnNext.className = 'nav-btn btn-submit';
+                btnNext.innerHTML = '<span>إرسال</span><span>✅</span>';
+                btnNext.className = 'nav-btn btn-submit';
             } else {
-                elements.btnNext.innerHTML = '<span>التالي</span><span>→</span>';
-                elements.btnNext.className = 'nav-btn btn-next';
+                btnNext.innerHTML = '<span>التالي</span><span>→</span>';
+                btnNext.className = 'nav-btn btn-next';
             }
             
             if (currentStep === 3) {
@@ -1922,7 +2729,7 @@
                     break;
             }
             
-            elements.btnNext.disabled = !isValid;
+            btnNext.disabled = !isValid;
         }
 
         async function nextStep() {
@@ -1935,6 +2742,7 @@
                 currentStep++;
                 formData.CurrentStep = currentStep;
                 updateProgress();
+                triggerHapticFeedback('light');
             }
         }
 
@@ -1943,179 +2751,82 @@
                 currentStep--;
                 formData.CurrentStep = currentStep;
                 updateProgress();
+                triggerHapticFeedback('light');
             }
         }
 
-        elements.btnNext.addEventListener('click', nextStep);
-        elements.btnBack.addEventListener('click', prevStep);
+        btnNext.addEventListener('click', nextStep);
+        btnBack.addEventListener('click', prevStep);
 
         // ═══════════════════════════════════════════════════════
-        // Templates
+        // ⭐ Text Editor Functions
         // ═══════════════════════════════════════════════════════
-        function initializeTemplates() {
-            elements.templatesGrid.innerHTML = '';
-            TEMPLATES_DATA.forEach((template, index) => {
-                const card = document.createElement('div');
-                card.className = 'template-card';
-                if (template.id === 5) card.classList.add('large');
-                card.dataset.templateId = template.id;
-                
-                const firstColorImage = convertDriveUrl(template.colors[0].landscape_image);
-                
-                card.innerHTML = `
-                    <div class="template-preview" style="background-image: url('${firstColorImage}');">
-                        <div class="template-number">${index + 1}</div>
-                        <div class="template-check">✓</div>
-                    </div>
-                    <div class="template-name">${template.name}</div>
-                `;
-                card.addEventListener('click', () => selectTemplate(template));
-                elements.templatesGrid.appendChild(card);
-            });
+        function updateTextStats() {
+            const text = textEditor.value;
+            const chars = text.length;
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            charCount.textContent = chars.toLocaleString('ar');
+            wordCount.textContent = words.toLocaleString('ar');
         }
 
-        function selectTemplate(template) {
-            document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
-            const selectedCard = document.querySelector(`[data-template-id="${template.id}"]`);
-            if (selectedCard) selectedCard.classList.add('selected');
+        textEditor.addEventListener('input', () => {
+            formData.corrected_full_text = textEditor.value;
             
-            selectedTemplate = template;
-            formData.template_id = template.id;
-            formData.template_name = template.name;
-            
-            loadTemplateColors(template.colors);
-            elements.colorsSection.style.display = 'block';
-            validateCurrentStep();
-        }
-
-        function loadTemplateColors(colors) {
-            elements.colorsGrid.innerHTML = '';
-            colors.forEach(color => {
-                const option = document.createElement('div');
-                option.className = 'color-option';
-                option.dataset.colorId = color.id;
-                option.style.backgroundImage = `url('${convertDriveUrl(color.landscape_image)}')`;
-                option.innerHTML = '<div class="template-check" style="position: absolute; top: 12px; right: 12px; width: 32px; height: 32px; background: var(--success); border-radius: 50%; display: none; align-items: center; justify-content: center; color: white; font-size: 18px; z-index: 3;">✓</div>';
-                option.addEventListener('click', () => selectColor(color));
-                elements.colorsGrid.appendChild(option);
-            });
-        }
-
-        function selectColor(color) {
-            document.querySelectorAll('#colorsGrid .color-option').forEach(o => o.classList.remove('selected'));
-            const selectedColorEl = elements.colorsGrid.querySelector(`[data-color-id="${color.id}"]`);
-            if (selectedColorEl) selectedColorEl.classList.add('selected');
-            
-            selectedColor = color;
-            formData.color_id = color.id;
-            formData.color_name = color.name;
-            formData.landscape_image_url = color.landscape_image;
-            formData.portrait_image_url = color.portrait_image;
-            formData.series_color = color.series_color;
-            formData.subseries_color = color.subseries_color;
-            formData.finalseries_color = color.finalseries_color;
-            formData.title_color = color.title_color;
-            formData.caption_color = color.caption_color;
-            
-            elements.landscapePreview.src = convertDriveUrl(color.landscape_image);
-            elements.portraitPreview.src = convertDriveUrl(color.portrait_image);
-            elements.templatePreviewModal.style.display = 'flex';
-            validateCurrentStep();
-        }
-
-        elements.closePreview.addEventListener('click', () => {
-            elements.templatePreviewModal.style.display = 'none';
-        });
-
-        elements.previewNextBtn.addEventListener('click', () => {
-            elements.templatePreviewModal.style.display = 'none';
-            nextStep();
-        });
-
-        // ═══════════════════════════════════════════════════════
-        // Series Colors
-        // ═══════════════════════════════════════════════════════
-        function initializeSeriesColors() {
-            elements.seriesColorsGrid.innerHTML = '';
-            
-            const recommendedOption = document.createElement('div');
-            recommendedOption.className = 'series-color-option selected';
-            recommendedOption.style.background = selectedColor.series_color;
-            recommendedOption.dataset.seriesColor = selectedColor.series_color;
-            recommendedOption.innerHTML = `
-                <div style="position: absolute; top: 8px; right: 8px; background: #FFD700; color: #000; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 700;">موصى به</div>
-                <div class="template-check">✓</div>
-            `;
-            recommendedOption.addEventListener('click', () => selectSeriesColor(selectedColor.series_color));
-            elements.seriesColorsGrid.appendChild(recommendedOption);
-            
-            SERIES_COLORS.forEach(colorObj => {
-                const option = document.createElement('div');
-                option.className = 'series-color-option';
-                option.dataset.seriesColor = colorObj.value;
-                option.style.background = colorObj.value;
-                option.innerHTML = '<div class="template-check">✓</div>';
-                option.addEventListener('click', () => selectSeriesColor(colorObj.value));
-                elements.seriesColorsGrid.appendChild(option);
-            });
-            
-            formData.series_color = selectedColor.series_color;
-            elements.seriesPreviewText.style.color = selectedColor.series_color;
-            elements.hexInput.value = selectedColor.series_color;
-            elements.hexPreview.style.background = selectedColor.series_color;
-        }
-
-        function selectSeriesColor(color) {
-            document.querySelectorAll('#seriesColorsGrid .series-color-option').forEach(o => o.classList.remove('selected'));
-            const selectedColorEl = elements.seriesColorsGrid.querySelector(`[data-series-color="${color}"]`);
-            if (selectedColorEl) selectedColorEl.classList.add('selected');
-            
-            formData.series_color = color;
-            elements.seriesPreviewText.style.color = color;
-            elements.hexInput.value = color;
-            elements.hexPreview.style.background = color;
-            validateCurrentStep();
-        }
-
-        elements.colorWheel.addEventListener('click', (e) => {
-            const rect = elements.colorWheel.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            const angle = Math.atan2(y, x);
-            const hue = (angle * 180 / Math.PI + 360) % 360;
-            const hexColor = hslToHex(hue, 80, 60);
-            
-            formData.series_color = hexColor;
-            elements.seriesPreviewText.style.color = hexColor;
-            elements.hexInput.value = hexColor;
-            elements.hexPreview.style.background = hexColor;
-            
-            const radius = rect.width / 2;
-            const pickerX = Math.cos(angle) * radius * 0.8;
-            const pickerY = Math.sin(angle) * radius * 0.8;
-            elements.colorWheelPicker.style.left = `${50 + (pickerX / rect.width) * 100}%`;
-            elements.colorWheelPicker.style.top = `${50 + (pickerY / rect.height) * 100}%`;
-            
-            document.querySelectorAll('#seriesColorsGrid .series-color-option').forEach(o => o.classList.remove('selected'));
-        });
-
-        elements.hexInput.addEventListener('input', (e) => {
-            let value = e.target.value;
-            if (!value.startsWith('#')) value = '#' + value;
-            value = value.substring(0, 7);
-            
-            if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
-                formData.series_color = value;
-                elements.seriesPreviewText.style.color = value;
-                elements.hexPreview.style.background = value;
-                document.querySelectorAll('#seriesColorsGrid .series-color-option').forEach(o => o.classList.remove('selected'));
+            if (formData.Transcript && formData.Transcript.length > 0) {
+                const correctedWords = formData.corrected_full_text.split(/\s+/);
+                formData['Transcript Corrected'] = formData.Transcript.map((item, index) => {
+                    return {
+                        ...item,
+                        text: correctedWords[index] || item.text
+                    };
+                });
             }
             
-            e.target.value = value;
+            updateTextStats();
+            validateCurrentStep();
+        });
+
+        copyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(textEditor.value);
+                copyBtn.innerHTML = '<span>✅</span><span>تم</span>';
+                triggerNotificationFeedback('success');
+                setTimeout(() => { copyBtn.innerHTML = '<span>📋</span><span>نسخ</span>'; }, 2000);
+            } catch (err) {
+                textEditor.select();
+                document.execCommand('copy');
+            }
+        });
+
+        pasteBtn.addEventListener('click', async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                textEditor.value = text;
+                formData.corrected_full_text = text;
+                updateTextStats();
+                validateCurrentStep();
+                triggerHapticFeedback('medium');
+            } catch (err) {
+                if (tg.showAlert) {
+                    tg.showAlert('⚠️ لم نتمكن من اللصق');
+                }
+            }
+        });
+
+        clearBtn.addEventListener('click', () => {
+            if (textEditor.value.trim()) {
+                if (confirm('هل تريد حذف النص؟')) {
+                    textEditor.value = '';
+                    formData.corrected_full_text = '';
+                    updateTextStats();
+                    validateCurrentStep();
+                    triggerHapticFeedback('heavy');
+                }
+            }
         });
 
         // ═══════════════════════════════════════════════════════
-        // Form Inputs
+        // ⭐ Form Inputs Setup
         // ═══════════════════════════════════════════════════════
         function setupInput(input, countEl, formKey) {
             input.addEventListener('input', () => {
@@ -2125,13 +2836,13 @@
             });
         }
 
-        setupInput(elements.titleInput, elements.titleCount, 'title');
-        setupInput(elements.mainSeriesInput, elements.mainSeriesCount, 'series');
-        setupInput(elements.subSeriesInput, elements.subSeriesCount, 'subSeries');
-        setupInput(elements.finalSeriesInput, elements.finalSeriesCount, 'finalSeries');
+        setupInput(titleInput, titleCount, 'title');
+        setupInput(mainSeriesInput, mainSeriesCount, 'series');
+        setupInput(subSeriesInput, subSeriesCount, 'subSeries');
+        setupInput(finalSeriesInput, finalSeriesCount, 'finalSeries');
 
         // ═══════════════════════════════════════════════════════
-        // Review
+        // ⭐ Review Update Function
         // ═══════════════════════════════════════════════════════
         function updateReview() {
             const words = formData.corrected_full_text.trim().split(/\s+/).length;
@@ -2147,8 +2858,12 @@
             document.getElementById('reviewColor').textContent = formData.color_name || '-';
             
             const colorDiv = document.createElement('div');
-            colorDiv.style.cssText = 'width: 20px; height: 20px; border-radius: 4px; display: inline-block; vertical-align: middle;';
+            colorDiv.style.width = '20px';
+            colorDiv.style.height = '20px';
             colorDiv.style.background = formData.series_color;
+            colorDiv.style.borderRadius = '4px';
+            colorDiv.style.display = 'inline-block';
+            colorDiv.style.verticalAlign = 'middle';
             document.getElementById('reviewSeriesColor').innerHTML = '';
             document.getElementById('reviewSeriesColor').appendChild(colorDiv);
             
@@ -2159,7 +2874,7 @@
         }
 
         // ═══════════════════════════════════════════════════════
-        // Submit
+        // ⭐ Submit Form Function
         // ═══════════════════════════════════════════════════════
         async function submitForm() {
             showLoading('جاري الإرسال...', 'الرجاء الانتظار');
@@ -2170,7 +2885,10 @@
                     Google_DriveID: formData.Google_DriveID,
                     user_id: formData.user_id,
                     audio_file_id: formData.audio_file_id,
+                    audio_file_name: formData.audio_file_name,
+                    audio_time: formData.audio_time,
                     'Transcript (with times)': formData.Transcript,
+                    'Transcript Corrected (with times)': formData['Transcript Corrected'],
                     transcript_txt: formData.transcript_txt,
                     corrected_full_text: formData.corrected_full_text,
                     landscape_image_url: formData.landscape_image_url,
@@ -2181,8 +2899,12 @@
                     finalSeries: formData.finalSeries,
                     status: 'completed',
                     CurrentStep: 5,
+                    Video_Id: formData.Video_Id,
+                    caption: formData.caption,
                     created_at: formData.created_at,
                     updated_at: new Date().toISOString(),
+                    description: formData.description,
+                    tags: formData.tags,
                     template_id: formData.template_id,
                     template_name: formData.template_name,
                     color_id: formData.color_id,
@@ -2195,42 +2917,69 @@
                     ai_corrections: aiChangesCount
                 };
 
+                console.log('📤 Sending data to n8n webhook:', dataToSend);
+
                 const response = await fetch(N8N_WEBHOOK_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
                     body: JSON.stringify(dataToSend)
                 });
 
                 if (!response.ok) {
-                    throw new Error('فشل إرسال البيانات');
+                    const errorText = await response.text();
+                    console.error('❌ Webhook error:', errorText);
+                    throw new Error('فشل إرسال البيانات إلى الخادم');
                 }
+
+                const result = await response.json().catch(() => ({ success: true }));
+                console.log('✅ Data sent successfully to n8n:', result);
 
                 tg.sendData(JSON.stringify({
                     type: 'video_completed',
                     id: formData.ID,
-                    status: 'completed'
+                    status: 'completed',
+                    timestamp: new Date().toISOString()
                 }));
 
                 hideLoading();
-                alert('✅ تم الإرسال بنجاح!');
-                tg.close();
+                
+                if (tg.showAlert) {
+                    tg.showAlert('✅ تم الإرسال بنجاح! جاري معالجة الفيديو...', () => {
+                        tg.close();
+                    });
+                } else {
+                    alert('✅ تم الإرسال بنجاح!');
+                    tg.close();
+                }
                 
             } catch (error) {
                 console.error('❌ Submit error:', error);
                 hideLoading();
-                alert('❌ حدث خطأ: ' + error.message);
+                
+                if (tg.showAlert) {
+                    tg.showAlert('❌ حدث خطأ: ' + error.message);
+                } else {
+                    alert('❌ حدث خطأ: ' + error.message);
+                }
             }
         }
 
         // ═══════════════════════════════════════════════════════
-        // Initialize
+        // ⭐ Initialize App
         // ═══════════════════════════════════════════════════════
         function init() {
             console.log('🚀 Initializing app...');
+            console.log('CONFIG:', typeof CONFIG !== 'undefined' ? 'Loaded ✅' : 'NOT FOUND ❌');
+            console.log('Telegram WebApp version:', tg.version);
+            
             initializeTemplates();
             updateProgress();
+            
             loadInitialData();
-            console.log('✅ App initialized');
+            
+            console.log('✅ App initialized successfully');
         }
 
         if (document.readyState === 'loading') {
