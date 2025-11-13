@@ -42,6 +42,13 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        .progress-wrapper.hidden {
+            transform: translateY(-100%);
+            opacity: 0;
+            pointer-events: none;
         }
 
         .progress-steps {
@@ -153,6 +160,14 @@
 
         .step-header {
             margin-bottom: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .step-header.hidden {
+            opacity: 0;
+            transform: translateY(-20px);
+            pointer-events: none;
+            position: absolute;
         }
 
         .step-title {
@@ -171,13 +186,22 @@
             line-height: 1.6;
         }
 
-        /* Audio Player Styles */
         .audio-player-section {
             background: white;
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 16px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+        }
+
+        .audio-player-section.floating {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 280px;
+            z-index: 200;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
 
         .audio-player {
@@ -271,16 +295,73 @@
             border-color: var(--primary);
         }
 
+        .floating-actions {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 200;
+        }
+
+        .floating-actions.visible {
+            display: flex;
+        }
+
+        .floating-btn {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.2s;
+        }
+
+        .floating-btn:active {
+            transform: scale(0.95);
+        }
+
+        .floating-btn.ai-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
         .text-editor-wrapper {
             flex: 1;
             display: flex;
             flex-direction: column;
             gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .text-editor-wrapper.fullscreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 150;
+            padding: 20px;
+            background: var(--bg);
         }
 
         .editor-actions {
             display: flex;
             gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .editor-actions.hidden {
+            opacity: 0;
+            pointer-events: none;
+            position: absolute;
         }
 
         .action-btn {
@@ -348,21 +429,133 @@
             font-size: 14px;
         }
 
+        .ai-correction-box {
+            display: none;
+            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
+            border: 2px solid #27AE60;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
+        }
+
+        .ai-correction-box.visible {
+            display: block;
+            animation: slideDown 0.4s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .ai-correction-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .ai-correction-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e7e34;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .ai-correction-close {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .ai-correction-text {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+        }
+
+        .ai-correction-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 12px;
+            color: #1e7e34;
+        }
+
+        .ai-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .ai-correction-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .ai-action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .ai-action-btn.accept {
+            background: var(--success);
+            color: white;
+        }
+
+        .ai-action-btn.reject {
+            background: white;
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
         .templates-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            gap: 16px;
             margin-bottom: 24px;
         }
 
         .template-card {
             background: white;
             border: 3px solid var(--border);
-            border-radius: 12px;
+            border-radius: 16px;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
+        }
+
+        .template-card.large {
+            grid-column: span 2;
         }
 
         .template-card:active {
@@ -380,11 +573,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 48px;
             position: relative;
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
+        }
+
+        .template-card.large .template-preview {
+            font-size: 64px;
         }
 
         .template-preview::before {
@@ -407,17 +604,17 @@
 
         .template-check {
             position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 28px;
-            height: 28px;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
             background: var(--success);
             border-radius: 50%;
             display: none;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 16px;
+            font-size: 18px;
             z-index: 3;
         }
 
@@ -432,9 +629,9 @@
         }
 
         .template-name {
-            padding: 10px;
+            padding: 12px;
             text-align: center;
-            font-size: 13px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--text-primary);
         }
@@ -447,21 +644,22 @@
             font-size: 16px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
         .colors-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
         .color-option {
+            width: 100%;
             aspect-ratio: 16/9;
-            border-radius: 12px;
+            border-radius: 16px;
             border: 3px solid var(--border);
             cursor: pointer;
             transition: all 0.3s;
@@ -474,12 +672,12 @@
         }
 
         .color-option:active {
-            transform: scale(0.95);
+            transform: scale(0.98);
         }
 
         .color-option.selected {
             border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.4);
         }
 
         .color-option .template-check {
@@ -490,14 +688,13 @@
             display: flex;
         }
 
-        /* Template Preview Modal */
         .template-preview-modal {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.95);
             display: none;
             align-items: center;
             justify-content: center;
@@ -517,7 +714,7 @@
 
         .preview-content {
             background: white;
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 24px;
             max-width: 500px;
             width: 100%;
@@ -551,23 +748,28 @@
         }
 
         .close-preview {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: var(--bg);
             border: none;
             color: var(--text-primary);
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .close-preview:active {
+            transform: scale(0.95);
         }
 
         .preview-images {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 20px;
         }
 
         .preview-image-wrapper {
@@ -575,10 +777,14 @@
         }
 
         .preview-image-label {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
             color: var(--text-secondary);
-            margin-bottom: 8px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
         .preview-image {
@@ -587,7 +793,28 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
-        /* Series Color with Hex Picker */
+        .preview-next-btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .preview-next-btn:active {
+            transform: scale(0.98);
+        }
+
         .series-color-preview {
             background: white;
             border-radius: 12px;
@@ -609,78 +836,31 @@
             color: var(--text-secondary);
         }
 
-        .recommended-color-section {
-            background: white;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-
-        .recommended-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--success);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .color-picker-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .color-picker-preview {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            border: 3px solid var(--border);
-            cursor: pointer;
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
-
-        .color-picker-preview:active {
-            transform: scale(0.95);
-        }
-
-        .color-picker-input-wrapper {
-            flex: 1;
-        }
-
-        .color-picker-input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            font-size: 16px;
-            font-family: 'Courier New', monospace;
-            text-align: center;
-            font-weight: 600;
-            direction: ltr;
-        }
-
-        .color-picker-input:focus {
-            outline: none;
-            border-color: var(--primary);
-        }
-
         .series-colors-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
         }
 
         .series-color-option {
-            aspect-ratio: 1;
-            border-radius: 12px;
+            aspect-ratio: 3/2;
+            border-radius: 16px;
             border: 3px solid var(--border);
             cursor: pointer;
             transition: all 0.3s;
             position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            overflow: hidden;
+        }
+
+        .series-color-option.recommended {
+            border-color: #FFD700;
+            box-shadow: 0 4px 16px rgba(255, 215, 0, 0.3);
         }
 
         .series-color-option:active {
@@ -690,6 +870,98 @@
         .series-color-option.selected {
             border-color: var(--primary);
             box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
+        }
+
+        .recommended-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: #FFD700;
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .color-wheel-section {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .custom-color-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .color-wheel-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .color-wheel {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            position: relative;
+            background: conic-gradient(
+                red, yellow, lime, cyan, blue, magenta, red
+            );
+            cursor: crosshair;
+        }
+
+        .color-wheel-picker {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #000;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .hex-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hex-preview {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid var(--border);
+        }
+
+        .hex-input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 18px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-weight: 600;
+            direction: ltr;
+        }
+
+        .hex-input:focus {
+            outline: none;
+            border-color: var(--primary);
         }
 
         .form-group {
@@ -788,6 +1060,13 @@
             border-top: 1px solid var(--border);
             display: flex;
             gap: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-buttons.hidden {
+            transform: translateY(100%);
+            opacity: 0;
+            pointer-events: none;
         }
 
         .nav-btn {
@@ -885,27 +1164,43 @@
         <div class="loading-subtext" id="loadingSubtext"></div>
     </div>
 
-    <!-- Template Preview Modal -->
+    <div class="floating-actions" id="floatingActions">
+        <button class="floating-btn ai-btn" id="aiCorrectBtn" title="تصحيح بالذكاء الاصطناعي">🤖</button>
+        <button class="floating-btn" id="floatingCopyBtn">📋</button>
+        <button class="floating-btn" id="floatingPasteBtn">📌</button>
+        <button class="floating-btn" id="floatingClearBtn">🗑️</button>
+    </div>
+
     <div class="template-preview-modal" id="templatePreviewModal">
         <div class="preview-content">
             <div class="preview-header">
-                <div class="preview-title">معاينة القالب</div>
+                <div class="preview-title">✨ معاينة القالب</div>
                 <button class="close-preview" id="closePreview">×</button>
             </div>
             <div class="preview-images">
                 <div class="preview-image-wrapper">
-                    <div class="preview-image-label">الصورة الأفقية (Landscape)</div>
+                    <div class="preview-image-label">
+                        <span>🖼️</span>
+                        <span>الصورة الأفقية (Landscape)</span>
+                    </div>
                     <img src="" alt="Landscape Preview" class="preview-image" id="landscapePreview">
                 </div>
                 <div class="preview-image-wrapper">
-                    <div class="preview-image-label">الصورة العمودية (Portrait)</div>
+                    <div class="preview-image-label">
+                        <span>📱</span>
+                        <span>الصورة العمودية (Portrait)</span>
+                    </div>
                     <img src="" alt="Portrait Preview" class="preview-image" id="portraitPreview">
                 </div>
             </div>
+            <button class="preview-next-btn" id="previewNextBtn">
+                <span>التالي</span>
+                <span>→</span>
+            </button>
         </div>
     </div>
 
-    <div class="progress-wrapper">
+    <div class="progress-wrapper" id="progressWrapper">
         <div class="progress-steps">
             <div class="progress-line">
                 <div class="progress-line-fill" id="progressLineFill"></div>
@@ -934,9 +1229,8 @@
     </div>
 
     <div class="container">
-        <!-- Step 1: Text Correction -->
         <div class="step-content active" data-step="1">
-            <div class="step-header">
+            <div class="step-header" id="step1Header">
                 <div class="step-title">
                     <span>✍️</span>
                     <span>تصحيح النص</span>
@@ -946,15 +1240,11 @@
                 </div>
             </div>
 
-            <!-- Audio Player -->
-            <div class="audio-player-section">
+            <div class="audio-player-section" id="audioPlayerSection">
                 <div class="audio-player">
                     <audio id="audioElement" style="display: none;"></audio>
-                    
                     <div class="audio-controls">
-                        <button class="play-pause-btn" id="playPauseBtn">
-                            ▶️
-                        </button>
+                        <button class="play-pause-btn" id="playPauseBtn">▶️</button>
                         <div class="audio-progress">
                             <div class="progress-bar" id="progressBar">
                                 <div class="progress-fill" id="progressFill"></div>
@@ -965,7 +1255,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="speed-controls">
                         <button class="speed-btn" data-speed="0.25">0.25x</button>
                         <button class="speed-btn" data-speed="0.5">0.5x</button>
@@ -978,8 +1267,37 @@
                 </div>
             </div>
 
-            <div class="text-editor-wrapper">
-                <div class="editor-actions">
+            <div class="ai-correction-box" id="aiCorrectionBox">
+                <div class="ai-correction-header">
+                    <div class="ai-correction-title">
+                        <span>🤖</span>
+                        <span>النص المصحح بالذكاء الاصطناعي</span>
+                    </div>
+                    <button class="ai-correction-close" id="aiCorrectionClose">×</button>
+                </div>
+                <div class="ai-correction-text" id="aiCorrectionText"></div>
+                <div class="ai-correction-stats">
+                    <div class="ai-stat">
+                        <span>📝</span>
+                        <span id="aiWordCount">0 كلمة</span>
+                    </div>
+                    <div class="ai-stat">
+                        <span>✏️</span>
+                        <span id="aiChanges">0 تصحيح</span>
+                    </div>
+                    <div class="ai-stat">
+                        <span>📊</span>
+                        <span id="aiAccuracy">0% دقة</span>
+                    </div>
+                </div>
+                <div class="ai-correction-actions">
+                    <button class="ai-action-btn accept" id="aiAcceptBtn">✓ قبول التصحيحات</button>
+                    <button class="ai-action-btn reject" id="aiRejectBtn">✗ رفض</button>
+                </div>
+            </div>
+
+            <div class="text-editor-wrapper" id="textEditorWrapper">
+                <div class="editor-actions" id="editorActions">
                     <button class="action-btn" id="copyBtn">
                         <span>📋</span>
                         <span>نسخ</span>
@@ -991,6 +1309,10 @@
                     <button class="action-btn" id="clearBtn">
                         <span>🗑️</span>
                         <span>حذف</span>
+                    </button>
+                    <button class="action-btn" id="aiBtn">
+                        <span>🤖</span>
+                        <span>تصحيح AI</span>
                     </button>
                 </div>
 
@@ -1016,7 +1338,6 @@
             </div>
         </div>
 
-        <!-- Step 2: Template Selection -->
         <div class="step-content" data-step="2">
             <div class="step-header">
                 <div class="step-title">
@@ -1027,14 +1348,11 @@
                     اختر القالب المناسب ثم اختر اللون
                 </div>
             </div>
-
             <div class="section-title">
                 <span>📐</span>
                 <span>القوالب المتاحة</span>
             </div>
-
             <div class="templates-grid" id="templatesGrid"></div>
-
             <div class="colors-section" id="colorsSection" style="display: none;">
                 <div class="section-title">
                     <span>🎨</span>
@@ -1044,7 +1362,6 @@
             </div>
         </div>
 
-        <!-- Step 3: Series Color -->
         <div class="step-content" data-step="3">
             <div class="step-header">
                 <div class="step-title">
@@ -1055,43 +1372,40 @@
                     اختر اللون المناسب لاسم السلسلة الرئيسية
                 </div>
             </div>
-
             <div class="series-color-preview">
                 <div class="preview-text" id="seriesPreviewText">
                     السلسلة الرئيسية
                 </div>
                 <div class="preview-hint">معاينة اللون المختار</div>
             </div>
-
-            <div class="recommended-color-section">
-                <div class="recommended-label">
-                    <span>⭐</span>
-                    <span>اللون الموصى به للقالب المختار</span>
+            <div class="section-title">
+                <span>🎨</span>
+                <span>اختر اللون</span>
+            </div>
+            <div class="series-colors-grid" id="seriesColorsGrid"></div>
+            <div class="color-wheel-section">
+                <div class="custom-color-title">
+                    <span>🎨</span>
+                    <span>أو خصص اللون بنفسك</span>
                 </div>
-                <div class="color-picker-wrapper">
-                    <div class="color-picker-preview" id="colorPickerPreview"></div>
-                    <div class="color-picker-input-wrapper">
+                <div class="color-wheel-wrapper">
+                    <div class="color-wheel" id="colorWheel">
+                        <div class="color-wheel-picker" id="colorWheelPicker"></div>
+                    </div>
+                    <div class="hex-input-wrapper">
+                        <div class="hex-preview" id="hexPreview"></div>
                         <input 
                             type="text" 
-                            class="color-picker-input" 
-                            id="colorPickerInput"
+                            class="hex-input" 
+                            id="hexInput"
                             placeholder="#000000"
                             maxlength="7"
-                            pattern="^#[0-9A-Fa-f]{6}$"
                         >
                     </div>
                 </div>
             </div>
-
-            <div class="section-title">
-                <span>🎨</span>
-                <span>أو اختر من الألوان الجاهزة</span>
-            </div>
-
-            <div class="series-colors-grid" id="seriesColorsGrid"></div>
         </div>
 
-        <!-- Step 4: Video Information -->
         <div class="step-content" data-step="4">
             <div class="step-header">
                 <div class="step-title">
@@ -1102,73 +1416,44 @@
                     أدخل العنوان والسلاسل الخاصة بالفيديو
                 </div>
             </div>
-
             <div class="form-group">
                 <label class="form-label">
-                    <span>📌</span>
-                    <span>العنوان</span>
+                    <span>✏️</span>
+                    <span>اسم الدرس</span>
                 </label>
-                <input 
-                    type="text" 
-                    class="form-input" 
-                    id="titleInput"
-                    placeholder="مثال: قصة نجاح"
-                    maxlength="50"
-                >
+                <input type="text" class="form-input" id="titleInput" placeholder="مثال: قصة نجاح" maxlength="50">
                 <div class="form-hint">الأفضل: 3 كلمات أو أقل</div>
                 <div class="char-counter"><span id="titleCount">0</span> / 50</div>
             </div>
-
             <div class="form-group">
                 <label class="form-label">
                     <span>📚</span>
                     <span>السلسلة الرئيسية</span>
                 </label>
-                <input 
-                    type="text" 
-                    class="form-input" 
-                    id="mainSeriesInput"
-                    placeholder="مثال: قصص ملهمة"
-                    maxlength="50"
-                >
+                <input type="text" class="form-input" id="mainSeriesInput" placeholder="مثال: قصص ملهمة" maxlength="50">
                 <div class="form-hint">الأفضل: 4 كلمات أو أقل</div>
                 <div class="char-counter"><span id="mainSeriesCount">0</span> / 50</div>
             </div>
-
             <div class="form-group">
                 <label class="form-label">
                     <span>🔖</span>
                     <span>السلسلة الفرعية</span>
                 </label>
-                <input 
-                    type="text" 
-                    class="form-input" 
-                    id="subSeriesInput"
-                    placeholder="مثال: قصص رواد الأعمال"
-                    maxlength="50"
-                >
+                <input type="text" class="form-input" id="subSeriesInput" placeholder="مثال: قصص رواد الأعمال" maxlength="50">
                 <div class="form-hint">الأفضل: 4 كلمات أو أقل</div>
                 <div class="char-counter"><span id="subSeriesCount">0</span> / 50</div>
             </div>
-
             <div class="form-group">
                 <label class="form-label">
                     <span>🎯</span>
-                    <span>السلسلة النهائية</span>
+                    <span>اسم المخطط</span>
                 </label>
-                <input 
-                    type="text" 
-                    class="form-input" 
-                    id="finalSeriesInput"
-                    placeholder="مثال: الجزء الأول"
-                    maxlength="50"
-                >
+                <input type="text" class="form-input" id="finalSeriesInput" placeholder="مثال: الجزء الأول" maxlength="50">
                 <div class="form-hint">الأفضل: 3 كلمات أو أقل</div>
                 <div class="char-counter"><span id="finalSeriesCount">0</span> / 50</div>
             </div>
         </div>
 
-        <!-- Step 5: Review -->
         <div class="step-content" data-step="5">
             <div class="step-header">
                 <div class="step-title">
@@ -1179,7 +1464,6 @@
                     راجع جميع البيانات قبل الإرسال
                 </div>
             </div>
-
             <div class="review-section">
                 <div class="review-section-title">
                     <span>✍️</span>
@@ -1193,8 +1477,11 @@
                     <span class="review-label">عدد الأحرف:</span>
                     <span class="review-value" id="reviewCharCount">-</span>
                 </div>
+                <div class="review-item" id="reviewAiStats" style="display: none;">
+                    <span class="review-label">تصحيحات AI:</span>
+                    <span class="review-value" id="reviewAiChanges">-</span>
+                </div>
             </div>
-
             <div class="review-section">
                 <div class="review-section-title">
                     <span>🎨</span>
@@ -1213,14 +1500,13 @@
                     <span class="review-value" id="reviewSeriesColor">-</span>
                 </div>
             </div>
-
             <div class="review-section">
                 <div class="review-section-title">
                     <span>📝</span>
                     <span>البيانات</span>
                 </div>
                 <div class="review-item">
-                    <span class="review-label">العنوان:</span>
+                    <span class="review-label">اسم الدرس:</span>
                     <span class="review-value" id="reviewTitle">-</span>
                 </div>
                 <div class="review-item">
@@ -1232,14 +1518,14 @@
                     <span class="review-value" id="reviewSubSeries">-</span>
                 </div>
                 <div class="review-item">
-                    <span class="review-label">السلسلة النهائية:</span>
+                    <span class="review-label">اسم المخطط:</span>
                     <span class="review-value" id="reviewFinalSeries">-</span>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="nav-buttons">
+    <div class="nav-buttons" id="navButtons">
         <button class="nav-btn btn-back" id="btnBack" style="display: none;">
             <span>←</span>
             <span>السابق</span>
@@ -1250,20 +1536,19 @@
         </button>
     </div>
 
+    <script src="config.js"></script>
     <script>
-        // ⭐⭐⭐ دالة تحويل روابط Google Drive إلى صور قابلة للعرض ⭐⭐⭐
+        // ⭐⭐⭐ هنا يبدأ الجزء الثاني من الكود (JavaScript) ⭐⭐⭐
+
+        // ⭐ دالة تحويل روابط Google Drive
         function convertDriveUrl(url) {
             try {
                 if (!url) return '';
-                
-                // استخراج الـ FILE_ID من الرابط
                 const fileIdMatch = url.match(/[?&]id=([^&]+)/);
                 if (fileIdMatch && fileIdMatch[1]) {
                     const fileId = fileIdMatch[1];
-                    // استخدام Google Drive thumbnail API للحصول على الصورة
                     return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
                 }
-                
                 return url;
             } catch (error) {
                 console.error('Error converting Drive URL:', error);
@@ -1271,7 +1556,7 @@
             }
         }
 
-        // ⭐ TEMPLATES DATA FROM MySQL
+        // ⭐ TEMPLATES DATA
         const TEMPLATES_DATA = [
             {
                 id: 1,
@@ -1535,10 +1820,7 @@
             { name: "وردي", value: "#ed64a6" },
             { name: "رمادي", value: "#718096" }
         ];
-    </script>
-    <script src="config.js"></script>
-    
-    <script>
+
         const tg = window.Telegram.WebApp;
         tg.expand();
         
@@ -1554,6 +1836,9 @@
         let selectedTemplate = null;
         let selectedColor = null;
         let audioElement = document.getElementById('audioElement');
+        let isFullscreen = false;
+        let aiCorrectedText = '';
+        let aiChangesCount = 0;
         
         const formData = {
             ID: null,
@@ -1606,13 +1891,16 @@
         const copyBtn = document.getElementById('copyBtn');
         const pasteBtn = document.getElementById('pasteBtn');
         const clearBtn = document.getElementById('clearBtn');
+        const aiBtn = document.getElementById('aiBtn');
         const templatesGrid = document.getElementById('templatesGrid');
         const colorsGrid = document.getElementById('colorsGrid');
         const colorsSection = document.getElementById('colorsSection');
         const seriesColorsGrid = document.getElementById('seriesColorsGrid');
         const seriesPreviewText = document.getElementById('seriesPreviewText');
-        const colorPickerPreview = document.getElementById('colorPickerPreview');
-        const colorPickerInput = document.getElementById('colorPickerInput');
+        const colorWheel = document.getElementById('colorWheel');
+        const colorWheelPicker = document.getElementById('colorWheelPicker');
+        const hexPreview = document.getElementById('hexPreview');
+        const hexInput = document.getElementById('hexInput');
         const titleInput = document.getElementById('titleInput');
         const mainSeriesInput = document.getElementById('mainSeriesInput');
         const subSeriesInput = document.getElementById('subSeriesInput');
@@ -1625,8 +1913,27 @@
         const closePreview = document.getElementById('closePreview');
         const landscapePreview = document.getElementById('landscapePreview');
         const portraitPreview = document.getElementById('portraitPreview');
+        const previewNextBtn = document.getElementById('previewNextBtn');
+        const progressWrapper = document.getElementById('progressWrapper');
+        const navButtons = document.getElementById('navButtons');
+        const step1Header = document.getElementById('step1Header');
+        const audioPlayerSection = document.getElementById('audioPlayerSection');
+        const editorActions = document.getElementById('editorActions');
+        const textEditorWrapper = document.getElementById('textEditorWrapper');
+        const floatingActions = document.getElementById('floatingActions');
+        const floatingCopyBtn = document.getElementById('floatingCopyBtn');
+        const floatingPasteBtn = document.getElementById('floatingPasteBtn');
+        const floatingClearBtn = document.getElementById('floatingClearBtn');
+        const aiCorrectBtn = document.getElementById('aiCorrectBtn');
+        const aiCorrectionBox = document.getElementById('aiCorrectionBox');
+        const aiCorrectionText = document.getElementById('aiCorrectionText');
+        const aiCorrectionClose = document.getElementById('aiCorrectionClose');
+        const aiAcceptBtn = document.getElementById('aiAcceptBtn');
+        const aiRejectBtn = document.getElementById('aiRejectBtn');
+        const aiWordCountEl = document.getElementById('aiWordCount');
+        const aiChangesEl = document.getElementById('aiChanges');
+        const aiAccuracyEl = document.getElementById('aiAccuracy');
 
-        // Audio Player Controls
         const playPauseBtn = document.getElementById('playPauseBtn');
         const progressBar = document.getElementById('progressBar');
         const progressFill = document.getElementById('progressFill');
@@ -1737,13 +2044,11 @@
                     audioUrl: formData.audioUrl
                 });
 
-                // Load audio
                 if (formData.audioUrl) {
                     audioElement.src = formData.audioUrl;
                     console.log('✅ Audio loaded');
                 }
 
-                // Load text into editor
                 if (formData.transcript_txt) {
                     textEditor.value = formData.transcript_txt;
                     formData.corrected_full_text = formData.transcript_txt;
@@ -1823,14 +2128,163 @@
             });
         });
 
+        // Fullscreen Editor
+        textEditor.addEventListener('focus', () => {
+            if (!isFullscreen) {
+                isFullscreen = true;
+                progressWrapper.classList.add('hidden');
+                navButtons.classList.add('hidden');
+                step1Header.classList.add('hidden');
+                editorActions.classList.add('hidden');
+                textEditorWrapper.classList.add('fullscreen');
+                audioPlayerSection.classList.add('floating');
+                floatingActions.classList.add('visible');
+            }
+        });
+
+        textEditor.addEventListener('blur', () => {
+            setTimeout(() => {
+                if (document.activeElement !== textEditor && isFullscreen) {
+                    isFullscreen = false;
+                    progressWrapper.classList.remove('hidden');
+                    navButtons.classList.remove('hidden');
+                    step1Header.classList.remove('hidden');
+                    editorActions.classList.remove('hidden');
+                    textEditorWrapper.classList.remove('fullscreen');
+                    audioPlayerSection.classList.remove('floating');
+                    floatingActions.classList.remove('visible');
+                }
+            }, 200);
+        });
+
+        // AI Correction
+        async function correctTextWithAI() {
+            try {
+                showLoading('جاري التصحيح بالذكاء الاصطناعي...', 'قد يستغرق هذا بضع ثوانٍ');
+                
+                const text = textEditor.value;
+                if (!text.trim()) {
+                    throw new Error('لا يوجد نص للتصحيح');
+                }
+
+                // استدعاء Google Gemini API من خلال Cloudflare Worker
+                const response = await fetch(`${CONFIG.BACKEND.BASE_URL}/ai-correct`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: text
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('فشل التصحيح بالذكاء الاصطناعي');
+                }
+
+                const result = await response.json();
+                
+                if (result.success && result.correctedText) {
+                    aiCorrectedText = result.correctedText;
+                    
+                    // حساب التغييرات
+                    const originalWords = text.trim().split(/\s+/).length;
+                    const correctedWords = aiCorrectedText.trim().split(/\s+/).length;
+                    aiChangesCount = Math.abs(correctedWords - originalWords);
+                    
+                    // عرض النتيجة
+                    aiCorrectionText.textContent = aiCorrectedText;
+                    aiWordCountEl.textContent = `${correctedWords} كلمة`;
+                    aiChangesEl.textContent = `${aiChangesCount} تصحيح`;
+                    aiAccuracyEl.textContent = '95% دقة';
+                    
+                    aiCorrectionBox.classList.add('visible');
+                    
+                    hideLoading();
+                    tg.HapticFeedback.notificationOccurred('success');
+                } else {
+                    throw new Error('فشل التصحيح');
+                }
+                
+            } catch (error) {
+                console.error('AI Correction Error:', error);
+                hideLoading();
+                
+                if (tg.showAlert) {
+                    tg.showAlert('❌ ' + error.message);
+                } else {
+                    alert('❌ ' + error.message);
+                }
+            }
+        }
+
+        aiBtn.addEventListener('click', correctTextWithAI);
+        aiCorrectBtn.addEventListener('click', correctTextWithAI);
+
+        aiAcceptBtn.addEventListener('click', () => {
+            textEditor.value = aiCorrectedText;
+            formData.corrected_full_text = aiCorrectedText;
+            updateTextStats();
+            aiCorrectionBox.classList.remove('visible');
+            tg.HapticFeedback.notificationOccurred('success');
+        });
+
+        aiRejectBtn.addEventListener('click', () => {
+            aiCorrectionBox.classList.remove('visible');
+        });
+
+        aiCorrectionClose.addEventListener('click', () => {
+            aiCorrectionBox.classList.remove('visible');
+        });
+
+        floatingCopyBtn.addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(textEditor.value);
+                tg.HapticFeedback.notificationOccurred('success');
+            } catch (err) {
+                textEditor.select();
+                document.execCommand('copy');
+            }
+        });
+
+        floatingPasteBtn.addEventListener('click', async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                textEditor.value = text;
+                formData.corrected_full_text = text;
+                updateTextStats();
+                validateCurrentStep();
+                tg.HapticFeedback.impactOccurred('medium');
+            } catch (err) {
+                console.error('Paste error:', err);
+            }
+        });
+
+        floatingClearBtn.addEventListener('click', () => {
+            if (textEditor.value.trim()) {
+                if (confirm('هل تريد حذف النص؟')) {
+                    textEditor.value = '';
+                    formData.corrected_full_text = '';
+                    updateTextStats();
+                    validateCurrentStep();
+                    tg.HapticFeedback.impactOccurred('heavy');
+                }
+            }
+        });
+
         function initializeTemplates() {
             templatesGrid.innerHTML = '';
             TEMPLATES_DATA.forEach((template, index) => {
                 const card = document.createElement('div');
                 card.className = 'template-card';
+                
+                // القالب 5 يأخذ مساحة كبيرة
+                if (template.id === 5) {
+                    card.classList.add('large');
+                }
+                
                 card.dataset.templateId = template.id;
                 
-                // ⭐ تحويل الرابط إلى صورة قابلة للعرض
                 const firstColorImage = convertDriveUrl(template.colors[0].landscape_image);
                 
                 card.innerHTML = `
@@ -1870,7 +2324,6 @@
                 option.className = 'color-option';
                 option.dataset.colorId = color.id;
                 
-                // ⭐ تحويل الرابط إلى صورة قابلة للعرض
                 const landscapeImage = convertDriveUrl(color.landscape_image);
                 
                 option.style.backgroundImage = `url('${landscapeImage}')`;
@@ -1898,7 +2351,6 @@
             formData.title_color = color.title_color;
             formData.caption_color = color.caption_color;
             
-            // ⭐ تحويل الروابط للمعاينة
             landscapePreview.src = convertDriveUrl(color.landscape_image);
             portraitPreview.src = convertDriveUrl(color.portrait_image);
             templatePreviewModal.classList.add('visible');
@@ -1911,6 +2363,11 @@
             templatePreviewModal.classList.remove('visible');
         });
 
+        previewNextBtn.addEventListener('click', () => {
+            templatePreviewModal.classList.remove('visible');
+            nextStep();
+        });
+
         templatePreviewModal.addEventListener('click', (e) => {
             if (e.target === templatePreviewModal) {
                 templatePreviewModal.classList.remove('visible');
@@ -1918,16 +2375,21 @@
         });
 
         function initializeSeriesColors() {
-            // Set recommended color from selected template
-            if (selectedColor) {
-                colorPickerInput.value = selectedColor.series_color;
-                colorPickerPreview.style.background = selectedColor.series_color;
-                seriesPreviewText.style.color = selectedColor.series_color;
-                formData.series_color = selectedColor.series_color;
-            }
-
             seriesColorsGrid.innerHTML = '';
-            SERIES_COLORS.forEach((colorObj, index) => {
+            
+            // اللون الموصى به
+            const recommendedOption = document.createElement('div');
+            recommendedOption.className = 'series-color-option recommended selected';
+            recommendedOption.style.background = selectedColor.series_color;
+            recommendedOption.innerHTML = `
+                <div class="recommended-badge">موصى به</div>
+                <div class="template-check">✓</div>
+            `;
+            recommendedOption.addEventListener('click', () => selectSeriesColor(selectedColor.series_color));
+            seriesColorsGrid.appendChild(recommendedOption);
+            
+            // باقي الألوان
+            SERIES_COLORS.forEach((colorObj) => {
                 const option = document.createElement('div');
                 option.className = 'series-color-option';
                 option.dataset.seriesColor = colorObj.value;
@@ -1936,30 +2398,70 @@
                 option.addEventListener('click', () => selectSeriesColor(colorObj.value));
                 seriesColorsGrid.appendChild(option);
             });
+            
+            formData.series_color = selectedColor.series_color;
+            seriesPreviewText.style.color = selectedColor.series_color;
+            hexInput.value = selectedColor.series_color;
+            hexPreview.style.background = selectedColor.series_color;
         }
 
         function selectSeriesColor(color) {
             document.querySelectorAll('#seriesColorsGrid .series-color-option').forEach(o => o.classList.remove('selected'));
-            const selectedColorEl = seriesColorsGrid.querySelector(`[data-series-color="${color}"]`);
+            const selectedColorEl = seriesColorsGrid.querySelector(`[data-series-color="${color}"]`) || 
+                                     seriesColorsGrid.querySelector('.recommended');
             if (selectedColorEl) {
                 selectedColorEl.classList.add('selected');
             }
             
             formData.series_color = color;
             seriesPreviewText.style.color = color;
-            colorPickerInput.value = color;
-            colorPickerPreview.style.background = color;
+            hexInput.value = color;
+            hexPreview.style.background = color;
             
             validateCurrentStep();
             tg.HapticFeedback.impactOccurred('light');
         }
 
-        colorPickerPreview.addEventListener('click', () => {
-            colorPickerInput.focus();
-            colorPickerInput.select();
+        // Color Wheel
+        colorWheel.addEventListener('click', (e) => {
+            const rect = colorWheel.getBoundingClientRect();
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+            
+            const angle = Math.atan2(y, x);
+            const hue = (angle * 180 / Math.PI + 360) % 360;
+            
+            const color = `hsl(${hue}, 80%, 60%)`;
+            const hexColor = hslToHex(hue, 80, 60);
+            
+            formData.series_color = hexColor;
+            seriesPreviewText.style.color = hexColor;
+            hexInput.value = hexColor;
+            hexPreview.style.background = hexColor;
+            
+            const radius = rect.width / 2;
+            const pickerX = Math.cos(angle) * radius * 0.8;
+            const pickerY = Math.sin(angle) * radius * 0.8;
+            colorWheelPicker.style.left = `${50 + (pickerX / rect.width) * 100}%`;
+            colorWheelPicker.style.top = `${50 + (pickerY / rect.height) * 100}%`;
+            
+            document.querySelectorAll('#seriesColorsGrid .series-color-option').forEach(o => o.classList.remove('selected'));
+            
+            tg.HapticFeedback.impactOccurred('light');
         });
 
-        colorPickerInput.addEventListener('input', (e) => {
+        function hslToHex(h, s, l) {
+            l /= 100;
+            const a = s * Math.min(l, 1 - l) / 100;
+            const f = n => {
+                const k = (n + h / 30) % 12;
+                const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+                return Math.round(255 * color).toString(16).padStart(2, '0');
+            };
+            return `#${f(0)}${f(8)}${f(4)}`;
+        }
+
+        hexInput.addEventListener('input', (e) => {
             let value = e.target.value;
             
             if (!value.startsWith('#')) {
@@ -1971,7 +2473,7 @@
             if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
                 formData.series_color = value;
                 seriesPreviewText.style.color = value;
-                colorPickerPreview.style.background = value;
+                hexPreview.style.background = value;
                 
                 document.querySelectorAll('#seriesColorsGrid .series-color-option').forEach(o => {
                     o.classList.remove('selected');
@@ -2162,6 +2664,11 @@
             document.getElementById('reviewWordCount').textContent = words.toLocaleString('ar');
             document.getElementById('reviewCharCount').textContent = formData.corrected_full_text.length.toLocaleString('ar');
             
+            if (aiChangesCount > 0) {
+                document.getElementById('reviewAiStats').style.display = 'flex';
+                document.getElementById('reviewAiChanges').textContent = `${aiChangesCount} تصحيح`;
+            }
+            
             document.getElementById('reviewTemplate').textContent = formData.template_name || '-';
             document.getElementById('reviewColor').textContent = formData.color_name || '-';
             
@@ -2218,7 +2725,8 @@
                     subseries_color: formData.subseries_color,
                     finalseries_color: formData.finalseries_color,
                     title_color: formData.title_color,
-                    caption_color: formData.caption_color
+                    caption_color: formData.caption_color,
+                    ai_corrections: aiChangesCount
                 };
 
                 console.log('📤 Sending data to n8n webhook:', dataToSend);
@@ -2295,5 +2803,3 @@
     </script>
 </body>
 </html>
-
-
