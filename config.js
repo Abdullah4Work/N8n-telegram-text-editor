@@ -26,7 +26,6 @@ const CONFIG = {
         MODEL: 'gemini-2.0-flash-exp', // ⭐ النموذج الجديد
         // API Key سيتم جلبه من Environment Variables في Worker
         // الاسم في Cloudflare Worker Environment: GOOGLE_AI_STUDIO_API
-        MAX_TOKENS: 8000,
         TEMPERATURE: 0.3,
         CORRECTION_PROMPT: `أنت مصحح نصوص عربية محترف. مهمتك تصحيح النص المفرغ من الصوت.
 
