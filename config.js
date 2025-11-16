@@ -8,24 +8,19 @@ const CONFIG = {
             REQUEST_TRANSCRIPT: '/request-transcript',
             TRANSCRIPT_STATUS: '/transcript-status',
             SAVE_DATA: '/save-data',
-            AI_CORRECT: '/ai-correct', // ⭐ جديد
-            GET_BIN: '/get-bin', // ⭐ للقراءة من JSONBin
+            AI_CORRECT: '/ai-correct',
+            GET_BIN: '/get-bin',
             HEALTH: '/health'
         }
     },
 
-    // ⭐ إضافة JSONBIN للقراءة المباشرة
     JSONBIN: {
-        BASE_URL: 'https://api.jsonbin.io/v3/b',
-        // ملاحظة: API_KEY سيتم تحميله من GitHub Secrets عبر deploy.yml
+        BASE_URL: 'https://api.jsonbin.io/v3/b'
     },
 
-    // ⭐ إعدادات Google Gemini AI
     AI: {
         PROVIDER: 'google-gemini',
-        MODEL: 'gemini-2.0-flash-exp', // ⭐ النموذج الجديد
-        // API Key سيتم جلبه من Environment Variables في Worker
-        // الاسم في Cloudflare Worker Environment: GOOGLE_AI_STUDIO_API
+        MODEL: 'gemini-2.0-flash-exp',
         TEMPERATURE: 0.3,
         CORRECTION_PROMPT: `أنت مصحح نصوص عربية محترف. مهمتك تصحيح النص المفرغ من الصوت.
 
@@ -41,7 +36,7 @@ const CONFIG = {
 
     APP: {
         WEB_APP_URL: 'https://abdullah4work.github.io/N8n-telegram-text-editor/',
-        MAX_FILE_SIZE: 52428800, // 50 MB
+        MAX_FILE_SIZE: 52428800,
         ALLOWED_AUDIO_FORMATS: ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/m4a', 'audio/flac', 'audio/mp3'],
         MAX_TEXT_LENGTH: 100000,
         AUTO_SAVE_INTERVAL: 30000
@@ -175,11 +170,21 @@ if (typeof Object.freeze === 'function') {
     Object.freeze(CONFIG);
     Object.freeze(CONFIG.BACKEND);
     Object.freeze(CONFIG.BACKEND.ENDPOINTS);
-    Object.freeze(CONFIG.AI); // ⭐ تجميد إعدادات AI
+    Object.freeze(CONFIG.AI);
     Object.freeze(CONFIG.JSONBIN);
     Object.freeze(CONFIG.APP);
     Object.freeze(CONFIG.TELEGRAM);
-    CONFIG.TEMPLATES.forEach(template => Object.freeze(template));
+    CONFIG.TEMPLATES.forEach(template => {
+        Object.freeze(template);
+        if (template.colors) {
+            template.colors.forEach(color => Object.freeze(color));
+        }
+        if (template.data) {
+            Object.freeze(template.data);
+            if (template.data.PORTRAIT) Object.freeze(template.data.PORTRAIT);
+            if (template.data.LANDSCAPE) Object.freeze(template.data.LANDSCAPE);
+        }
+    });
     CONFIG.SERIES_COLORS.forEach(color => Object.freeze(color));
 }
 
@@ -188,15 +193,12 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = CONFIG;
 }
 
+// إضافة CONFIG للنطاق العام
+if (typeof window !== 'undefined') {
+    window.CONFIG = CONFIG;
+}
+
 console.log('✅ CONFIG loaded securely with AI support via Worker');
 console.log('🤖 AI Model:', CONFIG.AI.MODEL);
 console.log('🔒 API Keys are stored safely in Worker Environment Variables');
-```
-
----
-
-## 🔐 **ملاحظات مهمة:**
-
-### 1️⃣ **في Cloudflare Worker يجب إضافة:**
-```
-Environment Variable Name: GOOGLE_AI_STUDIO_API
+console.log('📦 CONFIG is now available globally');
