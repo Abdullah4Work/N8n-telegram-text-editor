@@ -1843,24 +1843,18 @@
         </button>
     </div>
 
-<!-- ========================================== -->
-<!-- يوضع هنا الجزء الثاني (JavaScript الكامل) -->
-<!-- ========================================== -->
-
     <script>
-        // ===== تهيئة Telegram Web App =====
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        if (tg.version >= 6.2) {
-            try { tg.enableClosingConfirmation(); } catch (e) {}
-        }
-
-        // ===== الإعدادات =====
+        // ===== CONFIG مدمج =====
+        const WORKER_API_URL = 'https://n8n-video-worker.abdullah27623.workers.dev';
         const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor-response';
         const JSONBIN_API_KEY = '$2a$10$LZzUrZstrWJsJROsgMvgeeoq0lC8lexDSW39z0hwNIxijF8y5jf7u';
-        const WORKER_API_URL = CONFIG?.BACKEND?.BASE_URL || 'https://n8n-video-worker.abdullah27623.workers.dev';
 
-        // ===== المتغيرات العامة =====
+        // ===== Telegram =====
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+        try { tg.enableClosingConfirmation(); } catch (e) {}
+
+        // ===== المتغيرات =====
         let currentStep = 1;
         const totalSteps = 6;
         let selectedTemplate = null;
@@ -1871,7 +1865,6 @@
         const AI_REQUEST_COOLDOWN = 10000;
         let loadedTemplatesData = [];
 
-        // ===== بيانات النموذج =====
         const formData = {
             ID: null,
             binId: '',
@@ -1900,7 +1893,7 @@
             updated_at: new Date().toISOString()
         };
 
-        // ===== دوال المساعدة =====
+        // ===== دوال مساعدة =====
         function showLoading(text, subtext = '') {
             document.getElementById('loadingText').textContent = text;
             document.getElementById('loadingSubtext').textContent = subtext;
@@ -1936,7 +1929,7 @@
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
 
-        // ===== تحميل البيانات من JSONBin =====
+        // ===== تحميل البيانات =====
         async function loadInitialData() {
             try {
                 showLoading('جاري تحميل البيانات...', 'الرجاء الانتظار');
@@ -1944,9 +1937,7 @@
                 const urlParams = new URLSearchParams(window.location.search);
                 const binId = urlParams.get('bin');
 
-                if (!binId) {
-                    throw new Error('معرف البيانات غير موجود في الرابط');
-                }
+                if (!binId) throw new Error('معرف البيانات غير موجود');
 
                 const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
                     method: 'GET',
@@ -1958,36 +1949,31 @@
                 const responseData = await response.json();
                 const loadedData = responseData.record || {};
 
-                // حفظ البيانات
                 formData.ID = loadedData.id || '';
                 formData.binId = binId;
                 formData.audioUrl = loadedData.audioUrl || '';
                 formData.transcript_txt = loadedData.text || '';
                 formData.corrected_full_text = loadedData.text || '';
 
-                // حفظ القوالب
                 if (loadedData.templates && Array.isArray(loadedData.templates)) {
                     loadedTemplatesData = loadedData.templates;
+                    console.log('✅ تم تحميل', loadedTemplatesData.length, 'قالب');
                 }
 
-                // تحميل الصوت
                 if (formData.audioUrl) {
                     document.getElementById('audioElement').src = formData.audioUrl;
                 }
 
-                // تحميل النص
                 if (formData.transcript_txt) {
                     document.getElementById('textEditor').value = formData.transcript_txt;
                     updateTextStats();
                 }
 
-                // تحميل القوالب
                 initializeTemplates();
-
                 hideLoading();
                 validateCurrentStep();
             } catch (error) {
-                console.error('Error:', error);
+                console.error('❌ Error:', error);
                 hideLoading();
                 alert('❌ خطأ: ' + error.message);
             }
@@ -2010,8 +1996,7 @@
         document.getElementById('aiBtn').addEventListener('click', async () => {
             const now = Date.now();
             if (now - lastAIRequestTime < AI_REQUEST_COOLDOWN) {
-                const waitTime = Math.ceil((AI_REQUEST_COOLDOWN - (now - lastAIRequestTime)) / 1000);
-                alert(`⏰ الرجاء الانتظار ${waitTime} ثانية`);
+                alert(`⏰ انتظر ${Math.ceil((AI_REQUEST_COOLDOWN - (now - lastAIRequestTime)) / 1000)} ثانية`);
                 return;
             }
 
@@ -2035,7 +2020,7 @@
 
                 if (!response.ok) {
                     const errorData = await response.json();
-                    throw new Error(errorData.error || 'فشل التصحيح');
+                    throw new Error(errorData.userMessage || errorData.message || 'فشل التصحيح');
                 }
 
                 const result = await response.json();
@@ -2050,15 +2035,17 @@
                     document.getElementById('aiWordCount').textContent = `${correctedWords} كلمة`;
                     document.getElementById('aiChanges').textContent = `${aiChangesCount} تعديل`;
                     document.getElementById('aiCorrectionBox').classList.add('visible');
+                    
+                    console.log('✅ AI Correction Success');
                 } else {
                     throw new Error('لم يتم إرجاع نص مصحح');
                 }
 
                 hideLoading();
             } catch (error) {
-                console.error('AI Error:', error);
+                console.error('❌ AI Error:', error);
                 hideLoading();
-                alert('❌ فشل التصحيح: ' + error.message);
+                alert('❌ ' + error.message);
             }
         });
 
@@ -2135,7 +2122,6 @@
             audioElement.currentTime = percentage * audioElement.duration;
         });
 
-        // ===== سرعة التشغيل =====
         document.querySelectorAll('.speed-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 audioElement.playbackRate = parseFloat(btn.dataset.speed);
@@ -2154,7 +2140,6 @@
                 return;
             }
 
-            // تجميع القوالب الفريدة
             const uniqueTemplates = {};
             loadedTemplatesData.forEach(item => {
                 if (!uniqueTemplates[item.template_id]) {
@@ -2168,7 +2153,6 @@
                 uniqueTemplates[item.template_id].colors.push(item);
             });
 
-            // عرض القوالب
             Object.values(uniqueTemplates).forEach((template, index) => {
                 const card = document.createElement('div');
                 card.className = 'template-card';
@@ -2186,6 +2170,8 @@
                 card.onclick = () => selectTemplate(template);
                 grid.appendChild(card);
             });
+            
+            console.log('✅ تم عرض', Object.keys(uniqueTemplates).length, 'قالب');
         }
 
         // ===== اختيار القالب =====
@@ -2197,7 +2183,6 @@
             formData.template_id = template.id;
             formData.template_name = template.name;
 
-            // عرض الألوان
             const grid = document.getElementById('colorsGrid');
             grid.innerHTML = '';
 
@@ -2229,7 +2214,6 @@
             formData.subseries_color = color.landscape_subseries_color;
             formData.finalseries_color = color.landscape_finalseries_color;
 
-            // تعبئة تلقائية
             document.getElementById('mainSeriesInput').value = color.series_text || '';
             document.getElementById('subSeriesInput').value = color.sub_series_text || '';
             document.getElementById('finalSeriesInput').value = color.final_series_text || '';
@@ -2240,7 +2224,6 @@
             
             updateCharCounters();
 
-            // معاينة الصور
             const landscapeImg = document.getElementById('landscapePreview');
             const portraitImg = document.getElementById('portraitPreview');
 
@@ -2261,7 +2244,6 @@
             validateCurrentStep();
         }
 
-        // ===== إغلاق المعاينة =====
         document.getElementById('closePreview').addEventListener('click', () => {
             document.getElementById('templatePreviewModal').classList.remove('visible');
         });
@@ -2348,27 +2330,52 @@
             }
 
             showLoading('جاري إنشاء SEO...', 'قد يستغرق بضع ثوانٍ');
+            document.getElementById('seoGenerateBtn').disabled = true;
 
             try {
-                // إنشاء تلقائي
-                const words = formData.corrected_full_text.split(/\s+/).slice(0, 50).join(' ');
+                const response = await fetch(`${WORKER_API_URL}/generate-seo`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text: formData.corrected_full_text,
+                        title: formData.title,
+                        series: formData.series,
+                        subSeries: formData.subSeries
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.userMessage || 'فشل إنشاء SEO');
+                }
+
+                const result = await response.json();
                 
-                formData.seo_title = `${formData.title || 'عنوان'} | ${formData.series || 'السلسلة'}`;
-                formData.seo_description = `${words}...\n\n🔔 اشترك في القناة\n📚 السلسلة: ${formData.series}\n🎯 ${formData.title}`;
-                formData.tags = [formData.title, formData.series, formData.subSeries, 'تعليمي', 'عربي'].filter(t => t && t.trim());
+                if (result.success) {
+                    formData.seo_title = result.title || '';
+                    formData.seo_description = result.description || '';
+                    formData.tags = result.tags || [];
 
-                document.getElementById('seoTitleInput').value = formData.seo_title;
-                document.getElementById('seoDescriptionInput').value = formData.seo_description;
+                    document.getElementById('seoTitleInput').value = formData.seo_title;
+                    document.getElementById('seoDescriptionInput').value = formData.seo_description;
 
-                updateSEOCounts();
-                renderTags();
-                updateSEOStats();
+                    updateSEOCounts();
+                    renderTags();
+                    updateSEOStats();
+                    
+                    console.log('✅ SEO Generated Successfully');
+                } else {
+                    throw new Error('فشل إنشاء SEO');
+                }
 
                 hideLoading();
+                document.getElementById('seoGenerateBtn').disabled = false;
                 validateCurrentStep();
             } catch (error) {
+                console.error('❌ SEO Error:', error);
                 hideLoading();
-                alert('❌ خطأ: ' + error.message);
+                document.getElementById('seoGenerateBtn').disabled = false;
+                alert('❌ ' + error.message);
             }
         });
 
@@ -2560,13 +2567,15 @@
                     setTimeout(() => tg.close(), 500);
                 });
             } catch (error) {
-                console.error('Error:', error);
+                console.error('❌ Error:', error);
                 hideLoading();
                 alert('❌ خطأ: ' + error.message);
             }
         }
 
         // ===== البدء =====
+        console.log('🚀 App Starting...');
+        console.log('Worker API:', WORKER_API_URL);
         updateProgress();
         loadInitialData();
     </script>
