@@ -66,8 +66,8 @@
         .progress-line {
             position: absolute;
             top: 16px;
-            left: 8%;
-            right: 8%;
+            left: 5%;
+            right: 5%;
             height: 3px;
             background: var(--border);
             z-index: 1;
@@ -194,7 +194,7 @@
         }
 
         /* ═══════════════════════════════════════════════════════
-           Audio Player Section (محسّن)
+           Audio Player Section
         ═══════════════════════════════════════════════════════ */
         .audio-player-section {
             background: white;
@@ -868,54 +868,6 @@
             color: var(--text-secondary);
         }
 
-        .series-colors-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .series-color-option {
-            aspect-ratio: 3/2;
-            border-radius: 16px;
-            border: 3px solid var(--border);
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            overflow: hidden;
-        }
-
-        .series-color-option.recommended {
-            border-color: #FFD700;
-            box-shadow: 0 4px 16px rgba(255, 215, 0, 0.3);
-        }
-
-        .series-color-option:active {
-            transform: scale(0.95);
-        }
-
-        .series-color-option.selected {
-            border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
-        }
-
-        .recommended-badge {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            background: #FFD700;
-            color: #000;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 10px;
-            font-weight: 700;
-        }
-
         .color-wheel-section {
             background: white;
             border-radius: 16px;
@@ -1042,6 +994,119 @@
             color: var(--text-secondary);
             margin-top: 4px;
             direction: ltr;
+        }
+
+        /* ═══════════════════════════════════════════════════════
+           SEO Section
+        ═══════════════════════════════════════════════════════ */
+        .seo-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .seo-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .seo-generate-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            margin-bottom: 20px;
+        }
+
+        .seo-generate-btn:active {
+            transform: scale(0.98);
+        }
+
+        .seo-generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+            resize: vertical;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--bg);
+            border-radius: 8px;
+            min-height: 60px;
+        }
+
+        .tag-item {
+            background: white;
+            border: 2px solid var(--border);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .tag-item.editable {
+            cursor: pointer;
+        }
+
+        .tag-item.editable:hover {
+            border-color: var(--primary);
+        }
+
+        .tag-remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            padding: 0;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* ═══════════════════════════════════════════════════════
@@ -1267,6 +1332,10 @@
             </div>
             <div class="progress-step" data-step="5">
                 <div class="step-circle">5</div>
+                <div class="step-label">SEO</div>
+            </div>
+            <div class="progress-step" data-step="6">
+                <div class="step-circle">6</div>
                 <div class="step-label">المراجعة</div>
             </div>
         </div>
@@ -1383,9 +1452,7 @@
             </div>
         </div>
 
-<!-- ⭐⭐⭐ هنا يوضع الجزء الثاني من الكود ⭐⭐⭐ -->
-
-                <!-- Step 2: Template Selection -->
+        <!-- Step 2: Template Selection -->
         <div class="step-content" data-step="2">
             <div class="step-header">
                 <div class="step-title">
@@ -1427,15 +1494,10 @@
                 </div>
                 <div class="preview-hint">معاينة اللون المختار</div>
             </div>
-            <div class="section-title">
-                <span>🎨</span>
-                <span>اختر اللون</span>
-            </div>
-            <div class="series-colors-grid" id="seriesColorsGrid"></div>
             <div class="color-wheel-section">
                 <div class="custom-color-title">
                     <span>🎨</span>
-                    <span>أو خصص اللون بنفسك</span>
+                    <span>اختر اللون المفضل للتصميم</span>
                 </div>
                 <div class="color-wheel-wrapper">
                     <div class="color-wheel" id="colorWheel">
@@ -1504,8 +1566,60 @@
             </div>
         </div>
 
-        <!-- Step 5: Review -->
+        <!-- Step 5: SEO -->
         <div class="step-content" data-step="5">
+            <div class="step-header">
+                <div class="step-title">
+                    <span>🔍</span>
+                    <span>تحسين محركات البحث SEO</span>
+                </div>
+                <div class="step-description">
+                    إنشاء عنوان ووصف وكلمات مفتاحية احترافية
+                </div>
+            </div>
+
+            <button class="seo-generate-btn" id="seoGenerateBtn">
+                <span>🤖</span>
+                <span>إنشاء SEO احترافي تلقائياً</span>
+            </button>
+
+            <div class="seo-section">
+                <div class="seo-section-title">
+                    <span>📌</span>
+                    <span>عنوان الفيديو (SEO Title)</span>
+                </div>
+                <div class="form-group">
+                    <input type="text" class="form-input" id="seoTitleInput" placeholder="سيتم إنشاؤه تلقائياً..." maxlength="100">
+                    <div class="form-hint">الأفضل: 60-70 حرف</div>
+                    <div class="char-counter"><span id="seoTitleCount">0</span> / 100</div>
+                </div>
+            </div>
+
+            <div class="seo-section">
+                <div class="seo-section-title">
+                    <span>📝</span>
+                    <span>وصف الفيديو (Description)</span>
+                </div>
+                <div class="form-group">
+                    <textarea class="form-textarea" id="seoDescriptionInput" placeholder="سيتم إنشاؤه تلقائياً..." maxlength="5000"></textarea>
+                    <div class="form-hint">يتضمن وصف احترافي + النص الثابت</div>
+                    <div class="char-counter"><span id="seoDescCount">0</span> / 5000</div>
+                </div>
+            </div>
+
+            <div class="seo-section">
+                <div class="seo-section-title">
+                    <span>🏷️</span>
+                    <span>الكلمات المفتاحية (Tags)</span>
+                </div>
+                <div class="tags-container" id="tagsContainer">
+                    <div style="color: var(--text-secondary); font-size: 13px;">سيتم إنشاؤها تلقائياً...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 6: Review -->
+        <div class="step-content" data-step="6">
             <div class="step-header">
                 <div class="step-title">
                     <span>✅</span>
@@ -1573,6 +1687,20 @@
                     <span class="review-value" id="reviewFinalSeries">-</span>
                 </div>
             </div>
+            <div class="review-section">
+                <div class="review-section-title">
+                    <span>🔍</span>
+                    <span>SEO</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">العنوان:</span>
+                    <span class="review-value" id="reviewSeoTitle">-</span>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">عدد الكلمات المفتاحية:</span>
+                    <span class="review-value" id="reviewTagsCount">-</span>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1614,6 +1742,61 @@
         }
 
         const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor';
+
+        const FIXED_DESCRIPTION_TEXT = `
+--------------------------------------------------------
+بشرى سارة لمن يشاهد الفيديو الى نهايته ويعمل اعجاب للفيديو ومشاركة له على احد وسائل التواصل الاجتماعي وفي احد مجموعات علاج الزهريين ويشترك في القناة عاليوتيوب ان يدخل في امكانية الاشتراك في متابعة العلاج لمدة شهر مع الراقي مباشرة على حسابه الخاص عالتليجرام وتشخيص حالته وان كان زهري ام لا بعد ان يجيب على السؤال الخاص بالفيديو وقيمة هذا الاشتراك الشهري 65 دولار تحصل عليه مجانا باذن الله.
+ بجانب ان العلاج المجاني متاح للجميع لكن بدون اسئلة ومتابعة مع الراقي لضيق الوقت وضغط الرسائل
+
+
+السلام عليكم ورحمة الله وبركاته 
+
+للأعضاء الجدد
+تشترك اولا في قناة الرقية الشرعية واخر الزمان عالتليجرام من خلال الرابط التالي
+
+https://t.me/MyRoqia
+
+ثم تبدا اولا بقراءة الرسالة المثبتة في اعلى القناة وما بعدها من رسائل وافهم ما جاء فيها جيدا وشروط العلاج معنا وابدا بارسال المعلومات المطلوبة للتشخيص اولا والقسم المطلوب وترسلها لحساب الدعم الفني عالتليجرام من خلال هذا الرابط
+
+https://t.me/MyRoqiaSupport
+
+وتبدئ بتطبيق خطوات التشخيص حتى نتاكد مما عندك بالضبط ونرسلك خطوات العلاج وطريقة تحصين الجسم والبيت بشكل يومي وتنظيف الجسم من الاسحار وسماع المقاطع الخاصة بابطال اسحار السلالة الزهرية المستهدفة فان تاثرت بها تكون زهري ومستهدف من قبل الجن والشياطين والعفاريت السحرة 
+
+اشترك اولا في القناة العامة الخاصة بموقع رقيتي للرقية الشرعية عالتليجرام من خلال هذا الرابط 
+
+https://t.me/MyRoqia
+
+ثم تجد الخطوات المطلوبة للتشخيص في رابط الرسالة المثبتة في اعلى القناة 
+
+https://t.me/MyRoqia/86819
+
+
+اولا : شروط العلاج معنا في المجموعات
+https://t.me/MyRoqia/86819
+
+ثانيا : ملئ المعلومات المطلوبة للتشخيص كاملة
+https://t.me/MyRoqia/86822
+
+ثالثا : نص القسم المطلوب الالتزام به ترسله لحساب الدعم الفني عالتليجرام مع تاكيد منك على الالتزام بما فيه
+
+https://t.me/MyRoqia/86823
+
+
+رابعا : طريقة الاشتراك في متابعة العلاج عالخاص مع الراقي وتحويل قيمة الاشتراك عن طريق حساب الباي بال الخاص بالموقع 
+
+https://t.me/MyRoqia/86824
+
+
+خامسا : الفرق بين العلاج المجاني والعلاج مقابل اشتراك شهري
+
+العلاج المجاني لا يشمل الأسئلة والاجابات عليها ومتابعة كل حالة بشكل خاص وتفسير الرؤى التي لها علاقة بالعلاج وارسال برامج خاصة مناسبة لكل حالة حسب ما تعاني منه
+
+في العلاج المجاني التطبيق يكون لبرامج علاجية مرتبة الجميع يطبقها بالترتيب دون اسئلة ودون متابعة خاصة للعلاج بسبب ضغط الرسائل وضيق الوقت 
+
+https://t.me/MyRoqia/86825
+
+وفقكم الله وحفظكم بحفظه ويسر لكم علاجكم وتحصينكم وسماع المقاطع
+`;
 
         console.log('📱 Telegram WebApp SDK:', tg.version);
         console.log('🔗 N8N Webhook URL:', N8N_WEBHOOK_URL);
@@ -1875,22 +2058,11 @@
             }
         ];
 
-        const SERIES_COLORS = [
-            { name: "بنفسجي", value: "#667eea" },
-            { name: "أزرق", value: "#4299e1" },
-            { name: "أخضر", value: "#48bb78" },
-            { name: "أصفر", value: "#ecc94b" },
-            { name: "برتقالي", value: "#ed8936" },
-            { name: "أحمر", value: "#f56565" },
-            { name: "وردي", value: "#ed64a6" },
-            { name: "رمادي", value: "#718096" }
-        ];
-
         // ═══════════════════════════════════════════════════════
         // ⭐ State Variables
         // ═══════════════════════════════════════════════════════
         let currentStep = 1;
-        const totalSteps = 5;
+        const totalSteps = 6;
         let initialData = null;
         let selectedTemplate = null;
         let selectedColor = null;
@@ -1899,7 +2071,7 @@
         let aiCorrectedText = '';
         let aiChangesCount = 0;
         let lastAIRequestTime = 0;
-        const AI_REQUEST_COOLDOWN = 10000; // 10 ثواني بين كل طلب
+        const AI_REQUEST_COOLDOWN = 10000;
 
         const formData = {
             ID: null,
@@ -1926,7 +2098,7 @@
             created_at: null,
             updated_at: new Date().toISOString(),
             description: null,
-            tags: null,
+            tags: [],
             template_id: null,
             template_name: null,
             color_id: null,
@@ -1935,7 +2107,9 @@
             subseries_color: '#ebbd27',
             finalseries_color: '#fce74e',
             title_color: '#ffffff',
-            caption_color: '#ffffff'
+            caption_color: '#ffffff',
+            seo_title: '',
+            seo_description: ''
         };
 
         // ═══════════════════════════════════════════════════════
@@ -1959,7 +2133,6 @@
         const templatesGrid = document.getElementById('templatesGrid');
         const colorsGrid = document.getElementById('colorsGrid');
         const colorsSection = document.getElementById('colorsSection');
-        const seriesColorsGrid = document.getElementById('seriesColorsGrid');
         const seriesPreviewText = document.getElementById('seriesPreviewText');
         const colorWheel = document.getElementById('colorWheel');
         const colorWheelPicker = document.getElementById('colorWheelPicker');
@@ -2003,6 +2176,12 @@
         const currentTimeDisplay = document.getElementById('currentTime');
         const durationDisplay = document.getElementById('duration');
         const speedBtns = document.querySelectorAll('.speed-btn');
+        const seoGenerateBtn = document.getElementById('seoGenerateBtn');
+        const seoTitleInput = document.getElementById('seoTitleInput');
+        const seoDescriptionInput = document.getElementById('seoDescriptionInput');
+        const tagsContainer = document.getElementById('tagsContainer');
+        const seoTitleCount = document.getElementById('seoTitleCount');
+        const seoDescCount = document.getElementById('seoDescCount');
 
         // ═══════════════════════════════════════════════════════
         // ⭐ Utility Functions
@@ -2071,6 +2250,16 @@
                 }
             } catch (e) {
                 // Haptic feedback not available
+            }
+        }
+
+        function scrollToTop() {
+            const activeStep = document.querySelector('.step-content.active');
+            if (activeStep) {
+                activeStep.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             }
         }
 
@@ -2279,11 +2468,10 @@
         });
 
         // ═══════════════════════════════════════════════════════
-        // ⭐ AI Correction Function (Enhanced with Retry & Rate Limit Handling)
+        // ⭐ AI Correction Function
         // ═══════════════════════════════════════════════════════
         async function correctTextWithAI() {
             try {
-                // التحقق من Cooldown
                 const now = Date.now();
                 if (now - lastAIRequestTime < AI_REQUEST_COOLDOWN) {
                     const remainingTime = Math.ceil((AI_REQUEST_COOLDOWN - (now - lastAIRequestTime)) / 1000);
@@ -2299,11 +2487,8 @@
                 }
 
                 console.log('🤖 Requesting AI correction...');
-
-                // تحديث وقت آخر طلب
                 lastAIRequestTime = now;
 
-                // محاولة الطلب مع Retry
                 let attempt = 0;
                 const maxAttempts = 2;
                 let lastError = null;
@@ -2324,7 +2509,6 @@
 
                         console.log('AI Response status:', response.status);
 
-                        // معالجة 429 (Rate Limit)
                         if (response.status === 429) {
                             const errorData = await response.json().catch(() => ({}));
                             const retryAfter = errorData.retryAfter || 60;
@@ -2373,7 +2557,7 @@
                             triggerNotificationFeedback('success');
                             
                             console.log('✅ AI Correction successful');
-                            return; // نجح - اخرج من الحلقة
+                            return;
                         } else {
                             throw new Error('لم يتم إرجاع نص مصحح');
                         }
@@ -2384,12 +2568,11 @@
                         
                         if (attempt < maxAttempts) {
                             console.log(`Retrying after error: ${error.message}`);
-                            await new Promise(resolve => setTimeout(resolve, 2000)); // انتظر ثانيتين
+                            await new Promise(resolve => setTimeout(resolve, 2000));
                         }
                     }
                 }
 
-                // إذا فشلت جميع المحاولات
                 throw lastError || new Error('فشل التصحيح بعد عدة محاولات');
                 
             } catch (error) {
@@ -2572,49 +2755,12 @@
         // ⭐ Series Colors Functions
         // ═══════════════════════════════════════════════════════
         function initializeSeriesColors() {
-            seriesColorsGrid.innerHTML = '';
-            
-            const recommendedOption = document.createElement('div');
-            recommendedOption.className = 'series-color-option recommended selected';
-            recommendedOption.style.background = selectedColor.series_color;
-            recommendedOption.dataset.seriesColor = selectedColor.series_color;
-            recommendedOption.innerHTML = `
-                <div class="recommended-badge">موصى به</div>
-                <div class="template-check">✓</div>
-            `;
-            recommendedOption.addEventListener('click', () => selectSeriesColor(selectedColor.series_color));
-            seriesColorsGrid.appendChild(recommendedOption);
-            
-            SERIES_COLORS.forEach((colorObj) => {
-                const option = document.createElement('div');
-                option.className = 'series-color-option';
-                option.dataset.seriesColor = colorObj.value;
-                option.style.background = colorObj.value;
-                option.innerHTML = '<div class="template-check">✓</div>';
-                option.addEventListener('click', () => selectSeriesColor(colorObj.value));
-                seriesColorsGrid.appendChild(option);
-            });
+            if (!selectedColor) return;
             
             formData.series_color = selectedColor.series_color;
             seriesPreviewText.style.color = selectedColor.series_color;
             hexInput.value = selectedColor.series_color;
             hexPreview.style.background = selectedColor.series_color;
-        }
-
-        function selectSeriesColor(color) {
-            document.querySelectorAll('#seriesColorsGrid .series-color-option').forEach(o => o.classList.remove('selected'));
-            const selectedColorEl = seriesColorsGrid.querySelector(`[data-series-color="${color}"]`);
-            if (selectedColorEl) {
-                selectedColorEl.classList.add('selected');
-            }
-            
-            formData.series_color = color;
-            seriesPreviewText.style.color = color;
-            hexInput.value = color;
-            hexPreview.style.background = color;
-            
-            validateCurrentStep();
-            triggerHapticFeedback('light');
         }
 
         colorWheel.addEventListener('click', (e) => {
@@ -2638,8 +2784,6 @@
             colorWheelPicker.style.left = `${50 + (pickerX / rect.width) * 100}%`;
             colorWheelPicker.style.top = `${50 + (pickerY / rect.height) * 100}%`;
             
-            document.querySelectorAll('#seriesColorsGrid .series-color-option').forEach(o => o.classList.remove('selected'));
-            
             triggerHapticFeedback('light');
         });
 
@@ -2656,13 +2800,148 @@
                 formData.series_color = value;
                 seriesPreviewText.style.color = value;
                 hexPreview.style.background = value;
-                
-                document.querySelectorAll('#seriesColorsGrid .series-color-option').forEach(o => {
-                    o.classList.remove('selected');
-                });
             }
             
             e.target.value = value;
+        });
+
+        // ═══════════════════════════════════════════════════════
+        // ⭐ SEO Generation Function
+        // ═══════════════════════════════════════════════════════
+        async function generateSEO() {
+            try {
+                if (!formData.corrected_full_text.trim()) {
+                    alert('⚠️ لا يوجد نص لإنشاء SEO منه');
+                    return;
+                }
+
+                showLoading('جاري إنشاء SEO احترافي...', 'قد يستغرق هذا بضع ثوانٍ');
+                
+                seoGenerateBtn.disabled = true;
+                
+                console.log('🤖 Requesting SEO generation...');
+
+                const response = await fetch(`${CONFIG.BACKEND.BASE_URL}/generate-seo`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        text: formData.corrected_full_text,
+                        title: formData.title,
+                        series: formData.series,
+                        subSeries: formData.subSeries
+                    })
+                });
+
+                console.log('SEO Response status:', response.status);
+
+                if (response.status === 429) {
+                    const errorData = await response.json().catch(() => ({}));
+                    const retryAfter = errorData.retryAfter || 60;
+                    
+                    hideLoading();
+                    seoGenerateBtn.disabled = false;
+                    
+                    const message = `⏰ تم تجاوز الحد المسموح من الطلبات.\n\nالرجاء الانتظار ${retryAfter} ثانية والمحاولة مرة أخرى.`;
+                    
+                    if (tg.showAlert) {
+                        tg.showAlert(message);
+                    } else {
+                        alert(message);
+                    }
+                    return;
+                }
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || errorData.userMessage || 'فشل إنشاء SEO');
+                }
+
+                const result = await response.json();
+                console.log('SEO Result:', result);
+                
+                if (result.success) {
+                    formData.seo_title = result.title || '';
+                    formData.seo_description = result.description || '';
+                    formData.tags = result.tags || [];
+                    
+                    seoTitleInput.value = formData.seo_title;
+                    seoDescriptionInput.value = formData.seo_description;
+                    
+                    updateSEOCounts();
+                    renderTags();
+                    
+                    hideLoading();
+                    seoGenerateBtn.disabled = false;
+                    triggerNotificationFeedback('success');
+                    
+                    validateCurrentStep();
+                    
+                    console.log('✅ SEO generated successfully');
+                } else {
+                    throw new Error('لم يتم إرجاع بيانات SEO');
+                }
+                
+            } catch (error) {
+                console.error('SEO Generation Error:', error);
+                hideLoading();
+                seoGenerateBtn.disabled = false;
+                
+                const errorMsg = error.message || 'حدث خطأ أثناء إنشاء SEO';
+                
+                if (tg.showAlert) {
+                    tg.showAlert('❌ ' + errorMsg);
+                } else {
+                    alert('❌ ' + errorMsg);
+                }
+            }
+        }
+
+        function renderTags() {
+            tagsContainer.innerHTML = '';
+            
+            if (!formData.tags || formData.tags.length === 0) {
+                tagsContainer.innerHTML = '<div style="color: var(--text-secondary); font-size: 13px;">لا توجد كلمات مفتاحية</div>';
+                return;
+            }
+            
+            formData.tags.forEach((tag, index) => {
+                const tagEl = document.createElement('div');
+                tagEl.className = 'tag-item';
+                tagEl.innerHTML = `
+                    <span>${tag}</span>
+                    <button class="tag-remove" data-index="${index}">×</button>
+                `;
+                
+                const removeBtn = tagEl.querySelector('.tag-remove');
+                removeBtn.addEventListener('click', () => {
+                    formData.tags.splice(index, 1);
+                    renderTags();
+                    triggerHapticFeedback('light');
+                });
+                
+                tagsContainer.appendChild(tagEl);
+            });
+        }
+
+        function updateSEOCounts() {
+            seoTitleCount.textContent = seoTitleInput.value.length;
+            seoDescCount.textContent = seoDescriptionInput.value.length;
+        }
+
+        seoGenerateBtn.addEventListener('click', generateSEO);
+
+        seoTitleInput.addEventListener('input', () => {
+            formData.seo_title = seoTitleInput.value;
+            updateSEOCounts();
+            validateCurrentStep();
+        });
+
+        seoDescriptionInput.addEventListener('input', () => {
+            formData.seo_description = seoDescriptionInput.value;
+            updateSEOCounts();
+            validateCurrentStep();
         });
 
         // ═══════════════════════════════════════════════════════
@@ -2703,6 +2982,11 @@
                 initializeSeriesColors();
             }
             
+            if (currentStep === 6) {
+                updateReview();
+            }
+            
+            scrollToTop();
             validateCurrentStep();
         }
 
@@ -2724,8 +3008,12 @@
                              formData.subSeries.trim() && formData.finalSeries.trim();
                     break;
                 case 5:
+                    isValid = formData.seo_title.trim().length > 0 && 
+                             formData.seo_description.trim().length > 0 && 
+                             formData.tags.length > 0;
+                    break;
+                case 6:
                     isValid = true;
-                    updateReview();
                     break;
             }
             
@@ -2871,6 +3159,9 @@
             document.getElementById('reviewMainSeries').textContent = formData.series || '-';
             document.getElementById('reviewSubSeries').textContent = formData.subSeries || '-';
             document.getElementById('reviewFinalSeries').textContent = formData.finalSeries || '-';
+            
+            document.getElementById('reviewSeoTitle').textContent = formData.seo_title || '-';
+            document.getElementById('reviewTagsCount').textContent = `${formData.tags.length} كلمة مفتاحية`;
         }
 
         // ═══════════════════════════════════════════════════════
@@ -2898,12 +3189,12 @@
                     subSeries: formData.subSeries,
                     finalSeries: formData.finalSeries,
                     status: 'completed',
-                    CurrentStep: 5,
+                    CurrentStep: 6,
                     Video_Id: formData.Video_Id,
-                    caption: formData.caption,
+                    caption: formData.seo_title,
                     created_at: formData.created_at,
                     updated_at: new Date().toISOString(),
-                    description: formData.description,
+                    description: formData.seo_description,
                     tags: formData.tags,
                     template_id: formData.template_id,
                     template_name: formData.template_name,
