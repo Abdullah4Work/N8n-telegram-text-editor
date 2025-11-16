@@ -16,6 +16,7 @@
         :root {
             --primary: #4A90E2;
             --primary-light: #5BA3F5;
+            --primary-darker: #3A7BC8;
             --primary-lighter: #E8F4FD;
             --success: #27AE60;
             --danger: #E74C3C;
@@ -24,6 +25,8 @@
             --text-secondary: #7F8C8D;
             --border: #E1E8ED;
             --bg: #F7F9FC;
+            --ai-primary: #9B59B6;
+            --ai-light: #BB8FCE;
         }
 
         body {
@@ -36,9 +39,6 @@
             overflow-x: hidden;
         }
 
-        /* ═══════════════════════════════════════════════════════
-           Progress Bar
-        ═══════════════════════════════════════════════════════ */
         .progress-wrapper {
             background: white;
             padding: 16px;
@@ -46,13 +46,6 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            transition: all 0.3s ease;
-        }
-
-        .progress-wrapper.hidden {
-            transform: translateY(-100%);
-            opacity: 0;
-            pointer-events: none;
         }
 
         .progress-steps {
@@ -131,9 +124,6 @@
             color: var(--primary);
         }
 
-        /* ═══════════════════════════════════════════════════════
-           Container
-        ═══════════════════════════════════════════════════════ */
         .container {
             flex: 1;
             display: flex;
@@ -167,14 +157,6 @@
 
         .step-header {
             margin-bottom: 24px;
-            transition: all 0.3s ease;
-        }
-
-        .step-header.hidden {
-            opacity: 0;
-            transform: translateY(-20px);
-            pointer-events: none;
-            position: absolute;
         }
 
         .step-title {
@@ -193,27 +175,12 @@
             line-height: 1.6;
         }
 
-        /* ═══════════════════════════════════════════════════════
-           Audio Player Section
-        ═══════════════════════════════════════════════════════ */
         .audio-player-section {
             background: white;
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 16px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            transition: all 0.3s ease;
-        }
-
-        .audio-player-section.floating {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: calc(100% - 32px);
-            max-width: 400px;
-            z-index: 200;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
         }
 
         .audio-player {
@@ -309,156 +276,13 @@
             border-color: var(--primary);
         }
 
-        /* ═══════════════════════════════════════════════════════
-           Floating Actions
-        ═══════════════════════════════════════════════════════ */
-        .floating-actions {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            display: none;
-            flex-direction: column;
-            gap: 12px;
-            z-index: 200;
-        }
-
-        .floating-actions.visible {
-            display: flex;
-        }
-
-        .floating-btn {
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background: white;
-            border: none;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            transition: all 0.2s;
-        }
-
-        .floating-btn:active {
-            transform: scale(0.95);
-        }
-
-        .floating-btn.ai-btn {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-        }
-
-        /* ═══════════════════════════════════════════════════════
-           Text Editor Wrapper
-        ═══════════════════════════════════════════════════════ */
-        .text-editor-wrapper {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .text-editor-wrapper.fullscreen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 150;
-            padding: 20px;
-            background: var(--bg);
-        }
-
-        .editor-actions {
-            display: flex;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .editor-actions.hidden {
-            opacity: 0;
-            pointer-events: none;
-            position: absolute;
-        }
-
-        .action-btn {
-            flex: 1;
-            padding: 10px;
-            border: 1px solid var(--border);
-            border-radius: 10px;
-            background: white;
-            color: var(--text-primary);
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-
-        .action-btn:active {
-            transform: scale(0.98);
-        }
-
-        .editor-container {
-            flex: 1;
-            background: white;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-        }
-
-        .editor-textarea {
-            flex: 1;
-            padding: 16px;
-            border: none;
-            font-size: 15px;
-            line-height: 1.7;
-            resize: none;
-            font-family: inherit;
-            outline: none;
-        }
-
-        .editor-stats {
-            padding: 12px 16px;
-            background: var(--bg);
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .stat-value {
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 14px;
-        }
-
-        /* ═══════════════════════════════════════════════════════
-           AI Correction Box
-        ═══════════════════════════════════════════════════════ */
         .ai-correction-box {
             display: none;
-            background: linear-gradient(135deg, #d4fc79 0%, #96e6a1 100%);
-            border: 2px solid #27AE60;
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
+            border: 2px solid var(--success);
             border-radius: 12px;
             padding: 16px;
-            margin-bottom: 12px;
+            margin-bottom: 16px;
             box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
         }
 
@@ -488,7 +312,7 @@
         .ai-correction-title {
             font-size: 14px;
             font-weight: 700;
-            color: #1e7e34;
+            color: #2E7D32;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -523,7 +347,8 @@
             display: flex;
             gap: 16px;
             font-size: 12px;
-            color: #1e7e34;
+            color: #2E7D32;
+            margin-bottom: 12px;
         }
 
         .ai-stat {
@@ -535,7 +360,6 @@
         .ai-correction-actions {
             display: flex;
             gap: 8px;
-            margin-top: 12px;
         }
 
         .ai-action-btn {
@@ -560,9 +384,107 @@
             border: 1px solid var(--border);
         }
 
-        /* ═══════════════════════════════════════════════════════
-           Templates Grid
-        ═══════════════════════════════════════════════════════ */
+        .editor-container {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .editor-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .editor-textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 14px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 15px;
+            line-height: 1.7;
+            resize: vertical;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+
+        .editor-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .editor-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 14px;
+        }
+
+        .editor-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .action-btn {
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+
+        .action-btn.ai-btn {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--ai-primary), var(--ai-light));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(155, 89, 182, 0.3);
+            font-size: 15px;
+            padding: 14px;
+        }
+
+        .action-btn.ai-btn:hover {
+            box-shadow: 0 6px 16px rgba(155, 89, 182, 0.4);
+        }
+
         .templates-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -714,9 +636,6 @@
             display: flex;
         }
 
-        /* ═══════════════════════════════════════════════════════
-           Template Preview Modal
-        ═══════════════════════════════════════════════════════ */
         .template-preview-modal {
             position: fixed;
             top: 0;
@@ -803,6 +722,7 @@
 
         .preview-image-wrapper {
             text-align: center;
+            position: relative;
         }
 
         .preview-image-label {
@@ -820,6 +740,25 @@
             width: 100%;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .preview-image.loaded {
+            display: block;
+        }
+
+        .preview-image-loading {
+            width: 100%;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+            border-radius: 12px;
+        }
+
+        .preview-image-loading.hidden {
+            display: none;
         }
 
         .preview-next-btn {
@@ -844,9 +783,6 @@
             transform: scale(0.98);
         }
 
-        /* ═══════════════════════════════════════════════════════
-           Series Color Preview
-        ═══════════════════════════════════════════════════════ */
         .series-color-preview {
             background: white;
             border-radius: 12px;
@@ -868,7 +804,77 @@
             color: var(--text-secondary);
         }
 
-        .color-wheel-section {
+        .recommended-color-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .recommended-color-btn {
+            width: 100%;
+            padding: 16px;
+            border: 3px solid #FFD700;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .recommended-color-btn:active {
+            transform: scale(0.98);
+        }
+
+        .recommended-color-btn.selected {
+            background: var(--primary-lighter);
+            border-color: var(--primary);
+        }
+
+        .recommended-color-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .recommended-badge {
+            background: #FFD700;
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .recommended-color-preview {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid var(--border);
+        }
+
+        .recommended-color-text {
+            text-align: right;
+            flex: 1;
+        }
+
+        .recommended-color-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .recommended-color-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .custom-color-section {
             background: white;
             border-radius: 16px;
             padding: 24px;
@@ -886,57 +892,52 @@
             gap: 8px;
         }
 
-        .color-wheel-wrapper {
+        .color-picker-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
+            gap: 20px;
         }
 
-        .color-wheel {
-            width: 200px;
-            height: 200px;
-            border-radius: 50%;
+        .color-picker-container {
+            width: 240px;
+            height: 240px;
             position: relative;
-            background: conic-gradient(
-                red, yellow, lime, cyan, blue, magenta, red
-            );
-            cursor: crosshair;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
         }
 
-        .color-wheel-picker {
-            width: 20px;
-            height: 20px;
+        .color-picker {
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            border: none;
             border-radius: 50%;
-            background: white;
-            border: 3px solid #000;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
 
         .hex-input-wrapper {
             display: flex;
             align-items: center;
             gap: 12px;
+            width: 100%;
+            max-width: 300px;
         }
 
         .hex-preview {
             width: 60px;
             height: 60px;
-            border-radius: 50%;
+            border-radius: 12px;
             border: 3px solid var(--border);
+            transition: all 0.3s;
         }
 
         .hex-input {
             flex: 1;
-            padding: 12px;
+            padding: 14px;
             border: 2px solid var(--border);
             border-radius: 10px;
-            font-size: 18px;
+            font-size: 16px;
             font-family: 'Courier New', monospace;
             text-align: center;
             font-weight: 600;
@@ -948,9 +949,6 @@
             border-color: var(--primary);
         }
 
-        /* ═══════════════════════════════════════════════════════
-           Form Inputs
-        ═══════════════════════════════════════════════════════ */
         .form-group {
             margin-bottom: 20px;
         }
@@ -996,9 +994,6 @@
             direction: ltr;
         }
 
-        /* ═══════════════════════════════════════════════════════
-           SEO Section
-        ═══════════════════════════════════════════════════════ */
         .seo-section {
             background: white;
             border-radius: 12px;
@@ -1109,9 +1104,33 @@
             justify-content: center;
         }
 
-        /* ═══════════════════════════════════════════════════════
-           Review Section
-        ═══════════════════════════════════════════════════════ */
+        .seo-stats {
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .seo-stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .seo-stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .seo-stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
         .review-section {
             background: white;
             border-radius: 12px;
@@ -1135,7 +1154,7 @@
             border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             gap: 12px;
         }
 
@@ -1146,6 +1165,7 @@
         .review-label {
             font-size: 13px;
             color: var(--text-secondary);
+            min-width: 80px;
         }
 
         .review-value {
@@ -1157,22 +1177,58 @@
             word-break: break-word;
         }
 
-        /* ═══════════════════════════════════════════════════════
-           Navigation Buttons
-        ═══════════════════════════════════════════════════════ */
+        .review-expandable {
+            max-height: 60px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            position: relative;
+        }
+
+        .review-expandable.expanded {
+            max-height: none;
+        }
+
+        .review-expand-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 0;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .review-tags-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            max-height: 60px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .review-tags-preview.expanded {
+            max-height: none;
+        }
+
+        .review-tag {
+            background: var(--bg);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            color: var(--text-primary);
+        }
+
         .nav-buttons {
             padding: 16px;
             background: white;
             border-top: 1px solid var(--border);
             display: flex;
             gap: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .nav-buttons.hidden {
-            transform: translateY(100%);
-            opacity: 0;
-            pointer-events: none;
         }
 
         .nav-btn {
@@ -1217,9 +1273,6 @@
             box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
         }
 
-        /* ═══════════════════════════════════════════════════════
-           Loading Overlay
-        ═══════════════════════════════════════════════════════ */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -1273,13 +1326,6 @@
         <div class="loading-subtext" id="loadingSubtext"></div>
     </div>
 
-    <div class="floating-actions" id="floatingActions">
-        <button class="floating-btn ai-btn" id="aiCorrectBtn" title="تصحيح بالذكاء الاصطناعي">🤖</button>
-        <button class="floating-btn" id="floatingCopyBtn">📋</button>
-        <button class="floating-btn" id="floatingPasteBtn">📌</button>
-        <button class="floating-btn" id="floatingClearBtn">🗑️</button>
-    </div>
-
     <div class="template-preview-modal" id="templatePreviewModal">
         <div class="preview-content">
             <div class="preview-header">
@@ -1292,12 +1338,18 @@
                         <span>🖼️</span>
                         <span>الصورة الأفقية (Landscape)</span>
                     </div>
+                    <div class="preview-image-loading" id="landscapeLoading">
+                        <div class="spinner"></div>
+                    </div>
                     <img src="" alt="Landscape Preview" class="preview-image" id="landscapePreview">
                 </div>
                 <div class="preview-image-wrapper">
                     <div class="preview-image-label">
                         <span>📱</span>
                         <span>الصورة العمودية (Portrait)</span>
+                    </div>
+                    <div class="preview-image-loading" id="portraitLoading">
+                        <div class="spinner"></div>
                     </div>
                     <img src="" alt="Portrait Preview" class="preview-image" id="portraitPreview">
                 </div>
@@ -1342,9 +1394,9 @@
     </div>
 
     <div class="container">
-        <!-- Step 1: Text Correction -->
+        <!-- Step 1 -->
         <div class="step-content active" data-step="1">
-            <div class="step-header" id="step1Header">
+            <div class="step-header">
                 <div class="step-title">
                     <span>✍️</span>
                     <span>تصحيح النص</span>
@@ -1354,7 +1406,7 @@
                 </div>
             </div>
 
-            <div class="audio-player-section" id="audioPlayerSection">
+            <div class="audio-player-section">
                 <div class="audio-player">
                     <audio id="audioElement" style="display: none;"></audio>
                     <div class="audio-controls">
@@ -1384,7 +1436,7 @@
             <div class="ai-correction-box" id="aiCorrectionBox">
                 <div class="ai-correction-header">
                     <div class="ai-correction-title">
-                        <span>🤖</span>
+                        <span>✨</span>
                         <span>النص المصحح بالذكاء الاصطناعي</span>
                     </div>
                     <button class="ai-correction-close" id="aiCorrectionClose">×</button>
@@ -1410,49 +1462,51 @@
                 </div>
             </div>
 
-            <div class="text-editor-wrapper" id="textEditorWrapper">
-                <div class="editor-actions" id="editorActions">
-                    <button class="action-btn" id="copyBtn">
-                        <span>📋</span>
-                        <span>نسخ</span>
-                    </button>
-                    <button class="action-btn" id="pasteBtn">
-                        <span>📌</span>
-                        <span>لصق</span>
-                    </button>
-                    <button class="action-btn" id="clearBtn">
-                        <span>🗑️</span>
-                        <span>حذف</span>
-                    </button>
-                    <button class="action-btn" id="aiBtn">
-                        <span>🤖</span>
-                        <span>تصحيح AI</span>
-                    </button>
-                </div>
+            <div class="editor-actions">
+                <button class="action-btn ai-btn" id="aiBtn">
+                    <span>✨</span>
+                    <span>تصحيح بالذكاء الاصطناعي</span>
+                </button>
+                <button class="action-btn" id="copyBtn">
+                    <span>📄</span>
+                    <span>نسخ</span>
+                </button>
+                <button class="action-btn" id="pasteBtn">
+                    <span>📥</span>
+                    <span>لصق</span>
+                </button>
+                <button class="action-btn" id="clearBtn">
+                    <span>🗑️</span>
+                    <span>حذف</span>
+                </button>
+            </div>
 
-                <div class="editor-container">
-                    <textarea 
-                        class="editor-textarea" 
-                        id="textEditor"
-                        placeholder="جاري تحميل النص..."
-                    ></textarea>
-                    <div class="editor-stats">
-                        <div class="stat-item">
-                            <span>📊</span>
-                            <span class="stat-value" id="charCount">0</span>
-                            <span>حرف</span>
-                        </div>
-                        <div class="stat-item">
-                            <span>📝</span>
-                            <span class="stat-value" id="wordCount">0</span>
-                            <span>كلمة</span>
-                        </div>
+            <div class="editor-container">
+                <div class="editor-label">
+                    <span>📝</span>
+                    <span>النص المراد تصحيحه</span>
+                </div>
+                <textarea 
+                    class="editor-textarea" 
+                    id="textEditor"
+                    placeholder="جاري تحميل النص..."
+                ></textarea>
+                <div class="editor-stats">
+                    <div class="stat-item">
+                        <span>📊</span>
+                        <span class="stat-value" id="charCount">0</span>
+                        <span>حرف</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>📝</span>
+                        <span class="stat-value" id="wordCount">0</span>
+                        <span>كلمة</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Step 2: Template Selection -->
+        <!-- Step 2 -->
         <div class="step-content" data-step="2">
             <div class="step-header">
                 <div class="step-title">
@@ -1477,31 +1531,51 @@
             </div>
         </div>
 
-        <!-- Step 3: Series Color -->
+        <!-- Step 3 -->
         <div class="step-content" data-step="3">
             <div class="step-header">
                 <div class="step-title">
-                    <span>🌈</span>
+                    <span>🎨</span>
                     <span>لون السلسلة الرئيسية</span>
                 </div>
                 <div class="step-description">
                     اختر اللون المناسب لاسم السلسلة الرئيسية
                 </div>
             </div>
+
             <div class="series-color-preview">
                 <div class="preview-text" id="seriesPreviewText">
                     السلسلة الرئيسية
                 </div>
                 <div class="preview-hint">معاينة اللون المختار</div>
             </div>
-            <div class="color-wheel-section">
+
+            <div class="recommended-color-section">
+                <div class="section-title">
+                    <span>⭐</span>
+                    <span>اللون الموصى به للتصميم</span>
+                </div>
+                <button class="recommended-color-btn selected" id="recommendedColorBtn">
+                    <div class="recommended-color-info">
+                        <div class="recommended-badge">الأفضل</div>
+                        <div class="recommended-color-preview" id="recommendedColorPreview"></div>
+                    </div>
+                    <div class="recommended-color-text">
+                        <div class="recommended-color-title">اللون المناسب للتصميم</div>
+                        <div class="recommended-color-subtitle">محدد تلقائياً من القالب</div>
+                    </div>
+                    <div class="template-check">✓</div>
+                </button>
+            </div>
+
+            <div class="custom-color-section">
                 <div class="custom-color-title">
                     <span>🎨</span>
-                    <span>اختر اللون المفضل للتصميم</span>
+                    <span>أو اختر اللون المفضل يدوياً</span>
                 </div>
-                <div class="color-wheel-wrapper">
-                    <div class="color-wheel" id="colorWheel">
-                        <div class="color-wheel-picker" id="colorWheelPicker"></div>
+                <div class="color-picker-wrapper">
+                    <div class="color-picker-container">
+                        <input type="color" class="color-picker" id="colorPicker" value="#b9d780">
                     </div>
                     <div class="hex-input-wrapper">
                         <div class="hex-preview" id="hexPreview"></div>
@@ -1517,7 +1591,7 @@
             </div>
         </div>
 
-        <!-- Step 4: Video Information -->
+        <!-- Step 4 -->
         <div class="step-content" data-step="4">
             <div class="step-header">
                 <div class="step-title">
@@ -1566,7 +1640,7 @@
             </div>
         </div>
 
-        <!-- Step 5: SEO -->
+        <!-- Step 5 -->
         <div class="step-content" data-step="5">
             <div class="step-header">
                 <div class="step-title">
@@ -1579,7 +1653,7 @@
             </div>
 
             <button class="seo-generate-btn" id="seoGenerateBtn">
-                <span>🤖</span>
+                <span>✨</span>
                 <span>إنشاء SEO احترافي تلقائياً</span>
             </button>
 
@@ -1589,7 +1663,7 @@
                     <span>عنوان الفيديو (SEO Title)</span>
                 </div>
                 <div class="form-group">
-                    <input type="text" class="form-input" id="seoTitleInput" placeholder="سيتم إنشاؤه تلقائياً..." maxlength="100">
+                    <textarea class="form-textarea" id="seoTitleInput" placeholder="سيتم إنشاؤه تلقائياً..." rows="2" style="min-height: 60px;"></textarea>
                     <div class="form-hint">الأفضل: 60-70 حرف</div>
                     <div class="char-counter"><span id="seoTitleCount">0</span> / 100</div>
                 </div>
@@ -1601,7 +1675,7 @@
                     <span>وصف الفيديو (Description)</span>
                 </div>
                 <div class="form-group">
-                    <textarea class="form-textarea" id="seoDescriptionInput" placeholder="سيتم إنشاؤه تلقائياً..." maxlength="5000"></textarea>
+                    <textarea class="form-textarea" id="seoDescriptionInput" placeholder="سيتم إنشاؤه تلقائياً..." style="min-height: 200px;"></textarea>
                     <div class="form-hint">يتضمن وصف احترافي + النص الثابت</div>
                     <div class="char-counter"><span id="seoDescCount">0</span> / 5000</div>
                 </div>
@@ -1615,10 +1689,28 @@
                 <div class="tags-container" id="tagsContainer">
                     <div style="color: var(--text-secondary); font-size: 13px;">سيتم إنشاؤها تلقائياً...</div>
                 </div>
+                <div class="seo-stats" id="seoStats" style="display: none;">
+                    <div class="seo-stat-item">
+                        <div class="seo-stat-label">عدد الكلمات</div>
+                        <div class="seo-stat-value" id="statWordCount">0</div>
+                    </div>
+                    <div class="seo-stat-item">
+                        <div class="seo-stat-label">عدد الأحرف</div>
+                        <div class="seo-stat-value" id="statCharCount">0</div>
+                    </div>
+                    <div class="seo-stat-item">
+                        <div class="seo-stat-label">عدد الكلمات المفتاحية</div>
+                        <div class="seo-stat-value" id="statTagsCount">0</div>
+                    </div>
+                    <div class="seo-stat-item">
+                        <div class="seo-stat-label">طول الوصف</div>
+                        <div class="seo-stat-value" id="statDescLength">0</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <!-- Step 6: Review -->
+        <!-- Step 6 -->
         <div class="step-content" data-step="6">
             <div class="step-header">
                 <div class="step-title">
@@ -1697,14 +1789,32 @@
                     <span class="review-value" id="reviewSeoTitle">-</span>
                 </div>
                 <div class="review-item">
-                    <span class="review-label">عدد الكلمات المفتاحية:</span>
-                    <span class="review-value" id="reviewTagsCount">-</span>
+                    <span class="review-label">الوصف:</span>
+                    <div class="review-value">
+                        <div class="review-expandable" id="reviewDescExpandable">
+                            <span id="reviewSeoDesc">-</span>
+                        </div>
+                        <button class="review-expand-btn" id="reviewDescExpandBtn">
+                            <span id="reviewDescExpandText">عرض الكل</span>
+                            <span id="reviewDescExpandIcon">▼</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">الكلمات المفتاحية:</span>
+                    <div class="review-value">
+                        <div class="review-tags-preview" id="reviewTagsPreview">
+                        </div>
+                        <button class="review-expand-btn" id="reviewTagsExpandBtn">
+                            <span id="reviewTagsExpandText">عرض الكل</span>
+                            <span id="reviewTagsExpandIcon">▼</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Navigation Buttons -->
     <div class="nav-buttons" id="navButtons">
         <button class="nav-btn btn-back" id="btnBack" style="display: none;">
             <span>←</span>
@@ -1716,505 +1826,215 @@
         </button>
     </div>
 
-    <!-- Config Script -->
     <script src="config.js"></script>
-
-    <!-- Main JavaScript -->
     <script>
-        // ═══════════════════════════════════════════════════════
-        // ⭐ Configuration & Global Variables
-        // ═══════════════════════════════════════════════════════
-        window.CONFIG = window.CONFIG || {
-            BACKEND: {
-                BASE_URL: 'https://n8n-video-worker.abdullah27623.workers.dev'
-            }
-        };
-
+        window.CONFIG = window.CONFIG || { BACKEND: { BASE_URL: 'https://n8n-video-worker.abdullah27623.workers.dev' } };
         const tg = window.Telegram.WebApp;
         tg.expand();
-
-        if (tg.version >= 6.2) {
-            try {
-                tg.enableClosingConfirmation();
-            } catch (e) {
-                console.log('Closing confirmation not available');
-            }
-        }
-
+        if (tg.version >= 6.2) { try { tg.enableClosingConfirmation(); } catch (e) {} }
         const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor';
 
-        const FIXED_DESCRIPTION_TEXT = `
---------------------------------------------------------
-بشرى سارة لمن يشاهد الفيديو الى نهايته ويعمل اعجاب للفيديو ومشاركة له على احد وسائل التواصل الاجتماعي وفي احد مجموعات علاج الزهريين ويشترك في القناة عاليوتيوب ان يدخل في امكانية الاشتراك في متابعة العلاج لمدة شهر مع الراقي مباشرة على حسابه الخاص عالتليجرام وتشخيص حالته وان كان زهري ام لا بعد ان يجيب على السؤال الخاص بالفيديو وقيمة هذا الاشتراك الشهري 65 دولار تحصل عليه مجانا باذن الله.
- بجانب ان العلاج المجاني متاح للجميع لكن بدون اسئلة ومتابعة مع الراقي لضيق الوقت وضغط الرسائل
-
-
-السلام عليكم ورحمة الله وبركاته 
-
-للأعضاء الجدد
-تشترك اولا في قناة الرقية الشرعية واخر الزمان عالتليجرام من خلال الرابط التالي
-
-https://t.me/MyRoqia
-
-ثم تبدا اولا بقراءة الرسالة المثبتة في اعلى القناة وما بعدها من رسائل وافهم ما جاء فيها جيدا وشروط العلاج معنا وابدا بارسال المعلومات المطلوبة للتشخيص اولا والقسم المطلوب وترسلها لحساب الدعم الفني عالتليجرام من خلال هذا الرابط
-
-https://t.me/MyRoqiaSupport
-
-وتبدئ بتطبيق خطوات التشخيص حتى نتاكد مما عندك بالضبط ونرسلك خطوات العلاج وطريقة تحصين الجسم والبيت بشكل يومي وتنظيف الجسم من الاسحار وسماع المقاطع الخاصة بابطال اسحار السلالة الزهرية المستهدفة فان تاثرت بها تكون زهري ومستهدف من قبل الجن والشياطين والعفاريت السحرة 
-
-اشترك اولا في القناة العامة الخاصة بموقع رقيتي للرقية الشرعية عالتليجرام من خلال هذا الرابط 
-
-https://t.me/MyRoqia
-
-ثم تجد الخطوات المطلوبة للتشخيص في رابط الرسالة المثبتة في اعلى القناة 
-
-https://t.me/MyRoqia/86819
-
-
-اولا : شروط العلاج معنا في المجموعات
-https://t.me/MyRoqia/86819
-
-ثانيا : ملئ المعلومات المطلوبة للتشخيص كاملة
-https://t.me/MyRoqia/86822
-
-ثالثا : نص القسم المطلوب الالتزام به ترسله لحساب الدعم الفني عالتليجرام مع تاكيد منك على الالتزام بما فيه
-
-https://t.me/MyRoqia/86823
-
-
-رابعا : طريقة الاشتراك في متابعة العلاج عالخاص مع الراقي وتحويل قيمة الاشتراك عن طريق حساب الباي بال الخاص بالموقع 
-
-https://t.me/MyRoqia/86824
-
-
-خامسا : الفرق بين العلاج المجاني والعلاج مقابل اشتراك شهري
-
-العلاج المجاني لا يشمل الأسئلة والاجابات عليها ومتابعة كل حالة بشكل خاص وتفسير الرؤى التي لها علاقة بالعلاج وارسال برامج خاصة مناسبة لكل حالة حسب ما تعاني منه
-
-في العلاج المجاني التطبيق يكون لبرامج علاجية مرتبة الجميع يطبقها بالترتيب دون اسئلة ودون متابعة خاصة للعلاج بسبب ضغط الرسائل وضيق الوقت 
-
-https://t.me/MyRoqia/86825
-
-وفقكم الله وحفظكم بحفظه ويسر لكم علاجكم وتحصينكم وسماع المقاطع
-`;
-
-        console.log('📱 Telegram WebApp SDK:', tg.version);
-        console.log('🔗 N8N Webhook URL:', N8N_WEBHOOK_URL);
-        console.log('🔧 Worker API URL:', CONFIG.BACKEND.BASE_URL);
-
-        // ═══════════════════════════════════════════════════════
-        // ⭐ Templates Data
-        // ═══════════════════════════════════════════════════════
         const TEMPLATES_DATA = [
-            {
-                id: 1,
-                name: "القالب 1",
-                colors: [
-                    {
-                        id: 1,
-                        name: "original",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1OhcXo9hpCBbVK8rtX68s91PWm3ufspQ8",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=15PLpIMuEx4_WffgVlaEueXseDCfZyfto",
-                        series_color: "#b9d780",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    },
-                    {
-                        id: 2,
-                        name: "green",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1Vh8X4SWAMl65_V8RGrIO6KOb_V11AhR2",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=1lZxBToJj2AL5HIl3Ee5f_Yh9h8nvP5c7",
-                        series_color: "#b9d780",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    },
-                    {
-                        id: 3,
-                        name: "brown",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1kUHbWAGz9h2IVrlceS1mfVyqktotK-NE",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=15kfP0R0TZbkezlC9jHg8PdIFUgVxY9Tf",
-                        series_color: "#b9d780",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    },
-                    {
-                        id: 4,
-                        name: "purple",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1m6ftwpbUpDRYylxYHGjuSFkU6nSRFanU",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=1-Fgs9gCA9zckJXznBE3AGgVJzZndBIjv",
-                        series_color: "#b9d780",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    },
-                    {
-                        id: 5,
-                        name: "blue",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1SqZH4ei3Difj1pjxwasdfPFoL600WThr",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=1ktVYgv8-0VrlShjcNIG3DEbSoAQZYc-3",
-                        series_color: "#b9d780",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    }
-                ]
-            },
-            {
-                id: 2,
-                name: "القالب 2",
-                colors: [
-                    {
-                        id: 1,
-                        name: "original",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1cSldR1_6W_r_h4j1oIgNER2vn42hUjkY",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=141zHAG5VS6PamqL_LYDVLzfzcNGGkDng",
-                        series_color: "#b9d780",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    },
-                    {
-                        id: 2,
-                        name: "blue",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1Mid30-PS57fhJuWPutfb6jwR1QMjKRUr",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=1Bgz9T0a5Ynu-8JMleGGwh3t-nM8L0XSD",
-                        series_color: "#b9d780",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    }
-                ]
-            },
-            {
-                id: 3,
-                name: "القالب 3",
-                colors: [
-                    {
-                        id: 1,
-                        name: "original",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1sstL2nz3LqTFQH18oQuWOxJOxS2VPJYw",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=1UQ9FW34vaf7Z7uFHNZ_6pPdSjEOuKVvp",
-                        series_color: "#b9d780",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    },
-                    {
-                        id: 2,
-                        name: "blue",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1MtsjLM0PtSA2YPKfddWnTKm2Lk4KIdTj",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=1Odqc8g6KdeyjjYm1KeLytCpuRyywvbMt",
-                        series_color: "#b9d780",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    },
-                    {
-                        id: 3,
-                        name: "orange",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1dvJc-xLL_qn6OAcCNBrjnKNWAc3GeqZH",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=18fUeGxUEt_sjrazS3yI3IBEd3srAm-jc",
-                        series_color: "#b9d780",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    },
-                    {
-                        id: 4,
-                        name: "green",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1X-kuR8BC5qGfiVx-VBaQHlH8PUGlp5wh",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=1hWbIdGsFA9Zs8fjYb83ugnyd07f8l-kn",
-                        series_color: "#b9d780",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    },
-                    {
-                        id: 5,
-                        name: "purple",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1BgPDdNGiFKyXH809kTCLLu2HTBBY3i3s",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=1hCWKWdPdLQoT3qbfHKqeJfd2MV36VT88",
-                        series_color: "#b9d780",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    }
-                ]
-            },
-            {
-                id: 4,
-                name: "القالب 4",
-                colors: [
-                    {
-                        id: 1,
-                        name: "original",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1YHPD-fKvHgWLxqMc_JMgDDEHbyLcy_qb",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=1Jp4S29FlR4X8tqv5Bm3grU7if7DElKmF",
-                        series_color: "#ff9e00",
-                        subseries_color: "#9fde14",
-                        finalseries_color: "#fcf84e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    },
-                    {
-                        id: 2,
-                        name: "blue",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=14op-KfFzrLCti5sBypv3ES7SiJg6N9E-",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=1ofbaUyVMGcWEa32AYSZeBqcfNRQKMOnA",
-                        series_color: "#ff9e00",
-                        subseries_color: "#9fde14",
-                        finalseries_color: "#fcf84e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    },
-                    {
-                        id: 3,
-                        name: "orange",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1sHbD022NaSlq1v_kEirSnr2rEGMGTqEx",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=1Jp4S29FlR4X8tqv5Bm3grU7if7DElKmF",
-                        series_color: "#ff9e00",
-                        subseries_color: "#9fde14",
-                        finalseries_color: "#fcf84e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    }
-                ]
-            },
-            {
-                id: 5,
-                name: "القالب 5",
-                colors: [
-                    {
-                        id: 1,
-                        name: "original",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1L6Pj1_rSGggYZ7fv4RE91CA22VUot0Vg",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=1oGS1mSCnu-GK_3u_J4pUqsEO4HLpiRq8",
-                        series_color: "#ffffff",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    },
-                    {
-                        id: 2,
-                        name: "green",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1X46qV4OGD9KFG2ipuW5f9bhlu8VBgdsh",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=1OtZamDZVM0VfGf9NRsTdAGfjo_TtLRv6",
-                        series_color: "#ffffff",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    },
-                    {
-                        id: 3,
-                        name: "blue",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1UoSQaam5toVGwUK61EhKqRg_VRwe_gtf",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=1dhQN1cFe9PeLAJtz3xANxutDS4_DTCox",
-                        series_color: "#ffffff",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    },
-                    {
-                        id: 4,
-                        name: "orange",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=143tkdil0_varINJ0v14RSVvE0xt-zji9",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=1pg-vB9TOU48qeiQv2XjRzlMEH3dPWp9V",
-                        series_color: "#ffffff",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    },
-                    {
-                        id: 5,
-                        name: "brown",
-                        landscape_image: "https://drive.google.com/uc?export=download&id=1r5IBlbNJet1Ocl0txcz_Z0JQjiv4aJHo",
-                        portrait_image: "https://drive.google.com/uc?export=download&id=1ZN9kR3a9ojGBVBMsZc-Fa6r4NiHnISGC",
-                        series_color: "#ffffff",
-                        subseries_color: "#ebbd27",
-                        finalseries_color: "#fce74e",
-                        title_color: "#ffffff",
-                        caption_color: "#ffffff"
-                    }
-                ]
-            }
+            { id: 1, name: "القالب 1", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1OhcXo9hpCBbVK8rtX68s91PWm3ufspQ8", portrait_image: "https://drive.google.com/uc?export=download&id=15PLpIMuEx4_WffgVlaEueXseDCfZyfto", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "green", landscape_image: "https://drive.google.com/uc?export=download&id=1Vh8X4SWAMl65_V8RGrIO6KOb_V11AhR2", portrait_image: "https://drive.google.com/uc?export=download&id=1lZxBToJj2AL5HIl3Ee5f_Yh9h8nvP5c7", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 3, name: "brown", landscape_image: "https://drive.google.com/uc?export=download&id=1kUHbWAGz9h2IVrlceS1mfVyqktotK-NE", portrait_image: "https://drive.google.com/uc?export=download&id=15kfP0R0TZbkezlC9jHg8PdIFUgVxY9Tf", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 4, name: "purple", landscape_image: "https://drive.google.com/uc?export=download&id=1m6ftwpbUpDRYylxYHGjuSFkU6nSRFanU", portrait_image: "https://drive.google.com/uc?export=download&id=1-Fgs9gCA9zckJXznBE3AGgVJzZndBIjv", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 5, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1SqZH4ei3Difj1pjxwasdfPFoL600WThr", portrait_image: "https://drive.google.com/uc?export=download&id=1ktVYgv8-0VrlShjcNIG3DEbSoAQZYc-3", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }] },
+            { id: 2, name: "القالب 2", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1cSldR1_6W_r_h4j1oIgNER2vn42hUjkY", portrait_image: "https://drive.google.com/uc?export=download&id=141zHAG5VS6PamqL_LYDVLzfzcNGGkDng", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1Mid30-PS57fhJuWPutfb6jwR1QMjKRUr", portrait_image: "https://drive.google.com/uc?export=download&id=1Bgz9T0a5Ynu-8JMleGGwh3t-nM8L0XSD", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }] },
+            { id: 3, name: "القالب 3", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1sstL2nz3LqTFQH18oQuWOxJOxS2VPJYw", portrait_image: "https://drive.google.com/uc?export=download&id=1UQ9FW34vaf7Z7uFHNZ_6pPdSjEOuKVvp", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1MtsjLM0PtSA2YPKfddWnTKm2Lk4KIdTj", portrait_image: "https://drive.google.com/uc?export=download&id=1Odqc8g6KdeyjjYm1KeLytCpuRyywvbMt", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 3, name: "orange", landscape_image: "https://drive.google.com/uc?export=download&id=1dvJc-xLL_qn6OAcCNBrjnKNWAc3GeqZH", portrait_image: "https://drive.google.com/uc?export=download&id=18fUeGxUEt_sjrazS3yI3IBEd3srAm-jc", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 4, name: "green", landscape_image: "https://drive.google.com/uc?export=download&id=1X-kuR8BC5qGfiVx-VBaQHlH8PUGlp5wh", portrait_image: "https://drive.google.com/uc?export=download&id=1hWbIdGsFA9Zs8fjYb83ugnyd07f8l-kn", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 5, name: "purple", landscape_image: "https://drive.google.com/uc?export=download&id=1BgPDdNGiFKyXH809kTCLLu2HTBBY3i3s", portrait_image: "https://drive.google.com/uc?export=download&id=1hCWKWdPdLQoT3qbfHKqeJfd2MV36VT88", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }] },
+            { id: 4, name: "القالب 4", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1YHPD-fKvHgWLxqMc_JMgDDEHbyLcy_qb", portrait_image: "https://drive.google.com/uc?export=download&id=1Jp4S29FlR4X8tqv5Bm3grU7if7DElKmF", series_color: "#ff9e00", subseries_color: "#9fde14", finalseries_color: "#fcf84e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=14op-KfFzrLCti5sBypv3ES7SiJg6N9E-", portrait_image: "https://drive.google.com/uc?export=download&id=1ofbaUyVMGcWEa32AYSZeBqcfNRQKMOnA", series_color: "#ff9e00", subseries_color: "#9fde14", finalseries_color: "#fcf84e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 3, name: "orange", landscape_image: "https://drive.google.com/uc?export=download&id=1sHbD022NaSlq1v_kEirSnr2rEGMGTqEx", portrait_image: "https://drive.google.com/uc?export=download&id=1Jp4S29FlR4X8tqv5Bm3grU7if7DElKmF", series_color: "#ff9e00", subseries_color: "#9fde14", finalseries_color: "#fcf84e", title_color: "#ffffff", caption_color: "#ffffff" }] },
+            { id: 5, name: "القالب 5", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1L6Pj1_rSGggYZ7fv4RE91CA22VUot0Vg", portrait_image: "https://drive.google.com/uc?export=download&id=1oGS1mSCnu-GK_3u_J4pUqsEO4HLpiRq8", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "green", landscape_image: "https://drive.google.com/uc?export=download&id=1X46qV4OGD9KFG2ipuW5f9bhlu8VBgdsh", portrait_image: "https://drive.google.com/uc?export=download&id=1OtZamDZVM0VfGf9NRsTdAGfjo_TtLRv6", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 3, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1UoSQaam5toVGwUK61EhKqRg_VRwe_gtf", portrait_image: "https://drive.google.com/uc?export=download&id=1dhQN1cFe9PeLAJtz3xANxutDS4_DTCox", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 4, name: "orange", landscape_image: "https://drive.google.com/uc?export=download&id=143tkdil0_varINJ0v14RSVvE0xt-zji9", portrait_image: "https://drive.google.com/uc?export=download&id=1pg-vB9TOU48qeiQv2XjRzlMEH3dPWp9V", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 5, name: "brown", landscape_image: "https://drive.google.com/uc?export=download&id=1r5IBlbNJet1Ocl0txcz_Z0JQjiv4aJHo", portrait_image: "https://drive.google.com/uc?export=download&id=1ZN9kR3a9ojGBVBMsZc-Fa6r4NiHnISGC", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }] }
         ];
 
-        // ═══════════════════════════════════════════════════════
-        // ⭐ State Variables
-        // ═══════════════════════════════════════════════════════
-        let currentStep = 1;
-        const totalSteps = 6;
-        let initialData = null;
-        let selectedTemplate = null;
-        let selectedColor = null;
-        let audioElement = document.getElementById('audioElement');
-        let isFullscreen = false;
-        let aiCorrectedText = '';
-        let aiChangesCount = 0;
-        let lastAIRequestTime = 0;
+        let currentStep = 1, totalSteps = 6, selectedTemplate = null, selectedColor = null, aiCorrectedText = '', aiChangesCount = 0, lastAIRequestTime = 0;
         const AI_REQUEST_COOLDOWN = 10000;
+        const formData = { ID: null, Google_DriveID: null, user_id: '', audio_file_id: '', audio_file_name: '', audio_time: 0, audioUrl: '', Transcript: [], 'Transcript Corrected': [], transcript_txt: '', corrected_full_text: '', landscape_image_url: null, portrait_image_url: null, title: '', series: '', subSeries: '', finalSeries: '', status: 'in_progress', CurrentStep: 1, Video_Id: null, caption: null, created_at: null, updated_at: new Date().toISOString(), description: null, tags: [], template_id: null, template_name: null, color_id: null, color_name: null, series_color: '#b9d780', subseries_color: '#ebbd27', finalseries_color: '#fce74e', title_color: '#ffffff', caption_color: '#ffffff', seo_title: '', seo_description: '' };
 
-        const formData = {
-            ID: null,
-            Google_DriveID: null,
-            user_id: '',
-            audio_file_id: '',
-            audio_file_name: '',
-            audio_time: 0,
-            audioUrl: '',
-            Transcript: [],
-            'Transcript Corrected': [],
-            transcript_txt: '',
-            corrected_full_text: '',
-            landscape_image_url: null,
-            portrait_image_url: null,
-            title: '',
-            series: '',
-            subSeries: '',
-            finalSeries: '',
-            status: 'in_progress',
-            CurrentStep: 1,
-            Video_Id: null,
-            caption: null,
-            created_at: null,
-            updated_at: new Date().toISOString(),
-            description: null,
-            tags: [],
-            template_id: null,
-            template_name: null,
-            color_id: null,
-            color_name: null,
-            series_color: '#b9d780',
-            subseries_color: '#ebbd27',
-            finalseries_color: '#fce74e',
-            title_color: '#ffffff',
-            caption_color: '#ffffff',
-            seo_title: '',
-            seo_description: ''
-        };
-
-        // ═══════════════════════════════════════════════════════
-        // ⭐ DOM Elements
-        // ═══════════════════════════════════════════════════════
-        const progressSteps = document.querySelectorAll('.progress-step');
-        const progressLineFill = document.getElementById('progressLineFill');
-        const stepContents = document.querySelectorAll('.step-content');
-        const btnBack = document.getElementById('btnBack');
-        const btnNext = document.getElementById('btnNext');
-        const loadingOverlay = document.getElementById('loadingOverlay');
-        const loadingText = document.getElementById('loadingText');
-        const loadingSubtext = document.getElementById('loadingSubtext');
+        const audioElement = document.getElementById('audioElement');
         const textEditor = document.getElementById('textEditor');
-        const charCount = document.getElementById('charCount');
-        const wordCount = document.getElementById('wordCount');
-        const copyBtn = document.getElementById('copyBtn');
-        const pasteBtn = document.getElementById('pasteBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const aiBtn = document.getElementById('aiBtn');
-        const templatesGrid = document.getElementById('templatesGrid');
-        const colorsGrid = document.getElementById('colorsGrid');
-        const colorsSection = document.getElementById('colorsSection');
-        const seriesPreviewText = document.getElementById('seriesPreviewText');
-        const colorWheel = document.getElementById('colorWheel');
-        const colorWheelPicker = document.getElementById('colorWheelPicker');
-        const hexPreview = document.getElementById('hexPreview');
-        const hexInput = document.getElementById('hexInput');
-        const titleInput = document.getElementById('titleInput');
-        const mainSeriesInput = document.getElementById('mainSeriesInput');
-        const subSeriesInput = document.getElementById('subSeriesInput');
-        const finalSeriesInput = document.getElementById('finalSeriesInput');
-        const titleCount = document.getElementById('titleCount');
-        const mainSeriesCount = document.getElementById('mainSeriesCount');
-        const subSeriesCount = document.getElementById('subSeriesCount');
-        const finalSeriesCount = document.getElementById('finalSeriesCount');
-        const templatePreviewModal = document.getElementById('templatePreviewModal');
-        const closePreview = document.getElementById('closePreview');
-        const landscapePreview = document.getElementById('landscapePreview');
-        const portraitPreview = document.getElementById('portraitPreview');
-        const previewNextBtn = document.getElementById('previewNextBtn');
-        const progressWrapper = document.getElementById('progressWrapper');
-        const navButtons = document.getElementById('navButtons');
-        const step1Header = document.getElementById('step1Header');
-        const audioPlayerSection = document.getElementById('audioPlayerSection');
-        const editorActions = document.getElementById('editorActions');
-        const textEditorWrapper = document.getElementById('textEditorWrapper');
-        const floatingActions = document.getElementById('floatingActions');
-        const floatingCopyBtn = document.getElementById('floatingCopyBtn');
-        const floatingPasteBtn = document.getElementById('floatingPasteBtn');
-        const floatingClearBtn = document.getElementById('floatingClearBtn');
-        const aiCorrectBtn = document.getElementById('aiCorrectBtn');
-        const aiCorrectionBox = document.getElementById('aiCorrectionBox');
-        const aiCorrectionText = document.getElementById('aiCorrectionText');
-        const aiCorrectionClose = document.getElementById('aiCorrectionClose');
-        const aiAcceptBtn = document.getElementById('aiAcceptBtn');
-        const aiRejectBtn = document.getElementById('aiRejectBtn');
-        const aiWordCountEl = document.getElementById('aiWordCount');
-        const aiChangesEl = document.getElementById('aiChanges');
-        const aiAccuracyEl = document.getElementById('aiAccuracy');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const progressBar = document.getElementById('progressBar');
-        const progressFill = document.getElementById('progressFill');
-        const currentTimeDisplay = document.getElementById('currentTime');
-        const durationDisplay = document.getElementById('duration');
-        const speedBtns = document.querySelectorAll('.speed-btn');
-        const seoGenerateBtn = document.getElementById('seoGenerateBtn');
         const seoTitleInput = document.getElementById('seoTitleInput');
         const seoDescriptionInput = document.getElementById('seoDescriptionInput');
         const tagsContainer = document.getElementById('tagsContainer');
-        const seoTitleCount = document.getElementById('seoTitleCount');
-        const seoDescCount = document.getElementById('seoDescCount');
+        const colorPicker = document.getElementById('colorPicker');
+        const hexInput = document.getElementById('hexInput');
+        const hexPreview = document.getElementById('hexPreview');
+        const recommendedColorBtn = document.getElementById('recommendedColorBtn');
+        const recommendedColorPreview = document.getElementById('recommendedColorPreview');
+        const seriesPreviewText = document.getElementById('seriesPreviewText');
 
-        // ═══════════════════════════════════════════════════════
-        // ⭐ Utility Functions
-        // ═══════════════════════════════════════════════════════
         function showLoading(text, subtext = '') {
-            loadingText.textContent = text;
-            loadingSubtext.textContent = subtext;
-            loadingOverlay.classList.add('visible');
+            document.getElementById('loadingText').textContent = text;
+            document.getElementById('loadingSubtext').textContent = subtext;
+            document.getElementById('loadingOverlay').classList.add('visible');
         }
 
         function hideLoading() {
-            loadingOverlay.classList.remove('visible');
+            document.getElementById('loadingOverlay').classList.remove('visible');
         }
 
-        function getUrlParameter(name) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(name);
+        function scrollToTop() {
+            const activeStep = document.querySelector('.step-content.active');
+            if (activeStep) activeStep.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function convertDriveUrl(url) {
             try {
                 if (!url) return '';
                 const fileIdMatch = url.match(/[?&]id=([^&]+)/);
-                if (fileIdMatch && fileIdMatch[1]) {
-                    const fileId = fileIdMatch[1];
-                    return `https://drive.google.com/thumbnail?id=${fileId}&sz=w1000`;
-                }
+                if (fileIdMatch && fileIdMatch[1]) return `https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w1000`;
                 return url;
             } catch (error) {
-                console.error('Error converting Drive URL:', error);
                 return url;
             }
         }
+
+        async function loadInitialData() {
+            try {
+                showLoading('جاري تحميل البيانات...', 'الرجاء الانتظار');
+                const binId = new URLSearchParams(window.location.search).get('bin');
+                if (!binId) throw new Error('لم يتم العثور على معرف البيانات');
+                const response = await fetch(`${CONFIG.BACKEND.BASE_URL}/get-bin/${binId}`);
+                if (!response.ok) throw new Error('فشل تحميل البيانات');
+                const responseData = await response.json();
+                let loadedData = responseData.record || responseData.data || responseData;
+                formData.ID = loadedData.id || loadedData.ID;
+                formData.user_id = loadedData.user_id || '';
+                formData.audio_file_id = loadedData.audio_file_id || '';
+                formData.audioUrl = loadedData.audioUrl || '';
+                formData.Transcript = loadedData['Transcript (with times)'] || loadedData.Transcript || [];
+                formData.transcript_txt = loadedData.text || loadedData.transcript_txt || '';
+                formData.created_at = loadedData.timestamp || loadedData.created_at || new Date().toISOString();
+                if (formData.audioUrl) audioElement.src = formData.audioUrl;
+                if (formData.transcript_txt) {
+                    textEditor.value = formData.transcript_txt;
+                    formData.corrected_full_text = formData.transcript_txt;
+                    updateTextStats();
+                }
+                hideLoading();
+                validateCurrentStep();
+            } catch (error) {
+                hideLoading();
+                alert('❌ ' + (error.message || 'حدث خطأ'));
+            }
+        }
+
+        function updateTextStats() {
+            const text = textEditor.value;
+            document.getElementById('charCount').textContent = text.length.toLocaleString('ar');
+            document.getElementById('wordCount').textContent = (text.trim() ? text.trim().split(/\s+/).length : 0).toLocaleString('ar');
+        }
+
+        textEditor.addEventListener('input', () => {
+            formData.corrected_full_text = textEditor.value;
+            updateTextStats();
+            validateCurrentStep();
+        });
+
+        document.getElementById('aiBtn').addEventListener('click', async () => {
+            const now = Date.now();
+            if (now - lastAIRequestTime < AI_REQUEST_COOLDOWN) {
+                alert(`⏰ الرجاء الانتظار ${Math.ceil((AI_REQUEST_COOLDOWN - (now - lastAIRequestTime)) / 1000)} ثانية`);
+                return;
+            }
+            if (!textEditor.value.trim()) { alert('⚠️ لا يوجد نص للتصحيح'); return; }
+            showLoading('جاري التصحيح بالذكاء الاصطناعي...');
+            lastAIRequestTime = now;
+            try {
+                const response = await fetch(`${CONFIG.BACKEND.BASE_URL}/ai-correct`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: textEditor.value })
+                });
+                if (response.status === 429) {
+                    hideLoading();
+                    alert('⏰ تم تجاوز الحد المسموح. الرجاء الانتظار');
+                    return;
+                }
+                if (!response.ok) throw new Error('فشل التصحيح');
+                const result = await response.json();
+                if (result.success && result.correctedText) {
+                    aiCorrectedText = result.correctedText;
+                    document.getElementById('aiCorrectionText').textContent = aiCorrectedText;
+                    document.getElementById('aiWordCount').textContent = `${aiCorrectedText.trim().split(/\s+/).length} كلمة`;
+                    document.getElementById('aiCorrectionBox').classList.add('visible');
+                    hideLoading();
+                }
+            } catch (error) {
+                hideLoading();
+                alert('❌ ' + error.message);
+            }
+        });
+
+        document.getElementById('aiAcceptBtn').addEventListener('click', () => {
+            textEditor.value = aiCorrectedText;
+            formData.corrected_full_text = aiCorrectedText;
+            updateTextStats();
+            document.getElementById('aiCorrectionBox').classList.remove('visible');
+        });
+
+        document.getElementById('aiRejectBtn').addEventListener('click', () => {
+            document.getElementById('aiCorrectionBox').classList.remove('visible');
+        });
+
+        document.getElementById('aiCorrectionClose').addEventListener('click', () => {
+            document.getElementById('aiCorrectionBox').classList.remove('visible');
+        });
+
+        document.getElementById('copyBtn').addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(textEditor.value);
+            } catch (err) {
+                textEditor.select();
+                document.execCommand('copy');
+            }
+        });
+
+        document.getElementById('pasteBtn').addEventListener('click', async () => {
+            try {
+                const text = await navigator.clipboard.readText();
+                textEditor.value = text;
+                formData.corrected_full_text = text;
+                updateTextStats();
+                validateCurrentStep();
+            } catch (err) {}
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            if (textEditor.value.trim() && confirm('هل تريد حذف النص؟')) {
+                textEditor.value = '';
+                formData.corrected_full_text = '';
+                updateTextStats();
+                validateCurrentStep();
+            }
+        });
+
+        document.getElementById('playPauseBtn').addEventListener('click', () => {
+            if (audioElement.paused) {
+                audioElement.play();
+                document.getElementById('playPauseBtn').textContent = '⏸️';
+            } else {
+                audioElement.pause();
+                document.getElementById('playPauseBtn').textContent = '▶️';
+            }
+        });
+
+        audioElement.addEventListener('loadedmetadata', () => {
+            document.getElementById('duration').textContent = formatTime(audioElement.duration);
+        });
+
+        audioElement.addEventListener('timeupdate', () => {
+            document.getElementById('progressFill').style.width = `${(audioElement.currentTime / audioElement.duration) * 100}%`;
+            document.getElementById('currentTime').textContent = formatTime(audioElement.currentTime);
+        });
+
+        document.getElementById('progressBar').addEventListener('click', (e) => {
+            const rect = document.getElementById('progressBar').getBoundingClientRect();
+            audioElement.currentTime = ((e.clientX - rect.left) / rect.width) * audioElement.duration;
+        });
+
+        document.querySelectorAll('.speed-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                audioElement.playbackRate = parseFloat(btn.dataset.speed);
+                document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            });
+        });
 
         function formatTime(seconds) {
             const mins = Math.floor(seconds / 60);
@@ -2222,501 +2042,47 @@ https://t.me/MyRoqia/86825
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
 
-        function hslToHex(h, s, l) {
-            l /= 100;
-            const a = s * Math.min(l, 1 - l) / 100;
-            const f = n => {
-                const k = (n + h / 30) % 12;
-                const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
-                return Math.round(255 * color).toString(16).padStart(2, '0');
-            };
-            return `#${f(0)}${f(8)}${f(4)}`;
-        }
-
-        function triggerHapticFeedback(type = 'medium') {
-            try {
-                if (tg.HapticFeedback && tg.HapticFeedback.impactOccurred) {
-                    tg.HapticFeedback.impactOccurred(type);
-                }
-            } catch (e) {
-                // Haptic feedback not available
-            }
-        }
-
-        function triggerNotificationFeedback(type = 'success') {
-            try {
-                if (tg.HapticFeedback && tg.HapticFeedback.notificationOccurred) {
-                    tg.HapticFeedback.notificationOccurred(type);
-                }
-            } catch (e) {
-                // Haptic feedback not available
-            }
-        }
-
-        function scrollToTop() {
-            const activeStep = document.querySelector('.step-content.active');
-            if (activeStep) {
-                activeStep.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
-            }
-        }
-
-        // ═══════════════════════════════════════════════════════
-        // ⭐ Data Loading Function
-        // ═══════════════════════════════════════════════════════
-        async function loadInitialData() {
-            try {
-                showLoading('جاري تحميل البيانات...', 'الرجاء الانتظار');
-                
-                const binId = getUrlParameter('bin');
-                if (!binId) {
-                    throw new Error('لم يتم العثور على معرف البيانات في الرابط');
-                }
-
-                console.log('📥 Loading data from JSONBin via Worker');
-                console.log('Bin ID:', binId);
-                
-                const workerUrl = `${CONFIG.BACKEND.BASE_URL}/get-bin/${binId}`;
-                console.log('Full URL:', workerUrl);
-                
-                const response = await fetch(workerUrl, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-
-                console.log('Response status:', response.status);
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    console.error('❌ Worker API error:', errorData);
-                    throw new Error(errorData.error || `فشل تحميل البيانات (${response.status})`);
-                }
-
-                const responseData = await response.json();
-                console.log('✅ Raw response data:', responseData);
-
-                let loadedData = null;
-                
-                if (responseData.success && responseData.record) {
-                    loadedData = responseData.record;
-                } else if (responseData.record) {
-                    loadedData = responseData.record;
-                } else if (responseData.data) {
-                    loadedData = responseData.data;
-                } else {
-                    loadedData = responseData;
-                }
-
-                console.log('Processed data:', loadedData);
-
-                if (!loadedData || typeof loadedData !== 'object') {
-                    console.error('Invalid data structure:', loadedData);
-                    throw new Error('تنسيق البيانات غير صحيح');
-                }
-                
-                initialData = {
-                    ID: loadedData.id || loadedData.ID || null,
-                    user_id: loadedData.user_id || '',
-                    audio_file_id: loadedData.audio_file_id || '',
-                    audio_file_name: loadedData.audio_file_name || '',
-                    audio_time: loadedData.audio_time || 0,
-                    audioUrl: loadedData.audioUrl || '',
-                    'Transcript (with times)': loadedData['Transcript (with times)'] || loadedData.Transcript || [],
-                    transcript_txt: loadedData.text || loadedData.transcript_txt || '',
-                    created_at: loadedData.timestamp || loadedData.created_at || new Date().toISOString(),
-                    status: loadedData.status || 'in_progress',
-                    CurrentStep: loadedData.CurrentStep || 1
-                };
-
-                console.log('✅ Initial data transformed:', initialData);
-
-                formData.ID = initialData.ID;
-                formData.Google_DriveID = initialData.Google_DriveID || null;
-                formData.user_id = initialData.user_id || '';
-                formData.audio_file_id = initialData.audio_file_id || '';
-                formData.audio_file_name = initialData.audio_file_name || '';
-                formData.audio_time = initialData.audio_time || 0;
-                formData.audioUrl = initialData.audioUrl || '';
-                formData.Transcript = initialData['Transcript (with times)'] || [];
-                formData.transcript_txt = initialData.transcript_txt || '';
-                formData.created_at = initialData.created_at;
-                formData.status = initialData.status;
-                formData.CurrentStep = initialData.CurrentStep;
-                
-                console.log('FormData populated:', {
-                    ID: formData.ID,
-                    user_id: formData.user_id,
-                    has_transcript: formData.transcript_txt.length > 0,
-                    audioUrl: formData.audioUrl
-                });
-
-                if (formData.audioUrl) {
-                    audioElement.src = formData.audioUrl;
-                    console.log('✅ Audio loaded');
-                }
-
-                if (formData.transcript_txt) {
-                    textEditor.value = formData.transcript_txt;
-                    formData.corrected_full_text = formData.transcript_txt;
-                    updateTextStats();
-                    console.log('✅ Text loaded into editor');
-                } else {
-                    textEditor.placeholder = 'لا يوجد نص مفرغ. يمكنك كتابة النص يدوياً';
-                    console.log('⚠️ No transcript text found');
-                }
-                
-                hideLoading();
-                validateCurrentStep();
-                
-                triggerNotificationFeedback('success');
-                
-                console.log('✅ Form ready - All data loaded successfully');
-                
-            } catch (error) {
-                console.error('❌ Error loading data:', error);
-                console.error('Error stack:', error.stack);
-                hideLoading();
-                
-                const errorMsg = error.message || 'حدث خطأ غير متوقع';
-                
-                if (tg.showAlert) {
-                    tg.showAlert('❌ ' + errorMsg);
-                } else {
-                    alert('❌ ' + errorMsg);
-                }
-            }
-        }
-
-        // ═══════════════════════════════════════════════════════
-        // ⭐ Audio Player Functions
-        // ═══════════════════════════════════════════════════════
-        playPauseBtn.addEventListener('click', () => {
-            if (audioElement.paused) {
-                audioElement.play();
-                playPauseBtn.textContent = '⏸️';
-            } else {
-                audioElement.pause();
-                playPauseBtn.textContent = '▶️';
-            }
-            triggerHapticFeedback('light');
-        });
-
-        audioElement.addEventListener('loadedmetadata', () => {
-            durationDisplay.textContent = formatTime(audioElement.duration);
-        });
-
-        audioElement.addEventListener('timeupdate', () => {
-            const percent = (audioElement.currentTime / audioElement.duration) * 100;
-            progressFill.style.width = `${percent}%`;
-            currentTimeDisplay.textContent = formatTime(audioElement.currentTime);
-        });
-
-        audioElement.addEventListener('ended', () => {
-            playPauseBtn.textContent = '▶️';
-        });
-
-        progressBar.addEventListener('click', (e) => {
-            const rect = progressBar.getBoundingClientRect();
-            const percent = (e.clientX - rect.left) / rect.width;
-            audioElement.currentTime = percent * audioElement.duration;
-            triggerHapticFeedback('light');
-        });
-
-        speedBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const speed = parseFloat(btn.dataset.speed);
-                audioElement.playbackRate = speed;
-                speedBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                triggerHapticFeedback('light');
-            });
-        });
-
-        // ═══════════════════════════════════════════════════════
-        // ⭐ Fullscreen Editor
-        // ═══════════════════════════════════════════════════════
-        textEditor.addEventListener('focus', () => {
-            if (!isFullscreen) {
-                isFullscreen = true;
-                progressWrapper.classList.add('hidden');
-                navButtons.classList.add('hidden');
-                step1Header.classList.add('hidden');
-                editorActions.classList.add('hidden');
-                textEditorWrapper.classList.add('fullscreen');
-                audioPlayerSection.classList.add('floating');
-                floatingActions.classList.add('visible');
-            }
-        });
-
-        textEditor.addEventListener('blur', () => {
-            setTimeout(() => {
-                if (document.activeElement !== textEditor && isFullscreen) {
-                    isFullscreen = false;
-                    progressWrapper.classList.remove('hidden');
-                    navButtons.classList.remove('hidden');
-                    step1Header.classList.remove('hidden');
-                    editorActions.classList.remove('hidden');
-                    textEditorWrapper.classList.remove('fullscreen');
-                    audioPlayerSection.classList.remove('floating');
-                    floatingActions.classList.remove('visible');
-                }
-            }, 200);
-        });
-
-        // ═══════════════════════════════════════════════════════
-        // ⭐ AI Correction Function
-        // ═══════════════════════════════════════════════════════
-        async function correctTextWithAI() {
-            try {
-                const now = Date.now();
-                if (now - lastAIRequestTime < AI_REQUEST_COOLDOWN) {
-                    const remainingTime = Math.ceil((AI_REQUEST_COOLDOWN - (now - lastAIRequestTime)) / 1000);
-                    alert(`⏰ الرجاء الانتظار ${remainingTime} ثانية قبل طلب التصحيح مرة أخرى`);
-                    return;
-                }
-
-                showLoading('جاري التصحيح بالذكاء الاصطناعي...', 'قد يستغرق هذا بضع ثوانٍ');
-                
-                const text = textEditor.value;
-                if (!text.trim()) {
-                    throw new Error('لا يوجد نص للتصحيح');
-                }
-
-                console.log('🤖 Requesting AI correction...');
-                lastAIRequestTime = now;
-
-                let attempt = 0;
-                const maxAttempts = 2;
-                let lastError = null;
-
-                while (attempt < maxAttempts) {
-                    try {
-                        console.log(`Attempt ${attempt + 1}/${maxAttempts}`);
-
-                        const response = await fetch(`${CONFIG.BACKEND.BASE_URL}/ai-correct`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                text: text
-                            })
-                        });
-
-                        console.log('AI Response status:', response.status);
-
-                        if (response.status === 429) {
-                            const errorData = await response.json().catch(() => ({}));
-                            const retryAfter = errorData.retryAfter || 60;
-                            
-                            hideLoading();
-                            
-                            const message = `⏰ تم تجاوز الحد المسموح من الطلبات.\n\nالرجاء الانتظار ${retryAfter} ثانية والمحاولة مرة أخرى.\n\nسبب ذلك: Google Gemini لديه حد 15 طلب في الدقيقة للحسابات المجانية.`;
-                            
-                            if (tg.showPopup) {
-                                tg.showPopup({
-                                    title: '⏰ تجاوز الحد',
-                                    message: message,
-                                    buttons: [{id: 'ok', type: 'ok', text: 'حسناً'}]
-                                });
-                            } else if (tg.showAlert) {
-                                tg.showAlert(message);
-                            } else {
-                                alert(message);
-                            }
-                            return;
-                        }
-
-                        if (!response.ok) {
-                            const errorData = await response.json().catch(() => ({}));
-                            throw new Error(errorData.message || errorData.userMessage || 'فشل التصحيح');
-                        }
-
-                        const result = await response.json();
-                        console.log('AI Result:', result);
-                        
-                        if (result.success && result.correctedText) {
-                            aiCorrectedText = result.correctedText;
-                            
-                            const originalWords = text.trim().split(/\s+/).length;
-                            const correctedWords = aiCorrectedText.trim().split(/\s+/).length;
-                            aiChangesCount = Math.abs(correctedWords - originalWords);
-                            
-                            aiCorrectionText.textContent = aiCorrectedText;
-                            aiWordCountEl.textContent = `${correctedWords} كلمة`;
-                            aiChangesEl.textContent = `${aiChangesCount} تغيير`;
-                            aiAccuracyEl.textContent = '95% دقة';
-                            
-                            aiCorrectionBox.classList.add('visible');
-                            
-                            hideLoading();
-                            triggerNotificationFeedback('success');
-                            
-                            console.log('✅ AI Correction successful');
-                            return;
-                        } else {
-                            throw new Error('لم يتم إرجاع نص مصحح');
-                        }
-                        
-                    } catch (error) {
-                        lastError = error;
-                        attempt++;
-                        
-                        if (attempt < maxAttempts) {
-                            console.log(`Retrying after error: ${error.message}`);
-                            await new Promise(resolve => setTimeout(resolve, 2000));
-                        }
-                    }
-                }
-
-                throw lastError || new Error('فشل التصحيح بعد عدة محاولات');
-                
-            } catch (error) {
-                console.error('AI Correction Error:', error);
-                hideLoading();
-                
-                const errorMsg = error.message || 'حدث خطأ أثناء التصحيح';
-                
-                if (tg.showAlert) {
-                    tg.showAlert('❌ ' + errorMsg);
-                } else {
-                    alert('❌ ' + errorMsg);
-                }
-            }
-        }
-
-        aiBtn.addEventListener('click', correctTextWithAI);
-        aiCorrectBtn.addEventListener('click', correctTextWithAI);
-
-        aiAcceptBtn.addEventListener('click', () => {
-            textEditor.value = aiCorrectedText;
-            formData.corrected_full_text = aiCorrectedText;
-            updateTextStats();
-            aiCorrectionBox.classList.remove('visible');
-            triggerNotificationFeedback('success');
-        });
-
-        aiRejectBtn.addEventListener('click', () => {
-            aiCorrectionBox.classList.remove('visible');
-            triggerHapticFeedback('light');
-        });
-
-        aiCorrectionClose.addEventListener('click', () => {
-            aiCorrectionBox.classList.remove('visible');
-        });
-
-        // ═══════════════════════════════════════════════════════
-        // ⭐ Floating Actions
-        // ═══════════════════════════════════════════════════════
-        floatingCopyBtn.addEventListener('click', async () => {
-            try {
-                await navigator.clipboard.writeText(textEditor.value);
-                triggerNotificationFeedback('success');
-            } catch (err) {
-                textEditor.select();
-                document.execCommand('copy');
-            }
-        });
-
-        floatingPasteBtn.addEventListener('click', async () => {
-            try {
-                const text = await navigator.clipboard.readText();
-                textEditor.value = text;
-                formData.corrected_full_text = text;
-                updateTextStats();
-                validateCurrentStep();
-                triggerHapticFeedback('medium');
-            } catch (err) {
-                console.error('Paste error:', err);
-            }
-        });
-
-        floatingClearBtn.addEventListener('click', () => {
-            if (textEditor.value.trim()) {
-                if (confirm('هل تريد حذف النص؟')) {
-                    textEditor.value = '';
-                    formData.corrected_full_text = '';
-                    updateTextStats();
-                    validateCurrentStep();
-                    triggerHapticFeedback('heavy');
-                }
-            }
-        });
-
-        // ═══════════════════════════════════════════════════════
-        // ⭐ Templates Functions
-        // ═══════════════════════════════════════════════════════
         function initializeTemplates() {
-            templatesGrid.innerHTML = '';
+            const grid = document.getElementById('templatesGrid');
+            grid.innerHTML = '';
             TEMPLATES_DATA.forEach((template, index) => {
                 const card = document.createElement('div');
-                card.className = 'template-card';
-                
-                if (template.id === 5) {
-                    card.classList.add('large');
-                }
-                
+                card.className = 'template-card' + (template.id === 5 ? ' large' : '');
                 card.dataset.templateId = template.id;
-                
-                const firstColorImage = convertDriveUrl(template.colors[0].landscape_image);
-                
-                card.innerHTML = `
-                    <div class="template-preview" style="background-image: url('${firstColorImage}');">
-                        <div class="template-number">${index + 1}</div>
-                        <div class="template-check">✓</div>
-                    </div>
-                    <div class="template-name">${template.name}</div>
-                `;
+                card.innerHTML = `<div class="template-preview" style="background-image: url('${convertDriveUrl(template.colors[0].landscape_image}');"><div class="template-number">${index + 1}</div><div class="template-check">✓</div></div><div class="template-name">${template.name}</div>`;
                 card.addEventListener('click', () => selectTemplate(template));
-                templatesGrid.appendChild(card);
+                grid.appendChild(card);
             });
         }
 
         function selectTemplate(template) {
             document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
-            const selectedCard = document.querySelector(`[data-template-id="${template.id}"]`);
-            if (selectedCard) {
-                selectedCard.classList.add('selected');
-            }
-            
+            document.querySelector(`[data-template-id="${template.id}"]`).classList.add('selected');
             selectedTemplate = template;
             formData.template_id = template.id;
             formData.template_name = template.name;
-            
             loadTemplateColors(template.colors);
-            colorsSection.style.display = 'block';
-            
+            document.getElementById('colorsSection').style.display = 'block';
             validateCurrentStep();
-            triggerHapticFeedback('medium');
         }
 
         function loadTemplateColors(colors) {
-            colorsGrid.innerHTML = '';
+            const grid = document.getElementById('colorsGrid');
+            grid.innerHTML = '';
             colors.forEach(color => {
                 const option = document.createElement('div');
                 option.className = 'color-option';
                 option.dataset.colorId = color.id;
-                
-                const landscapeImage = convertDriveUrl(color.landscape_image);
-                
-                option.style.backgroundImage = `url('${landscapeImage}')`;
+                option.style.backgroundImage = `url('${convertDriveUrl(color.landscape_image)}')`;
                 option.innerHTML = '<div class="template-check">✓</div>';
                 option.addEventListener('click', () => selectColor(color));
-                colorsGrid.appendChild(option);
+                grid.appendChild(option);
             });
         }
 
         function selectColor(color) {
             document.querySelectorAll('#colorsGrid .color-option').forEach(o => o.classList.remove('selected'));
-            const selectedColorEl = colorsGrid.querySelector(`[data-color-id="${color.id}"]`);
-            if (selectedColorEl) {
-                selectedColorEl.classList.add('selected');
-            }
-            
+            document.getElementById('colorsGrid').querySelector(`[data-color-id="${color.id}"]`).classList.add('selected');
             selectedColor = color;
             formData.color_id = color.id;
             formData.color_name = color.name;
@@ -2725,212 +2091,153 @@ https://t.me/MyRoqia/86825
             formData.series_color = color.series_color;
             formData.subseries_color = color.subseries_color;
             formData.finalseries_color = color.finalseries_color;
-            formData.title_color = color.title_color;
-            formData.caption_color = color.caption_color;
-            
-            landscapePreview.src = convertDriveUrl(color.landscape_image);
-            portraitPreview.src = convertDriveUrl(color.portrait_image);
-            templatePreviewModal.classList.add('visible');
-            
+            const landscapeImg = document.getElementById('landscapePreview');
+            const portraitImg = document.getElementById('portraitPreview');
+            const landscapeLoading = document.getElementById('landscapeLoading');
+            const portraitLoading = document.getElementById('portraitLoading');
+            landscapeImg.onload = () => { landscapeLoading.classList.add('hidden'); landscapeImg.classList.add('loaded'); };
+            portraitImg.onload = () => { portraitLoading.classList.add('hidden'); portraitImg.classList.add('loaded'); };
+            landscapeImg.src = convertDriveUrl(color.landscape_image);
+            portraitImg.src = convertDriveUrl(color.portrait_image);
+            document.getElementById('templatePreviewModal').classList.add('visible');
             validateCurrentStep();
-            triggerHapticFeedback('medium');
         }
 
-        closePreview.addEventListener('click', () => {
-            templatePreviewModal.classList.remove('visible');
+        document.getElementById('closePreview').addEventListener('click', () => {
+            document.getElementById('templatePreviewModal').classList.remove('visible');
         });
 
-        previewNextBtn.addEventListener('click', () => {
-            templatePreviewModal.classList.remove('visible');
+        document.getElementById('previewNextBtn').addEventListener('click', () => {
+            document.getElementById('templatePreviewModal').classList.remove('visible');
             nextStep();
         });
 
-        templatePreviewModal.addEventListener('click', (e) => {
-            if (e.target === templatePreviewModal) {
-                templatePreviewModal.classList.remove('visible');
-            }
-        });
-
-        // ═══════════════════════════════════════════════════════
-        // ⭐ Series Colors Functions
-        // ═══════════════════════════════════════════════════════
         function initializeSeriesColors() {
             if (!selectedColor) return;
-            
             formData.series_color = selectedColor.series_color;
             seriesPreviewText.style.color = selectedColor.series_color;
             hexInput.value = selectedColor.series_color;
             hexPreview.style.background = selectedColor.series_color;
+            recommendedColorPreview.style.background = selectedColor.series_color;
+            colorPicker.value = selectedColor.series_color;
         }
 
-        colorWheel.addEventListener('click', (e) => {
-            const rect = colorWheel.getBoundingClientRect();
-            const x = e.clientX - rect.left - rect.width / 2;
-            const y = e.clientY - rect.top - rect.height / 2;
-            
-            const angle = Math.atan2(y, x);
-            const hue = (angle * 180 / Math.PI + 360) % 360;
-            
-            const hexColor = hslToHex(hue, 80, 60);
-            
-            formData.series_color = hexColor;
-            seriesPreviewText.style.color = hexColor;
-            hexInput.value = hexColor;
-            hexPreview.style.background = hexColor;
-            
-            const radius = rect.width / 2;
-            const pickerX = Math.cos(angle) * radius * 0.8;
-            const pickerY = Math.sin(angle) * radius * 0.8;
-            colorWheelPicker.style.left = `${50 + (pickerX / rect.width) * 100}%`;
-            colorWheelPicker.style.top = `${50 + (pickerY / rect.height) * 100}%`;
-            
-            triggerHapticFeedback('light');
+        recommendedColorBtn.addEventListener('click', () => {
+            recommendedColorBtn.classList.add('selected');
+            formData.series_color = selectedColor.series_color;
+            seriesPreviewText.style.color = selectedColor.series_color;
+            hexInput.value = selectedColor.series_color;
+            hexPreview.style.background = selectedColor.series_color;
+            colorPicker.value = selectedColor.series_color;
+        });
+
+        colorPicker.addEventListener('input', (e) => {
+            const color = e.target.value;
+            formData.series_color = color;
+            seriesPreviewText.style.color = color;
+            hexInput.value = color;
+            hexPreview.style.background = color;
+            recommendedColorBtn.classList.remove('selected');
         });
 
         hexInput.addEventListener('input', (e) => {
             let value = e.target.value;
-            
-            if (!value.startsWith('#')) {
-                value = '#' + value;
-            }
-            
+            if (!value.startsWith('#')) value = '#' + value;
             value = value.substring(0, 7);
-            
             if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
                 formData.series_color = value;
                 seriesPreviewText.style.color = value;
                 hexPreview.style.background = value;
+                colorPicker.value = value;
+                recommendedColorBtn.classList.remove('selected');
             }
-            
             e.target.value = value;
         });
 
-        // ═══════════════════════════════════════════════════════
-        // ⭐ SEO Generation Function
-        // ═══════════════════════════════════════════════════════
-        async function generateSEO() {
+        function setupInput(input, countEl, formKey) {
+            input.addEventListener('input', () => {
+                formData[formKey] = input.value;
+                countEl.textContent = input.value.length;
+                validateCurrentStep();
+            });
+        }
+
+        setupInput(document.getElementById('titleInput'), document.getElementById('titleCount'), 'title');
+        setupInput(document.getElementById('mainSeriesInput'), document.getElementById('mainSeriesCount'), 'series');
+        setupInput(document.getElementById('subSeriesInput'), document.getElementById('subSeriesCount'), 'subSeries');
+        setupInput(document.getElementById('finalSeriesInput'), document.getElementById('finalSeriesCount'), 'finalSeries');
+
+        document.getElementById('seoGenerateBtn').addEventListener('click', async () => {
+            if (!formData.corrected_full_text.trim()) { alert('⚠️ لا يوجد نص'); return; }
+            showLoading('جاري إنشاء SEO احترافي...');
+            document.getElementById('seoGenerateBtn').disabled = true;
             try {
-                if (!formData.corrected_full_text.trim()) {
-                    alert('⚠️ لا يوجد نص لإنشاء SEO منه');
-                    return;
-                }
-
-                showLoading('جاري إنشاء SEO احترافي...', 'قد يستغرق هذا بضع ثوانٍ');
-                
-                seoGenerateBtn.disabled = true;
-                
-                console.log('🤖 Requesting SEO generation...');
-
                 const response = await fetch(`${CONFIG.BACKEND.BASE_URL}/generate-seo`, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        text: formData.corrected_full_text,
-                        title: formData.title,
-                        series: formData.series,
-                        subSeries: formData.subSeries
-                    })
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: formData.corrected_full_text, title: formData.title, series: formData.series, subSeries: formData.subSeries })
                 });
-
-                console.log('SEO Response status:', response.status);
-
                 if (response.status === 429) {
-                    const errorData = await response.json().catch(() => ({}));
-                    const retryAfter = errorData.retryAfter || 60;
-                    
                     hideLoading();
-                    seoGenerateBtn.disabled = false;
-                    
-                    const message = `⏰ تم تجاوز الحد المسموح من الطلبات.\n\nالرجاء الانتظار ${retryAfter} ثانية والمحاولة مرة أخرى.`;
-                    
-                    if (tg.showAlert) {
-                        tg.showAlert(message);
-                    } else {
-                        alert(message);
-                    }
+                    document.getElementById('seoGenerateBtn').disabled = false;
+                    alert('⏰ تم تجاوز الحد المسموح');
                     return;
                 }
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.message || errorData.userMessage || 'فشل إنشاء SEO');
-                }
-
+                if (!response.ok) throw new Error('فشل إنشاء SEO');
                 const result = await response.json();
-                console.log('SEO Result:', result);
-                
                 if (result.success) {
                     formData.seo_title = result.title || '';
                     formData.seo_description = result.description || '';
                     formData.tags = result.tags || [];
-                    
                     seoTitleInput.value = formData.seo_title;
                     seoDescriptionInput.value = formData.seo_description;
-                    
                     updateSEOCounts();
                     renderTags();
-                    
                     hideLoading();
-                    seoGenerateBtn.disabled = false;
-                    triggerNotificationFeedback('success');
-                    
+                    document.getElementById('seoGenerateBtn').disabled = false;
                     validateCurrentStep();
-                    
-                    console.log('✅ SEO generated successfully');
-                } else {
-                    throw new Error('لم يتم إرجاع بيانات SEO');
+                    updateSEOStats();
                 }
-                
             } catch (error) {
-                console.error('SEO Generation Error:', error);
                 hideLoading();
-                seoGenerateBtn.disabled = false;
-                
-                const errorMsg = error.message || 'حدث خطأ أثناء إنشاء SEO';
-                
-                if (tg.showAlert) {
-                    tg.showAlert('❌ ' + errorMsg);
-                } else {
-                    alert('❌ ' + errorMsg);
-                }
+                document.getElementById('seoGenerateBtn').disabled = false;
+                alert('❌ ' + error.message);
             }
-        }
+        });
 
         function renderTags() {
             tagsContainer.innerHTML = '';
-            
             if (!formData.tags || formData.tags.length === 0) {
                 tagsContainer.innerHTML = '<div style="color: var(--text-secondary); font-size: 13px;">لا توجد كلمات مفتاحية</div>';
                 return;
             }
-            
             formData.tags.forEach((tag, index) => {
                 const tagEl = document.createElement('div');
                 tagEl.className = 'tag-item';
-                tagEl.innerHTML = `
-                    <span>${tag}</span>
-                    <button class="tag-remove" data-index="${index}">×</button>
-                `;
-                
-                const removeBtn = tagEl.querySelector('.tag-remove');
-                removeBtn.addEventListener('click', () => {
+                tagEl.innerHTML = `<span>${tag}</span><button class="tag-remove" data-index="${index}">×</button>`;
+                tagEl.querySelector('.tag-remove').addEventListener('click', () => {
                     formData.tags.splice(index, 1);
                     renderTags();
-                    triggerHapticFeedback('light');
+                    updateSEOStats();
                 });
-                
                 tagsContainer.appendChild(tagEl);
             });
         }
 
         function updateSEOCounts() {
-            seoTitleCount.textContent = seoTitleInput.value.length;
-            seoDescCount.textContent = seoDescriptionInput.value.length;
+            document.getElementById('seoTitleCount').textContent = seoTitleInput.value.length;
+            document.getElementById('seoDescCount').textContent = seoDescriptionInput.value.length;
         }
 
-        seoGenerateBtn.addEventListener('click', generateSEO);
+        function updateSEOStats() {
+            const words = formData.corrected_full_text.trim().split(/\s+/).length;
+            const chars = formData.corrected_full_text.length;
+            document.getElementById('statWordCount').textContent = words;
+            document.getElementById('statCharCount').textContent = chars;
+            document.getElementById('statTagsCount').textContent = formData.tags.length;
+            document.getElementById('statDescLength').textContent = formData.seo_description.length;
+            document.getElementById('seoStats').style.display = 'grid';
+        }
 
         seoTitleInput.addEventListener('input', () => {
             formData.seo_title = seoTitleInput.value;
@@ -2944,80 +2251,44 @@ https://t.me/MyRoqia/86825
             validateCurrentStep();
         });
 
-        // ═══════════════════════════════════════════════════════
-        // ⭐ Navigation & Progress Functions
-        // ═══════════════════════════════════════════════════════
         function updateProgress() {
             const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
-            progressLineFill.style.width = `${progress}%`;
-            
-            progressSteps.forEach((step, index) => {
+            document.getElementById('progressLineFill').style.width = `${progress}%`;
+            document.querySelectorAll('.progress-step').forEach((step, index) => {
                 const stepNum = index + 1;
                 step.classList.remove('active', 'completed');
-                if (stepNum < currentStep) {
-                    step.classList.add('completed');
-                } else if (stepNum === currentStep) {
-                    step.classList.add('active');
-                }
+                if (stepNum < currentStep) step.classList.add('completed');
+                else if (stepNum === currentStep) step.classList.add('active');
             });
-            
-            stepContents.forEach((content, index) => {
+            document.querySelectorAll('.step-content').forEach((content, index) => {
                 content.classList.remove('active');
-                if (index + 1 === currentStep) {
-                    content.classList.add('active');
-                }
+                if (index + 1 === currentStep) content.classList.add('active');
             });
-            
-            btnBack.style.display = currentStep === 1 ? 'none' : 'flex';
-            
+            document.getElementById('btnBack').style.display = currentStep === 1 ? 'none' : 'flex';
             if (currentStep === totalSteps) {
-                btnNext.innerHTML = '<span>إرسال</span><span>✅</span>';
-                btnNext.className = 'nav-btn btn-submit';
+                document.getElementById('btnNext').innerHTML = '<span>إرسال</span><span>✅</span>';
+                document.getElementById('btnNext').className = 'nav-btn btn-submit';
             } else {
-                btnNext.innerHTML = '<span>التالي</span><span>→</span>';
-                btnNext.className = 'nav-btn btn-next';
+                document.getElementById('btnNext').innerHTML = '<span>التالي</span><span>→</span>';
+                document.getElementById('btnNext').className = 'nav-btn btn-next';
             }
-            
-            if (currentStep === 3) {
-                initializeSeriesColors();
-            }
-            
-            if (currentStep === 6) {
-                updateReview();
-            }
-            
+            if (currentStep === 3) initializeSeriesColors();
+            if (currentStep === 6) updateReview();
             scrollToTop();
             validateCurrentStep();
         }
 
         function validateCurrentStep() {
             let isValid = false;
-            
             switch(currentStep) {
-                case 1:
-                    isValid = formData.corrected_full_text.trim().length > 0;
-                    break;
-                case 2:
-                    isValid = formData.template_id !== null && formData.color_id !== null;
-                    break;
-                case 3:
-                    isValid = formData.series_color !== null;
-                    break;
-                case 4:
-                    isValid = formData.title.trim() && formData.series.trim() && 
-                             formData.subSeries.trim() && formData.finalSeries.trim();
-                    break;
-                case 5:
-                    isValid = formData.seo_title.trim().length > 0 && 
-                             formData.seo_description.trim().length > 0 && 
-                             formData.tags.length > 0;
-                    break;
-                case 6:
-                    isValid = true;
-                    break;
+                case 1: isValid = formData.corrected_full_text.trim().length > 0; break;
+                case 2: isValid = formData.template_id !== null && formData.color_id !== null; break;
+                case 3: isValid = formData.series_color !== null; break;
+                case 4: isValid = formData.title.trim() && formData.series.trim() && formData.subSeries.trim() && formData.finalSeries.trim(); break;
+                case 5: isValid = formData.seo_title.trim().length > 0 && formData.seo_description.trim().length > 0 && formData.tags.length > 0; break;
+                case 6: isValid = true; break;
             }
-            
-            btnNext.disabled = !isValid;
+            document.getElementById('btnNext').disabled = !isValid;
         }
 
         async function nextStep() {
@@ -3025,12 +2296,10 @@ https://t.me/MyRoqia/86825
                 await submitForm();
                 return;
             }
-            
             if (currentStep < totalSteps) {
                 currentStep++;
                 formData.CurrentStep = currentStep;
                 updateProgress();
-                triggerHapticFeedback('light');
             }
         }
 
@@ -3039,245 +2308,93 @@ https://t.me/MyRoqia/86825
                 currentStep--;
                 formData.CurrentStep = currentStep;
                 updateProgress();
-                triggerHapticFeedback('light');
             }
         }
 
-        btnNext.addEventListener('click', nextStep);
-        btnBack.addEventListener('click', prevStep);
+        document.getElementById('btnNext').addEventListener('click', nextStep);
+        document.getElementById('btnBack').addEventListener('click', prevStep);
 
-        // ═══════════════════════════════════════════════════════
-        // ⭐ Text Editor Functions
-        // ═══════════════════════════════════════════════════════
-        function updateTextStats() {
-            const text = textEditor.value;
-            const chars = text.length;
-            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-            charCount.textContent = chars.toLocaleString('ar');
-            wordCount.textContent = words.toLocaleString('ar');
-        }
-
-        textEditor.addEventListener('input', () => {
-            formData.corrected_full_text = textEditor.value;
-            
-            if (formData.Transcript && formData.Transcript.length > 0) {
-                const correctedWords = formData.corrected_full_text.split(/\s+/);
-                formData['Transcript Corrected'] = formData.Transcript.map((item, index) => {
-                    return {
-                        ...item,
-                        text: correctedWords[index] || item.text
-                    };
-                });
-            }
-            
-            updateTextStats();
-            validateCurrentStep();
-        });
-
-        copyBtn.addEventListener('click', async () => {
-            try {
-                await navigator.clipboard.writeText(textEditor.value);
-                copyBtn.innerHTML = '<span>✅</span><span>تم</span>';
-                triggerNotificationFeedback('success');
-                setTimeout(() => { copyBtn.innerHTML = '<span>📋</span><span>نسخ</span>'; }, 2000);
-            } catch (err) {
-                textEditor.select();
-                document.execCommand('copy');
-            }
-        });
-
-        pasteBtn.addEventListener('click', async () => {
-            try {
-                const text = await navigator.clipboard.readText();
-                textEditor.value = text;
-                formData.corrected_full_text = text;
-                updateTextStats();
-                validateCurrentStep();
-                triggerHapticFeedback('medium');
-            } catch (err) {
-                if (tg.showAlert) {
-                    tg.showAlert('⚠️ لم نتمكن من اللصق');
-                }
-            }
-        });
-
-        clearBtn.addEventListener('click', () => {
-            if (textEditor.value.trim()) {
-                if (confirm('هل تريد حذف النص؟')) {
-                    textEditor.value = '';
-                    formData.corrected_full_text = '';
-                    updateTextStats();
-                    validateCurrentStep();
-                    triggerHapticFeedback('heavy');
-                }
-            }
-        });
-
-        // ═══════════════════════════════════════════════════════
-        // ⭐ Form Inputs Setup
-        // ═══════════════════════════════════════════════════════
-        function setupInput(input, countEl, formKey) {
-            input.addEventListener('input', () => {
-                formData[formKey] = input.value;
-                countEl.textContent = input.value.length;
-                validateCurrentStep();
-            });
-        }
-
-        setupInput(titleInput, titleCount, 'title');
-        setupInput(mainSeriesInput, mainSeriesCount, 'series');
-        setupInput(subSeriesInput, subSeriesCount, 'subSeries');
-        setupInput(finalSeriesInput, finalSeriesCount, 'finalSeries');
-
-        // ═══════════════════════════════════════════════════════
-        // ⭐ Review Update Function
-        // ═══════════════════════════════════════════════════════
         function updateReview() {
             const words = formData.corrected_full_text.trim().split(/\s+/).length;
             document.getElementById('reviewWordCount').textContent = words.toLocaleString('ar');
             document.getElementById('reviewCharCount').textContent = formData.corrected_full_text.length.toLocaleString('ar');
-            
             if (aiChangesCount > 0) {
                 document.getElementById('reviewAiStats').style.display = 'flex';
                 document.getElementById('reviewAiChanges').textContent = `${aiChangesCount} تصحيح`;
             }
-            
             document.getElementById('reviewTemplate').textContent = formData.template_name || '-';
             document.getElementById('reviewColor').textContent = formData.color_name || '-';
-            
             const colorDiv = document.createElement('div');
-            colorDiv.style.width = '20px';
-            colorDiv.style.height = '20px';
-            colorDiv.style.background = formData.series_color;
-            colorDiv.style.borderRadius = '4px';
-            colorDiv.style.display = 'inline-block';
-            colorDiv.style.verticalAlign = 'middle';
+            colorDiv.style.cssText = `width:20px;height:20px;background:${formData.series_color};border-radius:4px;display:inline-block;vertical-align:middle`;
             document.getElementById('reviewSeriesColor').innerHTML = '';
             document.getElementById('reviewSeriesColor').appendChild(colorDiv);
-            
             document.getElementById('reviewTitle').textContent = formData.title || '-';
             document.getElementById('reviewMainSeries').textContent = formData.series || '-';
             document.getElementById('reviewSubSeries').textContent = formData.subSeries || '-';
             document.getElementById('reviewFinalSeries').textContent = formData.finalSeries || '-';
-            
             document.getElementById('reviewSeoTitle').textContent = formData.seo_title || '-';
-            document.getElementById('reviewTagsCount').textContent = `${formData.tags.length} كلمة مفتاحية`;
+            document.getElementById('reviewSeoDesc').textContent = formData.seo_description || '-';
+            const tagsPreview = document.getElementById('reviewTagsPreview');
+            tagsPreview.innerHTML = '';
+            formData.tags.forEach(tag => {
+                const tagEl = document.createElement('div');
+                tagEl.className = 'review-tag';
+                tagEl.textContent = tag;
+                tagsPreview.appendChild(tagEl);
+            });
         }
 
-        // ═══════════════════════════════════════════════════════
-        // ⭐ Submit Form Function
-        // ═══════════════════════════════════════════════════════
+        document.getElementById('reviewDescExpandBtn').addEventListener('click', () => {
+            const expandable = document.getElementById('reviewDescExpandable');
+            const btn = document.getElementById('reviewDescExpandBtn');
+            if (expandable.classList.contains('expanded')) {
+                expandable.classList.remove('expanded');
+                document.getElementById('reviewDescExpandText').textContent = 'عرض الكل';
+                document.getElementById('reviewDescExpandIcon').textContent = '▼';
+            } else {
+                expandable.classList.add('expanded');
+                document.getElementById('reviewDescExpandText').textContent = 'إخفاء';
+                document.getElementById('reviewDescExpandIcon').textContent = '▲';
+            }
+        });
+
+        document.getElementById('reviewTagsExpandBtn').addEventListener('click', () => {
+            const tagsPreview = document.getElementById('reviewTagsPreview');
+            const btn = document.getElementById('reviewTagsExpandBtn');
+            if (tagsPreview.classList.contains('expanded')) {
+                tagsPreview.classList.remove('expanded');
+                document.getElementById('reviewTagsExpandText').textContent = 'عرض الكل';
+                document.getElementById('reviewTagsExpandIcon').textContent = '▼';
+            } else {
+                tagsPreview.classList.add('expanded');
+                document.getElementById('reviewTagsExpandText').textContent = 'إخفاء';
+                document.getElementById('reviewTagsExpandIcon').textContent = '▲';
+            }
+        });
+
         async function submitForm() {
             showLoading('جاري الإرسال...', 'الرجاء الانتظار');
-            
             try {
-                const dataToSend = {
-                    ID: formData.ID,
-                    Google_DriveID: formData.Google_DriveID,
-                    user_id: formData.user_id,
-                    audio_file_id: formData.audio_file_id,
-                    audio_file_name: formData.audio_file_name,
-                    audio_time: formData.audio_time,
-                    'Transcript (with times)': formData.Transcript,
-                    'Transcript Corrected (with times)': formData['Transcript Corrected'],
-                    transcript_txt: formData.transcript_txt,
-                    corrected_full_text: formData.corrected_full_text,
-                    landscape_image_url: formData.landscape_image_url,
-                    portrait_image_url: formData.portrait_image_url,
-                    title: formData.title,
-                    series: formData.series,
-                    subSeries: formData.subSeries,
-                    finalSeries: formData.finalSeries,
-                    status: 'completed',
-                    CurrentStep: 6,
-                    Video_Id: formData.Video_Id,
-                    caption: formData.seo_title,
-                    created_at: formData.created_at,
-                    updated_at: new Date().toISOString(),
-                    description: formData.seo_description,
-                    tags: formData.tags,
-                    template_id: formData.template_id,
-                    template_name: formData.template_name,
-                    color_id: formData.color_id,
-                    color_name: formData.color_name,
-                    series_color: formData.series_color,
-                    subseries_color: formData.subseries_color,
-                    finalseries_color: formData.finalseries_color,
-                    title_color: formData.title_color,
-                    caption_color: formData.caption_color,
-                    ai_corrections: aiChangesCount
-                };
-
-                console.log('📤 Sending data to n8n webhook:', dataToSend);
-
+                const dataToSend = { ...formData, status: 'completed', CurrentStep: 6, updated_at: new Date().toISOString(), ai_corrections: aiChangesCount };
                 const response = await fetch(N8N_WEBHOOK_URL, {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dataToSend)
                 });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('❌ Webhook error:', errorText);
-                    throw new Error('فشل إرسال البيانات إلى الخادم');
-                }
-
-                const result = await response.json().catch(() => ({ success: true }));
-                console.log('✅ Data sent successfully to n8n:', result);
-
-                tg.sendData(JSON.stringify({
-                    type: 'video_completed',
-                    id: formData.ID,
-                    status: 'completed',
-                    timestamp: new Date().toISOString()
-                }));
-
+                if (!response.ok) throw new Error('فشل إرسال البيانات');
+                tg.sendData(JSON.stringify({ type: 'video_completed', id: formData.ID, status: 'completed', timestamp: new Date().toISOString() }));
                 hideLoading();
-                
-                if (tg.showAlert) {
-                    tg.showAlert('✅ تم الإرسال بنجاح! جاري معالجة الفيديو...', () => {
-                        tg.close();
-                    });
-                } else {
-                    alert('✅ تم الإرسال بنجاح!');
-                    tg.close();
-                }
-                
+                alert('✅ تم الإرسال بنجاح!');
+                tg.close();
             } catch (error) {
-                console.error('❌ Submit error:', error);
                 hideLoading();
-                
-                if (tg.showAlert) {
-                    tg.showAlert('❌ حدث خطأ: ' + error.message);
-                } else {
-                    alert('❌ حدث خطأ: ' + error.message);
-                }
+                alert('❌ حدث خطأ: ' + error.message);
             }
         }
 
-        // ═══════════════════════════════════════════════════════
-        // ⭐ Initialize App
-        // ═══════════════════════════════════════════════════════
-        function init() {
-            console.log('🚀 Initializing app...');
-            console.log('CONFIG:', typeof CONFIG !== 'undefined' ? 'Loaded ✅' : 'NOT FOUND ❌');
-            console.log('Telegram WebApp version:', tg.version);
-            
-            initializeTemplates();
-            updateProgress();
-            
-            loadInitialData();
-            
-            console.log('✅ App initialized successfully');
-        }
-
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
+        initializeTemplates();
+        updateProgress();
+        loadInitialData();
     </script>
 </body>
 </html>
