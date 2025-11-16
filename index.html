@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
-    <meta name="description" content="نشر محتوى فيديو احترافي مع تحسين SEO وتصميم جذاب">
-    <meta name="keywords" content="نشر محتوى, رقيتي, فيديو, SEO">
-    <meta name="author" content="فريق موقع رقيتي">
-    <title>نشر محتوى احترافي - رقيتي</title>
+    <meta name="description" content="نشر محتوى - رقيتي">
+    <meta name="keywords" content="رقيتي, نشر محتوى">
+    <title>نشر محتوى - رقيتي</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -17,109 +16,36 @@
         }
 
         :root {
-            /* نظام ألوان أزرق موحد وهادئ */
             --primary: #4A90E2;
-            --primary-light: #6BA3E8;
-            --primary-lighter: #E3F2FD;
-            --primary-dark: #2E5C8A;
-            --primary-darker: #1E3A5F;
-            
-            --secondary: #5CA8F5;
-            --accent: #42A5F5;
-            
-            --success: #4CAF50;
-            --success-light: #81C784;
-            --warning: #FF9800;
-            --danger: #F44336;
-            
-            --text-primary: #1A237E;
-            --text-secondary: #546E7A;
-            --text-light: #78909C;
-            
-            --border: #E0E0E0;
-            --border-light: #F5F5F5;
-            --bg: #F8F9FA;
-            --bg-white: #FFFFFF;
-            
-            --shadow-sm: 0 2px 4px rgba(74, 144, 226, 0.08);
-            --shadow-md: 0 4px 12px rgba(74, 144, 226, 0.12);
-            --shadow-lg: 0 8px 24px rgba(74, 144, 226, 0.16);
-            
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
-            --radius-xl: 20px;
+            --primary-light: #5BA3F5;
+            --primary-darker: #3A7BC8;
+            --primary-lighter: #E8F4FD;
+            --success: #27AE60;
+            --danger: #E74C3C;
+            --warning: #F39C12;
+            --text-primary: #2C3E50;
+            --text-secondary: #7F8C8D;
+            --border: #E1E8ED;
+            --bg: #F7F9FC;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg);
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             overflow-x: hidden;
-            line-height: 1.6;
         }
 
-        /* تثبيت دائرة التحميل في المنتصف */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.98);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .loading-overlay.visible {
-            display: flex;
-        }
-
-        .spinner {
-            width: 56px;
-            height: 56px;
-            border: 5px solid var(--primary-lighter);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            flex-shrink: 0;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 16px;
-            color: var(--primary);
-            font-weight: 700;
-            text-align: center;
-        }
-
-        .loading-subtext {
-            font-size: 14px;
-            color: var(--text-secondary);
-            text-align: center;
-            max-width: 300px;
-            padding: 0 20px;
-        }
-
-        /* شريط التقدم المحسّن */
         .progress-wrapper {
-            background: var(--bg-white);
-            padding: 20px 16px;
-            box-shadow: var(--shadow-md);
+            background: white;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 2px solid var(--primary-lighter);
         }
 
         .progress-steps {
@@ -128,60 +54,56 @@
             align-items: center;
             margin-bottom: 12px;
             position: relative;
-            padding: 0 10px;
         }
 
         .progress-line {
             position: absolute;
             top: 16px;
-            left: 8%;
-            right: 8%;
-            height: 4px;
-            background: var(--border-light);
+            left: 5%;
+            right: 5%;
+            height: 3px;
+            background: var(--border);
             z-index: 1;
-            border-radius: 2px;
         }
 
         .progress-line-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             width: 0%;
-            border-radius: 2px;
         }
 
         .progress-step {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             position: relative;
             z-index: 2;
             flex: 1;
         }
 
         .step-circle {
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
-            background: var(--bg-white);
+            background: white;
             border: 3px solid var(--border);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-secondary);
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
         }
 
         .progress-step.active .step-circle {
             background: var(--primary);
             border-color: var(--primary);
             color: white;
-            transform: scale(1.15);
-            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.4);
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
         }
 
         .progress-step.completed .step-circle {
@@ -191,16 +113,15 @@
         }
 
         .step-label {
-            font-size: 11px;
+            font-size: 10px;
             color: var(--text-secondary);
             text-align: center;
             font-weight: 600;
-            max-width: 80px;
+            max-width: 70px;
         }
 
         .progress-step.active .step-label {
             color: var(--primary);
-            font-weight: 700;
         }
 
         .container {
@@ -214,7 +135,7 @@
             display: none;
             flex: 1;
             overflow-y: auto;
-            padding: 24px 16px 120px;
+            padding: 20px 16px 100px;
             animation: fadeInUp 0.4s ease;
         }
 
@@ -234,73 +155,60 @@
             }
         }
 
-        /* رأس الخطوة المحسّن */
         .step-header {
-            margin-bottom: 28px;
-            padding: 20px;
-            background: linear-gradient(135deg, var(--primary-lighter), var(--bg-white));
-            border-radius: var(--radius-lg);
-            border-right: 4px solid var(--primary);
+            margin-bottom: 24px;
         }
 
         .step-title {
-            font-size: 26px;
-            font-weight: 800;
-            color: var(--primary-dark);
-            margin-bottom: 10px;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .step-description {
-            font-size: 15px;
+            font-size: 14px;
             color: var(--text-secondary);
-            line-height: 1.7;
+            line-height: 1.6;
         }
 
-        /* مشغل الصوت المحسّن */
         .audio-player-section {
-            background: var(--bg-white);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-md);
-            border: 1px solid var(--primary-lighter);
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .audio-player {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
 
         .audio-controls {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 12px;
         }
 
         .play-pause-btn {
-            width: 56px;
-            height: 56px;
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             border: none;
             color: white;
-            font-size: 22px;
+            font-size: 20px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
             flex-shrink: 0;
-            box-shadow: var(--shadow-md);
-        }
-
-        .play-pause-btn:hover {
-            transform: scale(1.05);
-            box-shadow: var(--shadow-lg);
         }
 
         .play-pause-btn:active {
@@ -311,22 +219,21 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .progress-bar {
             width: 100%;
-            height: 8px;
-            background: var(--border-light);
-            border-radius: 4px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
             overflow: hidden;
             cursor: pointer;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
             width: 0%;
             transition: width 0.1s linear;
         }
@@ -334,40 +241,29 @@
         .time-display {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
-            font-weight: 600;
         }
 
         .speed-controls {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             overflow-x: auto;
-            padding: 4px 0;
-            scrollbar-width: none;
-        }
-
-        .speed-controls::-webkit-scrollbar {
-            display: none;
+            padding: 2px 0;
         }
 
         .speed-btn {
-            padding: 10px 14px;
-            border: 2px solid var(--border);
-            border-radius: var(--radius-sm);
-            background: var(--bg-white);
-            font-size: 12px;
-            font-weight: 700;
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: white;
+            font-size: 11px;
+            font-weight: 600;
             color: var(--text-primary);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
             white-space: nowrap;
             flex-shrink: 0;
-        }
-
-        .speed-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
         }
 
         .speed-btn:active {
@@ -378,18 +274,16 @@
             background: var(--primary);
             color: white;
             border-color: var(--primary);
-            box-shadow: var(--shadow-sm);
         }
 
-        /* صندوق تصحيح AI المحسّن */
         .ai-correction-box {
             display: none;
-            background: linear-gradient(135deg, #E8F5E9, #F1F8F4);
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
             border: 2px solid var(--success);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-lg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2);
         }
 
         .ai-correction-box.visible {
@@ -412,154 +306,131 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .ai-correction-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
-            color: var(--success);
+            color: #2E7D32;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .ai-correction-close {
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             border-radius: 50%;
             background: white;
-            border: 2px solid var(--border);
+            border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
-            color: var(--text-secondary);
-            transition: all 0.2s;
-        }
-
-        .ai-correction-close:hover {
-            background: var(--danger);
-            color: white;
-            border-color: var(--danger);
+            font-size: 16px;
         }
 
         .ai-correction-text {
             background: white;
-            padding: 16px;
-            border-radius: var(--radius-md);
+            padding: 12px;
+            border-radius: 8px;
             font-size: 14px;
-            line-height: 1.8;
+            line-height: 1.6;
             color: var(--text-primary);
-            max-height: 250px;
+            max-height: 200px;
             overflow-y: auto;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow-sm);
+            margin-bottom: 12px;
         }
 
         .ai-correction-stats {
             display: flex;
-            gap: 20px;
-            font-size: 13px;
-            color: var(--success);
-            margin-bottom: 16px;
+            gap: 16px;
+            font-size: 12px;
+            color: #2E7D32;
+            margin-bottom: 12px;
             flex-wrap: wrap;
         }
 
         .ai-stat {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             font-weight: 600;
         }
 
         .ai-correction-actions {
             display: flex;
-            gap: 12px;
+            gap: 8px;
         }
 
         .ai-action-btn {
             flex: 1;
-            padding: 12px;
+            padding: 10px;
             border: none;
-            border-radius: var(--radius-md);
-            font-size: 14px;
-            font-weight: 700;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
         }
 
         .ai-action-btn.accept {
             background: var(--success);
             color: white;
-            box-shadow: var(--shadow-md);
-        }
-
-        .ai-action-btn.accept:hover {
-            background: var(--success-light);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
         }
 
         .ai-action-btn.reject {
             background: white;
             color: var(--text-primary);
-            border: 2px solid var(--border);
+            border: 1px solid var(--border);
         }
 
-        .ai-action-btn.reject:hover {
-            border-color: var(--danger);
-            color: var(--danger);
-        }
-
-        /* محرر النصوص المحسّن */
         .editor-container {
-            background: var(--bg-white);
+            background: white;
             border: 2px solid var(--border);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-md);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .editor-label {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 14px;
+            color: var(--text-primary);
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .editor-textarea {
             width: 100%;
-            min-height: 320px;
-            padding: 16px;
+            min-height: 300px;
+            padding: 14px;
             border: 2px solid var(--border);
-            border-radius: var(--radius-md);
+            border-radius: 10px;
             font-size: 15px;
-            line-height: 1.8;
+            line-height: 1.7;
             resize: vertical;
             font-family: inherit;
-            transition: all 0.3s ease;
-            color: var(--text-primary);
+            transition: all 0.3s;
         }
 
         .editor-textarea:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
 
         .editor-stats {
             display: flex;
             justify-content: space-between;
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 2px solid var(--border-light);
-            font-size: 13px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
             color: var(--text-secondary);
         }
 
@@ -572,38 +443,30 @@
         .stat-value {
             font-weight: 700;
             color: var(--primary);
-            font-size: 16px;
+            font-size: 14px;
         }
 
-        /* أزرار الإجراءات المحسّنة */
         .editor-actions {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 16px;
         }
 
         .action-btn {
-            padding: 14px;
+            padding: 12px;
             border: 2px solid var(--border);
-            border-radius: var(--radius-md);
-            background: var(--bg-white);
+            border-radius: 10px;
+            background: white;
             color: var(--text-primary);
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: all 0.3s ease;
-        }
-
-        .action-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            transition: all 0.2s;
         }
 
         .action-btn:active {
@@ -612,45 +475,37 @@
 
         .action-btn.ai-btn {
             grid-column: 1 / -1;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             border: none;
-            box-shadow: var(--shadow-md);
-            font-size: 16px;
-            padding: 16px;
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+            font-size: 15px;
+            padding: 14px;
         }
 
         .action-btn.ai-btn:hover {
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(74, 144, 226, 0.4);
         }
 
-        /* القوالب المحسّنة */
         .templates-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 16px;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
 
         .template-card {
-            background: var(--bg-white);
+            background: white;
             border: 3px solid var(--border);
-            border-radius: var(--radius-lg);
+            border-radius: 16px;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             position: relative;
         }
 
         .template-card.large {
             grid-column: span 2;
-        }
-
-        .template-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
         }
 
         .template-card:active {
@@ -659,7 +514,7 @@
 
         .template-card.selected {
             border-color: var(--primary);
-            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.3);
+            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
         }
 
         .template-preview {
@@ -686,7 +541,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(74, 144, 226, 0.3), rgba(92, 168, 245, 0.2));
+            background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
         }
 
         .template-number {
@@ -701,17 +556,16 @@
             position: absolute;
             top: 12px;
             right: 12px;
-            width: 36px;
-            height: 36px;
-            background: var(--primary);
+            width: 32px;
+            height: 32px;
+            background: var(--success);
             border-radius: 50%;
             display: none;
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 20px;
+            font-size: 18px;
             z-index: 3;
-            box-shadow: var(--shadow-md);
         }
 
         .template-card.selected .template-check {
@@ -725,31 +579,25 @@
         }
 
         .template-name {
-            padding: 14px;
+            padding: 12px;
             text-align: center;
             font-size: 15px;
-            font-weight: 700;
+            font-weight: 600;
             color: var(--text-primary);
-            background: var(--primary-lighter);
         }
 
-        /* الألوان المحسّنة */
         .colors-section {
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
 
         .section-title {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 18px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 12px 16px;
-            background: var(--primary-lighter);
-            border-radius: var(--radius-md);
-            border-right: 4px solid var(--primary);
+            gap: 8px;
         }
 
         .colors-grid {
@@ -761,10 +609,10 @@
         .color-option {
             width: 100%;
             aspect-ratio: 16/9;
-            border-radius: var(--radius-lg);
+            border-radius: 16px;
             border: 3px solid var(--border);
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             position: relative;
             overflow: hidden;
             background-size: cover;
@@ -773,18 +621,13 @@
             background-color: var(--bg);
         }
 
-        .color-option:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-
         .color-option:active {
             transform: scale(0.98);
         }
 
         .color-option.selected {
             border-color: var(--primary);
-            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.4);
+            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.4);
         }
 
         .color-option .template-check {
@@ -795,7 +638,6 @@
             display: flex;
         }
 
-        /* نافذة المعاينة المحسّنة */
         .template-preview-modal {
             position: fixed;
             top: 0;
@@ -806,7 +648,7 @@
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
+            z-index: 1001;
             padding: 20px;
             animation: fadeIn 0.3s ease;
         }
@@ -822,14 +664,13 @@
 
         .preview-content {
             background: white;
-            border-radius: var(--radius-xl);
-            padding: 28px;
-            max-width: 550px;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 500px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
             animation: slideUp 0.4s ease;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
 
         @keyframes slideUp {
@@ -847,35 +688,28 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .preview-title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
-            color: var(--primary-dark);
+            color: var(--text-primary);
         }
 
         .close-preview {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: var(--bg);
-            border: 2px solid var(--border);
+            border: none;
             color: var(--text-primary);
-            font-size: 26px;
+            font-size: 24px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .close-preview:hover {
-            background: var(--danger);
-            color: white;
-            border-color: var(--danger);
-            transform: rotate(90deg);
+            transition: all 0.2s;
         }
 
         .close-preview:active {
@@ -885,7 +719,7 @@
         .preview-images {
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 20px;
         }
 
         .preview-image-wrapper {
@@ -895,19 +729,19 @@
 
         .preview-image-label {
             font-size: 14px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .preview-image {
             width: 100%;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-lg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             display: none;
         }
 
@@ -922,7 +756,7 @@
             align-items: center;
             justify-content: center;
             background: var(--bg);
-            border-radius: var(--radius-md);
+            border-radius: 12px;
         }
 
         .preview-image-loading.hidden {
@@ -931,83 +765,67 @@
 
         .preview-next-btn {
             width: 100%;
-            padding: 16px;
-            margin-top: 24px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 14px;
+            margin-top: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             border: none;
-            border-radius: var(--radius-md);
-            font-size: 16px;
+            border-radius: 12px;
+            font-size: 15px;
             font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-            box-shadow: var(--shadow-md);
-        }
-
-        .preview-next-btn:hover {
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            gap: 8px;
+            transition: all 0.2s;
         }
 
         .preview-next-btn:active {
             transform: scale(0.98);
         }
 
-        /* معاينة لون السلسلة */
         .series-color-preview {
-            background: var(--bg-white);
-            border-radius: var(--radius-lg);
-            padding: 28px;
-            margin-bottom: 28px;
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
             text-align: center;
-            box-shadow: var(--shadow-md);
-            border: 2px solid var(--primary-lighter);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .preview-text {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             transition: color 0.3s;
         }
 
         .preview-hint {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-secondary);
         }
 
-        /* اللون الموصى به */
         .recommended-color-section {
-            background: var(--bg-white);
-            border-radius: var(--radius-lg);
+            background: white;
+            border-radius: 12px;
             padding: 20px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-md);
-            border: 2px solid var(--primary-lighter);
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .recommended-color-btn {
             width: 100%;
-            padding: 18px;
+            padding: 16px;
             border: 3px solid #FFD700;
-            border-radius: var(--radius-md);
+            border-radius: 12px;
             background: white;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 14px;
-        }
-
-        .recommended-color-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            gap: 12px;
         }
 
         .recommended-color-btn:active {
@@ -1022,25 +840,23 @@
         .recommended-color-info {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
 
         .recommended-badge {
-            background: linear-gradient(135deg, #FFD700, #FFA000);
+            background: #FFD700;
             color: #000;
-            padding: 8px 14px;
+            padding: 6px 12px;
             border-radius: 20px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
-            box-shadow: var(--shadow-sm);
         }
 
         .recommended-color-preview {
-            width: 56px;
-            height: 56px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             border: 3px solid var(--border);
-            box-shadow: var(--shadow-sm);
         }
 
         .recommended-color-text {
@@ -1049,52 +865,49 @@
         }
 
         .recommended-color-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 4px;
         }
 
         .recommended-color-subtitle {
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-secondary);
         }
 
-        /* اختيار اللون المخصص */
         .custom-color-section {
-            background: var(--bg-white);
-            border-radius: var(--radius-lg);
+            background: white;
+            border-radius: 16px;
             padding: 24px;
-            margin-bottom: 28px;
-            box-shadow: var(--shadow-md);
-            border: 2px solid var(--primary-lighter);
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .custom-color-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 20px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .color-picker-wrapper {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 24px;
+            gap: 20px;
         }
 
         .color-picker-container {
-            width: 260px;
-            height: 260px;
+            width: 200px;
+            height: 200px;
             position: relative;
             border-radius: 50%;
             overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            border: 4px solid var(--primary-lighter);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
         }
 
         .color-picker {
@@ -1108,132 +921,115 @@
         .hex-input-wrapper {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             width: 100%;
-            max-width: 320px;
+            max-width: 300px;
         }
 
         .hex-preview {
-            width: 64px;
-            height: 64px;
-            border-radius: var(--radius-md);
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
             border: 3px solid var(--border);
             transition: all 0.3s;
-            box-shadow: var(--shadow-sm);
         }
 
         .hex-input {
             flex: 1;
-            padding: 16px;
+            padding: 14px;
             border: 2px solid var(--border);
-            border-radius: var(--radius-md);
-            font-size: 17px;
+            border-radius: 10px;
+            font-size: 16px;
             font-family: 'Courier New', monospace;
             text-align: center;
-            font-weight: 700;
+            font-weight: 600;
             direction: ltr;
-            transition: all 0.3s ease;
         }
 
         .hex-input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
         }
 
-        /* النماذج المحسّنة */
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .form-label {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
-            color: var(--primary-dark);
-            margin-bottom: 10px;
+            color: var(--text-primary);
+            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
 
         .form-hint {
             font-size: 12px;
             color: var(--text-secondary);
-            margin-top: 6px;
+            margin-top: 4px;
         }
 
         .form-input {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             border: 2px solid var(--border);
-            border-radius: var(--radius-md);
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 15px;
             font-family: inherit;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             background: white;
-            color: var(--text-primary);
         }
 
         .form-input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
 
         .char-counter {
             text-align: left;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
-            margin-top: 6px;
+            margin-top: 4px;
             direction: ltr;
-            font-weight: 600;
         }
 
-        /* قسم SEO المحسّن والمنظم */
         .seo-section {
-            background: var(--bg-white);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-md);
-            border: 2px solid var(--primary-lighter);
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
 
         .seo-section-title {
-            font-size: 17px;
+            font-size: 16px;
             font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 18px;
+            color: var(--text-primary);
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--primary-lighter);
+            gap: 8px;
         }
 
         .seo-generate-btn {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             border: none;
-            border-radius: var(--radius-md);
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 15px;
             font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            transition: all 0.3s ease;
-            margin-bottom: 24px;
-            box-shadow: var(--shadow-md);
-        }
-
-        .seo-generate-btn:hover {
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            gap: 8px;
+            transition: all 0.2s;
+            margin-bottom: 20px;
         }
 
         .seo-generate-btn:active {
@@ -1243,55 +1039,48 @@
         .seo-generate-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
-            transform: none;
         }
 
         .form-textarea {
             width: 100%;
-            min-height: 140px;
-            padding: 16px;
+            min-height: 120px;
+            padding: 14px;
             border: 2px solid var(--border);
-            border-radius: var(--radius-md);
+            border-radius: 10px;
             font-size: 15px;
             font-family: inherit;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
             background: white;
             resize: vertical;
-            line-height: 1.7;
-            color: var(--text-primary);
         }
 
         .form-textarea:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
 
-        /* الكلمات المفتاحية */
         .tags-container {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 14px;
-            padding: 16px;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 12px;
             background: var(--bg);
-            border-radius: var(--radius-md);
-            min-height: 80px;
-            border: 2px dashed var(--border);
+            border-radius: 8px;
+            min-height: 60px;
         }
 
         .tag-item {
             background: white;
-            border: 2px solid var(--primary);
-            padding: 8px 14px;
+            border: 2px solid var(--border);
+            padding: 6px 12px;
             border-radius: 20px;
             font-size: 13px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            color: var(--primary);
-            font-weight: 600;
+            gap: 6px;
+            transition: all 0.2s;
         }
 
         .tag-item.editable {
@@ -1299,10 +1088,7 @@
         }
 
         .tag-item.editable:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-sm);
+            border-color: var(--primary);
         }
 
         .tag-remove {
@@ -1310,83 +1096,68 @@
             border: none;
             color: var(--danger);
             cursor: pointer;
-            font-size: 18px;
+            font-size: 16px;
             line-height: 1;
             padding: 0;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
         }
 
-        .tag-remove:hover {
-            transform: scale(1.2);
-        }
-
-        /* إحصائيات SEO */
         .seo-stats {
-            background: linear-gradient(135deg, var(--primary-lighter), var(--bg-white));
-            border-radius: var(--radius-md);
-            padding: 16px;
-            margin-top: 16px;
+            background: var(--bg);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 16px;
-            border: 2px solid var(--primary-lighter);
+            gap: 12px;
         }
 
         .seo-stat-item {
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            padding: 12px;
-            background: white;
-            border-radius: var(--radius-sm);
+            gap: 4px;
         }
 
         .seo-stat-label {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
-            font-weight: 600;
         }
 
         .seo-stat-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        /* المراجعة */
-        .review-section {
-            background: var(--bg-white);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-md);
-            border: 2px solid var(--primary-lighter);
-        }
-
-        .review-section-title {
             font-size: 16px;
             font-weight: 700;
             color: var(--primary);
+        }
+
+        .review-section {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
             margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .review-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--primary-lighter);
+            gap: 6px;
         }
 
         .review-item {
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-light);
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 14px;
+            gap: 12px;
         }
 
         .review-item:last-child {
@@ -1394,10 +1165,9 @@
         }
 
         .review-label {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-secondary);
-            min-width: 100px;
-            font-weight: 600;
+            min-width: 80px;
         }
 
         .review-value {
@@ -1410,7 +1180,7 @@
         }
 
         .review-expandable {
-            max-height: 70px;
+            max-height: 60px;
             overflow: hidden;
             transition: max-height 0.3s ease;
             position: relative;
@@ -1425,25 +1195,20 @@
             border: none;
             color: var(--primary);
             cursor: pointer;
-            font-size: 13px;
-            font-weight: 700;
-            padding: 6px 0;
-            margin-top: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 0;
+            margin-top: 4px;
             display: flex;
             align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-        }
-
-        .review-expand-btn:hover {
-            gap: 10px;
+            gap: 4px;
         }
 
         .review-tags-preview {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            max-height: 70px;
+            gap: 4px;
+            max-height: 60px;
             overflow: hidden;
             transition: max-height 0.3s ease;
         }
@@ -1453,43 +1218,34 @@
         }
 
         .review-tag {
-            background: var(--primary-lighter);
-            padding: 6px 12px;
-            border-radius: 14px;
-            font-size: 12px;
-            color: var(--primary);
-            font-weight: 600;
+            background: var(--bg);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            color: var(--text-primary);
         }
 
-        /* أزرار التنقل */
         .nav-buttons {
-            padding: 18px 16px;
-            background: var(--bg-white);
-            border-top: 2px solid var(--primary-lighter);
+            padding: 16px;
+            background: white;
+            border-top: 1px solid var(--border);
             display: flex;
-            gap: 14px;
-            box-shadow: 0 -4px 12px rgba(74, 144, 226, 0.08);
-            position: sticky;
-            bottom: 0;
+            gap: 12px;
         }
 
         .nav-btn {
             flex: 1;
-            padding: 16px;
+            padding: 14px;
             border: none;
-            border-radius: var(--radius-md);
-            font-size: 16px;
+            border-radius: 10px;
+            font-size: 15px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-        }
-
-        .nav-btn:hover {
-            transform: translateY(-2px);
+            gap: 8px;
         }
 
         .nav-btn:active {
@@ -1499,7 +1255,6 @@
         .nav-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
-            transform: none;
         }
 
         .btn-back {
@@ -1508,67 +1263,82 @@
             color: var(--text-primary);
         }
 
-        .btn-back:hover:not(:disabled) {
-            border-color: var(--primary);
-            color: var(--primary);
-            box-shadow: var(--shadow-md);
-        }
-
         .btn-next {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
-            box-shadow: var(--shadow-md);
-        }
-
-        .btn-next:hover:not(:disabled) {
-            background: linear-gradient(135deg, var(--secondary), var(--primary));
-            box-shadow: var(--shadow-lg);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
         }
 
         .btn-submit {
-            background: linear-gradient(135deg, var(--success), var(--success-light));
+            background: linear-gradient(135deg, var(--success), #229954);
             color: white;
-            box-shadow: var(--shadow-md);
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
         }
 
-        .btn-submit:hover:not(:disabled) {
-            background: linear-gradient(135deg, var(--success-light), var(--success));
-            box-shadow: var(--shadow-lg);
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.98);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            flex-direction: column;
+            gap: 16px;
         }
 
-        /* تحسينات للأجهزة الصغيرة */
+        .loading-overlay.visible {
+            display: flex;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--primary-lighter);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .loading-subtext {
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 280px;
+        }
+
         @media (max-width: 480px) {
-            .step-title {
-                font-size: 22px;
+            .step-content {
+                padding: 16px 12px 100px;
             }
             
-            .templates-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .template-card.large {
-                grid-column: span 1;
-            }
-            
-            .editor-actions {
-                grid-template-columns: 1fr;
-            }
-            
-            .seo-stats {
-                grid-template-columns: 1fr;
+            .color-picker-container {
+                width: 180px;
+                height: 180px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- شاشة التحميل الثابتة -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
         <div class="loading-text" id="loadingText">جاري المعالجة...</div>
         <div class="loading-subtext" id="loadingSubtext"></div>
     </div>
 
-    <!-- نافذة معاينة القالب -->
     <div class="template-preview-modal" id="templatePreviewModal">
         <div class="preview-content">
             <div class="preview-header">
@@ -1604,7 +1374,6 @@
         </div>
     </div>
 
-    <!-- شريط التقدم -->
     <div class="progress-wrapper" id="progressWrapper">
         <div class="progress-steps">
             <div class="progress-line">
@@ -1638,7 +1407,6 @@
     </div>
 
     <div class="container">
-        <!-- الخطوة 1: التصحيح -->
         <div class="step-content active" data-step="1">
             <div class="step-header">
                 <div class="step-title">
@@ -1646,7 +1414,7 @@
                     <span>تصحيح النص</span>
                 </div>
                 <div class="step-description">
-                    استمع للمقطع الصوتي وصحح النص المفرغ بدقة
+                    استمع للمقطع الصوتي وصحح النص المفرغ
                 </div>
             </div>
 
@@ -1697,7 +1465,7 @@
                     </div>
                     <div class="ai-stat">
                         <span>📊</span>
-                        <span id="aiAccuracy">100% دقة</span>
+                        <span id="aiAccuracy">0% دقة</span>
                     </div>
                 </div>
                 <div class="ai-correction-actions">
@@ -1721,7 +1489,7 @@
                 </button>
                 <button class="action-btn" id="clearBtn">
                     <span>🗑️</span>
-                    <span>مسح</span>
+                    <span>حذف</span>
                 </button>
             </div>
 
@@ -1750,7 +1518,6 @@
             </div>
         </div>
 
-        <!-- الخطوة 2: القالب -->
         <div class="step-content" data-step="2">
             <div class="step-header">
                 <div class="step-title">
@@ -1758,7 +1525,7 @@
                     <span>اختر القالب واللون</span>
                 </div>
                 <div class="step-description">
-                    اختر القالب المناسب لمحتواك ثم اختر اللون المفضل
+                    اختر القالب المناسب ثم اختر اللون
                 </div>
             </div>
             <div class="section-title">
@@ -1769,13 +1536,12 @@
             <div class="colors-section" id="colorsSection" style="display: none;">
                 <div class="section-title">
                     <span>🎨</span>
-                    <span>اختر اللون المناسب</span>
+                    <span>اختر اللون</span>
                 </div>
                 <div class="colors-grid" id="colorsGrid"></div>
             </div>
         </div>
 
-        <!-- الخطوة 3: لون السلسلة -->
         <div class="step-content" data-step="3">
             <div class="step-header">
                 <div class="step-title">
@@ -1791,13 +1557,13 @@
                 <div class="preview-text" id="seriesPreviewText">
                     السلسلة الرئيسية
                 </div>
-                <div class="preview-hint">معاينة حية للون المختار</div>
+                <div class="preview-hint">معاينة اللون المختار</div>
             </div>
 
             <div class="recommended-color-section">
                 <div class="section-title">
                     <span>⭐</span>
-                    <span>اللون الموصى به</span>
+                    <span>اللون الموصى به للتصميم</span>
                 </div>
                 <button class="recommended-color-btn selected" id="recommendedColorBtn">
                     <div class="recommended-color-info">
@@ -1815,7 +1581,7 @@
             <div class="custom-color-section">
                 <div class="custom-color-title">
                     <span>🎨</span>
-                    <span>أو اختر لوناً مخصصاً</span>
+                    <span>أو اختر اللون المفضل يدوياً</span>
                 </div>
                 <div class="color-picker-wrapper">
                     <div class="color-picker-container">
@@ -1835,7 +1601,6 @@
             </div>
         </div>
 
-        <!-- الخطوة 4: البيانات -->
         <div class="step-content" data-step="4">
             <div class="step-header">
                 <div class="step-title">
@@ -1843,7 +1608,7 @@
                     <span>معلومات الفيديو</span>
                 </div>
                 <div class="step-description">
-                    أدخل العنوان والسلاسل الخاصة بالمحتوى
+                    أدخل العنوان والسلاسل الخاصة بالفيديو
                 </div>
             </div>
             <div class="form-group">
@@ -1851,8 +1616,8 @@
                     <span>✏️</span>
                     <span>اسم الدرس</span>
                 </label>
-                <input type="text" class="form-input" id="titleInput" placeholder="مثال: قصة نجاح ملهمة" maxlength="50">
-                <div class="form-hint">💡 الأفضل: 3 كلمات أو أقل للوضوح</div>
+                <input type="text" class="form-input" id="titleInput" placeholder="مثال: قصة نجاح" maxlength="50">
+                <div class="form-hint">الأفضل: 3 كلمات أو أقل</div>
                 <div class="char-counter"><span id="titleCount">0</span> / 50</div>
             </div>
             <div class="form-group">
@@ -1861,7 +1626,7 @@
                     <span>السلسلة الرئيسية</span>
                 </label>
                 <input type="text" class="form-input" id="mainSeriesInput" placeholder="مثال: قصص ملهمة" maxlength="50">
-                <div class="form-hint">💡 الأفضل: 4 كلمات أو أقل</div>
+                <div class="form-hint">الأفضل: 4 كلمات أو أقل</div>
                 <div class="char-counter"><span id="mainSeriesCount">0</span> / 50</div>
             </div>
             <div class="form-group">
@@ -1870,7 +1635,7 @@
                     <span>السلسلة الفرعية</span>
                 </label>
                 <input type="text" class="form-input" id="subSeriesInput" placeholder="مثال: قصص رواد الأعمال" maxlength="50">
-                <div class="form-hint">💡 الأفضل: 4 كلمات أو أقل</div>
+                <div class="form-hint">الأفضل: 4 كلمات أو أقل</div>
                 <div class="char-counter"><span id="subSeriesCount">0</span> / 50</div>
             </div>
             <div class="form-group">
@@ -1879,12 +1644,11 @@
                     <span>اسم المخطط</span>
                 </label>
                 <input type="text" class="form-input" id="finalSeriesInput" placeholder="مثال: الجزء الأول" maxlength="50">
-                <div class="form-hint">💡 الأفضل: 3 كلمات أو أقل</div>
+                <div class="form-hint">الأفضل: 3 كلمات أو أقل</div>
                 <div class="char-counter"><span id="finalSeriesCount">0</span> / 50</div>
             </div>
         </div>
 
-        <!-- الخطوة 5: SEO المحسّن -->
         <div class="step-content" data-step="5">
             <div class="step-header">
                 <div class="step-title">
@@ -1892,7 +1656,7 @@
                     <span>تحسين محركات البحث SEO</span>
                 </div>
                 <div class="step-description">
-                    إنشاء عنوان ووصف وكلمات مفتاحية احترافية لزيادة الانتشار
+                    إنشاء عنوان ووصف وكلمات مفتاحية احترافية
                 </div>
             </div>
 
@@ -1907,8 +1671,8 @@
                     <span>عنوان الفيديو (SEO Title)</span>
                 </div>
                 <div class="form-group">
-                    <textarea class="form-textarea" id="seoTitleInput" placeholder="سيتم إنشاء عنوان جذاب تلقائياً..." rows="2" style="min-height: 70px;"></textarea>
-                    <div class="form-hint">💡 الأفضل: 60-70 حرف لأفضل ظهور في البحث</div>
+                    <textarea class="form-textarea" id="seoTitleInput" placeholder="سيتم إنشاؤه تلقائياً..." rows="2" style="min-height: 60px;"></textarea>
+                    <div class="form-hint">الأفضل: 60-70 حرف</div>
                     <div class="char-counter"><span id="seoTitleCount">0</span> / 100</div>
                 </div>
             </div>
@@ -1919,8 +1683,8 @@
                     <span>وصف الفيديو (Description)</span>
                 </div>
                 <div class="form-group">
-                    <textarea class="form-textarea" id="seoDescriptionInput" placeholder="سيتم إنشاء وصف شامل واحترافي تلقائياً..." style="min-height: 220px;"></textarea>
-                    <div class="form-hint">💡 يتضمن: وصف احترافي + النص الثابت + روابط التواصل</div>
+                    <textarea class="form-textarea" id="seoDescriptionInput" placeholder="سيتم إنشاؤه تلقائياً..." style="min-height: 200px;"></textarea>
+                    <div class="form-hint">يتضمن وصف احترافي + النص الثابت</div>
                     <div class="char-counter"><span id="seoDescCount">0</span> / 5000</div>
                 </div>
             </div>
@@ -1931,7 +1695,7 @@
                     <span>الكلمات المفتاحية (Tags)</span>
                 </div>
                 <div class="tags-container" id="tagsContainer">
-                    <div style="color: var(--text-secondary); font-size: 14px;">⏳ سيتم إنشاء الكلمات المفتاحية تلقائياً...</div>
+                    <div style="color: var(--text-secondary); font-size: 13px;">سيتم إنشاؤها تلقائياً...</div>
                 </div>
                 <div class="seo-stats" id="seoStats" style="display: none;">
                     <div class="seo-stat-item">
@@ -1943,7 +1707,7 @@
                         <div class="seo-stat-value" id="statCharCount">0</div>
                     </div>
                     <div class="seo-stat-item">
-                        <div class="seo-stat-label">الكلمات المفتاحية</div>
+                        <div class="seo-stat-label">عدد الكلمات المفتاحية</div>
                         <div class="seo-stat-value" id="statTagsCount">0</div>
                     </div>
                     <div class="seo-stat-item">
@@ -1954,7 +1718,6 @@
             </div>
         </div>
 
-        <!-- الخطوة 6: المراجعة -->
         <div class="step-content" data-step="6">
             <div class="step-header">
                 <div class="step-title">
@@ -1962,7 +1725,7 @@
                     <span>المراجعة النهائية</span>
                 </div>
                 <div class="step-description">
-                    راجع جميع البيانات بعناية قبل الإرسال النهائي
+                    راجع جميع البيانات قبل الإرسال
                 </div>
             </div>
             <div class="review-section">
@@ -2026,7 +1789,7 @@
             <div class="review-section">
                 <div class="review-section-title">
                     <span>🔍</span>
-                    <span>SEO والتحسينات</span>
+                    <span>SEO</span>
                 </div>
                 <div class="review-item">
                     <span class="review-label">العنوان:</span>
@@ -2070,88 +1833,26 @@
         </button>
     </div>
 
+    <script src="config.js"></script>
     <script>
-        // ================== الإعدادات الأساسية ==================
-        window.CONFIG = window.CONFIG || { 
-            BACKEND: { 
-                BASE_URL: 'https://n8n-video-worker.abdullah27623.workers.dev' 
-            } 
-        };
-
+        window.CONFIG = window.CONFIG || { BACKEND: { BASE_URL: 'https://n8n-video-worker.abdullah27623.workers.dev' } };
         const tg = window.Telegram.WebApp;
         tg.expand();
-        
-        // تفعيل تأكيد الإغلاق
-        if (tg.version >= 6.2) { 
-            try { 
-                tg.enableClosingConfirmation(); 
-            } catch (e) {
-                console.log('Closing confirmation not supported');
-            } 
-        }
-
+        if (tg.version >= 6.2) { try { tg.enableClosingConfirmation(); } catch (e) {} }
         const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor';
 
-        // ================== بيانات القوالب ==================
         const TEMPLATES_DATA = [
-            { id: 1, name: "القالب 1", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1OhcXo9hpCBbVK8rtX68s91PWm3ufspQ8", portrait_image: "https://drive.google.com/uc?export=download&id=15PLpIMuEx4_WffgVlaEueXseDCfZyfto", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "green", landscape_image: "https://drive.google.com/uc?export=download&id=1Vh8X4SWAMl65_V8RGrIO6KOb_V11AhR2", portrait_image: "https://drive.google.com/uc?export=download&id=1lZxBToJj2AL5HIl3Ee5f_Yh9h8nvP5c7", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 3, name: "brown", landscape_image: "https://drive.google.com/uc?export=download&id=1kUHbWAGz9h2IVrlceS1mfVyqktotK-NE", portrait_image: "https://drive.google.com/uc?export=download&id=15kfP0R0TZbkezlC9jHg8PdIFUgVxY9Tf", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 4, name: "purple", landscape_image: "https://drive.google.com/uc?export=download&id=1m6ftwpbUpDRYylxYHGjuSFkU6nSRFanU", portrait_image: "https://drive.google.com/uc?export=download&id=1-Fgs9gCA9zckJXznBE3AGgVJzZndBIjv", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 5, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1SqZH4ei3Difj1pjxwasdfPFoL600WThr", portrait_image: "https://drive.google.com/uc?export=download&id=1ktVYgv8-0VrlShjcNIG3DEbSoAQZYc-3", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }] },
-            { id: 2, name: "القالب 2", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1cSldR1_6W_r_h4j1oIgNER2vn42hUjkY", portrait_image: "https://drive.google.com/uc?export=download&id=141zHAG5VS6PamqL_LYDVLzfzcNGGkDng", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1Mid30-PS57fhJuWPutfb6jwR1QMjKRUr", portrait_image: "https://drive.google.com/uc?export=download&id=1Bgz9T0a5Ynu-8JMleGGwh3t-nM8L0XSD", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }] },
-            { id: 3, name: "القالب 3", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1sstL2nz3LqTFQH18oQuWOxJOxS2VPJYw", portrait_image: "https://drive.google.com/uc?export=download&id=1UQ9FW34vaf7Z7uFHNZ_6pPdSjEOuKVvp", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1MtsjLM0PtSA2YPKfddWnTKm2Lk4KIdTj", portrait_image: "https://drive.google.com/uc?export=download&id=1Odqc8g6KdeyjjYm1KeLytCpuRyywvbMt", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 3, name: "orange", landscape_image: "https://drive.google.com/uc?export=download&id=1dvJc-xLL_qn6OAcCNBrjnKNWAc3GeqZH", portrait_image: "https://drive.google.com/uc?export=download&id=18fUeGxUEt_sjrazS3yI3IBEd3srAm-jc", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 4, name: "green", landscape_image: "https://drive.google.com/uc?export=download&id=1X-kuR8BC5qGfiVx-VBaQHlH8PUGlp5wh", portrait_image: "https://drive.google.com/uc?export=download&id=1hWbIdGsFA9Zs8fjYb83ugnyd07f8l-kn", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 5, name: "purple", landscape_image: "https://drive.google.com/uc?export=download&id=1BgPDdNGiFKyXH809kTCLLu2HTBBY3i3s", portrait_image: "https://drive.google.com/uc?export=download&id=1hCWKWdPdLQoT3qbfHKqeJfd2MV36VT88", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }] },
-            { id: 4, name: "القالب 4", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1YHPD-fKvHgWLxqMc_JMgDDEHbyLcy_qb", portrait_image: "https://drive.google.com/uc?export=download&id=1Jp4S29FlR4X8tqv5Bm3grU7if7DElKmF", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=14op-KfFzrLCti5sBypv3ES7SiJg6N9E-", portrait_image: "https://drive.google.com/uc?export=download&id=1ofbaUyVMGcWEa32AYSZeBqcfNRQKMOnA", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 3, name: "orange", landscape_image: "https://drive.google.com/uc?export=download&id=1sHbD022NaSlq1v_kEirSnr2rEGMGTqEx", portrait_image: "https://drive.google.com/uc?export=download&id=1Jp4S29FlR4X8tqv5Bm3grU7if7DElKmF", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }] },
-            { id: 5, name: "القالب 5", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1L6Pj1_rSGggYZ7fv4RE91CA22VUot0Vg", portrait_image: "https://drive.google.com/uc?export=download&id=1oGS1mSCnu-GK_3u_J4pUqsEO4HLpiRq8", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "green", landscape_image: "https://drive.google.com/uc?export=download&id=1X46qV4OGD9KFG2ipuW5f9bhlu8VBgdsh", portrait_image: "https://drive.google.com/uc?export=download&id=1OtZamDZVM0VfGf9NRsTdAGfjo_TtLRv6", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 3, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1UoSQaam5toVGwUK61EhKqRg_VRwe_gtf", portrait_image: "https://drive.google.com/uc?export=download&id=1dhQN1cFe9PeLAJtz3xANxutDS4_DTCox", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 4, name: "orange", landscape_image: "https://drive.google.com/uc?export=download&id=143tkdil0_varINJ0v14RSVvE0xt-zji9", portrait_image: "https://drive.google.com/uc?export=download&id=1pg-vB9TOU48qeiQv2XjRzlMEH3dPWp9V", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 5, name: "brown", landscape_image: "https://drive.google.com/uc?export=download&id=1r5IBlbNJet1Ocl0txcz_Z0JQjiv4aJHo", portrait_image: "https://drive.google.com/uc?export=download&id=1ZN9kR3a9ojGBVBMsZc-Fa6r4NiHnISGC", series_color: "#4A90E2", subseries_color: "#5CA8F5", finalseries_color: "#6BA3E8", title_color: "#ffffff", caption_color: "#ffffff" }] }
+            { id: 1, name: "القالب 1", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1OhcXo9hpCBbVK8rtX68s91PWm3ufspQ8", portrait_image: "https://drive.google.com/uc?export=download&id=15PLpIMuEx4_WffgVlaEueXseDCfZyfto", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "green", landscape_image: "https://drive.google.com/uc?export=download&id=1Vh8X4SWAMl65_V8RGrIO6KOb_V11AhR2", portrait_image: "https://drive.google.com/uc?export=download&id=1lZxBToJj2AL5HIl3Ee5f_Yh9h8nvP5c7", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 3, name: "brown", landscape_image: "https://drive.google.com/uc?export=download&id=1kUHbWAGz9h2IVrlceS1mfVyqktotK-NE", portrait_image: "https://drive.google.com/uc?export=download&id=15kfP0R0TZbkezlC9jHg8PdIFUgVxY9Tf", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 4, name: "purple", landscape_image: "https://drive.google.com/uc?export=download&id=1m6ftwpbUpDRYylxYHGjuSFkU6nSRFanU", portrait_image: "https://drive.google.com/uc?export=download&id=1-Fgs9gCA9zckJXznBE3AGgVJzZndBIjv", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 5, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1SqZH4ei3Difj1pjxwasdfPFoL600WThr", portrait_image: "https://drive.google.com/uc?export=download&id=1ktVYgv8-0VrlShjcNIG3DEbSoAQZYc-3", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }] },
+            { id: 2, name: "القالب 2", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1cSldR1_6W_r_h4j1oIgNER2vn42hUjkY", portrait_image: "https://drive.google.com/uc?export=download&id=141zHAG5VS6PamqL_LYDVLzfzcNGGkDng", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1Mid30-PS57fhJuWPutfb6jwR1QMjKRUr", portrait_image: "https://drive.google.com/uc?export=download&id=1Bgz9T0a5Ynu-8JMleGGwh3t-nM8L0XSD", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }] },
+            { id: 3, name: "القالب 3", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1sstL2nz3LqTFQH18oQuWOxJOxS2VPJYw", portrait_image: "https://drive.google.com/uc?export=download&id=1UQ9FW34vaf7Z7uFHNZ_6pPdSjEOuKVvp", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1MtsjLM0PtSA2YPKfddWnTKm2Lk4KIdTj", portrait_image: "https://drive.google.com/uc?export=download&id=1Odqc8g6KdeyjjYm1KeLytCpuRyywvbMt", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 3, name: "orange", landscape_image: "https://drive.google.com/uc?export=download&id=1dvJc-xLL_qn6OAcCNBrjnKNWAc3GeqZH", portrait_image: "https://drive.google.com/uc?export=download&id=18fUeGxUEt_sjrazS3yI3IBEd3srAm-jc", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 4, name: "green", landscape_image: "https://drive.google.com/uc?export=download&id=1X-kuR8BC5qGfiVx-VBaQHlH8PUGlp5wh", portrait_image: "https://drive.google.com/uc?export=download&id=1hWbIdGsFA9Zs8fjYb83ugnyd07f8l-kn", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 5, name: "purple", landscape_image: "https://drive.google.com/uc?export=download&id=1BgPDdNGiFKyXH809kTCLLu2HTBBY3i3s", portrait_image: "https://drive.google.com/uc?export=download&id=1hCWKWdPdLQoT3qbfHKqeJfd2MV36VT88", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }] },
+            { id: 4, name: "القالب 4", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1YHPD-fKvHgWLxqMc_JMgDDEHbyLcy_qb", portrait_image: "https://drive.google.com/uc?export=download&id=1Jp4S29FlR4X8tqv5Bm3grU7if7DElKmF", series_color: "#ff9e00", subseries_color: "#9fde14", finalseries_color: "#fcf84e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=14op-KfFzrLCti5sBypv3ES7SiJg6N9E-", portrait_image: "https://drive.google.com/uc?export=download&id=1ofbaUyVMGcWEa32AYSZeBqcfNRQKMOnA", series_color: "#ff9e00", subseries_color: "#9fde14", finalseries_color: "#fcf84e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 3, name: "orange", landscape_image: "https://drive.google.com/uc?export=download&id=1sHbD022NaSlq1v_kEirSnr2rEGMGTqEx", portrait_image: "https://drive.google.com/uc?export=download&id=1Jp4S29FlR4X8tqv5Bm3grU7if7DElKmF", series_color: "#ff9e00", subseries_color: "#9fde14", finalseries_color: "#fcf84e", title_color: "#ffffff", caption_color: "#ffffff" }] },
+            { id: 5, name: "القالب 5", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1L6Pj1_rSGggYZ7fv4RE91CA22VUot0Vg", portrait_image: "https://drive.google.com/uc?export=download&id=1oGS1mSCnu-GK_3u_J4pUqsEO4HLpiRq8", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "green", landscape_image: "https://drive.google.com/uc?export=download&id=1X46qV4OGD9KFG2ipuW5f9bhlu8VBgdsh", portrait_image: "https://drive.google.com/uc?export=download&id=1OtZamDZVM0VfGf9NRsTdAGfjo_TtLRv6", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 3, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1UoSQaam5toVGwUK61EhKqRg_VRwe_gtf", portrait_image: "https://drive.google.com/uc?export=download&id=1dhQN1cFe9PeLAJtz3xANxutDS4_DTCox", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 4, name: "orange", landscape_image: "https://drive.google.com/uc?export=download&id=143tkdil0_varINJ0v14RSVvE0xt-zji9", portrait_image: "https://drive.google.com/uc?export=download&id=1pg-vB9TOU48qeiQv2XjRzlMEH3dPWp9V", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 5, name: "brown", landscape_image: "https://drive.google.com/uc?export=download&id=1r5IBlbNJet1Ocl0txcz_Z0JQjiv4aJHo", portrait_image: "https://drive.google.com/uc?export=download&id=1ZN9kR3a9ojGBVBMsZc-Fa6r4NiHnISGC", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }] }
         ];
 
-        // ================== المتغيرات العامة ==================
-        let currentStep = 1;
-        const totalSteps = 6;
-        let selectedTemplate = null;
-        let selectedColor = null;
-        let aiCorrectedText = '';
-        let aiChangesCount = 0;
-        let lastAIRequestTime = 0;
-        const AI_REQUEST_COOLDOWN = 10000; // 10 ثواني
+        let currentStep = 1, totalSteps = 6, selectedTemplate = null, selectedColor = null, aiCorrectedText = '', aiChangesCount = 0, lastAIRequestTime = 0;
+        const AI_REQUEST_COOLDOWN = 10000;
+        const formData = { ID: null, Google_DriveID: null, user_id: '', audio_file_id: '', audio_file_name: '', audio_time: 0, audioUrl: '', Transcript: [], 'Transcript Corrected': [], transcript_txt: '', corrected_full_text: '', landscape_image_url: null, portrait_image_url: null, title: '', series: '', subSeries: '', finalSeries: '', status: 'in_progress', CurrentStep: 1, Video_Id: null, caption: null, created_at: null, updated_at: new Date().toISOString(), description: null, tags: [], template_id: null, template_name: null, color_id: null, color_name: null, series_color: '#b9d780', subseries_color: '#ebbd27', finalseries_color: '#fce74e', title_color: '#ffffff', caption_color: '#ffffff', seo_title: '', seo_description: '' };
 
-        // بيانات النموذج
-        const formData = {
-            ID: null,
-            Google_DriveID: null,
-            user_id: '',
-            audio_file_id: '',
-            audio_file_name: '',
-            audio_time: 0,
-            audioUrl: '',
-            Transcript: [],
-            'Transcript Corrected': [],
-            transcript_txt: '',
-            corrected_full_text: '',
-            landscape_image_url: null,
-            portrait_image_url: null,
-            title: '',
-            series: '',
-            subSeries: '',
-            finalSeries: '',
-            status: 'in_progress',
-            CurrentStep: 1,
-            Video_Id: null,
-            caption: null,
-            created_at: null,
-            updated_at: new Date().toISOString(),
-            description: null,
-            tags: [],
-            template_id: null,
-            template_name: null,
-            color_id: null,
-            color_name: null,
-            series_color: '#4A90E2',
-            subseries_color: '#5CA8F5',
-            finalseries_color: '#6BA3E8',
-            title_color: '#ffffff',
-            caption_color: '#ffffff',
-            seo_title: '',
-            seo_description: ''
-        };
-
-        // ================== عناصر DOM ==================
         const audioElement = document.getElementById('audioElement');
         const textEditor = document.getElementById('textEditor');
         const seoTitleInput = document.getElementById('seoTitleInput');
@@ -2164,70 +1865,41 @@
         const recommendedColorPreview = document.getElementById('recommendedColorPreview');
         const seriesPreviewText = document.getElementById('seriesPreviewText');
 
-        // ================== دوال المساعدة ==================
-        
-        // إظهار شاشة التحميل (ثابتة في المنتصف)
         function showLoading(text, subtext = '') {
             document.getElementById('loadingText').textContent = text;
             document.getElementById('loadingSubtext').textContent = subtext;
             document.getElementById('loadingOverlay').classList.add('visible');
         }
 
-        // إخفاء شاشة التحميل
         function hideLoading() {
             document.getElementById('loadingOverlay').classList.remove('visible');
         }
 
-        // التمرير لأعلى
         function scrollToTop() {
             const activeStep = document.querySelector('.step-content.active');
-            if (activeStep) {
-                activeStep.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+            if (activeStep) activeStep.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // تحويل رابط Google Drive
         function convertDriveUrl(url) {
             try {
                 if (!url) return '';
                 const fileIdMatch = url.match(/[?&]id=([^&]+)/);
-                if (fileIdMatch && fileIdMatch[1]) {
-                    return `https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w1000`;
-                }
+                if (fileIdMatch && fileIdMatch[1]) return `https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w1000`;
                 return url;
             } catch (error) {
-                console.error('Error converting drive URL:', error);
                 return url;
             }
         }
 
-        // تنسيق الوقت
-        function formatTime(seconds) {
-            if (!seconds || isNaN(seconds)) return '0:00';
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
-        }
-
-        // ================== تحميل البيانات الأولية ==================
         async function loadInitialData() {
             try {
-                showLoading('⏳ جاري تحميل البيانات...', 'الرجاء الانتظار قليلاً');
-                
+                showLoading('جاري تحميل البيانات...', 'الرجاء الانتظار');
                 const binId = new URLSearchParams(window.location.search).get('bin');
-                if (!binId) {
-                    throw new Error('لم يتم العثور على معرف البيانات');
-                }
-
+                if (!binId) throw new Error('لم يتم العثور على معرف البيانات');
                 const response = await fetch(`${CONFIG.BACKEND.BASE_URL}/get-bin/${binId}`);
-                if (!response.ok) {
-                    throw new Error('فشل تحميل البيانات من الخادم');
-                }
-
+                if (!response.ok) throw new Error('فشل تحميل البيانات');
                 const responseData = await response.json();
                 let loadedData = responseData.record || responseData.data || responseData;
-
-                // تحميل البيانات
                 formData.ID = loadedData.id || loadedData.ID;
                 formData.user_id = loadedData.user_id || '';
                 formData.audio_file_id = loadedData.audio_file_id || '';
@@ -2235,138 +1907,104 @@
                 formData.Transcript = loadedData['Transcript (with times)'] || loadedData.Transcript || [];
                 formData.transcript_txt = loadedData.text || loadedData.transcript_txt || '';
                 formData.created_at = loadedData.timestamp || loadedData.created_at || new Date().toISOString();
-
-                // تحميل الصوت
-                if (formData.audioUrl) {
-                    audioElement.src = formData.audioUrl;
-                }
-
-                // تحميل النص
+                if (formData.audioUrl) audioElement.src = formData.audioUrl;
                 if (formData.transcript_txt) {
                     textEditor.value = formData.transcript_txt;
                     formData.corrected_full_text = formData.transcript_txt;
                     updateTextStats();
                 }
-
                 hideLoading();
                 validateCurrentStep();
             } catch (error) {
                 hideLoading();
-                console.error('Load error:', error);
-                alert('❌ خطأ: ' + (error.message || 'حدث خطأ في تحميل البيانات'));
+                alert('❌ ' + (error.message || 'حدث خطأ'));
             }
         }
 
-        // ================== تحديث إحصائيات النص ==================
         function updateTextStats() {
             const text = textEditor.value;
-            const charCount = text.length;
-            const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
-            
-            document.getElementById('charCount').textContent = charCount.toLocaleString('ar');
-            document.getElementById('wordCount').textContent = wordCount.toLocaleString('ar');
+            document.getElementById('charCount').textContent = text.length.toLocaleString('ar');
+            document.getElementById('wordCount').textContent = (text.trim() ? text.trim().split(/\s+/).length : 0).toLocaleString('ar');
         }
 
-        // ================== معالجات الخطوة 1 (تصحيح النص) ==================
-        
-        // مراقبة تغييرات النص
         textEditor.addEventListener('input', () => {
             formData.corrected_full_text = textEditor.value;
             updateTextStats();
             validateCurrentStep();
         });
 
-        // زر التصحيح بالذكاء الاصطناعي
         document.getElementById('aiBtn').addEventListener('click', async () => {
             const now = Date.now();
-            const timeLeft = AI_REQUEST_COOLDOWN - (now - lastAIRequestTime);
-            
-            if (timeLeft > 0) {
-                const secondsLeft = Math.ceil(timeLeft / 1000);
-                alert(`⏰ الرجاء الانتظار ${secondsLeft} ثانية قبل المحاولة مرة أخرى`);
+            if (now - lastAIRequestTime < AI_REQUEST_COOLDOWN) {
+                alert(`⏰ الرجاء الانتظار ${Math.ceil((AI_REQUEST_COOLDOWN - (now - lastAIRequestTime)) / 1000)} ثانية`);
                 return;
             }
-
-            if (!textEditor.value.trim()) {
-                alert('⚠️ الرجاء إدخال نص للتصحيح');
-                return;
-            }
-
-            showLoading('✨ جاري التصحيح بالذكاء الاصطناعي...', 'قد يستغرق هذا بضع ثوان');
+            if (!textEditor.value.trim()) { alert('⚠️ لا يوجد نص للتصحيح'); return; }
+            showLoading('جاري التصحيح بالذكاء الاصطناعي...');
             lastAIRequestTime = now;
-
             try {
+                const originalText = textEditor.value;
                 const response = await fetch(`${CONFIG.BACKEND.BASE_URL}/ai-correct`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: textEditor.value })
+                    body: JSON.stringify({ text: originalText })
                 });
-
                 if (response.status === 429) {
                     hideLoading();
-                    alert('⏰ تم تجاوز الحد المسموح من الطلبات. الرجاء الانتظار والمحاولة لاحقاً');
+                    alert('⏰ تم تجاوز الحد المسموح. الرجاء الانتظار');
                     return;
                 }
-
-                if (!response.ok) {
-                    throw new Error('فشل التصحيح بالذكاء الاصطناعي');
-                }
-
+                if (!response.ok) throw new Error('فشل التصحيح');
                 const result = await response.json();
-                
                 if (result.success && result.correctedText) {
                     aiCorrectedText = result.correctedText;
-                    const wordCount = aiCorrectedText.trim().split(/\s+/).length;
+                    const correctedWords = aiCorrectedText.trim().split(/\s+/).length;
+                    const correctedChars = aiCorrectedText.length;
+                    const originalWords = originalText.trim().split(/\s+/).length;
+                    const originalChars = originalText.length;
+                    
+                    const wordDiff = Math.abs(correctedWords - originalWords);
+                    const charDiff = Math.abs(correctedChars - originalChars);
+                    
+                    aiChangesCount = wordDiff + charDiff;
                     
                     document.getElementById('aiCorrectionText').textContent = aiCorrectedText;
-                    document.getElementById('aiWordCount').textContent = `${wordCount} كلمة`;
-                    document.getElementById('aiChanges').textContent = `تم التصحيح`;
-                    document.getElementById('aiAccuracy').textContent = `100% دقة`;
+                    document.getElementById('aiWordCount').textContent = `${correctedWords} كلمة`;
+                    document.getElementById('aiChanges').textContent = `${aiChangesCount} تعديل`;
+                    document.getElementById('aiAccuracy').textContent = `محسّن`;
                     document.getElementById('aiCorrectionBox').classList.add('visible');
-                    
                     hideLoading();
-                } else {
-                    throw new Error('لم يتم الحصول على نتيجة صحيحة');
                 }
             } catch (error) {
                 hideLoading();
-                console.error('AI correction error:', error);
-                alert('❌ حدث خطأ في التصحيح: ' + error.message);
+                alert('❌ ' + error.message);
             }
         });
 
-        // قبول التصحيحات من AI
         document.getElementById('aiAcceptBtn').addEventListener('click', () => {
             textEditor.value = aiCorrectedText;
             formData.corrected_full_text = aiCorrectedText;
             updateTextStats();
             document.getElementById('aiCorrectionBox').classList.remove('visible');
-            validateCurrentStep();
         });
 
-        // رفض التصحيحات من AI
         document.getElementById('aiRejectBtn').addEventListener('click', () => {
             document.getElementById('aiCorrectionBox').classList.remove('visible');
         });
 
-        // إغلاق صندوق التصحيحات
         document.getElementById('aiCorrectionClose').addEventListener('click', () => {
             document.getElementById('aiCorrectionBox').classList.remove('visible');
         });
 
-        // زر النسخ
         document.getElementById('copyBtn').addEventListener('click', async () => {
             try {
                 await navigator.clipboard.writeText(textEditor.value);
-                // يمكن إضافة إشعار هنا
             } catch (err) {
-                // Fallback
                 textEditor.select();
                 document.execCommand('copy');
             }
         });
 
-        // زر اللصق
         document.getElementById('pasteBtn').addEventListener('click', async () => {
             try {
                 const text = await navigator.clipboard.readText();
@@ -2374,14 +2012,11 @@
                 formData.corrected_full_text = text;
                 updateTextStats();
                 validateCurrentStep();
-            } catch (err) {
-                console.error('Paste error:', err);
-            }
+            } catch (err) {}
         });
 
-        // زر المسح
         document.getElementById('clearBtn').addEventListener('click', () => {
-            if (textEditor.value.trim() && confirm('⚠️ هل أنت متأكد من حذف النص؟')) {
+            if (textEditor.value.trim() && confirm('هل تريد حذف النص؟')) {
                 textEditor.value = '';
                 formData.corrected_full_text = '';
                 updateTextStats();
@@ -2389,9 +2024,6 @@
             }
         });
 
-        // ================== معالجات مشغل الصوت ==================
-        
-        // زر التشغيل/الإيقاف
         document.getElementById('playPauseBtn').addEventListener('click', () => {
             if (audioElement.paused) {
                 audioElement.play();
@@ -2402,105 +2034,75 @@
             }
         });
 
-        // تحميل البيانات الوصفية للصوت
         audioElement.addEventListener('loadedmetadata', () => {
             document.getElementById('duration').textContent = formatTime(audioElement.duration);
         });
 
-        // تحديث الوقت
         audioElement.addEventListener('timeupdate', () => {
-            const progress = (audioElement.currentTime / audioElement.duration) * 100;
-            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('progressFill').style.width = `${(audioElement.currentTime / audioElement.duration) * 100}%`;
             document.getElementById('currentTime').textContent = formatTime(audioElement.currentTime);
         });
 
-        // النقر على شريط التقدم
         document.getElementById('progressBar').addEventListener('click', (e) => {
             const rect = document.getElementById('progressBar').getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const percentage = clickX / rect.width;
-            audioElement.currentTime = percentage * audioElement.duration;
+            audioElement.currentTime = ((e.clientX - rect.left) / rect.width) * audioElement.duration;
         });
 
-        // أزرار السرعة
         document.querySelectorAll('.speed-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                const speed = parseFloat(btn.dataset.speed);
-                audioElement.playbackRate = speed;
+                audioElement.playbackRate = parseFloat(btn.dataset.speed);
                 document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
             });
         });
 
-        // ================== معالجات الخطوة 2 (القوالب والألوان) ==================
-        
-        // تهيئة القوالب
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
         function initializeTemplates() {
             const grid = document.getElementById('templatesGrid');
             grid.innerHTML = '';
-
             TEMPLATES_DATA.forEach((template, index) => {
                 const card = document.createElement('div');
                 card.className = 'template-card' + (template.id === 5 ? ' large' : '');
                 card.dataset.templateId = template.id;
-                
-                const previewImage = convertDriveUrl(template.colors[0].landscape_image);
-                
-                card.innerHTML = `
-                    <div class="template-preview" style="background-image: url('${previewImage}');">
-                        <div class="template-number">${index + 1}</div>
-                        <div class="template-check">✓</div>
-                    </div>
-                    <div class="template-name">${template.name}</div>
-                `;
-                
+                card.innerHTML = `<div class="template-preview" style="background-image: url('${convertDriveUrl(template.colors[0].landscape_image}');"><div class="template-number">${index + 1}</div><div class="template-check">✓</div></div><div class="template-name">${template.name}</div>`;
                 card.addEventListener('click', () => selectTemplate(template));
                 grid.appendChild(card);
             });
         }
 
-        // اختيار قالب
         function selectTemplate(template) {
             document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
             document.querySelector(`[data-template-id="${template.id}"]`).classList.add('selected');
-            
             selectedTemplate = template;
             formData.template_id = template.id;
             formData.template_name = template.name;
-            
             loadTemplateColors(template.colors);
             document.getElementById('colorsSection').style.display = 'block';
-            
             validateCurrentStep();
         }
 
-        // تحميل ألوان القالب
         function loadTemplateColors(colors) {
             const grid = document.getElementById('colorsGrid');
             grid.innerHTML = '';
-
             colors.forEach(color => {
                 const option = document.createElement('div');
                 option.className = 'color-option';
                 option.dataset.colorId = color.id;
-                
-                const colorImage = convertDriveUrl(color.landscape_image);
-                option.style.backgroundImage = `url('${colorImage}')`;
+                option.style.backgroundImage = `url('${convertDriveUrl(color.landscape_image)}')`;
                 option.innerHTML = '<div class="template-check">✓</div>';
-                
                 option.addEventListener('click', () => selectColor(color));
                 grid.appendChild(option);
             });
         }
 
-        // اختيار لون
         function selectColor(color) {
             document.querySelectorAll('#colorsGrid .color-option').forEach(o => o.classList.remove('selected'));
-            const selectedOption = document.getElementById('colorsGrid').querySelector(`[data-color-id="${color.id}"]`);
-            if (selectedOption) {
-                selectedOption.classList.add('selected');
-            }
-
+            document.getElementById('colorsGrid').querySelector(`[data-color-id="${color.id}"]`).classList.add('selected');
             selectedColor = color;
             formData.color_id = color.id;
             formData.color_name = color.name;
@@ -2509,52 +2111,29 @@
             formData.series_color = color.series_color;
             formData.subseries_color = color.subseries_color;
             formData.finalseries_color = color.finalseries_color;
-
-            // تحميل المعاينة
             const landscapeImg = document.getElementById('landscapePreview');
             const portraitImg = document.getElementById('portraitPreview');
             const landscapeLoading = document.getElementById('landscapeLoading');
             const portraitLoading = document.getElementById('portraitLoading');
-
-            landscapeImg.classList.remove('loaded');
-            portraitImg.classList.remove('loaded');
-            landscapeLoading.classList.remove('hidden');
-            portraitLoading.classList.remove('hidden');
-
-            landscapeImg.onload = () => {
-                landscapeLoading.classList.add('hidden');
-                landscapeImg.classList.add('loaded');
-            };
-
-            portraitImg.onload = () => {
-                portraitLoading.classList.add('hidden');
-                portraitImg.classList.add('loaded');
-            };
-
+            landscapeImg.onload = () => { landscapeLoading.classList.add('hidden'); landscapeImg.classList.add('loaded'); };
+            portraitImg.onload = () => { portraitLoading.classList.add('hidden'); portraitImg.classList.add('loaded'); };
             landscapeImg.src = convertDriveUrl(color.landscape_image);
             portraitImg.src = convertDriveUrl(color.portrait_image);
-
             document.getElementById('templatePreviewModal').classList.add('visible');
             validateCurrentStep();
         }
 
-        // إغلاق نافذة المعاينة
         document.getElementById('closePreview').addEventListener('click', () => {
             document.getElementById('templatePreviewModal').classList.remove('visible');
         });
 
-        // زر التالي في المعاينة
         document.getElementById('previewNextBtn').addEventListener('click', () => {
             document.getElementById('templatePreviewModal').classList.remove('visible');
             nextStep();
         });
 
-        // ================== معالجات الخطوة 3 (لون السلسلة) ==================
-        
-        // تهيئة ألوان السلسلة
         function initializeSeriesColors() {
             if (!selectedColor) return;
-
             formData.series_color = selectedColor.series_color;
             seriesPreviewText.style.color = selectedColor.series_color;
             hexInput.value = selectedColor.series_color;
@@ -2563,10 +2142,7 @@
             colorPicker.value = selectedColor.series_color;
         }
 
-        // اختيار اللون الموصى به
         recommendedColorBtn.addEventListener('click', () => {
-            if (!selectedColor) return;
-            
             recommendedColorBtn.classList.add('selected');
             formData.series_color = selectedColor.series_color;
             seriesPreviewText.style.color = selectedColor.series_color;
@@ -2575,7 +2151,6 @@
             colorPicker.value = selectedColor.series_color;
         });
 
-        // اختيار لون مخصص
         colorPicker.addEventListener('input', (e) => {
             const color = e.target.value;
             formData.series_color = color;
@@ -2585,14 +2160,10 @@
             recommendedColorBtn.classList.remove('selected');
         });
 
-        // إدخال اللون بصيغة HEX
         hexInput.addEventListener('input', (e) => {
             let value = e.target.value;
-            if (!value.startsWith('#')) {
-                value = '#' + value;
-            }
+            if (!value.startsWith('#')) value = '#' + value;
             value = value.substring(0, 7);
-
             if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
                 formData.series_color = value;
                 seriesPreviewText.style.color = value;
@@ -2600,17 +2171,13 @@
                 colorPicker.value = value;
                 recommendedColorBtn.classList.remove('selected');
             }
-
             e.target.value = value;
         });
 
-        // ================== معالجات الخطوة 4 (البيانات) ==================
-        
-        // إعداد حقول الإدخال
-        function setupInput(inputElement, counterElement, formKey) {
-            inputElement.addEventListener('input', () => {
-                formData[formKey] = inputElement.value;
-                counterElement.textContent = inputElement.value.length;
+        function setupInput(input, countEl, formKey) {
+            input.addEventListener('input', () => {
+                formData[formKey] = input.value;
+                countEl.textContent = input.value.length;
                 validateCurrentStep();
             });
         }
@@ -2620,116 +2187,78 @@
         setupInput(document.getElementById('subSeriesInput'), document.getElementById('subSeriesCount'), 'subSeries');
         setupInput(document.getElementById('finalSeriesInput'), document.getElementById('finalSeriesCount'), 'finalSeries');
 
-        // ================== معالجات الخطوة 5 (SEO) ==================
-        
-        // زر إنشاء SEO
         document.getElementById('seoGenerateBtn').addEventListener('click', async () => {
-            if (!formData.corrected_full_text.trim()) {
-                alert('⚠️ الرجاء إدخال نص أولاً');
-                return;
-            }
-
-            showLoading('✨ جاري إنشاء SEO احترافي...', 'قد يستغرق هذا بضع ثوان');
+            if (!formData.corrected_full_text.trim()) { alert('⚠️ لا يوجد نص'); return; }
+            showLoading('جاري إنشاء SEO احترافي...');
             document.getElementById('seoGenerateBtn').disabled = true;
-
             try {
                 const response = await fetch(`${CONFIG.BACKEND.BASE_URL}/generate-seo`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        text: formData.corrected_full_text,
-                        title: formData.title,
-                        series: formData.series,
-                        subSeries: formData.subSeries
-                    })
+                    body: JSON.stringify({ text: formData.corrected_full_text, title: formData.title, series: formData.series, subSeries: formData.subSeries })
                 });
-
                 if (response.status === 429) {
                     hideLoading();
                     document.getElementById('seoGenerateBtn').disabled = false;
-                    alert('⏰ تم تجاوز الحد المسموح من الطلبات. الرجاء الانتظار');
+                    alert('⏰ تم تجاوز الحد المسموح');
                     return;
                 }
-
-                if (!response.ok) {
-                    throw new Error('فشل إنشاء SEO');
-                }
-
+                if (!response.ok) throw new Error('فشل إنشاء SEO');
                 const result = await response.json();
-
                 if (result.success) {
                     formData.seo_title = result.title || '';
                     formData.seo_description = result.description || '';
                     formData.tags = result.tags || [];
-
                     seoTitleInput.value = formData.seo_title;
                     seoDescriptionInput.value = formData.seo_description;
-
                     updateSEOCounts();
                     renderTags();
-                    updateSEOStats();
-
                     hideLoading();
                     document.getElementById('seoGenerateBtn').disabled = false;
                     validateCurrentStep();
-                } else {
-                    throw new Error('لم يتم الحصول على نتيجة صحيحة');
+                    updateSEOStats();
                 }
             } catch (error) {
                 hideLoading();
                 document.getElementById('seoGenerateBtn').disabled = false;
-                console.error('SEO generation error:', error);
-                alert('❌ حدث خطأ في إنشاء SEO: ' + error.message);
+                alert('❌ ' + error.message);
             }
         });
 
-        // عرض الكلمات المفتاحية
         function renderTags() {
             tagsContainer.innerHTML = '';
-
             if (!formData.tags || formData.tags.length === 0) {
-                tagsContainer.innerHTML = '<div style="color: var(--text-secondary); font-size: 14px;">⏳ لا توجد كلمات مفتاحية</div>';
+                tagsContainer.innerHTML = '<div style="color: var(--text-secondary); font-size: 13px;">لا توجد كلمات مفتاحية</div>';
                 return;
             }
-
             formData.tags.forEach((tag, index) => {
                 const tagEl = document.createElement('div');
                 tagEl.className = 'tag-item';
-                tagEl.innerHTML = `
-                    <span>${tag}</span>
-                    <button class="tag-remove" data-index="${index}">×</button>
-                `;
-
+                tagEl.innerHTML = `<span>${tag}</span><button class="tag-remove" data-index="${index}">×</button>`;
                 tagEl.querySelector('.tag-remove').addEventListener('click', () => {
                     formData.tags.splice(index, 1);
                     renderTags();
                     updateSEOStats();
                 });
-
                 tagsContainer.appendChild(tagEl);
             });
         }
 
-        // تحديث عدادات SEO
         function updateSEOCounts() {
             document.getElementById('seoTitleCount').textContent = seoTitleInput.value.length;
             document.getElementById('seoDescCount').textContent = seoDescriptionInput.value.length;
         }
 
-        // تحديث إحصائيات SEO
         function updateSEOStats() {
-            const words = formData.corrected_full_text.trim() ? formData.corrected_full_text.trim().split(/\s+/).length : 0;
+            const words = formData.corrected_full_text.trim().split(/\s+/).length;
             const chars = formData.corrected_full_text.length;
-
-            document.getElementById('statWordCount').textContent = words.toLocaleString('ar');
-            document.getElementById('statCharCount').textContent = chars.toLocaleString('ar');
-            document.getElementById('statTagsCount').textContent = formData.tags.length.toLocaleString('ar');
-            document.getElementById('statDescLength').textContent = formData.seo_description.length.toLocaleString('ar');
-            
+            document.getElementById('statWordCount').textContent = words;
+            document.getElementById('statCharCount').textContent = chars;
+            document.getElementById('statTagsCount').textContent = formData.tags.length;
+            document.getElementById('statDescLength').textContent = formData.seo_description.length;
             document.getElementById('seoStats').style.display = 'grid';
         }
 
-        // مراقبة تغييرات SEO
         seoTitleInput.addEventListener('input', () => {
             formData.seo_title = seoTitleInput.value;
             updateSEOCounts();
@@ -2742,42 +2271,91 @@
             validateCurrentStep();
         });
 
-        // ================== معالجات الخطوة 6 (المراجعة) ==================
-        
-        // تحديث بيانات المراجعة
+        function updateProgress() {
+            const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('progressLineFill').style.width = `${progress}%`;
+            document.querySelectorAll('.progress-step').forEach((step, index) => {
+                const stepNum = index + 1;
+                step.classList.remove('active', 'completed');
+                if (stepNum < currentStep) step.classList.add('completed');
+                else if (stepNum === currentStep) step.classList.add('active');
+            });
+            document.querySelectorAll('.step-content').forEach((content, index) => {
+                content.classList.remove('active');
+                if (index + 1 === currentStep) content.classList.add('active');
+            });
+            document.getElementById('btnBack').style.display = currentStep === 1 ? 'none' : 'flex';
+            if (currentStep === totalSteps) {
+                document.getElementById('btnNext').innerHTML = '<span>إرسال</span><span>✅</span>';
+                document.getElementById('btnNext').className = 'nav-btn btn-submit';
+            } else {
+                document.getElementById('btnNext').innerHTML = '<span>التالي</span><span>→</span>';
+                document.getElementById('btnNext').className = 'nav-btn btn-next';
+            }
+            if (currentStep === 3) initializeSeriesColors();
+            if (currentStep === 6) updateReview();
+            scrollToTop();
+            validateCurrentStep();
+        }
+
+        function validateCurrentStep() {
+            let isValid = false;
+            switch(currentStep) {
+                case 1: isValid = formData.corrected_full_text.trim().length > 0; break;
+                case 2: isValid = formData.template_id !== null && formData.color_id !== null; break;
+                case 3: isValid = formData.series_color !== null; break;
+                case 4: isValid = formData.title.trim() && formData.series.trim() && formData.subSeries.trim() && formData.finalSeries.trim(); break;
+                case 5: isValid = formData.seo_title.trim().length > 0 && formData.seo_description.trim().length > 0 && formData.tags.length > 0; break;
+                case 6: isValid = true; break;
+            }
+            document.getElementById('btnNext').disabled = !isValid;
+        }
+
+        async function nextStep() {
+            if (currentStep === totalSteps) {
+                await submitForm();
+                return;
+            }
+            if (currentStep < totalSteps) {
+                currentStep++;
+                formData.CurrentStep = currentStep;
+                updateProgress();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                formData.CurrentStep = currentStep;
+                updateProgress();
+            }
+        }
+
+        document.getElementById('btnNext').addEventListener('click', nextStep);
+        document.getElementById('btnBack').addEventListener('click', prevStep);
+
         function updateReview() {
-            const words = formData.corrected_full_text.trim() ? formData.corrected_full_text.trim().split(/\s+/).length : 0;
-            
+            const words = formData.corrected_full_text.trim().split(/\s+/).length;
             document.getElementById('reviewWordCount').textContent = words.toLocaleString('ar');
             document.getElementById('reviewCharCount').textContent = formData.corrected_full_text.length.toLocaleString('ar');
-
             if (aiChangesCount > 0) {
                 document.getElementById('reviewAiStats').style.display = 'flex';
                 document.getElementById('reviewAiChanges').textContent = `${aiChangesCount} تصحيح`;
             }
-
             document.getElementById('reviewTemplate').textContent = formData.template_name || '-';
             document.getElementById('reviewColor').textContent = formData.color_name || '-';
-
-            // عرض لون السلسلة
             const colorDiv = document.createElement('div');
-            colorDiv.style.cssText = `width:24px;height:24px;background:${formData.series_color};border-radius:6px;display:inline-block;vertical-align:middle;border:2px solid var(--border)`;
+            colorDiv.style.cssText = `width:20px;height:20px;background:${formData.series_color};border-radius:4px;display:inline-block;vertical-align:middle`;
             document.getElementById('reviewSeriesColor').innerHTML = '';
             document.getElementById('reviewSeriesColor').appendChild(colorDiv);
-            document.getElementById('reviewSeriesColor').appendChild(document.createTextNode(' ' + formData.series_color));
-
             document.getElementById('reviewTitle').textContent = formData.title || '-';
             document.getElementById('reviewMainSeries').textContent = formData.series || '-';
             document.getElementById('reviewSubSeries').textContent = formData.subSeries || '-';
             document.getElementById('reviewFinalSeries').textContent = formData.finalSeries || '-';
-
             document.getElementById('reviewSeoTitle').textContent = formData.seo_title || '-';
             document.getElementById('reviewSeoDesc').textContent = formData.seo_description || '-';
-
-            // عرض الكلمات المفتاحية
             const tagsPreview = document.getElementById('reviewTagsPreview');
             tagsPreview.innerHTML = '';
-
             formData.tags.forEach(tag => {
                 const tagEl = document.createElement('div');
                 tagEl.className = 'review-tag';
@@ -2786,12 +2364,10 @@
             });
         }
 
-        // توسيع الوصف
         document.getElementById('reviewDescExpandBtn').addEventListener('click', () => {
             const expandable = document.getElementById('reviewDescExpandable');
-            const isExpanded = expandable.classList.contains('expanded');
-
-            if (isExpanded) {
+            const btn = document.getElementById('reviewDescExpandBtn');
+            if (expandable.classList.contains('expanded')) {
                 expandable.classList.remove('expanded');
                 document.getElementById('reviewDescExpandText').textContent = 'عرض الكل';
                 document.getElementById('reviewDescExpandIcon').textContent = '▼';
@@ -2802,12 +2378,10 @@
             }
         });
 
-        // توسيع الكلمات المفتاحية
         document.getElementById('reviewTagsExpandBtn').addEventListener('click', () => {
             const tagsPreview = document.getElementById('reviewTagsPreview');
-            const isExpanded = tagsPreview.classList.contains('expanded');
-
-            if (isExpanded) {
+            const btn = document.getElementById('reviewTagsExpandBtn');
+            if (tagsPreview.classList.contains('expanded')) {
                 tagsPreview.classList.remove('expanded');
                 document.getElementById('reviewTagsExpandText').textContent = 'عرض الكل';
                 document.getElementById('reviewTagsExpandIcon').textContent = '▼';
@@ -2818,227 +2392,29 @@
             }
         });
 
-        // ================== التنقل بين الخطوات ==================
-        
-        // تحديث شريط التقدم
-        function updateProgress() {
-            const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
-            document.getElementById('progressLineFill').style.width = `${progress}%`;
-
-            // تحديث دوائر الخطوات
-            document.querySelectorAll('.progress-step').forEach((step, index) => {
-                const stepNum = index + 1;
-                step.classList.remove('active', 'completed');
-
-                if (stepNum < currentStep) {
-                    step.classList.add('completed');
-                } else if (stepNum === currentStep) {
-                    step.classList.add('active');
-                }
-            });
-
-            // إظهار المحتوى المناسب
-            document.querySelectorAll('.step-content').forEach((content, index) => {
-                content.classList.remove('active');
-                if (index + 1 === currentStep) {
-                    content.classList.add('active');
-                }
-            });
-
-            // تحديث أزرار التنقل
-            document.getElementById('btnBack').style.display = currentStep === 1 ? 'none' : 'flex';
-
-            if (currentStep === totalSteps) {
-                document.getElementById('btnNext').innerHTML = '<span>إرسال</span><span>✅</span>';
-                document.getElementById('btnNext').className = 'nav-btn btn-submit';
-            } else {
-                document.getElementById('btnNext').innerHTML = '<span>التالي</span><span>→</span>';
-                document.getElementById('btnNext').className = 'nav-btn btn-next';
-            }
-
-            // تنفيذ إجراءات خاصة بكل خطوة
-            if (currentStep === 3) {
-                initializeSeriesColors();
-            }
-
-            if (currentStep === 6) {
-                updateReview();
-            }
-
-            scrollToTop();
-            validateCurrentStep();
-        }
-
-        // التحقق من صحة الخطوة الحالية
-        function validateCurrentStep() {
-            let isValid = false;
-
-            switch(currentStep) {
-                case 1: // التصحيح
-                    isValid = formData.corrected_full_text.trim().length > 0;
-                    break;
-                
-                case 2: // القالب واللون
-                    isValid = formData.template_id !== null && formData.color_id !== null;
-                    break;
-                
-                case 3: // لون السلسلة
-                    isValid = formData.series_color !== null;
-                    break;
-                
-                case 4: // البيانات
-                    isValid = formData.title.trim() && 
-                             formData.series.trim() && 
-                             formData.subSeries.trim() && 
-                             formData.finalSeries.trim();
-                    break;
-                
-                case 5: // SEO
-                    isValid = formData.seo_title.trim().length > 0 && 
-                             formData.seo_description.trim().length > 0 && 
-                             formData.tags.length > 0;
-                    break;
-                
-                case 6: // المراجعة
-                    isValid = true;
-                    break;
-            }
-
-            document.getElementById('btnNext').disabled = !isValid;
-        }
-
-        // الانتقال للخطوة التالية
-        async function nextStep() {
-            if (currentStep === totalSteps) {
-                await submitForm();
-                return;
-            }
-
-            if (currentStep < totalSteps) {
-                currentStep++;
-                formData.CurrentStep = currentStep;
-                updateProgress();
-            }
-        }
-
-        // الرجوع للخطوة السابقة
-        function prevStep() {
-            if (currentStep > 1) {
-                currentStep--;
-                formData.CurrentStep = currentStep;
-                updateProgress();
-            }
-        }
-
-        // معالجات أزرار التنقل
-        document.getElementById('btnNext').addEventListener('click', nextStep);
-        document.getElementById('btnBack').addEventListener('click', prevStep);
-
-        // ================== إرسال النموذج ==================
-        
         async function submitForm() {
-            showLoading('📤 جاري إرسال البيانات...', 'الرجاء عدم إغلاق الصفحة');
-
+            showLoading('جاري إرسال البيانات...', 'الرجاء عدم الإغلاق');
             try {
-                const dataToSend = {
-                    ...formData,
-                    status: 'completed',
-                    CurrentStep: 6,
-                    updated_at: new Date().toISOString(),
-                    ai_corrections: aiChangesCount
-                };
-
+                const dataToSend = { ...formData, status: 'completed', CurrentStep: 6, updated_at: new Date().toISOString(), ai_corrections: aiChangesCount };
                 const response = await fetch(N8N_WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dataToSend)
                 });
-
-                if (!response.ok) {
-                    throw new Error('فشل إرسال البيانات إلى الخادم');
-                }
-
-                // إرسال إشعار للبوت
-                try {
-                    tg.sendData(JSON.stringify({
-                        type: 'video_completed',
-                        id: formData.ID,
-                        status: 'completed',
-                        timestamp: new Date().toISOString()
-                    }));
-                } catch (e) {
-                    console.log('Could not send data to bot:', e);
-                }
-
+                if (!response.ok) throw new Error('فشل إرسال البيانات');
+                tg.sendData(JSON.stringify({ type: 'video_completed', id: formData.ID, status: 'completed', timestamp: new Date().toISOString() }));
                 hideLoading();
-                alert('✅ تم إرسال البيانات بنجاح!');
-                
-                // إغلاق التطبيق
-                setTimeout(() => {
-                    tg.close();
-                }, 1000);
-
+                alert('✅ تم الإرسال بنجاح!');
+                tg.close();
             } catch (error) {
                 hideLoading();
-                console.error('Submit error:', error);
-                alert('❌ حدث خطأ في الإرسال: ' + error.message);
+                alert('❌ حدث خطأ: ' + error.message);
             }
         }
 
-        // ================== التهيئة الأولية ==================
-        
-        // بدء التطبيق
-        function initializeApp() {
-            initializeTemplates();
-            updateProgress();
-            loadInitialData();
-        }
-
-        // تشغيل التطبيق عند تحميل الصفحة
-        initializeApp();
-
-        // ================== معالجات إضافية ==================
-        
-        // منع إعادة التحميل العرضية
-        window.addEventListener('beforeunload', (e) => {
-            if (currentStep > 1 && currentStep < totalSteps) {
-                e.preventDefault();
-                e.returnValue = '';
-            }
-        });
-
-        // معالجة أخطاء JavaScript العامة
-        window.addEventListener('error', (e) => {
-            console.error('Global error:', e.error);
-        });
-
-        // معالجة الأخطاء غير المعالجة في Promises
-        window.addEventListener('unhandledrejection', (e) => {
-            console.error('Unhandled promise rejection:', e.reason);
-        });
-
-        console.log('✅ التطبيق جاهز للاستخدام');
+        initializeTemplates();
+        updateProgress();
+        loadInitialData();
     </script>
 </body>
 </html>
-
-<!-- ✅ نهاية الجزء الثاني - الكود مكتمل -->
-<!-- 
-    ملخص التحسينات المطبقة:
-    
-    1. ✅ دائرة التحميل ثابتة في المنتصف (position: fixed مع z-index عالي)
-    2. ✅ نظام ألوان أزرق موحد وهادئ في كل الواجهة
-    3. ✅ تحسينات SEO شاملة:
-       - Meta tags محسّنة
-       - عناوين وصفية أفضل
-       - تنظيم أفضل لعرض البيانات
-    4. ✅ تحسين واجهة المستخدم:
-       - تباعد أفضل
-       - ألوان متناسقة
-       - shadows وتأثيرات موحدة
-       - تجربة مستخدم أكثر سلاسة
-    5. ✅ كود منظم ومقسم إلى أقسام واضحة
-    6. ✅ معالجة أخطاء محسّنة
-    7. ✅ رسائل توضيحية أفضل للمستخدم
--->
-    <script src="config.js"></script>
