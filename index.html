@@ -359,9 +359,6 @@
             border-color: var(--primary);
         }
 
-        /* ═══════════════════════════════════════════════════════
-           🎨 تحسينات صندوق التصحيح AI
-           ═══════════════════════════════════════════════════════ */
         .ai-correction-box {
             display: none;
             background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
@@ -784,9 +781,6 @@
             display: flex;
         }
 
-        /* ═══════════════════════════════════════════════════════
-           📱 معاينة القالب
-           ═══════════════════════════════════════════════════════ */
         .template-preview-modal {
             position: fixed;
             top: 0;
@@ -927,11 +921,8 @@
             transform: scale(0.98);
         }
 
-        /* ═══════════════════════════════════════════════════════
-           🎨 معاينة لون السلسلة (مع ظل)
-           ═══════════════════════════════════════════════════════ */
         .series-color-preview {
-            background: var(--bg-secondary);
+            background: linear-gradient(135deg, rgba(0,0,0,0.08), rgba(0,0,0,0.03));
             border-radius: 12px;
             padding: 30px 20px;
             margin-bottom: 20px;
@@ -948,7 +939,8 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(0,0,0,0.05), rgba(0,0,0,0.02));
+            background: white;
+            opacity: 0.95;
             z-index: 0;
         }
 
@@ -959,13 +951,6 @@
             transition: all 0.3s;
             position: relative;
             z-index: 1;
-            /* 🔥 الظل القوي للنص - يظهر حتى لو كان النص أبيض */
-            text-shadow: 
-                0 2px 4px rgba(0,0,0,0.3),
-                0 4px 8px rgba(0,0,0,0.2),
-                0 1px 2px rgba(0,0,0,0.4),
-                1px 1px 3px rgba(0,0,0,0.25),
-                -1px -1px 3px rgba(255,255,255,0.3);
         }
 
         .preview-hint {
@@ -1045,9 +1030,6 @@
             color: var(--text-secondary);
         }
 
-        /* ═══════════════════════════════════════════════════════
-           🎨 دائرة الألوان التفاعلية - محسّنة بالكامل
-           ═══════════════════════════════════════════════════════ */
         .custom-color-section {
             background: var(--bg-secondary);
             border-radius: 14px;
@@ -1073,7 +1055,6 @@
             gap: 20px;
         }
 
-        /* 🎨 الدائرة الرئيسية */
         .color-wheel-container {
             position: relative;
             width: 220px;
@@ -1081,7 +1062,6 @@
             margin: 0 auto;
         }
 
-        /* دائرة الألوان */
         .color-wheel {
             width: 100%;
             height: 100%;
@@ -1108,7 +1088,6 @@
             position: relative;
         }
 
-        /* التدرج الأبيض للأسود في المنتصف */
         .color-wheel::before {
             content: '';
             position: absolute;
@@ -1127,7 +1106,6 @@
             );
         }
 
-        /* 🎯 المؤشر القابل للسحب */
         .color-picker-handle {
             position: absolute;
             width: 28px;
@@ -1154,7 +1132,6 @@
                 0 0 25px rgba(0,0,0,0.3);
         }
 
-        /* معلومات اللون */
         .hex-input-wrapper {
             display: flex;
             align-items: center;
@@ -1236,6 +1213,34 @@
             direction: ltr;
         }
 
+        .save-template-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            margin-top: 20px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .save-template-btn:active {
+            transform: scale(0.98);
+        }
+
+        .save-template-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         .seo-section {
             background: var(--bg-secondary);
             border-radius: 12px;
@@ -1300,11 +1305,59 @@
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
 
+        .tags-input-section {
+            margin-bottom: 16px;
+        }
+
+        .tags-input-wrapper {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .tags-input {
+            flex: 1;
+            padding: 13px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .tags-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .tags-add-btn {
+            padding: 13px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .tags-add-btn:active {
+            transform: scale(0.95);
+        }
+
+        .tags-add-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .tags-container {
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-top: 12px;
             padding: 12px;
             background: var(--bg-primary);
             border-radius: 8px;
@@ -1320,6 +1373,15 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .tag-item:hover {
+            border-color: var(--danger);
+        }
+
+        .tag-text {
+            cursor: pointer;
         }
 
         .tag-remove {
@@ -1335,6 +1397,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .tag-remove:hover {
+            transform: scale(1.2);
         }
 
         .seo-stats {
@@ -1453,6 +1520,53 @@
             border-radius: 12px;
             font-size: 11px;
             color: var(--text-primary);
+        }
+
+        .review-template-images {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .review-image-wrapper {
+            text-align: center;
+        }
+
+        .review-image-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .review-image {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            display: none;
+        }
+
+        .review-image.loaded {
+            display: block;
+        }
+
+        .review-image-loading {
+            width: 100%;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+            border-radius: 12px;
+        }
+
+        .review-image-loading.hidden {
+            display: none;
         }
 
         .nav-buttons {
@@ -1601,9 +1715,7 @@
     </div>
 
     <div class="container">
-        <!-- ═══════════════════════════════════════════════════════
-             الخطوة 1: التصحيح
-             ═══════════════════════════════════════════════════════ -->
+        <!-- الخطوة 1: التصحيح -->
         <div class="step-content active" data-step="1">
             <div class="step-header">
                 <div class="step-title">
@@ -1640,7 +1752,6 @@
                 </div>
             </div>
 
-            <!-- 🎨 صندوق التصحيح المحسّن -->
             <div class="ai-correction-box" id="aiCorrectionBox">
                 <div class="ai-correction-header">
                     <div class="ai-correction-title">
@@ -1720,9 +1831,7 @@
             </div>
         </div>
 
-        <!-- ═══════════════════════════════════════════════════════
-             الخطوة 2: القالب
-             ═══════════════════════════════════════════════════════ -->
+        <!-- الخطوة 2: القالب -->
         <div class="step-content" data-step="2">
             <div class="step-header">
                 <div class="step-title">
@@ -1745,9 +1854,7 @@
             </div>
         </div>
 
-        <!-- ═══════════════════════════════════════════════════════
-             الخطوة 3: الألوان (مع دائرة تفاعلية)
-             ═══════════════════════════════════════════════════════ -->
+        <!-- الخطوة 3: الألوان -->
         <div class="step-content" data-step="3">
             <div class="step-header">
                 <div class="step-title">
@@ -1757,13 +1864,11 @@
                 <div class="step-description">اختر اللون المناسب لاسم السلسلة</div>
             </div>
 
-            <!-- 🎨 معاينة مع ظل -->
             <div class="series-color-preview">
                 <div class="preview-text" id="seriesPreviewText">السلسلة الرئيسية</div>
                 <div class="preview-hint">معاينة اللون المختار</div>
             </div>
 
-            <!-- ⭐ اللون الموصى به -->
             <div class="recommended-color-section">
                 <div class="section-title">
                     <span>⭐</span>
@@ -1782,20 +1887,16 @@
                 </button>
             </div>
 
-            <!-- 🎨 دائرة الألوان التفاعلية -->
             <div class="custom-color-section">
                 <div class="custom-color-title">
                     <span>🎨</span>
                     <span>أو اختر لوناً مخصصاً</span>
                 </div>
                 <div class="color-picker-wrapper">
-                    <!-- دائرة الألوان مع المؤشر القابل للسحب -->
                     <div class="color-wheel-container" id="colorWheelContainer">
                         <div class="color-wheel" id="colorWheel"></div>
                         <div class="color-picker-handle" id="colorPickerHandle"></div>
                     </div>
-                    
-                    <!-- معلومات اللون -->
                     <div class="hex-input-wrapper">
                         <div class="hex-preview" id="hexPreview"></div>
                         <input type="text" class="hex-input" id="hexInput" placeholder="#000000" maxlength="7">
@@ -1804,9 +1905,7 @@
             </div>
         </div>
 
-        <!-- ═══════════════════════════════════════════════════════
-             الخطوة 4: البيانات
-             ═══════════════════════════════════════════════════════ -->
+        <!-- الخطوة 4: البيانات -->
         <div class="step-content" data-step="4">
             <div class="step-header">
                 <div class="step-title">
@@ -1815,15 +1914,7 @@
                 </div>
                 <div class="step-description">أدخل العنوان والسلاسل الخاصة بالفيديو</div>
             </div>
-            <div class="form-group">
-                <label class="form-label">
-                    <span>✏️</span>
-                    <span>اسم الدرس</span>
-                </label>
-                <input type="text" class="form-input" id="titleInput" placeholder="مثال: قصة نجاح" maxlength="50">
-                <div class="form-hint">الأفضل: 3 كلمات أو أقل</div>
-                <div class="char-counter"><span id="titleCount">0</span> / 50</div>
-            </div>
+
             <div class="form-group">
                 <label class="form-label">
                     <span>📚</span>
@@ -1833,6 +1924,7 @@
                 <div class="form-hint">الأفضل: 4 كلمات أو أقل</div>
                 <div class="char-counter"><span id="mainSeriesCount">0</span> / 50</div>
             </div>
+
             <div class="form-group">
                 <label class="form-label">
                     <span>🔖</span>
@@ -1842,6 +1934,7 @@
                 <div class="form-hint">الأفضل: 4 كلمات أو أقل</div>
                 <div class="char-counter"><span id="subSeriesCount">0</span> / 50</div>
             </div>
+
             <div class="form-group">
                 <label class="form-label">
                     <span>🎯</span>
@@ -1851,11 +1944,24 @@
                 <div class="form-hint">الأفضل: 3 كلمات أو أقل</div>
                 <div class="char-counter"><span id="finalSeriesCount">0</span> / 50</div>
             </div>
+
+            <div class="form-group">
+                <label class="form-label">
+                    <span>✏️</span>
+                    <span>اسم الدرس</span>
+                </label>
+                <input type="text" class="form-input" id="titleInput" placeholder="مثال: قصة نجاح" maxlength="50">
+                <div class="form-hint">الأفضل: 3 كلمات أو أقل</div>
+                <div class="char-counter"><span id="titleCount">0</span> / 50</div>
+            </div>
+
+            <button class="save-template-btn" id="saveTemplateBtn">
+                <span>💾</span>
+                <span>حفظ التعديلات على القالب الأساسي</span>
+            </button>
         </div>
 
-        <!-- ═══════════════════════════════════════════════════════
-             الخطوة 5: SEO
-             ═══════════════════════════════════════════════════════ -->
+        <!-- الخطوة 5: SEO -->
         <div class="step-content" data-step="5">
             <div class="step-header">
                 <div class="step-title">
@@ -1899,9 +2005,20 @@
                     <span>🏷️</span>
                     <span>الكلمات المفتاحية</span>
                 </div>
+                
+                <div class="tags-input-section">
+                    <div class="tags-input-wrapper">
+                        <input type="text" class="tags-input" id="tagInput" placeholder="أدخل كلمة مفتاحية..." maxlength="30">
+                        <button class="tags-add-btn" id="addTagBtn">
+                            <span>➕ إضافة</span>
+                        </button>
+                    </div>
+                </div>
+
                 <div class="tags-container" id="tagsContainer">
                     <div style="color: var(--text-secondary); font-size: 12px;">سيتم إنشاؤها تلقائياً...</div>
                 </div>
+                
                 <div class="seo-stats" id="seoStats" style="display: none;">
                     <div class="seo-stat-item">
                         <div class="seo-stat-label">عدد الكلمات</div>
@@ -1923,9 +2040,7 @@
             </div>
         </div>
 
-        <!-- ═══════════════════════════════════════════════════════
-             الخطوة 6: المراجعة
-             ═══════════════════════════════════════════════════════ -->
+        <!-- الخطوة 6: المراجعة -->
         <div class="step-content" data-step="6">
             <div class="step-header">
                 <div class="step-title">
@@ -1934,6 +2049,7 @@
                 </div>
                 <div class="step-description">راجع جميع البيانات قبل الإرسال</div>
             </div>
+
             <div class="review-section">
                 <div class="review-section-title">
                     <span>✍️</span>
@@ -1952,6 +2068,7 @@
                     <span class="review-value" id="reviewAiChanges">-</span>
                 </div>
             </div>
+
             <div class="review-section">
                 <div class="review-section-title">
                     <span>🎨</span>
@@ -1969,15 +2086,35 @@
                     <span class="review-label">لون السلسلة:</span>
                     <span class="review-value" id="reviewSeriesColor">-</span>
                 </div>
+
+                <div class="review-template-images">
+                    <div class="review-image-wrapper">
+                        <div class="review-image-label">
+                            <span>🖼️</span>
+                            <span>الصورة الأفقية (Landscape)</span>
+                        </div>
+                        <div class="review-image-loading" id="reviewLandscapeLoading">
+                            <div class="spinner"></div>
+                        </div>
+                        <img src="" alt="Landscape" class="review-image" id="reviewLandscapeImage">
+                    </div>
+                    <div class="review-image-wrapper">
+                        <div class="review-image-label">
+                            <span>📱</span>
+                            <span>الصورة العمودية (Portrait)</span>
+                        </div>
+                        <div class="review-image-loading" id="reviewPortraitLoading">
+                            <div class="spinner"></div>
+                        </div>
+                        <img src="" alt="Portrait" class="review-image" id="reviewPortraitImage">
+                    </div>
+                </div>
             </div>
+
             <div class="review-section">
                 <div class="review-section-title">
                     <span>📝</span>
                     <span>البيانات</span>
-                </div>
-                <div class="review-item">
-                    <span class="review-label">اسم الدرس:</span>
-                    <span class="review-value" id="reviewTitle">-</span>
                 </div>
                 <div class="review-item">
                     <span class="review-label">السلسلة الرئيسية:</span>
@@ -1991,7 +2128,12 @@
                     <span class="review-label">اسم المخطط:</span>
                     <span class="review-value" id="reviewFinalSeries">-</span>
                 </div>
+                <div class="review-item">
+                    <span class="review-label">اسم الدرس:</span>
+                    <span class="review-value" id="reviewTitle">-</span>
+                </div>
             </div>
+
             <div class="review-section">
                 <div class="review-section-title">
                     <span>🔍</span>
@@ -2039,23 +2181,15 @@
     </div>
 
     <script>
-        // ═══════════════════════════════════════════════════════
-        // 🔧 CONFIG
-        // ═══════════════════════════════════════════════════════
         const WORKER_API_URL = 'https://n8n-video-worker.abdullah27623.workers.dev';
         const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor-response';
+        const N8N_TEMPLATE_UPDATE_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor';
         const JSONBIN_API_KEY = '$2a$10$LZzUrZstrWJsJROsgMvgeeoq0lC8lexDSW39z0hwNIxijF8y5jf7u';
 
-        // ═══════════════════════════════════════════════════════
-        // 🌐 Telegram
-        // ═══════════════════════════════════════════════════════
         const tg = window.Telegram.WebApp;
         tg.expand();
         try { tg.enableClosingConfirmation(); } catch (e) {}
 
-        // ═══════════════════════════════════════════════════════
-        // 📊 متغيرات التطبيق
-        // ═══════════════════════════════════════════════════════
         let currentStep = 1;
         const totalSteps = 6;
         let selectedTemplate = null;
@@ -2094,9 +2228,6 @@
             updated_at: new Date().toISOString()
         };
 
-        // ═══════════════════════════════════════════════════════
-        // 🛠️ دوال مساعدة
-        // ═══════════════════════════════════════════════════════
         function showLoading(text, subtext = '') {
             document.getElementById('loadingText').textContent = text;
             document.getElementById('loadingSubtext').textContent = subtext;
@@ -2132,9 +2263,6 @@
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
 
-        // ═══════════════════════════════════════════════════════
-        // 📥 تحميل البيانات
-        // ═══════════════════════════════════════════════════════
         async function loadInitialData() {
             try {
                 showLoading('جاري تحميل البيانات...', 'الرجاء الانتظار');
@@ -2184,9 +2312,6 @@
             }
         }
 
-        // ═══════════════════════════════════════════════════════
-        // 📊 تحديث إحصائيات النص
-        // ═══════════════════════════════════════════════════════
         function updateTextStats() {
             const text = document.getElementById('textEditor').value || '';
             const charCount = text.length;
@@ -2199,9 +2324,6 @@
             validateCurrentStep();
         }
 
-        // ═══════════════════════════════════════════════════════
-        // 🤖 تصحيح AI
-        // ═══════════════════════════════════════════════════════
         document.getElementById('aiBtn').addEventListener('click', async () => {
             const now = Date.now();
             if (now - lastAIRequestTime < AI_REQUEST_COOLDOWN) {
@@ -2236,8 +2358,6 @@
                 
                 if (result.success && result.correctedText) {
                     aiCorrectedText = result.correctedText;
-                    
-                    // 🔢 استخدام changesCount من الـ Worker
                     aiChangesCount = result.meta?.changesCount || 0;
                     
                     const correctedWords = aiCorrectedText.trim().split(/\s+/).length;
@@ -2248,8 +2368,6 @@
                     document.getElementById('aiChanges').textContent = aiChangesCount;
                     document.getElementById('aiChars').textContent = correctedChars;
                     document.getElementById('aiCorrectionBox').classList.add('visible');
-                    
-                    console.log('✅ AI Correction Success:', result.meta);
                 } else {
                     throw new Error('لم يتم إرجاع نص مصحح');
                 }
@@ -2262,7 +2380,6 @@
             }
         });
 
-        // قبول/رفض التصحيح
         document.getElementById('aiAcceptBtn').addEventListener('click', () => {
             document.getElementById('textEditor').value = aiCorrectedText;
             formData.corrected_full_text = aiCorrectedText;
@@ -2278,9 +2395,6 @@
             document.getElementById('aiCorrectionBox').classList.remove('visible');
         });
 
-        // ═══════════════════════════════════════════════════════
-        // ✏️ أزرار المحرر
-        // ═══════════════════════════════════════════════════════
         document.getElementById('textEditor').addEventListener('input', updateTextStats);
 
         document.getElementById('copyBtn').addEventListener('click', async () => {
@@ -2308,9 +2422,6 @@
             }
         });
 
-        // ═══════════════════════════════════════════════════════
-        // 🎵 مشغل الصوت
-        // ═══════════════════════════════════════════════════════
         const audioElement = document.getElementById('audioElement');
         
         document.getElementById('playPauseBtn').addEventListener('click', () => {
@@ -2347,9 +2458,6 @@
             });
         });
 
-        // ═══════════════════════════════════════════════════════
-        // 🎨 تحميل القوالب
-        // ═══════════════════════════════════════════════════════
         function initializeTemplates() {
             const grid = document.getElementById('templatesGrid');
             grid.innerHTML = '';
@@ -2389,13 +2497,8 @@
                 card.onclick = () => selectTemplate(template);
                 grid.appendChild(card);
             });
-            
-            console.log('✅ تم عرض', Object.keys(uniqueTemplates).length, 'قالب');
         }
 
-        // ═══════════════════════════════════════════════════════
-        // ✅ اختيار القالب
-        // ═══════════════════════════════════════════════════════
         function selectTemplate(template) {
             document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
             document.querySelector(`[data-template-id="${template.id}"]`).classList.add('selected');
@@ -2421,9 +2524,6 @@
             validateCurrentStep();
         }
 
-        // ═══════════════════════════════════════════════════════
-        // 🎨 اختيار اللون
-        // ═══════════════════════════════════════════════════════
         function selectColor(color) {
             document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
             document.querySelector(`[data-color-id="${color.color_id}"]`).classList.add('selected');
@@ -2476,9 +2576,6 @@
             nextStep();
         });
 
-        // ═══════════════════════════════════════════════════════
-        // 🎨 دائرة الألوان التفاعلية - الكود الكامل
-        // ═══════════════════════════════════════════════════════
         let isDragging = false;
         let currentColor = '#b9d780';
 
@@ -2509,11 +2606,9 @@
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
             
-            // تحويل HEX إلى HSL
             const rgb = hexToRgb(hexColor);
             const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
             
-            // حساب الموقع بناءً على Hue و Saturation
             const angle = hsl.h * (Math.PI / 180);
             const distance = (hsl.s / 100) * (centerX * 0.85);
             
@@ -2524,7 +2619,6 @@
             handle.style.top = `${y}px`;
         }
 
-        // اللون الموصى به
         document.getElementById('recommendedColorBtn').addEventListener('click', () => {
             if (!selectedColor) return;
             const seriesColor = selectedColor.landscape_series_color;
@@ -2533,7 +2627,6 @@
             document.getElementById('recommendedColorBtn').classList.add('selected');
         });
 
-        // دائرة الألوان - التفاعل
         const colorWheel = document.getElementById('colorWheel');
         const colorWheelContainer = document.getElementById('colorWheelContainer');
         const colorPickerHandle = document.getElementById('colorPickerHandle');
@@ -2594,7 +2687,6 @@
         colorWheel.addEventListener('click', handleColorPick);
         colorWheel.addEventListener('touchstart', handleColorPick);
 
-        // إدخال HEX يدوياً
         document.getElementById('hexInput').addEventListener('input', (e) => {
             let value = e.target.value;
             if (!value.startsWith('#')) value = '#' + value;
@@ -2609,9 +2701,6 @@
             e.target.value = value;
         });
 
-        // ═══════════════════════════════════════════════════════
-        // 🎨 دوال تحويل الألوان
-        // ═══════════════════════════════════════════════════════
         function hexToRgb(hex) {
             const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
             return result ? {
@@ -2653,9 +2742,6 @@
             return `#${f(0)}${f(8)}${f(4)}`;
         }
 
-        // ═══════════════════════════════════════════════════════
-        // 📝 حقول الإدخال
-        // ═══════════════════════════════════════════════════════
         function updateCharCounters() {
             ['title', 'mainSeries', 'subSeries', 'finalSeries'].forEach(field => {
                 const input = document.getElementById(field + 'Input');
@@ -2674,9 +2760,101 @@
             });
         });
 
-        // ═══════════════════════════════════════════════════════
-        // 🔍 إنشاء SEO
-        // ═══════════════════════════════════════════════════════
+        // ✅ زر حفظ التعديلات - إرسال إلى N8N
+        document.getElementById('saveTemplateBtn').addEventListener('click', async () => {
+            if (!selectedColor) {
+                alert('⚠️ لم تختر قالباً بعد');
+                return;
+            }
+
+            if (!formData.series || !formData.subSeries || !formData.finalSeries) {
+                alert('⚠️ يجب ملء جميع حقول السلاسل');
+                return;
+            }
+
+            const confirmed = confirm('هل تريد حفظ هذه التعديلات كإعدادات افتراضية للقالب؟');
+            if (!confirmed) return;
+
+            showLoading('جاري حفظ التعديلات...', 'الرجاء الانتظار');
+
+            try {
+                // ✅ إرسال جميع البيانات إلى N8N
+                const updatePayload = {
+                    type: 'template_update',
+                    action: 'save_template_settings',
+                    timestamp: new Date().toISOString(),
+                    user_id: formData.ID,
+                    bin_id: formData.binId,
+                    template_data: {
+                        template_id: formData.template_id,
+                        template_name: formData.template_name,
+                        color_id: formData.color_id,
+                        color_name: formData.color_name,
+                        series_text: formData.series,
+                        sub_series_text: formData.subSeries,
+                        final_series_text: formData.finalSeries,
+                        series_color: formData.series_color,
+                        subseries_color: formData.subseries_color,
+                        finalseries_color: formData.finalseries_color,
+                        landscape_image_url: formData.landscape_image_url,
+                        portrait_image_url: formData.portrait_image_url
+                    },
+                    full_data: { ...formData }
+                };
+
+                console.log('📤 إرسال التحديثات إلى N8N:', updatePayload);
+
+                const response = await fetch(N8N_TEMPLATE_UPDATE_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(updatePayload)
+                });
+
+                if (!response.ok) {
+                    throw new Error('فشل حفظ التعديلات على الخادم');
+                }
+
+                const result = await response.json();
+                console.log('✅ استجابة N8N:', result);
+
+                hideLoading();
+                alert('✅ تم حفظ التعديلات بنجاح!');
+                
+            } catch (error) {
+                console.error('❌ Error saving template:', error);
+                hideLoading();
+                alert('❌ فشل حفظ التعديلات: ' + error.message);
+            }
+        });
+
+        function addTag(tagText) {
+            const trimmed = tagText.trim();
+            if (!trimmed) return;
+            
+            if (formData.tags.includes(trimmed)) {
+                alert('⚠️ الكلمة موجودة مسبقاً');
+                return;
+            }
+
+            formData.tags.push(trimmed);
+            renderTags();
+            updateSEOStats();
+            document.getElementById('tagInput').value = '';
+            validateCurrentStep();
+        }
+
+        document.getElementById('addTagBtn').addEventListener('click', () => {
+            const input = document.getElementById('tagInput');
+            addTag(input.value);
+        });
+
+        document.getElementById('tagInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addTag(e.target.value);
+            }
+        });
+
         document.getElementById('seoGenerateBtn').addEventListener('click', async () => {
             if (!formData.corrected_full_text.trim()) {
                 alert('⚠️ لا يوجد نص');
@@ -2716,8 +2894,6 @@
                     updateSEOCounts();
                     renderTags();
                     updateSEOStats();
-                    
-                    console.log('✅ SEO Generated Successfully');
                 } else {
                     throw new Error('فشل إنشاء SEO');
                 }
@@ -2745,12 +2921,18 @@
             formData.tags.forEach((tag, index) => {
                 const tagEl = document.createElement('div');
                 tagEl.className = 'tag-item';
-                tagEl.innerHTML = `<span>${tag}</span><button class="tag-remove" data-index="${index}">×</button>`;
+                tagEl.innerHTML = `
+                    <span class="tag-text">${tag}</span>
+                    <button class="tag-remove" data-index="${index}">×</button>
+                `;
+                
                 tagEl.querySelector('.tag-remove').onclick = () => {
                     formData.tags.splice(index, 1);
                     renderTags();
                     updateSEOStats();
+                    validateCurrentStep();
                 };
+                
                 container.appendChild(tagEl);
             });
         }
@@ -2781,9 +2963,6 @@
             validateCurrentStep();
         });
 
-        // ═══════════════════════════════════════════════════════
-        // 🚀 التنقل
-        // ═══════════════════════════════════════════════════════
         function updateProgress() {
             const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
             document.getElementById('progressLineFill').style.width = `${progress}%`;
@@ -2849,9 +3028,6 @@
         document.getElementById('btnNext').addEventListener('click', nextStep);
         document.getElementById('btnBack').addEventListener('click', prevStep);
 
-        // ═══════════════════════════════════════════════════════
-        // ✅ المراجعة
-        // ═══════════════════════════════════════════════════════
         function updateReview() {
             const words = formData.corrected_full_text.trim() ? formData.corrected_full_text.trim().split(/\s+/).length : 0;
             
@@ -2867,10 +3043,10 @@
             document.getElementById('reviewColor').textContent = formData.color_name || '-';
             document.getElementById('reviewSeriesColor').innerHTML = `<div style="width:18px;height:18px;background:${formData.series_color};border-radius:4px;display:inline-block;margin-left:8px"></div>${formData.series_color}`;
             
-            document.getElementById('reviewTitle').textContent = formData.title || '-';
             document.getElementById('reviewMainSeries').textContent = formData.series || '-';
             document.getElementById('reviewSubSeries').textContent = formData.subSeries || '-';
             document.getElementById('reviewFinalSeries').textContent = formData.finalSeries || '-';
+            document.getElementById('reviewTitle').textContent = formData.title || '-';
             document.getElementById('reviewSeoTitle').textContent = formData.seo_title || '-';
             document.getElementById('reviewSeoDesc').textContent = formData.seo_description || '-';
 
@@ -2882,6 +3058,24 @@
                 tagEl.textContent = tag;
                 tagsPreview.appendChild(tagEl);
             });
+
+            if (formData.landscape_image_url) {
+                const landscapeImg = document.getElementById('reviewLandscapeImage');
+                landscapeImg.onload = () => {
+                    document.getElementById('reviewLandscapeLoading').classList.add('hidden');
+                    landscapeImg.classList.add('loaded');
+                };
+                landscapeImg.src = convertDriveUrl(formData.landscape_image_url);
+            }
+
+            if (formData.portrait_image_url) {
+                const portraitImg = document.getElementById('reviewPortraitImage');
+                portraitImg.onload = () => {
+                    document.getElementById('reviewPortraitLoading').classList.add('hidden');
+                    portraitImg.classList.add('loaded');
+                };
+                portraitImg.src = convertDriveUrl(formData.portrait_image_url);
+            }
         }
 
         document.getElementById('reviewDescExpandBtn').addEventListener('click', () => {
@@ -2898,9 +3092,6 @@
             document.getElementById('reviewTagsExpandIcon').textContent = tagsPreview.classList.contains('expanded') ? '▲' : '▼';
         });
 
-        // ═══════════════════════════════════════════════════════
-        // 📤 الإرسال
-        // ═══════════════════════════════════════════════════════
         async function submitForm() {
             showLoading('جاري الإرسال...', 'الرجاء الانتظار');
 
@@ -2933,11 +3124,7 @@
             }
         }
 
-        // ═══════════════════════════════════════════════════════
-        // 🚀 البدء
-        // ═══════════════════════════════════════════════════════
         console.log('🚀 App Starting...');
-        console.log('Worker API:', WORKER_API_URL);
         updateProgress();
         loadInitialData();
     </script>
