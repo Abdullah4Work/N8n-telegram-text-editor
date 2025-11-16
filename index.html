@@ -3,19 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="نشر محتوى احترافي - رقيتي | منصة تحرير ونشر المحتوى بالذكاء الاصطناعي">
-    <meta name="keywords" content="رقيتي, نشر محتوى, تحرير فيديو, ذكاء اصطناعي">
-    <meta name="author" content="رقيتي">
+    <meta name="description" content="نشر محتوى احترافي - رقيتي">
     <meta name="theme-color" content="#4A90E2">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <title>نشر محتوى احترافي - رقيتي</title>
-    
-    <!-- Telegram Web App Script -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    
     <style>
-        /* ==================== المتغيرات العامة ==================== */
         * {
             margin: 0;
             padding: 0;
@@ -24,74 +16,41 @@
         }
 
         :root {
-            /* الألوان الأساسية */
             --primary: #4A90E2;
             --primary-light: #5BA3F5;
             --primary-dark: #3A7BC8;
             --primary-lighter: #E8F4FD;
-            --primary-gradient: linear-gradient(135deg, #4A90E2, #5BA3F5);
-            
-            /* ألوان الحالات */
             --success: #27AE60;
             --success-light: #2ECC71;
             --danger: #E74C3C;
             --warning: #F39C12;
-            --info: #3498DB;
-            
-            /* ألوان النصوص */
             --text-primary: #2C3E50;
             --text-secondary: #7F8C8D;
             --text-light: #95A5A6;
-            --text-white: #FFFFFF;
-            
-            /* ألوان الخلفيات */
             --bg-primary: #F7F9FC;
             --bg-secondary: #FFFFFF;
             --bg-tertiary: #ECF0F1;
-            --bg-overlay: rgba(0, 0, 0, 0.6);
-            
-            /* الحدود والظلال */
             --border-color: #E1E8ED;
             --border-light: #F0F3F5;
             --shadow-sm: 0 2px 4px rgba(0,0,0,0.06);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
             --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
             --shadow-xl: 0 12px 32px rgba(0,0,0,0.16);
-            
-            /* نصف القطر */
             --radius-sm: 6px;
             --radius-md: 10px;
             --radius-lg: 14px;
             --radius-xl: 18px;
-            --radius-full: 9999px;
-            
-            /* المسافات */
             --spacing-xs: 4px;
             --spacing-sm: 8px;
             --spacing-md: 12px;
             --spacing-lg: 16px;
             --spacing-xl: 20px;
             --spacing-2xl: 24px;
-            --spacing-3xl: 32px;
-            
-            /* الانتقالات */
-            --transition-fast: 0.15s ease;
             --transition-base: 0.3s ease;
-            --transition-slow: 0.5s ease;
-            
-            /* Z-Index */
-            --z-dropdown: 1000;
-            --z-sticky: 1020;
-            --z-fixed: 1030;
-            --z-modal-backdrop: 1040;
-            --z-modal: 1050;
-            --z-popover: 1060;
-            --z-tooltip: 1070;
         }
 
-        /* ==================== الأساسيات ==================== */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-primary);
             color: var(--text-primary);
             min-height: 100vh;
@@ -100,28 +59,69 @@
             overflow-x: hidden;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
         }
 
-        /* ==================== شريط التقدم ==================== */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.98);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .loading-overlay.visible {
+            display: flex;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--primary-lighter);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 16px;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .loading-subtext {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 280px;
+        }
+
         .progress-wrapper {
             background: var(--bg-secondary);
-            padding: var(--spacing-lg);
+            padding: 14px 16px;
             box-shadow: var(--shadow-md);
             position: sticky;
             top: 0;
-            z-index: var(--z-sticky);
-            border-bottom: 1px solid var(--border-light);
+            z-index: 100;
         }
 
         .progress-steps {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: var(--spacing-md);
+            margin-bottom: 10px;
             position: relative;
-            padding: 0 var(--spacing-sm);
+            padding: 0 8px;
         }
 
         .progress-line {
@@ -130,35 +130,33 @@
             left: 6%;
             right: 6%;
             height: 3px;
-            background: var(--border-color);
+            background: var(--border-light);
             z-index: 1;
-            border-radius: var(--radius-full);
+            border-radius: 10px;
         }
 
         .progress-line-fill {
             height: 100%;
-            background: var(--primary-gradient);
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
             transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             width: 0%;
-            border-radius: var(--radius-full);
-            box-shadow: 0 0 8px rgba(74, 144, 226, 0.4);
+            border-radius: 10px;
         }
 
         .progress-step {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: var(--spacing-xs);
+            gap: 4px;
             position: relative;
             z-index: 2;
             flex: 1;
-            transition: all var(--transition-base);
         }
 
         .step-circle {
-            width: 32px;
-            height: 32px;
-            border-radius: var(--radius-full);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
             background: var(--bg-secondary);
             border: 3px solid var(--border-color);
             display: flex;
@@ -167,23 +165,22 @@
             font-weight: 700;
             font-size: 13px;
             color: var(--text-secondary);
-            transition: all var(--transition-base);
+            transition: all 0.3s;
             box-shadow: var(--shadow-sm);
         }
 
         .progress-step.active .step-circle {
-            background: var(--primary-gradient);
+            background: var(--primary);
             border-color: var(--primary);
-            color: var(--text-white);
-            transform: scale(1.15);
-            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.5);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
         }
 
         .progress-step.completed .step-circle {
             background: var(--success);
             border-color: var(--success);
-            color: var(--text-white);
-            box-shadow: 0 2px 8px rgba(39, 174, 96, 0.3);
+            color: white;
         }
 
         .step-label {
@@ -191,20 +188,13 @@
             color: var(--text-secondary);
             text-align: center;
             font-weight: 600;
-            max-width: 65px;
-            transition: all var(--transition-base);
+            max-width: 60px;
         }
 
         .progress-step.active .step-label {
             color: var(--primary);
-            font-weight: 700;
         }
 
-        .progress-step.completed .step-label {
-            color: var(--success);
-        }
-
-        /* ==================== الحاوية الرئيسية ==================== */
         .container {
             flex: 1;
             display: flex;
@@ -216,9 +206,8 @@
             display: none;
             flex: 1;
             overflow-y: auto;
-            overflow-x: hidden;
-            padding: var(--spacing-xl) var(--spacing-lg) 120px;
-            animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 18px 14px 110px;
+            animation: fadeInUp 0.4s ease;
             -webkit-overflow-scrolling: touch;
         }
 
@@ -230,7 +219,7 @@
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(24px);
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -238,81 +227,65 @@
             }
         }
 
-        /* ==================== رأس الخطوة ==================== */
         .step-header {
-            margin-bottom: var(--spacing-2xl);
-            padding: var(--spacing-xl);
+            margin-bottom: 20px;
+            padding: 16px;
             background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(92, 168, 245, 0.05));
-            border-radius: var(--radius-lg);
-            border-right: 4px solid var(--primary);
-            box-shadow: var(--shadow-sm);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
         }
 
         .step-title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
             color: var(--text-primary);
-            margin-bottom: var(--spacing-sm);
+            margin-bottom: 6px;
             display: flex;
             align-items: center;
-            gap: var(--spacing-md);
-            line-height: 1.3;
-        }
-
-        .step-title-emoji {
-            font-size: 28px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+            gap: 10px;
         }
 
         .step-description {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--text-secondary);
-            line-height: 1.6;
-            font-weight: 500;
+            line-height: 1.5;
         }
 
-        /* ==================== مشغل الصوت ==================== */
         .audio-player-section {
             background: var(--bg-secondary);
-            border-radius: var(--radius-lg);
-            padding: var(--spacing-xl);
-            margin-bottom: var(--spacing-xl);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
             box-shadow: var(--shadow-md);
-            border: 1px solid var(--border-light);
         }
 
         .audio-player {
             display: flex;
             flex-direction: column;
-            gap: var(--spacing-lg);
+            gap: 12px;
         }
 
         .audio-controls {
             display: flex;
             align-items: center;
-            gap: var(--spacing-lg);
+            gap: 12px;
         }
 
         .play-pause-btn {
-            width: 52px;
-            height: 52px;
-            border-radius: var(--radius-full);
-            background: var(--primary-gradient);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             border: none;
-            color: var(--text-white);
+            color: white;
             font-size: 20px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all var(--transition-base);
+            transition: all 0.2s;
             flex-shrink: 0;
             box-shadow: var(--shadow-md);
-        }
-
-        .play-pause-btn:hover {
-            transform: scale(1.05);
-            box-shadow: var(--shadow-lg);
         }
 
         .play-pause-btn:active {
@@ -323,25 +296,23 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: var(--spacing-sm);
+            gap: 6px;
         }
 
         .progress-bar {
             width: 100%;
             height: 6px;
             background: var(--bg-tertiary);
-            border-radius: var(--radius-full);
+            border-radius: 10px;
             overflow: hidden;
             cursor: pointer;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .progress-fill {
             height: 100%;
-            background: var(--primary-gradient);
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
             width: 0%;
             transition: width 0.1s linear;
-            box-shadow: 0 0 6px rgba(74, 144, 226, 0.5);
         }
 
         .time-display {
@@ -350,16 +321,14 @@
             font-size: 11px;
             color: var(--text-secondary);
             font-weight: 600;
-            font-variant-numeric: tabular-nums;
         }
 
         .speed-controls {
             display: flex;
-            gap: var(--spacing-sm);
+            gap: 6px;
             overflow-x: auto;
-            padding: var(--spacing-xs) 0;
+            padding: 2px 0;
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
         }
 
         .speed-controls::-webkit-scrollbar {
@@ -367,24 +336,17 @@
         }
 
         .speed-btn {
-            padding: 8px 12px;
+            padding: 7px 11px;
             border: 2px solid var(--border-color);
-            border-radius: var(--radius-md);
+            border-radius: 8px;
             background: var(--bg-secondary);
             font-size: 12px;
             font-weight: 700;
             color: var(--text-primary);
             cursor: pointer;
-            transition: all var(--transition-base);
+            transition: all 0.2s;
             white-space: nowrap;
             flex-shrink: 0;
-        }
-
-        .speed-btn:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-sm);
         }
 
         .speed-btn:active {
@@ -392,32 +354,30 @@
         }
 
         .speed-btn.active {
-            background: var(--primary-gradient);
-            color: var(--text-white);
+            background: var(--primary);
+            color: white;
             border-color: var(--primary);
-            box-shadow: var(--shadow-md);
         }
 
-        /* ==================== صندوق التصحيح بالـ AI ==================== */
         .ai-correction-box {
             display: none;
-            background: linear-gradient(135deg, #E8F5E9 0%, #C8E6C9 100%);
+            background: linear-gradient(135deg, #E8F5E9, #C8E6C9);
             border: 2px solid var(--success);
-            border-radius: var(--radius-lg);
-            padding: var(--spacing-xl);
-            margin-bottom: var(--spacing-xl);
-            box-shadow: 0 4px 20px rgba(39, 174, 96, 0.25);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 16px rgba(39, 174, 96, 0.2);
         }
 
         .ai-correction-box.visible {
             display: block;
-            animation: slideDown 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: slideDown 0.4s ease;
         }
 
         @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(-24px);
+                transform: translateY(-20px);
             }
             to {
                 opacity: 1;
@@ -429,23 +389,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: var(--spacing-lg);
+            margin-bottom: 12px;
         }
 
         .ai-correction-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             color: #2E7D32;
             display: flex;
             align-items: center;
-            gap: var(--spacing-sm);
+            gap: 6px;
         }
 
         .ai-correction-close {
-            width: 28px;
-            height: 28px;
-            border-radius: var(--radius-full);
-            background: var(--bg-secondary);
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: white;
             border: 2px solid var(--border-color);
             cursor: pointer;
             display: flex;
@@ -453,98 +413,77 @@
             justify-content: center;
             font-size: 18px;
             color: var(--text-secondary);
-            transition: all var(--transition-base);
+            transition: all 0.2s;
         }
 
         .ai-correction-close:hover {
             background: var(--danger);
-            color: var(--text-white);
+            color: white;
             border-color: var(--danger);
-            transform: rotate(90deg);
         }
 
         .ai-correction-text {
-            background: var(--bg-secondary);
-            padding: var(--spacing-lg);
-            border-radius: var(--radius-md);
+            background: white;
+            padding: 14px;
+            border-radius: 10px;
             font-size: 14px;
-            line-height: 1.8;
+            line-height: 1.7;
             color: var(--text-primary);
-            max-height: 220px;
+            max-height: 200px;
             overflow-y: auto;
-            margin-bottom: var(--spacing-lg);
+            margin-bottom: 12px;
             box-shadow: var(--shadow-sm);
-            -webkit-overflow-scrolling: touch;
         }
 
         .ai-correction-stats {
             display: flex;
-            gap: var(--spacing-lg);
+            gap: 14px;
             font-size: 12px;
             color: #2E7D32;
-            margin-bottom: var(--spacing-lg);
+            margin-bottom: 12px;
             flex-wrap: wrap;
         }
 
         .ai-stat {
             display: flex;
             align-items: center;
-            gap: var(--spacing-xs);
+            gap: 5px;
             font-weight: 700;
-            padding: var(--spacing-xs) var(--spacing-md);
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: var(--radius-md);
         }
 
         .ai-correction-actions {
             display: flex;
-            gap: var(--spacing-md);
+            gap: 10px;
         }
 
         .ai-action-btn {
             flex: 1;
-            padding: 12px;
+            padding: 11px;
             border: none;
-            border-radius: var(--radius-md);
-            font-size: 14px;
+            border-radius: 10px;
+            font-size: 13px;
             font-weight: 700;
             cursor: pointer;
-            transition: all var(--transition-base);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .ai-action-btn:active {
-            transform: scale(0.97);
+            transition: all 0.2s;
         }
 
         .ai-action-btn.accept {
             background: var(--success);
-            color: var(--text-white);
-        }
-
-        .ai-action-btn.accept:hover {
-            background: var(--success-light);
-            box-shadow: var(--shadow-md);
+            color: white;
         }
 
         .ai-action-btn.reject {
-            background: var(--bg-secondary);
+            background: white;
             color: var(--text-primary);
             border: 2px solid var(--border-color);
         }
 
-        .ai-action-btn.reject:hover {
-            border-color: var(--danger);
-            color: var(--danger);
-        }
-
-        /* ==================== محرر النصوص ==================== */
         .editor-container {
             background: var(--bg-secondary);
             border: 2px solid var(--border-color);
-            border-radius: var(--radius-lg);
-            padding: var(--spacing-xl);
-            margin-bottom: var(--spacing-xl);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
             box-shadow: var(--shadow-md);
         }
 
@@ -552,39 +491,38 @@
             font-size: 14px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: var(--spacing-lg);
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
-            gap: var(--spacing-sm);
+            gap: 6px;
         }
 
         .editor-textarea {
             width: 100%;
-            min-height: 280px;
-            padding: var(--spacing-lg);
+            min-height: 260px;
+            padding: 14px;
             border: 2px solid var(--border-color);
-            border-radius: var(--radius-md);
+            border-radius: 10px;
             font-size: 15px;
-            line-height: 1.8;
+            line-height: 1.7;
             resize: vertical;
             font-family: inherit;
-            transition: all var(--transition-base);
+            transition: all 0.3s;
             background: #FAFBFC;
-            color: var(--text-primary);
         }
 
         .editor-textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
-            background: var(--bg-secondary);
+            background: white;
         }
 
         .editor-stats {
             display: flex;
             justify-content: space-between;
-            margin-top: var(--spacing-lg);
-            padding-top: var(--spacing-lg);
+            margin-top: 12px;
+            padding-top: 12px;
             border-top: 2px solid var(--border-light);
             font-size: 12px;
             color: var(--text-secondary);
@@ -593,27 +531,26 @@
         .stat-item {
             display: flex;
             align-items: center;
-            gap: var(--spacing-sm);
+            gap: 6px;
         }
 
         .stat-value {
             font-weight: 700;
             color: var(--primary);
-            font-size: 16px;
+            font-size: 15px;
         }
 
-        /* ==================== أزرار الإجراءات ==================== */
         .editor-actions {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: var(--spacing-md);
-            margin-bottom: var(--spacing-xl);
+            gap: 10px;
+            margin-bottom: 16px;
         }
 
         .action-btn {
-            padding: 13px;
+            padding: 12px;
             border: 2px solid var(--border-color);
-            border-radius: var(--radius-md);
+            border-radius: 10px;
             background: var(--bg-secondary);
             color: var(--text-primary);
             font-size: 14px;
@@ -622,16 +559,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: var(--spacing-sm);
-            transition: all var(--transition-base);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--primary);
-            color: var(--primary);
+            gap: 6px;
+            transition: all 0.2s;
         }
 
         .action-btn:active {
@@ -640,34 +569,28 @@
 
         .action-btn.ai-btn {
             grid-column: 1 / -1;
-            background: var(--primary-gradient);
-            color: var(--text-white);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
             border: none;
             box-shadow: var(--shadow-md);
             font-size: 15px;
-            padding: 15px;
+            padding: 14px;
         }
 
-        .action-btn.ai-btn:hover {
-            box-shadow: var(--shadow-lg);
-            transform: translateY(-2px);
-        }
-
-        /* ==================== القوالب ==================== */
         .templates-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: var(--spacing-lg);
-            margin-bottom: var(--spacing-2xl);
+            gap: 14px;
+            margin-bottom: 20px;
         }
 
         .template-card {
             background: var(--bg-secondary);
             border: 3px solid var(--border-color);
-            border-radius: var(--radius-lg);
+            border-radius: 14px;
             overflow: hidden;
             cursor: pointer;
-            transition: all var(--transition-base);
+            transition: all 0.3s;
             position: relative;
             box-shadow: var(--shadow-sm);
         }
@@ -676,18 +599,13 @@
             grid-column: span 2;
         }
 
-        .template-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-
         .template-card:active {
             transform: scale(0.98);
         }
 
         .template-card.selected {
             border-color: var(--primary);
-            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.4);
+            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
         }
 
         .template-preview {
@@ -696,15 +614,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
+            font-size: 44px;
             position: relative;
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
         }
 
         .template-card.large .template-preview {
-            font-size: 64px;
+            font-size: 60px;
         }
 
         .template-preview::before {
@@ -720,95 +637,82 @@
         .template-number {
             position: relative;
             z-index: 2;
-            color: var(--text-white);
+            color: white;
             font-weight: 700;
             text-shadow: 0 2px 8px rgba(0,0,0,0.6);
         }
 
         .template-check {
             position: absolute;
-            top: 12px;
-            right: 12px;
-            width: 36px;
-            height: 36px;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
             background: var(--success);
-            border-radius: var(--radius-full);
+            border-radius: 50%;
             display: none;
             align-items: center;
             justify-content: center;
-            color: var(--text-white);
-            font-size: 20px;
+            color: white;
+            font-size: 18px;
             z-index: 3;
-            box-shadow: var(--shadow-md);
         }
 
         .template-card.selected .template-check {
             display: flex;
-            animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: scaleIn 0.3s ease;
         }
 
         @keyframes scaleIn {
-            from { 
-                transform: scale(0) rotate(-180deg); 
-            }
-            to { 
-                transform: scale(1) rotate(0deg); 
-            }
+            from { transform: scale(0); }
+            to { transform: scale(1); }
         }
 
         .template-name {
-            padding: var(--spacing-lg);
+            padding: 12px;
             text-align: center;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             color: var(--text-primary);
-            background: linear-gradient(to bottom, var(--bg-secondary), #F8F9FA);
-        }
-
-        /* ==================== الألوان ==================== */
-        .colors-section {
-            margin-bottom: var(--spacing-2xl);
+            background: linear-gradient(to bottom, white, #F8F9FA);
         }
 
         .section-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: var(--spacing-xl);
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
-            gap: var(--spacing-md);
-            padding: var(--spacing-lg);
+            gap: 8px;
+            padding: 12px;
             background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(92, 168, 245, 0.05));
-            border-radius: var(--radius-md);
-            border-right: 3px solid var(--primary);
+            border-radius: 10px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .colors-section {
+            margin-bottom: 20px;
         }
 
         .colors-grid {
             display: flex;
             flex-direction: column;
-            gap: var(--spacing-lg);
+            gap: 14px;
         }
 
         .color-option {
             width: 100%;
             aspect-ratio: 16/9;
-            border-radius: var(--radius-lg);
+            border-radius: 14px;
             border: 3px solid var(--border-color);
             cursor: pointer;
-            transition: all var(--transition-base);
+            transition: all 0.3s;
             position: relative;
             overflow: hidden;
             background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
-            background-color: var(--bg-primary);
             box-shadow: var(--shadow-sm);
-        }
-
-        .color-option:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
         }
 
         .color-option:active {
@@ -817,7 +721,7 @@
 
         .color-option.selected {
             border-color: var(--primary);
-            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.4);
+            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.4);
         }
 
         .color-option .template-check {
@@ -828,102 +732,43 @@
             display: flex;
         }
 
-        /* ==================== شاشة التحميل ==================== */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(255, 255, 255, 0.98);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 99999;
-            flex-direction: column;
-            gap: var(--spacing-xl);
-            backdrop-filter: blur(4px);
-        }
-
-        .loading-overlay.visible {
-            display: flex;
-        }
-
-        .spinner {
-            width: 56px;
-            height: 56px;
-            border: 5px solid var(--primary-lighter);
-            border-top-color: var(--primary);
-            border-radius: var(--radius-full);
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .loading-text {
-            font-size: 16px;
-            color: var(--text-primary);
-            font-weight: 700;
-            text-align: center;
-        }
-
-        .loading-subtext {
-            font-size: 14px;
-            color: var(--text-secondary);
-            text-align: center;
-            max-width: 300px;
-            padding: 0 var(--spacing-xl);
-        }
-
-        /* ==================== نافذة المعاينة ==================== */
         .template-preview-modal {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: var(--bg-overlay);
+            background: rgba(0, 0, 0, 0.95);
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: var(--z-modal);
-            padding: var(--spacing-xl);
-            animation: fadeIn 0.3s ease;
-            backdrop-filter: blur(8px);
+            z-index: 9999;
+            padding: 20px;
         }
 
         .template-preview-modal.visible {
             display: flex;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
         .preview-content {
-            background: var(--bg-secondary);
-            border-radius: var(--radius-xl);
-            padding: var(--spacing-2xl);
-            max-width: 540px;
+            background: white;
+            border-radius: 18px;
+            padding: 22px;
+            max-width: 500px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
-            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            -webkit-overflow-scrolling: touch;
-            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.4s ease;
         }
 
         @keyframes slideUp {
             from {
                 opacity: 0;
-                transform: translateY(60px) scale(0.95);
+                transform: translateY(50px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: translateY(0);
             }
         }
 
@@ -931,35 +776,28 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: var(--spacing-2xl);
+            margin-bottom: 20px;
         }
 
         .preview-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: var(--text-primary);
         }
 
         .close-preview {
-            width: 40px;
-            height: 40px;
-            border-radius: var(--radius-full);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
             background: var(--bg-tertiary);
-            border: 2px solid var(--border-color);
+            border: none;
             color: var(--text-primary);
             font-size: 24px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all var(--transition-base);
-        }
-
-        .close-preview:hover {
-            background: var(--danger);
-            color: var(--text-white);
-            border-color: var(--danger);
-            transform: rotate(90deg);
+            transition: all 0.2s;
         }
 
         .close-preview:active {
@@ -969,28 +807,27 @@
         .preview-images {
             display: flex;
             flex-direction: column;
-            gap: var(--spacing-2xl);
+            gap: 18px;
         }
 
         .preview-image-wrapper {
             text-align: center;
-            position: relative;
         }
 
         .preview-image-label {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
             color: var(--text-secondary);
-            margin-bottom: var(--spacing-lg);
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: var(--spacing-sm);
+            gap: 6px;
         }
 
         .preview-image {
             width: 100%;
-            border-radius: var(--radius-lg);
+            border-radius: 12px;
             box-shadow: var(--shadow-lg);
             display: none;
         }
@@ -1006,7 +843,7 @@
             align-items: center;
             justify-content: center;
             background: var(--bg-primary);
-            border-radius: var(--radius-lg);
+            border-radius: 12px;
         }
 
         .preview-image-loading.hidden {
@@ -1015,44 +852,513 @@
 
         .preview-next-btn {
             width: 100%;
-            padding: 16px;
-            margin-top: var(--spacing-2xl);
-            background: var(--primary-gradient);
-            color: var(--text-white);
+            padding: 14px;
+            margin-top: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
             border: none;
-            border-radius: var(--radius-lg);
-            font-size: 16px;
+            border-radius: 12px;
+            font-size: 15px;
             font-weight: 700;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: var(--spacing-md);
-            transition: all var(--transition-base);
-            box-shadow: var(--shadow-md);
-        }
-
-        .preview-next-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-lg);
+            gap: 8px;
+            transition: all 0.2s;
         }
 
         .preview-next-btn:active {
             transform: scale(0.98);
         }
 
-        /* سيتم إضافة المزيد من الأنماط في الجزء الثاني... */
+        .series-color-preview {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+        }
 
-        /* ==================== تحسينات للأجهزة الصغيرة ==================== */
+        .preview-text {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            transition: color 0.3s;
+        }
+
+        .preview-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .recommended-color-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .recommended-color-btn {
+            width: 100%;
+            padding: 16px;
+            border: 3px solid #FFD700;
+            border-radius: 12px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .recommended-color-btn:active {
+            transform: scale(0.98);
+        }
+
+        .recommended-color-btn.selected {
+            background: var(--primary-lighter);
+            border-color: var(--primary);
+        }
+
+        .recommended-color-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .recommended-badge {
+            background: #FFD700;
+            color: #000;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .recommended-color-preview {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 3px solid var(--border-color);
+        }
+
+        .recommended-color-text {
+            text-align: right;
+            flex: 1;
+        }
+
+        .recommended-color-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .recommended-color-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .custom-color-section {
+            background: var(--bg-secondary);
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .custom-color-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .color-picker-container {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .color-picker {
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            border: none;
+        }
+
+        .hex-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .hex-preview {
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
+            border: 3px solid var(--border-color);
+            transition: all 0.3s;
+        }
+
+        .hex-input {
+            flex: 1;
+            padding: 13px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            font-weight: 700;
+            direction: ltr;
+        }
+
+        .hex-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 13px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .char-counter {
+            text-align: left;
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            direction: ltr;
+        }
+
+        .seo-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .seo-section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .seo-generate-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            margin-bottom: 18px;
+        }
+
+        .seo-generate-btn:active {
+            transform: scale(0.98);
+        }
+
+        .seo-generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 13px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+            resize: vertical;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 12px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            min-height: 60px;
+        }
+
+        .tag-item {
+            background: white;
+            border: 2px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tag-remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            padding: 0;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .seo-stats {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .seo-stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .seo-stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        .seo-stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .review-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .review-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .review-item {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            min-width: 80px;
+        }
+
+        .review-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: left;
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .review-expandable {
+            max-height: 60px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .review-expandable.expanded {
+            max-height: none;
+        }
+
+        .review-expand-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 0;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .review-tags-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            max-height: 60px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .review-tags-preview.expanded {
+            max-height: none;
+        }
+
+        .review-tag {
+            background: var(--bg-primary);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            color: var(--text-primary);
+        }
+
+        .nav-buttons {
+            padding: 14px;
+            background: white;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            gap: 12px;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .nav-btn:active {
+            transform: scale(0.98);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-back {
+            background: white;
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
         @media (max-width: 480px) {
-            :root {
-                --spacing-lg: 14px;
-                --spacing-xl: 18px;
-                --spacing-2xl: 22px;
+            .step-content {
+                padding: 16px 12px 100px;
             }
 
-            .step-title {
-                font-size: 20px;
+            .color-picker-container {
+                width: 160px;
+                height: 160px;
             }
 
             .templates-grid {
@@ -1062,22 +1368,16 @@
             .template-card.large {
                 grid-column: span 1;
             }
-
-            .editor-actions {
-                grid-template-columns: 1fr;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- شاشة التحميل -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
         <div class="loading-text" id="loadingText">جاري المعالجة...</div>
         <div class="loading-subtext" id="loadingSubtext"></div>
     </div>
 
-    <!-- نافذة معاينة القالب -->
     <div class="template-preview-modal" id="templatePreviewModal">
         <div class="preview-content">
             <div class="preview-header">
@@ -1113,8 +1413,7 @@
         </div>
     </div>
 
-    <!-- شريط التقدم -->
-    <div class="progress-wrapper" id="progressWrapper">
+    <div class="progress-wrapper">
         <div class="progress-steps">
             <div class="progress-line">
                 <div class="progress-line-fill" id="progressLineFill"></div>
@@ -1146,21 +1445,16 @@
         </div>
     </div>
 
-    <!-- الحاوية الرئيسية -->
     <div class="container">
-        <!-- الخطوة 1: التصحيح -->
         <div class="step-content active" data-step="1">
             <div class="step-header">
                 <div class="step-title">
-                    <span class="step-title-emoji">✍️</span>
-                    <span>تصحيح النص بالذكاء الاصطناعي</span>
+                    <span>✍️</span>
+                    <span>تصحيح النص</span>
                 </div>
-                <div class="step-description">
-                    استمع للمقطع الصوتي وصحح النص المفرغ باستخدام أدوات الذكاء الاصطناعي المتقدمة
-                </div>
+                <div class="step-description">استمع للمقطع الصوتي وصحح النص المفرغ</div>
             </div>
 
-            <!-- مشغل الصوت -->
             <div class="audio-player-section">
                 <div class="audio-player">
                     <audio id="audioElement" style="display: none;"></audio>
@@ -1188,12 +1482,11 @@
                 </div>
             </div>
 
-            <!-- صندوق التصحيح بالذكاء الاصطناعي -->
             <div class="ai-correction-box" id="aiCorrectionBox">
                 <div class="ai-correction-header">
                     <div class="ai-correction-title">
                         <span>✨</span>
-                        <span>النص المصحح بالذكاء الاصطناعي</span>
+                        <span>النص المصحح</span>
                     </div>
                     <button class="ai-correction-close" id="aiCorrectionClose">×</button>
                 </div>
@@ -1207,22 +1500,13 @@
                         <span>✏️</span>
                         <span id="aiChanges">0 تعديل</span>
                     </div>
-                    <div class="ai-stat">
-                        <span>🤖</span>
-                        <span>Gemini 2.0</span>
-                    </div>
                 </div>
                 <div class="ai-correction-actions">
-                    <button class="ai-action-btn accept" id="aiAcceptBtn">
-                        ✓ قبول التصحيحات
-                    </button>
-                    <button class="ai-action-btn reject" id="aiRejectBtn">
-                        ✗ رفض
-                    </button>
+                    <button class="ai-action-btn accept" id="aiAcceptBtn">✓ قبول</button>
+                    <button class="ai-action-btn reject" id="aiRejectBtn">✗ رفض</button>
                 </div>
             </div>
 
-            <!-- أزرار الإجراءات -->
             <div class="editor-actions">
                 <button class="action-btn ai-btn" id="aiBtn">
                     <span>✨</span>
@@ -1230,7 +1514,7 @@
                 </button>
                 <button class="action-btn" id="copyBtn">
                     <span>📄</span>
-                    <span>نسخ النص</span>
+                    <span>نسخ</span>
                 </button>
                 <button class="action-btn" id="pasteBtn">
                     <span>📥</span>
@@ -1238,21 +1522,16 @@
                 </button>
                 <button class="action-btn" id="clearBtn">
                     <span>🗑️</span>
-                    <span>مسح الكل</span>
+                    <span>حذف</span>
                 </button>
             </div>
 
-            <!-- محرر النصوص -->
             <div class="editor-container">
                 <div class="editor-label">
                     <span>📝</span>
                     <span>النص المراد تصحيحه</span>
                 </div>
-                <textarea 
-                    class="editor-textarea" 
-                    id="textEditor"
-                    placeholder="جاري تحميل النص من الخادم..."
-                ></textarea>
+                <textarea class="editor-textarea" id="textEditor" placeholder="جاري تحميل النص..."></textarea>
                 <div class="editor-stats">
                     <div class="stat-item">
                         <span>📊</span>
@@ -1268,58 +1547,46 @@
             </div>
         </div>
 
-<!-- 🔵 نهاية الجزء الأول - يتبع في الجزء الثاني... -->
-
-                <!-- الخطوة 2: اختيار القالب واللون -->
         <div class="step-content" data-step="2">
             <div class="step-header">
                 <div class="step-title">
-                    <span class="step-title-emoji">🎨</span>
-                    <span>اختر القالب والتصميم المناسب</span>
+                    <span>🎨</span>
+                    <span>اختر القالب واللون</span>
                 </div>
-                <div class="step-description">
-                    اختر القالب الذي يناسب محتواك ثم حدد اللون المفضل لديك
-                </div>
+                <div class="step-description">اختر القالب المناسب ثم اختر اللون</div>
             </div>
-
             <div class="section-title">
                 <span>📐</span>
                 <span>القوالب المتاحة</span>
             </div>
             <div class="templates-grid" id="templatesGrid"></div>
-
             <div class="colors-section" id="colorsSection" style="display: none;">
                 <div class="section-title">
                     <span>🎨</span>
-                    <span>اختر اللون المناسب</span>
+                    <span>اختر اللون</span>
                 </div>
                 <div class="colors-grid" id="colorsGrid"></div>
             </div>
         </div>
 
-        <!-- الخطوة 3: لون السلسلة -->
         <div class="step-content" data-step="3">
             <div class="step-header">
                 <div class="step-title">
-                    <span class="step-title-emoji">🎨</span>
+                    <span>🎨</span>
                     <span>لون السلسلة الرئيسية</span>
                 </div>
-                <div class="step-description">
-                    اختر اللون المثالي لاسم السلسلة الرئيسية في التصميم
-                </div>
+                <div class="step-description">اختر اللون المناسب لاسم السلسلة</div>
             </div>
 
             <div class="series-color-preview">
-                <div class="preview-text" id="seriesPreviewText">
-                    السلسلة الرئيسية
-                </div>
-                <div class="preview-hint">معاينة حية للون المختار</div>
+                <div class="preview-text" id="seriesPreviewText">السلسلة الرئيسية</div>
+                <div class="preview-hint">معاينة اللون المختار</div>
             </div>
 
             <div class="recommended-color-section">
                 <div class="section-title">
                     <span>⭐</span>
-                    <span>اللون الموصى به من التصميم</span>
+                    <span>اللون الموصى به</span>
                 </div>
                 <button class="recommended-color-btn selected" id="recommendedColorBtn">
                     <div class="recommended-color-info">
@@ -1327,8 +1594,8 @@
                         <div class="recommended-color-preview" id="recommendedColorPreview"></div>
                     </div>
                     <div class="recommended-color-text">
-                        <div class="recommended-color-title">اللون المناسب للتصميم</div>
-                        <div class="recommended-color-subtitle">محدد تلقائياً من القالب</div>
+                        <div class="recommended-color-title">اللون المناسب</div>
+                        <div class="recommended-color-subtitle">محدد تلقائياً</div>
                     </div>
                     <div class="template-check">✓</div>
                 </button>
@@ -1345,96 +1612,80 @@
                     </div>
                     <div class="hex-input-wrapper">
                         <div class="hex-preview" id="hexPreview"></div>
-                        <input 
-                            type="text" 
-                            class="hex-input" 
-                            id="hexInput"
-                            placeholder="#000000"
-                            maxlength="7"
-                        >
+                        <input type="text" class="hex-input" id="hexInput" placeholder="#000000" maxlength="7">
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- الخطوة 4: البيانات -->
         <div class="step-content" data-step="4">
             <div class="step-header">
                 <div class="step-title">
-                    <span class="step-title-emoji">📝</span>
-                    <span>معلومات الفيديو والسلاسل</span>
+                    <span>📝</span>
+                    <span>معلومات الفيديو</span>
                 </div>
-                <div class="step-description">
-                    أدخل العنوان والسلاسل الرئيسية والفرعية الخاصة بالمحتوى
-                </div>
+                <div class="step-description">أدخل العنوان والسلاسل الخاصة بالفيديو</div>
             </div>
-
             <div class="form-group">
                 <label class="form-label">
                     <span>✏️</span>
-                    <span>اسم الدرس أو العنوان الرئيسي</span>
+                    <span>اسم الدرس</span>
                 </label>
-                <input type="text" class="form-input" id="titleInput" placeholder="مثال: قصة نجاح ملهمة" maxlength="50">
-                <div class="form-hint">💡 الأفضل: 3 كلمات أو أقل لعرض أوضح</div>
+                <input type="text" class="form-input" id="titleInput" placeholder="مثال: قصة نجاح" maxlength="50">
+                <div class="form-hint">الأفضل: 3 كلمات أو أقل</div>
                 <div class="char-counter"><span id="titleCount">0</span> / 50</div>
             </div>
-
             <div class="form-group">
                 <label class="form-label">
                     <span>📚</span>
                     <span>السلسلة الرئيسية</span>
                 </label>
-                <input type="text" class="form-input" id="mainSeriesInput" placeholder="مثال: قصص ملهمة للنجاح" maxlength="50">
-                <div class="form-hint">💡 الأفضل: 4 كلمات أو أقل</div>
+                <input type="text" class="form-input" id="mainSeriesInput" placeholder="مثال: قصص ملهمة" maxlength="50">
+                <div class="form-hint">الأفضل: 4 كلمات أو أقل</div>
                 <div class="char-counter"><span id="mainSeriesCount">0</span> / 50</div>
             </div>
-
             <div class="form-group">
                 <label class="form-label">
                     <span>🔖</span>
                     <span>السلسلة الفرعية</span>
                 </label>
                 <input type="text" class="form-input" id="subSeriesInput" placeholder="مثال: قصص رواد الأعمال" maxlength="50">
-                <div class="form-hint">💡 الأفضل: 4 كلمات أو أقل</div>
+                <div class="form-hint">الأفضل: 4 كلمات أو أقل</div>
                 <div class="char-counter"><span id="subSeriesCount">0</span> / 50</div>
             </div>
-
             <div class="form-group">
                 <label class="form-label">
                     <span>🎯</span>
-                    <span>اسم المخطط أو التصنيف النهائي</span>
+                    <span>اسم المخطط</span>
                 </label>
                 <input type="text" class="form-input" id="finalSeriesInput" placeholder="مثال: الجزء الأول" maxlength="50">
-                <div class="form-hint">💡 الأفضل: 3 كلمات أو أقل</div>
+                <div class="form-hint">الأفضل: 3 كلمات أو أقل</div>
                 <div class="char-counter"><span id="finalSeriesCount">0</span> / 50</div>
             </div>
         </div>
 
-        <!-- الخطوة 5: SEO -->
         <div class="step-content" data-step="5">
             <div class="step-header">
                 <div class="step-title">
-                    <span class="step-title-emoji">🔍</span>
-                    <span>تحسين محركات البحث SEO</span>
+                    <span>🔍</span>
+                    <span>تحسين SEO</span>
                 </div>
-                <div class="step-description">
-                    إنشاء عنوان ووصف وكلمات مفتاحية احترافية لزيادة الانتشار
-                </div>
+                <div class="step-description">إنشاء عنوان ووصف احترافي</div>
             </div>
 
             <button class="seo-generate-btn" id="seoGenerateBtn">
                 <span>✨</span>
-                <span>إنشاء SEO احترافي بالذكاء الاصطناعي</span>
+                <span>إنشاء SEO تلقائياً</span>
             </button>
 
             <div class="seo-section">
                 <div class="seo-section-title">
                     <span>📌</span>
-                    <span>عنوان الفيديو (SEO Title)</span>
+                    <span>عنوان الفيديو</span>
                 </div>
                 <div class="form-group">
-                    <textarea class="form-textarea" id="seoTitleInput" placeholder="سيتم إنشاؤه تلقائياً بالذكاء الاصطناعي..." rows="2" style="min-height: 70px;"></textarea>
-                    <div class="form-hint">💡 الأفضل: 60-70 حرف لأفضل ظهور في نتائج البحث</div>
+                    <textarea class="form-textarea" id="seoTitleInput" placeholder="سيتم إنشاؤه تلقائياً..." rows="2" style="min-height: 60px;"></textarea>
+                    <div class="form-hint">الأفضل: 60-70 حرف</div>
                     <div class="char-counter"><span id="seoTitleCount">0</span> / 100</div>
                 </div>
             </div>
@@ -1442,11 +1693,11 @@
             <div class="seo-section">
                 <div class="seo-section-title">
                     <span>📝</span>
-                    <span>وصف الفيديو (Description)</span>
+                    <span>وصف الفيديو</span>
                 </div>
                 <div class="form-group">
-                    <textarea class="form-textarea" id="seoDescriptionInput" placeholder="سيتم إنشاء وصف شامل واحترافي تلقائياً..." style="min-height: 200px;"></textarea>
-                    <div class="form-hint">💡 يتضمن: وصف احترافي + النص الثابت + روابط التواصل</div>
+                    <textarea class="form-textarea" id="seoDescriptionInput" placeholder="سيتم إنشاؤه تلقائياً..." style="min-height: 180px;"></textarea>
+                    <div class="form-hint">وصف احترافي شامل</div>
                     <div class="char-counter"><span id="seoDescCount">0</span> / 5000</div>
                 </div>
             </div>
@@ -1454,10 +1705,10 @@
             <div class="seo-section">
                 <div class="seo-section-title">
                     <span>🏷️</span>
-                    <span>الكلمات المفتاحية (Tags)</span>
+                    <span>الكلمات المفتاحية</span>
                 </div>
                 <div class="tags-container" id="tagsContainer">
-                    <div style="color: var(--text-secondary); font-size: 13px;">⏳ سيتم إنشاء الكلمات المفتاحية تلقائياً...</div>
+                    <div style="color: var(--text-secondary); font-size: 12px;">سيتم إنشاؤها تلقائياً...</div>
                 </div>
                 <div class="seo-stats" id="seoStats" style="display: none;">
                     <div class="seo-stat-item">
@@ -1480,18 +1731,14 @@
             </div>
         </div>
 
-        <!-- الخطوة 6: المراجعة -->
         <div class="step-content" data-step="6">
             <div class="step-header">
                 <div class="step-title">
-                    <span class="step-title-emoji">✅</span>
-                    <span>المراجعة النهائية والإرسال</span>
+                    <span>✅</span>
+                    <span>المراجعة النهائية</span>
                 </div>
-                <div class="step-description">
-                    راجع جميع البيانات بعناية قبل الإرسال النهائي للنظام
-                </div>
+                <div class="step-description">راجع جميع البيانات قبل الإرسال</div>
             </div>
-
             <div class="review-section">
                 <div class="review-section-title">
                     <span>✍️</span>
@@ -1510,11 +1757,10 @@
                     <span class="review-value" id="reviewAiChanges">-</span>
                 </div>
             </div>
-
             <div class="review-section">
                 <div class="review-section-title">
                     <span>🎨</span>
-                    <span>التصميم المختار</span>
+                    <span>التصميم</span>
                 </div>
                 <div class="review-item">
                     <span class="review-label">القالب:</span>
@@ -1529,11 +1775,10 @@
                     <span class="review-value" id="reviewSeriesColor">-</span>
                 </div>
             </div>
-
             <div class="review-section">
                 <div class="review-section-title">
                     <span>📝</span>
-                    <span>البيانات والسلاسل</span>
+                    <span>البيانات</span>
                 </div>
                 <div class="review-item">
                     <span class="review-label">اسم الدرس:</span>
@@ -1552,11 +1797,10 @@
                     <span class="review-value" id="reviewFinalSeries">-</span>
                 </div>
             </div>
-
             <div class="review-section">
                 <div class="review-section-title">
                     <span>🔍</span>
-                    <span>تحسين محركات البحث SEO</span>
+                    <span>SEO</span>
                 </div>
                 <div class="review-item">
                     <span class="review-label">العنوان:</span>
@@ -1588,8 +1832,7 @@
         </div>
     </div>
 
-    <!-- أزرار التنقل -->
-    <div class="nav-buttons" id="navButtons">
+    <div class="nav-buttons">
         <button class="nav-btn btn-back" id="btnBack" style="display: none;">
             <span>←</span>
             <span>السابق</span>
@@ -1600,137 +1843,34 @@
         </button>
     </div>
 
-    <!-- تحميل Config.js -->
     <script src="config.js"></script>
-
-    <!-- JavaScript الرئيسي -->
     <script>
-        // ==================== التهيئة الأساسية ====================
-        console.log('🚀 بدء تحميل التطبيق...');
-        console.log('📦 CONFIG:', CONFIG);
-        console.log('🤖 AI Model:', CONFIG.AI.MODEL);
-
         const tg = window.Telegram.WebApp;
         tg.expand();
-        
-        // تفعيل تأكيد الإغلاق
-        if (tg.version >= 6.2) {
-            try {
-                tg.enableClosingConfirmation();
-                console.log('✅ تم تفعيل تأكيد الإغلاق');
-            } catch (e) {
-                console.warn('⚠️ لم يتم تفعيل تأكيد الإغلاق:', e);
-            }
-        }
+        if (tg.version >= 6.2) { try { tg.enableClosingConfirmation(); } catch (e) {} }
 
         const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor';
 
-        // ==================== بيانات القوالب من Google Drive ====================
         const TEMPLATES_DATA = [
-            { 
-                id: 1, 
-                name: "القالب 1", 
-                colors: [
-                    { id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1OhcXo9hpCBbVK8rtX68s91PWm3ufspQ8", portrait_image: "https://drive.google.com/uc?export=download&id=15PLpIMuEx4_WffgVlaEueXseDCfZyfto", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" },
-                    { id: 2, name: "green", landscape_image: "https://drive.google.com/uc?export=download&id=1Vh8X4SWAMl65_V8RGrIO6KOb_V11AhR2", portrait_image: "https://drive.google.com/uc?export=download&id=1lZxBToJj2AL5HIl3Ee5f_Yh9h8nvP5c7", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" },
-                    { id: 3, name: "brown", landscape_image: "https://drive.google.com/uc?export=download&id=1kUHbWAGz9h2IVrlceS1mfVyqktotK-NE", portrait_image: "https://drive.google.com/uc?export=download&id=15kfP0R0TZbkezlC9jHg8PdIFUgVxY9Tf", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" },
-                    { id: 4, name: "purple", landscape_image: "https://drive.google.com/uc?export=download&id=1m6ftwpbUpDRYylxYHGjuSFkU6nSRFanU", portrait_image: "https://drive.google.com/uc?export=download&id=1-Fgs9gCA9zckJXznBE3AGgVJzZndBIjv", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" },
-                    { id: 5, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1SqZH4ei3Difj1pjxwasdfPFoL600WThr", portrait_image: "https://drive.google.com/uc?export=download&id=1ktVYgv8-0VrlShjcNIG3DEbSoAQZYc-3", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }
-                ]
-            },
-            { 
-                id: 2, 
-                name: "القالب 2", 
-                colors: [
-                    { id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1cSldR1_6W_r_h4j1oIgNER2vn42hUjkY", portrait_image: "https://drive.google.com/uc?export=download&id=141zHAG5VS6PamqL_LYDVLzfzcNGGkDng", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" },
-                    { id: 2, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1Mid30-PS57fhJuWPutfb6jwR1QMjKRUr", portrait_image: "https://drive.google.com/uc?export=download&id=1Bgz9T0a5Ynu-8JMleGGwh3t-nM8L0XSD", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }
-                ]
-            },
-            { 
-                id: 3, 
-                name: "القالب 3", 
-                colors: [
-                    { id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1sstL2nz3LqTFQH18oQuWOxJOxS2VPJYw", portrait_image: "https://drive.google.com/uc?export=download&id=1UQ9FW34vaf7Z7uFHNZ_6pPdSjEOuKVvp", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" },
-                    { id: 2, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1MtsjLM0PtSA2YPKfddWnTKm2Lk4KIdTj", portrait_image: "https://drive.google.com/uc?export=download&id=1Odqc8g6KdeyjjYm1KeLytCpuRyywvbMt", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" },
-                    { id: 3, name: "orange", landscape_image: "https://drive.google.com/uc?export=download&id=1dvJc-xLL_qn6OAcCNBrjnKNWAc3GeqZH", portrait_image: "https://drive.google.com/uc?export=download&id=18fUeGxUEt_sjrazS3yI3IBEd3srAm-jc", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" },
-                    { id: 4, name: "green", landscape_image: "https://drive.google.com/uc?export=download&id=1X-kuR8BC5qGfiVx-VBaQHlH8PUGlp5wh", portrait_image: "https://drive.google.com/uc?export=download&id=1hWbIdGsFA9Zs8fjYb83ugnyd07f8l-kn", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" },
-                    { id: 5, name: "purple", landscape_image: "https://drive.google.com/uc?export=download&id=1BgPDdNGiFKyXH809kTCLLu2HTBBY3i3s", portrait_image: "https://drive.google.com/uc?export=download&id=1hCWKWdPdLQoT3qbfHKqeJfd2MV36VT88", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }
-                ]
-            },
-            { 
-                id: 4, 
-                name: "القالب 4", 
-                colors: [
-                    { id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1YHPD-fKvHgWLxqMc_JMgDDEHbyLcy_qb", portrait_image: "https://drive.google.com/uc?export=download&id=1Jp4S29FlR4X8tqv5Bm3grU7if7DElKmF", series_color: "#ff9e00", subseries_color: "#9fde14", finalseries_color: "#fcf84e", title_color: "#ffffff", caption_color: "#ffffff" },
-                    { id: 2, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=14op-KfFzrLCti5sBypv3ES7SiJg6N9E-", portrait_image: "https://drive.google.com/uc?export=download&id=1ofbaUyVMGcWEa32AYSZeBqcfNRQKMOnA", series_color: "#ff9e00", subseries_color: "#9fde14", finalseries_color: "#fcf84e", title_color: "#ffffff", caption_color: "#ffffff" },
-                    { id: 3, name: "orange", landscape_image: "https://drive.google.com/uc?export=download&id=1sHbD022NaSlq1v_kEirSnr2rEGMGTqEx", portrait_image: "https://drive.google.com/uc?export=download&id=1Jp4S29FlR4X8tqv5Bm3grU7if7DElKmF", series_color: "#ff9e00", subseries_color: "#9fde14", finalseries_color: "#fcf84e", title_color: "#ffffff", caption_color: "#ffffff" }
-                ]
-            },
-            { 
-                id: 5, 
-                name: "القالب 5", 
-                colors: [
-                    { id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1L6Pj1_rSGggYZ7fv4RE91CA22VUot0Vg", portrait_image: "https://drive.google.com/uc?export=download&id=1oGS1mSCnu-GK_3u_J4pUqsEO4HLpiRq8", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" },
-                    { id: 2, name: "green", landscape_image: "https://drive.google.com/uc?export=download&id=1X46qV4OGD9KFG2ipuW5f9bhlu8VBgdsh", portrait_image: "https://drive.google.com/uc?export=download&id=1OtZamDZVM0VfGf9NRsTdAGfjo_TtLRv6", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" },
-                    { id: 3, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1UoSQaam5toVGwUK61EhKqRg_VRwe_gtf", portrait_image: "https://drive.google.com/uc?export=download&id=1dhQN1cFe9PeLAJtz3xANxutDS4_DTCox", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" },
-                    { id: 4, name: "orange", landscape_image: "https://drive.google.com/uc?export=download&id=143tkdil0_varINJ0v14RSVvE0xt-zji9", portrait_image: "https://drive.google.com/uc?export=download&id=1pg-vB9TOU48qeiQv2XjRzlMEH3dPWp9V", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" },
-                    { id: 5, name: "brown", landscape_image: "https://drive.google.com/uc?export=download&id=1r5IBlbNJet1Ocl0txcz_Z0JQjiv4aJHo", portrait_image: "https://drive.google.com/uc?export=download&id=1ZN9kR3a9ojGBVBMsZc-Fa6r4NiHnISGC", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }
-                ]
-            }
+            { id: 1, name: "القالب 1", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1OhcXo9hpCBbVK8rtX68s91PWm3ufspQ8", portrait_image: "https://drive.google.com/uc?export=download&id=15PLpIMuEx4_WffgVlaEueXseDCfZyfto", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "green", landscape_image: "https://drive.google.com/uc?export=download&id=1Vh8X4SWAMl65_V8RGrIO6KOb_V11AhR2", portrait_image: "https://drive.google.com/uc?export=download&id=1lZxBToJj2AL5HIl3Ee5f_Yh9h8nvP5c7", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 3, name: "brown", landscape_image: "https://drive.google.com/uc?export=download&id=1kUHbWAGz9h2IVrlceS1mfVyqktotK-NE", portrait_image: "https://drive.google.com/uc?export=download&id=15kfP0R0TZbkezlC9jHg8PdIFUgVxY9Tf", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 4, name: "purple", landscape_image: "https://drive.google.com/uc?export=download&id=1m6ftwpbUpDRYylxYHGjuSFkU6nSRFanU", portrait_image: "https://drive.google.com/uc?export=download&id=1-Fgs9gCA9zckJXznBE3AGgVJzZndBIjv", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 5, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1SqZH4ei3Difj1pjxwasdfPFoL600WThr", portrait_image: "https://drive.google.com/uc?export=download&id=1ktVYgv8-0VrlShjcNIG3DEbSoAQZYc-3", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }] },
+            { id: 2, name: "القالب 2", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1cSldR1_6W_r_h4j1oIgNER2vn42hUjkY", portrait_image: "https://drive.google.com/uc?export=download&id=141zHAG5VS6PamqL_LYDVLzfzcNGGkDng", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1Mid30-PS57fhJuWPutfb6jwR1QMjKRUr", portrait_image: "https://drive.google.com/uc?export=download&id=1Bgz9T0a5Ynu-8JMleGGwh3t-nM8L0XSD", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }] },
+            { id: 3, name: "القالب 3", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1sstL2nz3LqTFQH18oQuWOxJOxS2VPJYw", portrait_image: "https://drive.google.com/uc?export=download&id=1UQ9FW34vaf7Z7uFHNZ_6pPdSjEOuKVvp", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1MtsjLM0PtSA2YPKfddWnTKm2Lk4KIdTj", portrait_image: "https://drive.google.com/uc?export=download&id=1Odqc8g6KdeyjjYm1KeLytCpuRyywvbMt", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 3, name: "orange", landscape_image: "https://drive.google.com/uc?export=download&id=1dvJc-xLL_qn6OAcCNBrjnKNWAc3GeqZH", portrait_image: "https://drive.google.com/uc?export=download&id=18fUeGxUEt_sjrazS3yI3IBEd3srAm-jc", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 4, name: "green", landscape_image: "https://drive.google.com/uc?export=download&id=1X-kuR8BC5qGfiVx-VBaQHlH8PUGlp5wh", portrait_image: "https://drive.google.com/uc?export=download&id=1hWbIdGsFA9Zs8fjYb83ugnyd07f8l-kn", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 5, name: "purple", landscape_image: "https://drive.google.com/uc?export=download&id=1BgPDdNGiFKyXH809kTCLLu2HTBBY3i3s", portrait_image: "https://drive.google.com/uc?export=download&id=1hCWKWdPdLQoT3qbfHKqeJfd2MV36VT88", series_color: "#b9d780", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }] },
+            { id: 4, name: "القالب 4", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1YHPD-fKvHgWLxqMc_JMgDDEHbyLcy_qb", portrait_image: "https://drive.google.com/uc?export=download&id=1Jp4S29FlR4X8tqv5Bm3grU7if7DElKmF", series_color: "#ff9e00", subseries_color: "#9fde14", finalseries_color: "#fcf84e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=14op-KfFzrLCti5sBypv3ES7SiJg6N9E-", portrait_image: "https://drive.google.com/uc?export=download&id=1ofbaUyVMGcWEa32AYSZeBqcfNRQKMOnA", series_color: "#ff9e00", subseries_color: "#9fde14", finalseries_color: "#fcf84e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 3, name: "orange", landscape_image: "https://drive.google.com/uc?export=download&id=1sHbD022NaSlq1v_kEirSnr2rEGMGTqEx", portrait_image: "https://drive.google.com/uc?export=download&id=1Jp4S29FlR4X8tqv5Bm3grU7if7DElKmF", series_color: "#ff9e00", subseries_color: "#9fde14", finalseries_color: "#fcf84e", title_color: "#ffffff", caption_color: "#ffffff" }] },
+            { id: 5, name: "القالب 5", colors: [{ id: 1, name: "original", landscape_image: "https://drive.google.com/uc?export=download&id=1L6Pj1_rSGggYZ7fv4RE91CA22VUot0Vg", portrait_image: "https://drive.google.com/uc?export=download&id=1oGS1mSCnu-GK_3u_J4pUqsEO4HLpiRq8", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 2, name: "green", landscape_image: "https://drive.google.com/uc?export=download&id=1X46qV4OGD9KFG2ipuW5f9bhlu8VBgdsh", portrait_image: "https://drive.google.com/uc?export=download&id=1OtZamDZVM0VfGf9NRsTdAGfjo_TtLRv6", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 3, name: "blue", landscape_image: "https://drive.google.com/uc?export=download&id=1UoSQaam5toVGwUK61EhKqRg_VRwe_gtf", portrait_image: "https://drive.google.com/uc?export=download&id=1dhQN1cFe9PeLAJtz3xANxutDS4_DTCox", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 4, name: "orange", landscape_image: "https://drive.google.com/uc?export=download&id=143tkdil0_varINJ0v14RSVvE0xt-zji9", portrait_image: "https://drive.google.com/uc?export=download&id=1pg-vB9TOU48qeiQv2XjRzlMEH3dPWp9V", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }, { id: 5, name: "brown", landscape_image: "https://drive.google.com/uc?export=download&id=1r5IBlbNJet1Ocl0txcz_Z0JQjiv4aJHo", portrait_image: "https://drive.google.com/uc?export=download&id=1ZN9kR3a9ojGBVBMsZc-Fa6r4NiHnISGC", series_color: "#ffffff", subseries_color: "#ebbd27", finalseries_color: "#fce74e", title_color: "#ffffff", caption_color: "#ffffff" }] }
         ];
 
-        // ==================== المتغيرات العامة ====================
-        let currentStep = 1;
-        const totalSteps = 6;
-        let selectedTemplate = null;
-        let selectedColor = null;
-        let aiCorrectedText = '';
-        let aiChangesCount = 0;
-        let lastAIRequestTime = 0;
+        let currentStep = 1, totalSteps = 6, selectedTemplate = null, selectedColor = null, aiCorrectedText = '', aiChangesCount = 0, lastAIRequestTime = 0;
         const AI_REQUEST_COOLDOWN = 10000;
 
-        // بيانات النموذج
         const formData = {
-            ID: null,
-            Google_DriveID: null,
-            user_id: '',
-            audio_file_id: '',
-            audio_file_name: '',
-            audio_time: 0,
-            audioUrl: '',
-            Transcript: [],
-            'Transcript Corrected': [],
-            transcript_txt: '',
-            corrected_full_text: '',
-            landscape_image_url: null,
-            portrait_image_url: null,
-            title: '',
-            series: '',
-            subSeries: '',
-            finalSeries: '',
-            status: 'in_progress',
-            CurrentStep: 1,
-            Video_Id: null,
-            caption: null,
-            created_at: null,
-            updated_at: new Date().toISOString(),
-            description: null,
-            tags: [],
-            template_id: null,
-            template_name: null,
-            color_id: null,
-            color_name: null,
-            series_color: '#b9d780',
-            subseries_color: '#ebbd27',
-            finalseries_color: '#fce74e',
-            title_color: '#ffffff',
-            caption_color: '#ffffff',
-            seo_title: '',
-            seo_description: '',
-            ai_model: CONFIG.AI.MODEL
+            ID: null, user_id: '', audio_file_id: '', audioUrl: '', Transcript: [], transcript_txt: '', corrected_full_text: '',
+            landscape_image_url: null, portrait_image_url: null, title: '', series: '', subSeries: '', finalSeries: '',
+            status: 'in_progress', CurrentStep: 1, created_at: null, updated_at: new Date().toISOString(),
+            tags: [], template_id: null, template_name: null, color_id: null, color_name: null,
+            series_color: '#b9d780', subseries_color: '#ebbd27', finalseries_color: '#fce74e',
+            title_color: '#ffffff', caption_color: '#ffffff', seo_title: '', seo_description: ''
         };
 
-        // ==================== عناصر DOM ====================
         const audioElement = document.getElementById('audioElement');
         const textEditor = document.getElementById('textEditor');
         const seoTitleInput = document.getElementById('seoTitleInput');
@@ -1743,8 +1883,6 @@
         const recommendedColorPreview = document.getElementById('recommendedColorPreview');
         const seriesPreviewText = document.getElementById('seriesPreviewText');
 
-        // ==================== دوال المساعدة ====================
-        
         function showLoading(text, subtext = '') {
             document.getElementById('loadingText').textContent = text;
             document.getElementById('loadingSubtext').textContent = subtext;
@@ -1757,21 +1895,16 @@
 
         function scrollToTop() {
             const activeStep = document.querySelector('.step-content.active');
-            if (activeStep) {
-                activeStep.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+            if (activeStep) activeStep.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         function convertDriveUrl(url) {
             try {
                 if (!url) return '';
                 const fileIdMatch = url.match(/[?&]id=([^&]+)/);
-                if (fileIdMatch && fileIdMatch[1]) {
-                    return `https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w1000`;
-                }
+                if (fileIdMatch && fileIdMatch[1]) return `https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w1000`;
                 return url;
             } catch (error) {
-                console.error('Error converting drive URL:', error);
                 return url;
             }
         }
@@ -1783,30 +1916,18 @@
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
 
-        // ==================== تحميل البيانات الأولية ====================
         async function loadInitialData() {
             try {
-                showLoading('⏳ جاري تحميل البيانات...', 'الرجاء الانتظار قليلاً');
-                
+                showLoading('جاري تحميل البيانات...', 'الرجاء الانتظار');
                 const binId = new URLSearchParams(window.location.search).get('bin');
-                if (!binId) {
-                    throw new Error('لم يتم العثور على معرف البيانات');
-                }
+                if (!binId) throw new Error('لم يتم العثور على معرف البيانات');
 
-                console.log('📥 جاري تحميل البيانات من:', `${CONFIG.BACKEND.BASE_URL}${CONFIG.BACKEND.ENDPOINTS.GET_BIN}/${binId}`);
-                
                 const response = await fetch(`${CONFIG.BACKEND.BASE_URL}${CONFIG.BACKEND.ENDPOINTS.GET_BIN}/${binId}`);
-                
-                if (!response.ok) {
-                    throw new Error(`فشل تحميل البيانات: ${response.status}`);
-                }
+                if (!response.ok) throw new Error('فشل تحميل البيانات');
 
                 const responseData = await response.json();
                 const loadedData = responseData.record || responseData.data || responseData;
 
-                console.log('✅ تم تحميل البيانات بنجاح:', loadedData);
-
-                // ملء بيانات النموذج
                 formData.ID = loadedData.id || loadedData.ID;
                 formData.user_id = loadedData.user_id || '';
                 formData.audio_file_id = loadedData.audio_file_id || '';
@@ -1815,72 +1936,51 @@
                 formData.transcript_txt = loadedData.text || loadedData.transcript_txt || '';
                 formData.created_at = loadedData.timestamp || loadedData.created_at || new Date().toISOString();
 
-                // تحميل الصوت
-                if (formData.audioUrl) {
-                    audioElement.src = formData.audioUrl;
-                    console.log('🎵 تم تحميل ملف الصوت');
-                }
+                if (formData.audioUrl) audioElement.src = formData.audioUrl;
 
-                // تحميل النص في textarea
                 if (formData.transcript_txt) {
                     setTimeout(() => {
                         textEditor.value = formData.transcript_txt;
                         formData.corrected_full_text = formData.transcript_txt;
                         updateTextStats();
                         validateCurrentStep();
-                        console.log('📝 تم تحميل النص:', formData.transcript_txt.substring(0, 50) + '...');
-                    }, 150);
+                    }, 100);
                 }
 
                 hideLoading();
             } catch (error) {
                 hideLoading();
-                console.error('❌ خطأ في تحميل البيانات:', error);
-                alert('❌ خطأ: ' + (error.message || 'حدث خطأ في تحميل البيانات'));
+                alert('❌ خطأ: ' + (error.message || 'حدث خطأ'));
             }
         }
 
-        // ==================== تحديث إحصائيات النص ====================
         function updateTextStats() {
             const text = textEditor.value || '';
             const charCount = text.length;
             const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
-
             document.getElementById('charCount').textContent = charCount.toLocaleString('ar');
             document.getElementById('wordCount').textContent = wordCount.toLocaleString('ar');
         }
 
-        // ==================== معالجات الخطوة 1: التصحيح ====================
-        
         textEditor.addEventListener('input', () => {
             formData.corrected_full_text = textEditor.value;
             updateTextStats();
             validateCurrentStep();
         });
 
-        // زر التصحيح بالذكاء الاصطناعي
         document.getElementById('aiBtn').addEventListener('click', async () => {
             const now = Date.now();
-            const timeLeft = AI_REQUEST_COOLDOWN - (now - lastAIRequestTime);
-
-            if (timeLeft > 0) {
-                const secondsLeft = Math.ceil(timeLeft / 1000);
-                alert(`⏰ الرجاء الانتظار ${secondsLeft} ثانية قبل المحاولة مرة أخرى`);
+            if (now - lastAIRequestTime < AI_REQUEST_COOLDOWN) {
+                alert(`⏰ الرجاء الانتظار ${Math.ceil((AI_REQUEST_COOLDOWN - (now - lastAIRequestTime)) / 1000)} ثانية`);
                 return;
             }
+            if (!textEditor.value.trim()) { alert('⚠️ لا يوجد نص للتصحيح'); return; }
 
-            if (!textEditor.value.trim()) {
-                alert('⚠️ الرجاء إدخال نص للتصحيح');
-                return;
-            }
-
-            showLoading('✨ جاري التصحيح بالذكاء الاصطناعي...', `باستخدام ${CONFIG.AI.MODEL}`);
+            showLoading('جاري التصحيح بالذكاء الاصطناعي...');
             lastAIRequestTime = now;
 
             try {
                 const originalText = textEditor.value;
-                console.log('🤖 إرسال طلب تصحيح AI:', originalText.substring(0, 50) + '...');
-
                 const response = await fetch(`${CONFIG.BACKEND.BASE_URL}${CONFIG.BACKEND.ENDPOINTS.AI_CORRECT}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1889,20 +1989,14 @@
 
                 if (response.status === 429) {
                     hideLoading();
-                    alert('⏰ تم تجاوز الحد المسموح من الطلبات. الرجاء الانتظار والمحاولة لاحقاً');
+                    alert('⏰ تم تجاوز الحد المسموح');
                     return;
                 }
-
-                if (!response.ok) {
-                    throw new Error(`فشل التصحيح: ${response.status}`);
-                }
+                if (!response.ok) throw new Error('فشل التصحيح');
 
                 const result = await response.json();
-                console.log('✅ نتيجة التصحيح:', result);
-
                 if (result.success && result.correctedText) {
                     aiCorrectedText = result.correctedText;
-                    
                     const correctedWords = aiCorrectedText.trim().split(/\s+/).length;
                     const correctedChars = aiCorrectedText.length;
                     const originalWords = originalText.trim().split(/\s+/).length;
@@ -1911,47 +2005,35 @@
                     aiChangesCount = Math.abs(correctedWords - originalWords) + Math.abs(correctedChars - originalChars);
 
                     document.getElementById('aiCorrectionText').textContent = aiCorrectedText;
-                    document.getElementById('aiWordCount').textContent = `${correctedWords.toLocaleString('ar')} كلمة`;
-                    document.getElementById('aiChanges').textContent = `${aiChangesCount.toLocaleString('ar')} تعديل`;
+                    document.getElementById('aiWordCount').textContent = `${correctedWords} كلمة`;
+                    document.getElementById('aiChanges').textContent = `${aiChangesCount} تعديل`;
                     document.getElementById('aiCorrectionBox').classList.add('visible');
-
                     hideLoading();
-                    console.log('✅ تم عرض التصحيحات بنجاح');
-                } else {
-                    throw new Error('لم يتم الحصول على نتيجة صحيحة');
                 }
             } catch (error) {
                 hideLoading();
-                console.error('❌ خطأ في التصحيح:', error);
-                alert('❌ حدث خطأ في التصحيح: ' + error.message);
+                alert('❌ ' + error.message);
             }
         });
 
-        // قبول التصحيحات
         document.getElementById('aiAcceptBtn').addEventListener('click', () => {
             textEditor.value = aiCorrectedText;
             formData.corrected_full_text = aiCorrectedText;
             updateTextStats();
             document.getElementById('aiCorrectionBox').classList.remove('visible');
-            console.log('✅ تم قبول التصحيحات');
         });
 
-        // رفض التصحيحات
         document.getElementById('aiRejectBtn').addEventListener('click', () => {
             document.getElementById('aiCorrectionBox').classList.remove('visible');
-            console.log('❌ تم رفض التصحيحات');
         });
 
-        // إغلاق صندوق التصحيحات
         document.getElementById('aiCorrectionClose').addEventListener('click', () => {
             document.getElementById('aiCorrectionBox').classList.remove('visible');
         });
 
-        // أزرار الإجراءات
         document.getElementById('copyBtn').addEventListener('click', async () => {
             try {
                 await navigator.clipboard.writeText(textEditor.value);
-                console.log('📋 تم نسخ النص');
             } catch (err) {
                 textEditor.select();
                 document.execCommand('copy');
@@ -1965,24 +2047,18 @@
                 formData.corrected_full_text = text;
                 updateTextStats();
                 validateCurrentStep();
-                console.log('📥 تم لصق النص');
-            } catch (err) {
-                console.error('خطأ في اللصق:', err);
-            }
+            } catch (err) {}
         });
 
         document.getElementById('clearBtn').addEventListener('click', () => {
-            if (textEditor.value.trim() && confirm('⚠️ هل أنت متأكد من حذف النص؟')) {
+            if (textEditor.value.trim() && confirm('هل تريد حذف النص؟')) {
                 textEditor.value = '';
                 formData.corrected_full_text = '';
                 updateTextStats();
                 validateCurrentStep();
-                console.log('🗑️ تم مسح النص');
             }
         });
 
-        // ==================== معالجات مشغل الصوت ====================
-        
         document.getElementById('playPauseBtn').addEventListener('click', () => {
             if (audioElement.paused) {
                 audioElement.play();
@@ -2005,97 +2081,58 @@
 
         document.getElementById('progressBar').addEventListener('click', (e) => {
             const rect = document.getElementById('progressBar').getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const percentage = clickX / rect.width;
-            audioElement.currentTime = percentage * audioElement.duration;
+            audioElement.currentTime = ((e.clientX - rect.left) / rect.width) * audioElement.duration;
         });
 
         document.querySelectorAll('.speed-btn').forEach(btn => {
             btn.addEventListener('click', () => {
-                const speed = parseFloat(btn.dataset.speed);
-                audioElement.playbackRate = speed;
+                audioElement.playbackRate = parseFloat(btn.dataset.speed);
                 document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
             });
         });
 
-        // سيتم إضافة باقي الوظائف في تعليق منفصل بسبب طول الكود...
-        
-        console.log('✅ تم تحميل معالجات الخطوة 1');
-
-        // ==================== معالجات الخطوة 2: القوالب ====================
-        
         function initializeTemplates() {
             const grid = document.getElementById('templatesGrid');
             grid.innerHTML = '';
-
             TEMPLATES_DATA.forEach((template, index) => {
                 const card = document.createElement('div');
                 card.className = 'template-card' + (template.id === 5 ? ' large' : '');
                 card.dataset.templateId = template.id;
-
-                const previewImage = convertDriveUrl(template.colors[0].landscape_image);
-
-                card.innerHTML = `
-                    <div class="template-preview" style="background-image: url('${previewImage}');">
-                        <div class="template-number">${index + 1}</div>
-                        <div class="template-check">✓</div>
-                    </div>
-                    <div class="template-name">${template.name}</div>
-                `;
-
+                card.innerHTML = `<div class="template-preview" style="background-image: url('${convertDriveUrl(template.colors[0].landscape_image)}');"><div class="template-number">${index + 1}</div><div class="template-check">✓</div></div><div class="template-name">${template.name}</div>`;
                 card.addEventListener('click', () => selectTemplate(template));
                 grid.appendChild(card);
             });
-
-            console.log('✅ تم تهيئة القوالب:', TEMPLATES_DATA.length);
         }
 
         function selectTemplate(template) {
             document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
-            const selectedCard = document.querySelector(`[data-template-id="${template.id}"]`);
-            if (selectedCard) {
-                selectedCard.classList.add('selected');
-            }
-
+            document.querySelector(`[data-template-id="${template.id}"]`).classList.add('selected');
             selectedTemplate = template;
             formData.template_id = template.id;
             formData.template_name = template.name;
-
             loadTemplateColors(template.colors);
             document.getElementById('colorsSection').style.display = 'block';
-
             validateCurrentStep();
-            console.log('✅ تم اختيار القالب:', template.name);
         }
 
         function loadTemplateColors(colors) {
             const grid = document.getElementById('colorsGrid');
             grid.innerHTML = '';
-
             colors.forEach(color => {
                 const option = document.createElement('div');
                 option.className = 'color-option';
                 option.dataset.colorId = color.id;
-
-                const colorImage = convertDriveUrl(color.landscape_image);
-                option.style.backgroundImage = `url('${colorImage}')`;
+                option.style.backgroundImage = `url('${convertDriveUrl(color.landscape_image)}')`;
                 option.innerHTML = '<div class="template-check">✓</div>';
-
                 option.addEventListener('click', () => selectColor(color));
                 grid.appendChild(option);
             });
-
-            console.log('✅ تم تحميل ألوان القالب:', colors.length);
         }
 
         function selectColor(color) {
             document.querySelectorAll('#colorsGrid .color-option').forEach(o => o.classList.remove('selected'));
-            const selectedOption = document.getElementById('colorsGrid').querySelector(`[data-color-id="${color.id}"]`);
-            if (selectedOption) {
-                selectedOption.classList.add('selected');
-            }
-
+            document.getElementById('colorsGrid').querySelector(`[data-color-id="${color.id}"]`).classList.add('selected');
             selectedColor = color;
             formData.color_id = color.id;
             formData.color_name = color.name;
@@ -2105,33 +2142,18 @@
             formData.subseries_color = color.subseries_color;
             formData.finalseries_color = color.finalseries_color;
 
-            // عرض المعاينة
             const landscapeImg = document.getElementById('landscapePreview');
             const portraitImg = document.getElementById('portraitPreview');
             const landscapeLoading = document.getElementById('landscapeLoading');
             const portraitLoading = document.getElementById('portraitLoading');
 
-            landscapeImg.classList.remove('loaded');
-            portraitImg.classList.remove('loaded');
-            landscapeLoading.classList.remove('hidden');
-            portraitLoading.classList.remove('hidden');
-
-            landscapeImg.onload = () => {
-                landscapeLoading.classList.add('hidden');
-                landscapeImg.classList.add('loaded');
-            };
-
-            portraitImg.onload = () => {
-                portraitLoading.classList.add('hidden');
-                portraitImg.classList.add('loaded');
-            };
+            landscapeImg.onload = () => { landscapeLoading.classList.add('hidden'); landscapeImg.classList.add('loaded'); };
+            portraitImg.onload = () => { portraitLoading.classList.add('hidden'); portraitImg.classList.add('loaded'); };
 
             landscapeImg.src = convertDriveUrl(color.landscape_image);
             portraitImg.src = convertDriveUrl(color.portrait_image);
-
             document.getElementById('templatePreviewModal').classList.add('visible');
             validateCurrentStep();
-            console.log('✅ تم اختيار اللون:', color.name);
         }
 
         document.getElementById('closePreview').addEventListener('click', () => {
@@ -2143,25 +2165,19 @@
             nextStep();
         });
 
-        // ==================== معالجات الخطوة 3: لون السلسلة ====================
-        
         function initializeSeriesColors() {
             if (!selectedColor) return;
-
             formData.series_color = selectedColor.series_color;
             seriesPreviewText.style.color = selectedColor.series_color;
             hexInput.value = selectedColor.series_color;
             hexPreview.style.background = selectedColor.series_color;
             recommendedColorPreview.style.background = selectedColor.series_color;
             colorPicker.value = selectedColor.series_color;
-
-            console.log('✅ تم تهيئة ألوان السلسلة:', selectedColor.series_color);
         }
 
         recommendedColorBtn.addEventListener('click', () => {
-            if (!selectedColor) return;
-
             recommendedColorBtn.classList.add('selected');
+            if (!selectedColor) return;
             formData.series_color = selectedColor.series_color;
             seriesPreviewText.style.color = selectedColor.series_color;
             hexInput.value = selectedColor.series_color;
@@ -2180,11 +2196,8 @@
 
         hexInput.addEventListener('input', (e) => {
             let value = e.target.value;
-            if (!value.startsWith('#')) {
-                value = '#' + value;
-            }
+            if (!value.startsWith('#')) value = '#' + value;
             value = value.substring(0, 7);
-
             if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
                 formData.series_color = value;
                 seriesPreviewText.style.color = value;
@@ -2192,16 +2205,13 @@
                 colorPicker.value = value;
                 recommendedColorBtn.classList.remove('selected');
             }
-
             e.target.value = value;
         });
 
-        // ==================== معالجات الخطوة 4: البيانات ====================
-        
-        function setupInput(inputElement, counterElement, formKey) {
-            inputElement.addEventListener('input', () => {
-                formData[formKey] = inputElement.value;
-                counterElement.textContent = inputElement.value.length;
+        function setupInput(input, countEl, formKey) {
+            input.addEventListener('input', () => {
+                formData[formKey] = input.value;
+                countEl.textContent = input.value.length;
                 validateCurrentStep();
             });
         }
@@ -2211,75 +2221,248 @@
         setupInput(document.getElementById('subSeriesInput'), document.getElementById('subSeriesCount'), 'subSeries');
         setupInput(document.getElementById('finalSeriesInput'), document.getElementById('finalSeriesCount'), 'finalSeries');
 
-        // ==================== معالجات الخطوة 5: SEO ====================
-        
         document.getElementById('seoGenerateBtn').addEventListener('click', async () => {
-            if (!formData.corrected_full_text.trim()) {
-                alert('⚠️ الرجاء إدخال نص أولاً في الخطوة الأولى');
-                return;
-            }
-
-            showLoading('✨ جاري إنشاء SEO احترافي...', `باستخدام ${CONFIG.AI.MODEL}`);
+            if (!formData.corrected_full_text.trim()) { alert('⚠️ لا يوجد نص'); return; }
+            showLoading('جاري إنشاء SEO احترافي...');
             document.getElementById('seoGenerateBtn').disabled = true;
 
             try {
-                console.log('🔍 إرسال طلب إنشاء SEO...');
-
                 const response = await fetch(`${CONFIG.BACKEND.BASE_URL}/generate-seo`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        text: formData.corrected_full_text,
-                        title: formData.title,
-                        series: formData.series,
-                        subSeries: formData.subSeries
-                    })
+                    body: JSON.stringify({ text: formData.corrected_full_text, title: formData.title, series: formData.series, subSeries: formData.subSeries })
                 });
 
                 if (response.status === 429) {
                     hideLoading();
                     document.getElementById('seoGenerateBtn').disabled = false;
-                    alert('⏰ تم تجاوز الحد المسموح من الطلبات');
+                    alert('⏰ تم تجاوز الحد المسموح');
                     return;
                 }
-
-                if (!response.ok) {
-                    throw new Error(`فشل إنشاء SEO: ${response.status}`);
-                }
+                if (!response.ok) throw new Error('فشل إنشاء SEO');
 
                 const result = await response.json();
-                console.log('✅ نتيجة SEO:', result);
-
                 if (result.success) {
                     formData.seo_title = result.title || '';
                     formData.seo_description = result.description || '';
                     formData.tags = result.tags || [];
-
                     seoTitleInput.value = formData.seo_title;
                     seoDescriptionInput.value = formData.seo_description;
-
                     updateSEOCounts();
                     renderTags();
-                    updateSEOStats();
-
                     hideLoading();
                     document.getElementById('seoGenerateBtn').disabled = false;
                     validateCurrentStep();
-                    
-                    console.log('✅ تم إنشاء SEO بنجاح');
-                } else {
-                    throw new Error('لم يتم الحصول على نتيجة صحيحة');
+                    updateSEOStats();
                 }
             } catch (error) {
                 hideLoading();
                 document.getElementById('seoGenerateBtn').disabled = false;
-                console.error('❌ خطأ في إنشاء SEO:', error);
-                alert('❌ حدث خطأ في إنشاء SEO: ' + error.message);
+                alert('❌ ' + error.message);
             }
         });
 
         function renderTags() {
             tagsContainer.innerHTML = '';
-
             if (!formData.tags || formData.tags.length === 0) {
-                tagsContainer.innerHTML = '<div style="color: var(--text-secondary); font-size: 13px;">لا توجد كلمات 
+                tagsContainer.innerHTML = '<div style="color: var(--text-secondary); font-size: 12px;">لا توجد كلمات مفتاحية</div>';
+                return;
+            }
+            formData.tags.forEach((tag, index) => {
+                const tagEl = document.createElement('div');
+                tagEl.className = 'tag-item';
+                tagEl.innerHTML = `<span>${tag}</span><button class="tag-remove" data-index="${index}">×</button>`;
+                tagEl.querySelector('.tag-remove').addEventListener('click', () => {
+                    formData.tags.splice(index, 1);
+                    renderTags();
+                    updateSEOStats();
+                });
+                tagsContainer.appendChild(tagEl);
+            });
+        }
+
+        function updateSEOCounts() {
+            document.getElementById('seoTitleCount').textContent = seoTitleInput.value.length;
+            document.getElementById('seoDescCount').textContent = seoDescriptionInput.value.length;
+        }
+
+        function updateSEOStats() {
+            const words = formData.corrected_full_text.trim() ? formData.corrected_full_text.trim().split(/\s+/).length : 0;
+            const chars = formData.corrected_full_text.length;
+            document.getElementById('statWordCount').textContent = words;
+            document.getElementById('statCharCount').textContent = chars;
+            document.getElementById('statTagsCount').textContent = formData.tags.length;
+            document.getElementById('statDescLength').textContent = formData.seo_description.length;
+            document.getElementById('seoStats').style.display = 'grid';
+        }
+
+        seoTitleInput.addEventListener('input', () => {
+            formData.seo_title = seoTitleInput.value;
+            updateSEOCounts();
+            validateCurrentStep();
+        });
+
+        seoDescriptionInput.addEventListener('input', () => {
+            formData.seo_description = seoDescriptionInput.value;
+            updateSEOCounts();
+            validateCurrentStep();
+        });
+
+        function updateProgress() {
+            const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            document.getElementById('progressLineFill').style.width = `${progress}%`;
+
+            document.querySelectorAll('.progress-step').forEach((step, index) => {
+                const stepNum = index + 1;
+                step.classList.remove('active', 'completed');
+                if (stepNum < currentStep) step.classList.add('completed');
+                else if (stepNum === currentStep) step.classList.add('active');
+            });
+
+            document.querySelectorAll('.step-content').forEach((content, index) => {
+                content.classList.remove('active');
+                if (index + 1 === currentStep) content.classList.add('active');
+            });
+
+            document.getElementById('btnBack').style.display = currentStep === 1 ? 'none' : 'flex';
+
+            if (currentStep === totalSteps) {
+                document.getElementById('btnNext').innerHTML = '<span>إرسال</span><span>✅</span>';
+                document.getElementById('btnNext').className = 'nav-btn btn-submit';
+            } else {
+                document.getElementById('btnNext').innerHTML = '<span>التالي</span><span>→</span>';
+                document.getElementById('btnNext').className = 'nav-btn btn-next';
+            }
+
+            if (currentStep === 3) initializeSeriesColors();
+            if (currentStep === 6) updateReview();
+
+            scrollToTop();
+            validateCurrentStep();
+        }
+
+        function validateCurrentStep() {
+            let isValid = false;
+            switch(currentStep) {
+                case 1: isValid = formData.corrected_full_text.trim().length > 0; break;
+                case 2: isValid = formData.template_id !== null && formData.color_id !== null; break;
+                case 3: isValid = formData.series_color !== null; break;
+                case 4: isValid = formData.title.trim() && formData.series.trim() && formData.subSeries.trim() && formData.finalSeries.trim(); break;
+                case 5: isValid = formData.seo_title.trim().length > 0 && formData.seo_description.trim().length > 0 && formData.tags.length > 0; break;
+                case 6: isValid = true; break;
+            }
+            document.getElementById('btnNext').disabled = !isValid;
+        }
+
+        async function nextStep() {
+            if (currentStep === totalSteps) {
+                await submitForm();
+                return;
+            }
+            if (currentStep < totalSteps) {
+                currentStep++;
+                formData.CurrentStep = currentStep;
+                updateProgress();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                currentStep--;
+                formData.CurrentStep = currentStep;
+                updateProgress();
+            }
+        }
+
+        document.getElementById('btnNext').addEventListener('click', nextStep);
+        document.getElementById('btnBack').addEventListener('click', prevStep);
+
+        function updateReview() {
+            const words = formData.corrected_full_text.trim() ? formData.corrected_full_text.trim().split(/\s+/).length : 0;
+            document.getElementById('reviewWordCount').textContent = words.toLocaleString('ar');
+            document.getElementById('reviewCharCount').textContent = formData.corrected_full_text.length.toLocaleString('ar');
+
+            if (aiChangesCount > 0) {
+                document.getElementById('reviewAiStats').style.display = 'flex';
+                document.getElementById('reviewAiChanges').textContent = `${aiChangesCount} تصحيح`;
+            }
+
+            document.getElementById('reviewTemplate').textContent = formData.template_name || '-';
+            document.getElementById('reviewColor').textContent = formData.color_name || '-';
+
+            const colorDiv = document.createElement('div');
+            colorDiv.style.cssText = `width:18px;height:18px;background:${formData.series_color};border-radius:4px;display:inline-block;vertical-align:middle`;
+            document.getElementById('reviewSeriesColor').innerHTML = '';
+            document.getElementById('reviewSeriesColor').appendChild(colorDiv);
+
+            document.getElementById('reviewTitle').textContent = formData.title || '-';
+            document.getElementById('reviewMainSeries').textContent = formData.series || '-';
+            document.getElementById('reviewSubSeries').textContent = formData.subSeries || '-';
+            document.getElementById('reviewFinalSeries').textContent = formData.finalSeries || '-';
+            document.getElementById('reviewSeoTitle').textContent = formData.seo_title || '-';
+            document.getElementById('reviewSeoDesc').textContent = formData.seo_description || '-';
+
+            const tagsPreview = document.getElementById('reviewTagsPreview');
+            tagsPreview.innerHTML = '';
+            formData.tags.forEach(tag => {
+                const tagEl = document.createElement('div');
+                tagEl.className = 'review-tag';
+                tagEl.textContent = tag;
+                tagsPreview.appendChild(tagEl);
+            });
+        }
+
+        document.getElementById('reviewDescExpandBtn').addEventListener('click', () => {
+            const expandable = document.getElementById('reviewDescExpandable');
+            if (expandable.classList.contains('expanded')) {
+                expandable.classList.remove('expanded');
+                document.getElementById('reviewDescExpandText').textContent = 'عرض الكل';
+                document.getElementById('reviewDescExpandIcon').textContent = '▼';
+            } else {
+                expandable.classList.add('expanded');
+                document.getElementById('reviewDescExpandText').textContent = 'إخفاء';
+                document.getElementById('reviewDescExpandIcon').textContent = '▲';
+            }
+        });
+
+        document.getElementById('reviewTagsExpandBtn').addEventListener('click', () => {
+            const tagsPreview = document.getElementById('reviewTagsPreview');
+            if (tagsPreview.classList.contains('expanded')) {
+                tagsPreview.classList.remove('expanded');
+                document.getElementById('reviewTagsExpandText').textContent = 'عرض الكل';
+                document.getElementById('reviewTagsExpandIcon').textContent = '▼';
+            } else {
+                tagsPreview.classList.add('expanded');
+                document.getElementById('reviewTagsExpandText').textContent = 'إخفاء';
+                document.getElementById('reviewTagsExpandIcon').textContent = '▲';
+            }
+        });
+
+        async function submitForm() {
+            showLoading('جاري إرسال البيانات...', 'الرجاء عدم الإغلاق');
+            try {
+                const dataToSend = { ...formData, status: 'completed', CurrentStep: 6, updated_at: new Date().toISOString(), ai_corrections: aiChangesCount };
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dataToSend)
+                });
+                if (!response.ok) throw new Error('فشل إرسال البيانات');
+                try {
+                    tg.sendData(JSON.stringify({ type: 'video_completed', id: formData.ID, status: 'completed', timestamp: new Date().toISOString() }));
+                } catch(e) {}
+                hideLoading();
+                alert('✅ تم الإرسال بنجاح!');
+                setTimeout(() => tg.close(), 1000);
+            } catch (error) {
+                hideLoading();
+                alert('❌ حدث خطأ: ' + error.message);
+            }
+        }
+
+        initializeTemplates();
+        updateProgress();
+        loadInitialData();
+    </script>
+</body>
+</html>
