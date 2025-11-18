@@ -40,13 +40,6 @@
             --radius-md: 10px;
             --radius-lg: 14px;
             --radius-xl: 18px;
-            --spacing-xs: 4px;
-            --spacing-sm: 8px;
-            --spacing-md: 12px;
-            --spacing-lg: 16px;
-            --spacing-xl: 20px;
-            --spacing-2xl: 24px;
-            --transition-base: 0.3s ease;
         }
 
         body {
@@ -217,14 +210,8 @@
         }
 
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .step-header {
@@ -372,14 +359,8 @@
         }
 
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .ai-correction-header {
@@ -431,15 +412,6 @@
             margin-bottom: 12px;
             box-shadow: var(--shadow-sm);
             border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        .ai-correction-text::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .ai-correction-text::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 10px;
         }
 
         .ai-correction-stats {
@@ -798,14 +770,8 @@
         }
 
         @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .preview-header {
@@ -908,30 +874,43 @@
             transform: scale(0.98);
         }
 
+        /* تحسين معاينة اللون - خلفية داكنة للتباين */
         .series-color-preview {
-            background: #e8e9eb;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
             border-radius: 12px;
-            padding: 30px 20px;
+            padding: 40px 20px;
             margin-bottom: 20px;
             text-align: center;
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-lg);
             position: relative;
             overflow: hidden;
-            border: 2px solid var(--border-color);
+            border: 3px solid #2d3748;
+        }
+
+        .series-color-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+            pointer-events: none;
         }
 
         .preview-text {
-            font-size: 22px;
-            font-weight: 700;
+            font-size: 26px;
+            font-weight: 800;
             margin-bottom: 8px;
             transition: all 0.3s;
             position: relative;
             z-index: 1;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
 
         .preview-hint {
             font-size: 12px;
-            color: var(--text-secondary);
+            color: rgba(255,255,255,0.6);
             position: relative;
             z-index: 1;
         }
@@ -1106,10 +1085,6 @@
         .color-picker-handle:active {
             cursor: grabbing;
             transform: translate(-50%, -50%) scale(1.15);
-            box-shadow: 
-                0 4px 15px rgba(0,0,0,0.5),
-                0 0 0 3px white,
-                0 0 25px rgba(0,0,0,0.3);
         }
 
         .hex-input-wrapper {
@@ -1200,7 +1175,7 @@
             color: white;
             border: none;
             border-radius: 12px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             cursor: pointer;
             display: flex;
@@ -1221,12 +1196,95 @@
             cursor: not-allowed;
         }
 
+        /* تصميم قوي واحترافي لخطوة SEO */
+        .seo-hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .seo-hero-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .seo-hero-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .seo-hero-subtitle {
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
+            line-height: 1.5;
+        }
+
+        .seo-required-badge {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 12px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .seo-generate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(17, 153, 142, 0.4);
+        }
+
+        .seo-generate-btn:active {
+            transform: scale(0.98);
+        }
+
+        .seo-generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .seo-generate-btn.generated {
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+        }
+
         .seo-section {
             background: var(--bg-secondary);
             border-radius: 12px;
             padding: 18px;
             margin-bottom: 18px;
             box-shadow: var(--shadow-md);
+            border: 2px solid var(--border-color);
+        }
+
+        .seo-section.highlight {
+            border-color: var(--primary);
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.2);
         }
 
         .seo-section-title {
@@ -1237,33 +1295,6 @@
             display: flex;
             align-items: center;
             gap: 8px;
-        }
-
-        .seo-generate-btn {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s;
-            margin-bottom: 18px;
-        }
-
-        .seo-generate-btn:active {
-            transform: scale(0.98);
-        }
-
-        .seo-generate-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
         }
 
         .serp-preview {
@@ -1503,16 +1534,6 @@
             word-break: break-word;
         }
 
-        .review-expandable {
-            max-height: 60px;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-
-        .review-expandable.expanded {
-            max-height: none;
-        }
-
         .review-expand-btn {
             background: none;
             border: none;
@@ -1593,6 +1614,27 @@
 
         .review-image-loading.hidden {
             display: none;
+        }
+
+        /* عرض SEO في المراجعة */
+        .review-seo-title-box,
+        .review-seo-desc-box {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .review-seo-desc-box {
+            max-height: 80px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .review-seo-desc-box.expanded {
+            max-height: none;
         }
 
         .nav-buttons {
@@ -1949,7 +1991,7 @@
                     <span>📚</span>
                     <span>السلسلة الرئيسية</span>
                 </label>
-                <input type="text" class="form-input" id="mainSeriesInput" placeholder="مثال: قصص ملهمة" maxlength="50">
+                <input type="text" class="form-input" id="mainSeriesInput" placeholder="مثال: الرقية الشرعية" maxlength="50">
                 <div class="form-hint">الأفضل: 4 كلمات أو أقل</div>
                 <div class="char-counter"><span id="mainSeriesCount">0</span> / 50</div>
             </div>
@@ -1959,7 +2001,7 @@
                     <span>🔖</span>
                     <span>السلسلة الفرعية</span>
                 </label>
-                <input type="text" class="form-input" id="subSeriesInput" placeholder="مثال: قصص رواد الأعمال" maxlength="50">
+                <input type="text" class="form-input" id="subSeriesInput" placeholder="مثال: علاج السحر" maxlength="50">
                 <div class="form-hint">الأفضل: 4 كلمات أو أقل</div>
                 <div class="char-counter"><span id="subSeriesCount">0</span> / 50</div>
             </div>
@@ -1979,14 +2021,13 @@
                     <span>✏️</span>
                     <span>اسم الدرس</span>
                 </label>
-                <input type="text" class="form-input" id="titleInput" placeholder="مثال: قصة نجاح" maxlength="50">
+                <input type="text" class="form-input" id="titleInput" placeholder="مثال: أعراض المس" maxlength="50">
                 <div class="form-hint">الأفضل: 3 كلمات أو أقل</div>
                 <div class="char-counter"><span id="titleCount">0</span> / 50</div>
             </div>
 
             <button class="save-template-btn" id="saveTemplateBtn">
-                <span>💾</span>
-                <span>حفظ التعديلات على القالب الأساسي</span>
+                <span id="saveTemplateBtnText">💾 حفظ التعديلات على القالب الأساسي</span>
             </button>
         </div>
 
@@ -1995,36 +2036,43 @@
             <div class="step-header">
                 <div class="step-title">
                     <span>🔍</span>
-                    <span>تحسين SEO</span>
+                    <span>تحسين محركات البحث (SEO)</span>
                 </div>
-                <div class="step-description">إنشاء عنوان ووصف احترافي</div>
+                <div class="step-description">إنشاء عنوان ووصف وكلمات مفتاحية للرقية الشرعية</div>
+            </div>
+
+            <div class="seo-hero-section">
+                <div class="seo-hero-icon">🚀</div>
+                <div class="seo-hero-title">تحسين الظهور في نتائج البحث</div>
+                <div class="seo-hero-subtitle">سيتم إنشاء عنوان ووصف وكلمات مفتاحية متخصصة في الرقية الشرعية والعلاج الروحاني بناءً على محتوى النص المصحح</div>
+                <div class="seo-required-badge">⚠️ إجباري - يجب إنشاء SEO للمتابعة</div>
             </div>
 
             <button class="seo-generate-btn" id="seoGenerateBtn">
                 <span>✨</span>
-                <span>إنشاء SEO تلقائياً</span>
+                <span>إنشاء SEO بالذكاء الاصطناعي</span>
             </button>
 
-            <div class="seo-section">
+            <div class="seo-section highlight">
                 <div class="seo-section-title">
                     <span>📌</span>
                     <span>عنوان الفيديو</span>
                 </div>
                 <div class="form-group">
-                    <textarea class="form-textarea" id="seoTitleInput" placeholder="سيتم إنشاؤه تلقائياً..." rows="2" style="min-height: 60px;"></textarea>
-                    <div class="form-hint">الأفضل: 60-70 حرف</div>
+                    <textarea class="form-textarea" id="seoTitleInput" placeholder="اضغط على زر إنشاء SEO أعلاه..." rows="2" style="min-height: 60px;"></textarea>
+                    <div class="form-hint">الأفضل: 60-70 حرف - متخصص في الرقية الشرعية</div>
                     <div class="char-counter"><span id="seoTitleCount">0</span> / 100</div>
                 </div>
             </div>
 
-            <div class="seo-section">
+            <div class="seo-section highlight">
                 <div class="seo-section-title">
                     <span>📝</span>
                     <span>وصف الفيديو</span>
                 </div>
                 <div class="form-group">
-                    <textarea class="form-textarea" id="seoDescriptionInput" placeholder="سيتم إنشاؤه تلقائياً..." style="min-height: 180px;"></textarea>
-                    <div class="form-hint">وصف احترافي شامل</div>
+                    <textarea class="form-textarea" id="seoDescriptionInput" placeholder="اضغط على زر إنشاء SEO أعلاه..." style="min-height: 180px;"></textarea>
+                    <div class="form-hint">وصف احترافي شامل عن الرقية والعلاج الروحاني</div>
                     <div class="char-counter"><span id="seoDescCount">0</span> / 5000</div>
                 </div>
             </div>
@@ -2045,7 +2093,7 @@
                 </div>
 
                 <div class="tags-container" id="tagsContainer">
-                    <div style="color: var(--text-secondary); font-size: 12px;">سيتم إنشاؤها تلقائياً...</div>
+                    <div style="color: var(--text-secondary); font-size: 12px;">اضغط على زر إنشاء SEO...</div>
                 </div>
                 
                 <div class="seo-stats" id="seoStats" style="display: none;">
@@ -2187,6 +2235,24 @@
                     <div class="serp-url">https://www.youtube.com/watch</div>
                     <div class="serp-title" id="reviewSerpTitle">عنوان الفيديو</div>
                     <div class="serp-description" id="reviewSerpDescription">وصف الفيديو...</div>
+                </div>
+
+                <div class="review-item">
+                    <span class="review-label">العنوان:</span>
+                    <div class="review-value">
+                        <div class="review-seo-title-box" id="reviewSeoTitleBox">-</div>
+                    </div>
+                </div>
+
+                <div class="review-item">
+                    <span class="review-label">الوصف:</span>
+                    <div class="review-value">
+                        <div class="review-seo-desc-box" id="reviewSeoDescBox">-</div>
+                        <button class="review-expand-btn" id="reviewDescExpandBtn">
+                            <span id="reviewDescExpandText">عرض الكل</span>
+                            <span id="reviewDescExpandIcon">▼</span>
+                        </button>
+                    </div>
                 </div>
 
                 <div class="review-item">
@@ -2566,6 +2632,7 @@
             });
 
             document.getElementById('colorsSection').style.display = 'block';
+            updateSaveTemplateButtonText();
             validateCurrentStep();
         }
 
@@ -2611,7 +2678,17 @@
             portraitImg.src = convertDriveUrl(color.portrait_link);
 
             document.getElementById('templatePreviewModal').classList.add('visible');
+            updateSaveTemplateButtonText();
             validateCurrentStep();
+        }
+
+        function updateSaveTemplateButtonText() {
+            const btn = document.getElementById('saveTemplateBtnText');
+            if (formData.template_name && formData.template_id) {
+                btn.textContent = `💾 حفظ التعديلات على القالب الأساسي (${formData.template_name})`;
+            } else {
+                btn.textContent = '💾 حفظ التعديلات على القالب الأساسي';
+            }
         }
 
         document.getElementById('closePreview').addEventListener('click', () => {
@@ -2934,11 +3011,11 @@
 
         document.getElementById('seoGenerateBtn').addEventListener('click', async () => {
             if (!formData.corrected_full_text.trim()) {
-                alert('⚠️ لا يوجد نص');
+                alert('⚠️ لا يوجد نص مصحح لإنشاء SEO منه');
                 return;
             }
 
-            showLoading('جاري إنشاء SEO...', 'قد يستغرق بضع ثوانٍ');
+            showLoading('جاري إنشاء SEO للرقية الشرعية...', 'يتم تحليل المحتوى وإنشاء عنوان ووصف وكلمات مفتاحية متخصصة');
             document.getElementById('seoGenerateBtn').disabled = true;
 
             try {
@@ -2947,9 +3024,8 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         text: formData.corrected_full_text,
-                        title: formData.title,
-                        series: formData.series,
-                        subSeries: formData.subSeries
+                        context: 'ruqyah_islamic_healing',
+                        focus: 'الرقية الشرعية والعلاج الروحاني'
                     })
                 });
 
@@ -2974,6 +3050,10 @@
                     updateSerpPreview();
                     
                     seoGeneratedSuccessfully = true;
+                    
+                    const btn = document.getElementById('seoGenerateBtn');
+                    btn.classList.add('generated');
+                    btn.innerHTML = '<span>✅</span><span>تم إنشاء SEO بنجاح - اضغط لإعادة الإنشاء</span>';
                 } else {
                     throw new Error('فشل إنشاء SEO');
                 }
@@ -2986,7 +3066,7 @@
                 hideLoading();
                 document.getElementById('seoGenerateBtn').disabled = false;
                 
-                alert('❌ فشل إنشاء SEO تلقائياً. يمكنك المتابعة بدون SEO أو إدخال البيانات يدوياً.');
+                alert('❌ فشل إنشاء SEO: ' + error.message + '\n\nيجب إنشاء SEO للمتابعة.');
                 seoGeneratedSuccessfully = false;
                 validateCurrentStep();
             }
@@ -3095,7 +3175,8 @@
                     isValid = formData.title.trim() && formData.series.trim() && formData.subSeries.trim() && formData.finalSeries.trim(); 
                     break;
                 case 5: 
-                    isValid = true;
+                    // SEO إجباري - يجب إنشاءه للمتابعة
+                    isValid = seoGeneratedSuccessfully && formData.seo_title.trim() && formData.seo_description.trim();
                     break;
                 case 6: 
                     isValid = true; 
@@ -3105,6 +3186,11 @@
         }
 
         async function nextStep() {
+            if (currentStep === 5 && !seoGeneratedSuccessfully) {
+                alert('⚠️ يجب إنشاء SEO بالذكاء الاصطناعي للمتابعة\n\nاضغط على زر "إنشاء SEO بالذكاء الاصطناعي"');
+                return;
+            }
+            
             if (currentStep === totalSteps) {
                 await submitForm();
                 return;
@@ -3145,8 +3231,13 @@
             document.getElementById('reviewFinalSeries').textContent = formData.finalSeries || '-';
             document.getElementById('reviewTitle').textContent = formData.title || '-';
             
+            // عرض SEO في المراجعة
             document.getElementById('reviewSerpTitle').textContent = formData.seo_title || 'عنوان الفيديو';
             document.getElementById('reviewSerpDescription').textContent = (formData.seo_description || 'وصف الفيديو...').substring(0, 160) + ((formData.seo_description || '').length > 160 ? '...' : '');
+            
+            // عرض العنوان والوصف الكامل
+            document.getElementById('reviewSeoTitleBox').textContent = formData.seo_title || '-';
+            document.getElementById('reviewSeoDescBox').textContent = formData.seo_description || '-';
 
             const tagsPreview = document.getElementById('reviewTagsPreview');
             tagsPreview.innerHTML = '';
@@ -3181,11 +3272,20 @@
             }
         }
 
+        // زر عرض الكل للكلمات المفتاحية
         document.getElementById('reviewTagsExpandBtn').addEventListener('click', () => {
             const tagsPreview = document.getElementById('reviewTagsPreview');
             tagsPreview.classList.toggle('expanded');
             document.getElementById('reviewTagsExpandText').textContent = tagsPreview.classList.contains('expanded') ? 'إخفاء' : 'عرض الكل';
             document.getElementById('reviewTagsExpandIcon').textContent = tagsPreview.classList.contains('expanded') ? '▲' : '▼';
+        });
+
+        // زر عرض الكل للوصف
+        document.getElementById('reviewDescExpandBtn').addEventListener('click', () => {
+            const descBox = document.getElementById('reviewSeoDescBox');
+            descBox.classList.toggle('expanded');
+            document.getElementById('reviewDescExpandText').textContent = descBox.classList.contains('expanded') ? 'إخفاء' : 'عرض الكل';
+            document.getElementById('reviewDescExpandIcon').textContent = descBox.classList.contains('expanded') ? '▲' : '▼';
         });
 
         async function submitForm() {
