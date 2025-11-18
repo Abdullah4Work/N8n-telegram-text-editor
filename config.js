@@ -1,7 +1,7 @@
 // ✅ CONFIG محسّن مع Error Handling
 const CONFIG = {
     BACKEND: {
-        BASE_URL: 'https://n8n-video-worker.abdullah27623.workers.dev',
+        BASE_URL: 'https://n8n-video-worker.abdullah4work.deno.net',
         ENDPOINTS: {
             UPLOAD_AUDIO: '/upload-audio',
             REQUEST_TRANSCRIPT: '/request-transcript',
