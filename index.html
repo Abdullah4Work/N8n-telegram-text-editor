@@ -1224,7 +1224,7 @@
         }
 
         .seo-generate-btn.generated {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            background: linear-gradient(135deg, var(--success), var(--success-light));
         }
 
         .seo-section {
@@ -3115,8 +3115,10 @@
                     isValid = formData.title.trim() && formData.series.trim() && formData.subSeries.trim() && formData.finalSeries.trim(); 
                     break;
                 case 5: 
-                    // يمكن المتابعة بدون SEO أو بعد ملء الحقول يدوياً
-                    isValid = formData.seo_title.trim() || formData.seo_description.trim() || formData.tags.length > 0 || true;
+                    // ✅ التعديل الرئيسي: يجب ملء جميع حقول SEO (عنوان + وصف + كلمة واحدة على الأقل)
+                    isValid = formData.seo_title.trim().length > 0 && 
+                              formData.seo_description.trim().length > 0 && 
+                              formData.tags.length > 0;
                     break;
                 case 6: 
                     isValid = true; 
