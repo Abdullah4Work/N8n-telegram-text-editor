@@ -1,6 +1,5 @@
-// ✅ آمن 100% - لا يوجد API Keys هنا!
+// ✅ CONFIG محسّن مع Error Handling
 const CONFIG = {
-    // استخدام Worker بدل الـ APIs مباشرة
     BACKEND: {
         BASE_URL: 'https://n8n-video-worker.abdullah27623.workers.dev',
         ENDPOINTS: {
@@ -9,9 +8,13 @@ const CONFIG = {
             TRANSCRIPT_STATUS: '/transcript-status',
             SAVE_DATA: '/save-data',
             AI_CORRECT: '/ai-correct',
+            GET_BIN_DATA: '/get-bin-data',  // ✅ تصحيح الاسم
             GET_BIN: '/get-bin',
             HEALTH: '/health'
-        }
+        },
+        TIMEOUT: 30000,  // 30 seconds
+        RETRY_ATTEMPTS: 3,
+        RETRY_DELAY: 2000  // 2 seconds
     },
 
     JSONBIN: {
@@ -165,6 +168,267 @@ const CONFIG = {
     ]
 };
 
+// ==================== ✅ دالة Fetch محسّنة مع CORS + Retry ====================
+async function fetchWithRetry(url, options = {}, retries = CONFIG.BACKEND.RETRY_ATTEMPTS) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), CONFIG.BACKEND.TIMEOUT);
+
+    const fetchOptions = {
+        ...options,
+        signal: controller.signal,
+        mode: 'cors',  // ✅ تفعيل CORS
+        credentials: 'omit',  // ✅ لا نرسل credentials
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            ...options.headers
+        }
+    };
+
+    for (let attempt = 1; attempt <= retries; attempt++) {
+        try {
+            console.log(`🔄 Attempt ${attempt}/${retries}: ${url}`);
+            
+            const response = await fetch(url, fetchOptions);
+            clearTimeout(timeout);
+
+            console.log(`📡 Response status: ${response.status}`);
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error(`❌ Server error (${response.status}):`, errorText);
+                
+                // إذا 500 error، نحاول مرة ثانية
+                if (response.status >= 500 && attempt < retries) {
+                    console.log(`⏳ Retrying in ${CONFIG.BACKEND.RETRY_DELAY}ms...`);
+                    await new Promise(resolve => setTimeout(resolve, CONFIG.BACKEND.RETRY_DELAY));
+                    continue;
+                }
+                
+                throw new Error(`Server error: ${response.status} - ${errorText}`);
+            }
+
+            const data = await response.json();
+            console.log('✅ Success:', data);
+            return data;
+
+        } catch (error) {
+            clearTimeout(timeout);
+            
+            console.error(`❌ Attempt ${attempt} failed:`, error.message);
+
+            // إذا CORS error أو network error
+            if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                console.error('🚫 CORS or Network Error detected');
+            }
+
+            if (error.name === 'AbortError') {
+                console.error('⏱️ Request timeout');
+            }
+
+            // آخر محاولة؟
+            if (attempt === retries) {
+                throw new Error(`❌ Failed after ${retries} attempts: ${error.message}`);
+            }
+
+            // انتظر قبل المحاولة التالية
+            await new Promise(resolve => setTimeout(resolve, CONFIG.BACKEND.RETRY_DELAY * attempt));
+        }
+    }
+}
+
+// ==================== ✅ دالة تحميل البيانات الأولية محسّنة ====================
+async function loadInitialData() {
+    try {
+        console.log('🚀 Loading initial data...');
+        
+        // الحصول على binId من URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const binId = urlParams.get('bin');
+        
+        if (!binId) {
+            console.warn('⚠️ No binId in URL');
+            return null;
+        }
+
+        console.log('🆔 BinId:', binId);
+
+        // ✅ استخدام الـ endpoint الصحيح
+        const url = `${CONFIG.BACKEND.BASE_URL}${CONFIG.BACKEND.ENDPOINTS.GET_BIN_DATA}?binId=${binId}`;
+        
+        console.log('📡 Fetching from:', url);
+
+        const data = await fetchWithRetry(url, {
+            method: 'GET'
+        });
+
+        console.log('✅ Data loaded successfully:', data);
+        return data;
+
+    } catch (error) {
+        console.error('❌ Error loading initial data:', error);
+        
+        // عرض رسالة للمستخدم
+        showUserError('فشل تحميل البيانات. يرجى المحاولة مرة أخرى.');
+        
+        return null;
+    }
+}
+
+// ==================== ✅ دالة عرض الأخطاء للمستخدم ====================
+function showUserError(message) {
+    // إنشاء عنصر رسالة الخطأ
+    const errorDiv = document.createElement('div');
+    errorDiv.style.cssText = `
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+        color: white;
+        padding: 15px 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        z-index: 10000;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 16px;
+        max-width: 90%;
+        text-align: center;
+        animation: slideDown 0.3s ease-out;
+    `;
+    errorDiv.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 24px;">❌</span>
+            <span>${message}</span>
+        </div>
+    `;
+
+    // إضافة animation
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideDown {
+            from {
+                transform: translate(-50%, -100%);
+                opacity: 0;
+            }
+            to {
+                transform: translate(-50%, 0);
+                opacity: 1;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+
+    document.body.appendChild(errorDiv);
+
+    // إزالة الرسالة بعد 5 ثواني
+    setTimeout(() => {
+        errorDiv.style.animation = 'slideDown 0.3s ease-out reverse';
+        setTimeout(() => errorDiv.remove(), 300);
+    }, 5000);
+}
+
+// ==================== ✅ دالة حفظ البيانات محسّنة ====================
+async function saveData(data) {
+    try {
+        console.log('💾 Saving data...');
+
+        const url = `${CONFIG.BACKEND.BASE_URL}${CONFIG.BACKEND.ENDPOINTS.SAVE_DATA}`;
+        
+        const result = await fetchWithRetry(url, {
+            method: 'POST',
+            body: JSON.stringify(data)
+        });
+
+        console.log('✅ Data saved successfully');
+        return result;
+
+    } catch (error) {
+        console.error('❌ Error saving data:', error);
+        showUserError('فشل حفظ البيانات. يرجى المحاولة مرة أخرى.');
+        throw error;
+    }
+}
+
+// ==================== ✅ دالة تصحيح النص بالـ AI محسّنة ====================
+async function correctTextWithAI(text) {
+    try {
+        console.log('🤖 AI correction started...');
+
+        const url = `${CONFIG.BACKEND.BASE_URL}${CONFIG.BACKEND.ENDPOINTS.AI_CORRECT}`;
+        
+        const result = await fetchWithRetry(url, {
+            method: 'POST',
+            body: JSON.stringify({ text })
+        });
+
+        console.log('✅ AI correction completed');
+        return result.correctedText;
+
+    } catch (error) {
+        console.error('❌ AI correction error:', error);
+        showUserError('فشل تصحيح النص. يرجى المحاولة مرة أخرى.');
+        throw error;
+    }
+}
+
+// ==================== ✅ دالة رفع الصوت محسّنة ====================
+async function uploadAudio(audioFile) {
+    try {
+        console.log('📤 Uploading audio...');
+
+        // التحقق من حجم الملف
+        if (audioFile.size > CONFIG.APP.MAX_FILE_SIZE) {
+            throw new Error('حجم الملف كبير جداً. الحد الأقصى 50MB');
+        }
+
+        // التحقق من نوع الملف
+        if (!CONFIG.APP.ALLOWED_AUDIO_FORMATS.includes(audioFile.type)) {
+            throw new Error('صيغة الملف غير مدعومة');
+        }
+
+        const formData = new FormData();
+        formData.append('audio', audioFile);
+
+        const url = `${CONFIG.BACKEND.BASE_URL}${CONFIG.BACKEND.ENDPOINTS.UPLOAD_AUDIO}`;
+        
+        const result = await fetchWithRetry(url, {
+            method: 'POST',
+            body: formData,
+            headers: {}  // لا نضيف Content-Type لأن FormData يحددها تلقائياً
+        });
+
+        console.log('✅ Audio uploaded successfully');
+        return result;
+
+    } catch (error) {
+        console.error('❌ Audio upload error:', error);
+        showUserError('فشل رفع الملف الصوتي. يرجى المحاولة مرة أخرى.');
+        throw error;
+    }
+}
+
+// ==================== ✅ دالة فحص صحة الـ Worker ====================
+async function checkWorkerHealth() {
+    try {
+        console.log('🏥 Checking worker health...');
+
+        const url = `${CONFIG.BACKEND.BASE_URL}${CONFIG.BACKEND.ENDPOINTS.HEALTH}`;
+        
+        const result = await fetchWithRetry(url, {
+            method: 'GET'
+        });
+
+        console.log('✅ Worker is healthy:', result);
+        return true;
+
+    } catch (error) {
+        console.error('❌ Worker health check failed:', error);
+        showUserError('الخدمة غير متاحة حالياً. يرجى المحاولة لاحقاً.');
+        return false;
+    }
+}
+
 // تجميد الكائن لمنع التعديل
 if (typeof Object.freeze === 'function') {
     Object.freeze(CONFIG);
@@ -193,12 +457,44 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = CONFIG;
 }
 
-// إضافة CONFIG للنطاق العام
+// إضافة للنطاق العام
 if (typeof window !== 'undefined') {
     window.CONFIG = CONFIG;
+    window.fetchWithRetry = fetchWithRetry;
+    window.loadInitialData = loadInitialData;
+    window.saveData = saveData;
+    window.correctTextWithAI = correctTextWithAI;
+    window.uploadAudio = uploadAudio;
+    window.checkWorkerHealth = checkWorkerHealth;
+    window.showUserError = showUserError;
 }
 
-console.log('✅ CONFIG loaded securely with AI support via Worker');
+console.log('✅ CONFIG loaded with enhanced error handling');
+console.log('🔒 CORS enabled with retry logic');
 console.log('🤖 AI Model:', CONFIG.AI.MODEL);
-console.log('🔒 API Keys are stored safely in Worker Environment Variables');
-console.log('📦 CONFIG is now available globally');
+console.log('⚡ Retry attempts:', CONFIG.BACKEND.RETRY_ATTEMPTS);
+console.log('⏱️ Timeout:', CONFIG.BACKEND.TIMEOUT / 1000, 'seconds');
+
+// ✅ فحص صحة الـ Worker عند تحميل الصفحة
+if (typeof window !== 'undefined') {
+    window.addEventListener('DOMContentLoaded', async () => {
+        console.log('🚀 App Starting...');
+        
+        // فحص صحة الـ Worker
+        const isHealthy = await checkWorkerHealth();
+        
+        if (isHealthy) {
+            console.log('✅ Worker is ready');
+            
+            // تحميل البيانات الأولية
+            const data = await loadInitialData();
+            
+            if (data) {
+                console.log('✅ Initial data loaded');
+                // يمكنك استخدام البيانات هنا
+            }
+        } else {
+            console.error('❌ Worker is not available');
+        }
+    });
+}
