@@ -475,7 +475,7 @@
         }
 
         .ai-action-btn.accept {
-            background: linear-gradient(135deg, var(--success), var(--success-light));
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             box-shadow: var(--shadow-md);
         }
@@ -874,7 +874,6 @@
             transform: scale(0.98);
         }
 
-        /* تحسين معاينة اللون - خلفية داكنة للتباين */
         .series-color-preview {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             border-radius: 12px;
@@ -1171,7 +1170,7 @@
         .save-template-btn {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, var(--success), var(--success-light));
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             border: none;
             border-radius: 12px;
@@ -1196,55 +1195,10 @@
             cursor: not-allowed;
         }
 
-        /* تصميم قوي واحترافي لخطوة SEO */
-        .seo-hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 16px;
-            padding: 24px;
-            margin-bottom: 20px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-
-        .seo-hero-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
-
-        .seo-hero-title {
-            font-size: 20px;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 8px;
-        }
-
-        .seo-hero-subtitle {
-            font-size: 13px;
-            color: rgba(255,255,255,0.8);
-            line-height: 1.5;
-        }
-
-        .seo-required-badge {
-            display: inline-block;
-            background: #ff6b6b;
-            color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            margin-top: 12px;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
         .seo-generate-btn {
             width: 100%;
             padding: 18px;
-            background: linear-gradient(135deg, #11998e, #38ef7d);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             border: none;
             border-radius: 14px;
@@ -1257,7 +1211,7 @@
             gap: 10px;
             transition: all 0.3s;
             margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(17, 153, 142, 0.4);
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
         }
 
         .seo-generate-btn:active {
@@ -1270,7 +1224,7 @@
         }
 
         .seo-generate-btn.generated {
-            background: linear-gradient(135deg, var(--success), var(--success-light));
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
         }
 
         .seo-section {
@@ -1616,7 +1570,6 @@
             display: none;
         }
 
-        /* عرض SEO في المراجعة */
         .review-seo-title-box,
         .review-seo-desc-box {
             background: var(--bg-primary);
@@ -1688,7 +1641,7 @@
         }
 
         .btn-submit {
-            background: linear-gradient(135deg, var(--success), var(--success-light));
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             box-shadow: var(--shadow-md);
         }
@@ -2038,14 +1991,7 @@
                     <span>🔍</span>
                     <span>تحسين محركات البحث (SEO)</span>
                 </div>
-                <div class="step-description">إنشاء عنوان ووصف وكلمات مفتاحية للرقية الشرعية</div>
-            </div>
-
-            <div class="seo-hero-section">
-                <div class="seo-hero-icon">🚀</div>
-                <div class="seo-hero-title">تحسين الظهور في نتائج البحث</div>
-                <div class="seo-hero-subtitle">سيتم إنشاء عنوان ووصف وكلمات مفتاحية متخصصة في الرقية الشرعية والعلاج الروحاني بناءً على محتوى النص المصحح</div>
-                <div class="seo-required-badge">⚠️ إجباري - يجب إنشاء SEO للمتابعة</div>
+                <div class="step-description">أدخل عنوان ووصف وكلمات مفتاحية للفيديو، أو استخدم الذكاء الاصطناعي لإنشائها تلقائياً</div>
             </div>
 
             <button class="seo-generate-btn" id="seoGenerateBtn">
@@ -2059,7 +2005,7 @@
                     <span>عنوان الفيديو</span>
                 </div>
                 <div class="form-group">
-                    <textarea class="form-textarea" id="seoTitleInput" placeholder="اضغط على زر إنشاء SEO أعلاه..." rows="2" style="min-height: 60px;"></textarea>
+                    <textarea class="form-textarea" id="seoTitleInput" placeholder="أدخل عنوان الفيديو هنا..." rows="2" style="min-height: 60px;"></textarea>
                     <div class="form-hint">الأفضل: 60-70 حرف - متخصص في الرقية الشرعية</div>
                     <div class="char-counter"><span id="seoTitleCount">0</span> / 100</div>
                 </div>
@@ -2071,7 +2017,7 @@
                     <span>وصف الفيديو</span>
                 </div>
                 <div class="form-group">
-                    <textarea class="form-textarea" id="seoDescriptionInput" placeholder="اضغط على زر إنشاء SEO أعلاه..." style="min-height: 180px;"></textarea>
+                    <textarea class="form-textarea" id="seoDescriptionInput" placeholder="أدخل وصف الفيديو هنا..." style="min-height: 180px;"></textarea>
                     <div class="form-hint">وصف احترافي شامل عن الرقية والعلاج الروحاني</div>
                     <div class="char-counter"><span id="seoDescCount">0</span> / 5000</div>
                 </div>
@@ -2093,7 +2039,7 @@
                 </div>
 
                 <div class="tags-container" id="tagsContainer">
-                    <div style="color: var(--text-secondary); font-size: 12px;">اضغط على زر إنشاء SEO...</div>
+                    <div style="color: var(--text-secondary); font-size: 12px;">لا توجد كلمات مفتاحية بعد</div>
                 </div>
                 
                 <div class="seo-stats" id="seoStats" style="display: none;">
@@ -2299,7 +2245,6 @@
         let lastAIRequestTime = 0;
         const AI_REQUEST_COOLDOWN = 10000;
         let loadedTemplatesData = [];
-        let seoGeneratedSuccessfully = false;
 
         const formData = {
             ID: null,
@@ -3004,7 +2949,7 @@
             document.getElementById('serpTitle').textContent = title;
             document.getElementById('serpDescription').textContent = description.substring(0, 160) + (description.length > 160 ? '...' : '');
             
-            if (formData.seo_title && formData.seo_description) {
+            if (formData.seo_title || formData.seo_description) {
                 document.getElementById('serpPreview').style.display = 'block';
             }
         }
@@ -3049,8 +2994,6 @@
                     updateSEOStats();
                     updateSerpPreview();
                     
-                    seoGeneratedSuccessfully = true;
-                    
                     const btn = document.getElementById('seoGenerateBtn');
                     btn.classList.add('generated');
                     btn.innerHTML = '<span>✅</span><span>تم إنشاء SEO بنجاح - اضغط لإعادة الإنشاء</span>';
@@ -3065,10 +3008,7 @@
                 console.error('❌ SEO Error:', error);
                 hideLoading();
                 document.getElementById('seoGenerateBtn').disabled = false;
-                
-                alert('❌ فشل إنشاء SEO: ' + error.message + '\n\nيجب إنشاء SEO للمتابعة.');
-                seoGeneratedSuccessfully = false;
-                validateCurrentStep();
+                alert('❌ فشل إنشاء SEO: ' + error.message);
             }
         });
 
@@ -3077,7 +3017,7 @@
             container.innerHTML = '';
 
             if (!formData.tags || formData.tags.length === 0) {
-                container.innerHTML = '<div style="color:var(--text-secondary);font-size:12px">لا توجد كلمات</div>';
+                container.innerHTML = '<div style="color:var(--text-secondary);font-size:12px">لا توجد كلمات مفتاحية بعد</div>';
                 return;
             }
 
@@ -3175,8 +3115,8 @@
                     isValid = formData.title.trim() && formData.series.trim() && formData.subSeries.trim() && formData.finalSeries.trim(); 
                     break;
                 case 5: 
-                    // SEO إجباري - يجب إنشاءه للمتابعة
-                    isValid = seoGeneratedSuccessfully && formData.seo_title.trim() && formData.seo_description.trim();
+                    // يمكن المتابعة بدون SEO أو بعد ملء الحقول يدوياً
+                    isValid = formData.seo_title.trim() || formData.seo_description.trim() || formData.tags.length > 0 || true;
                     break;
                 case 6: 
                     isValid = true; 
@@ -3186,11 +3126,6 @@
         }
 
         async function nextStep() {
-            if (currentStep === 5 && !seoGeneratedSuccessfully) {
-                alert('⚠️ يجب إنشاء SEO بالذكاء الاصطناعي للمتابعة\n\nاضغط على زر "إنشاء SEO بالذكاء الاصطناعي"');
-                return;
-            }
-            
             if (currentStep === totalSteps) {
                 await submitForm();
                 return;
@@ -3231,11 +3166,9 @@
             document.getElementById('reviewFinalSeries').textContent = formData.finalSeries || '-';
             document.getElementById('reviewTitle').textContent = formData.title || '-';
             
-            // عرض SEO في المراجعة
             document.getElementById('reviewSerpTitle').textContent = formData.seo_title || 'عنوان الفيديو';
             document.getElementById('reviewSerpDescription').textContent = (formData.seo_description || 'وصف الفيديو...').substring(0, 160) + ((formData.seo_description || '').length > 160 ? '...' : '');
             
-            // عرض العنوان والوصف الكامل
             document.getElementById('reviewSeoTitleBox').textContent = formData.seo_title || '-';
             document.getElementById('reviewSeoDescBox').textContent = formData.seo_description || '-';
 
@@ -3272,7 +3205,6 @@
             }
         }
 
-        // زر عرض الكل للكلمات المفتاحية
         document.getElementById('reviewTagsExpandBtn').addEventListener('click', () => {
             const tagsPreview = document.getElementById('reviewTagsPreview');
             tagsPreview.classList.toggle('expanded');
@@ -3280,7 +3212,6 @@
             document.getElementById('reviewTagsExpandIcon').textContent = tagsPreview.classList.contains('expanded') ? '▲' : '▼';
         });
 
-        // زر عرض الكل للوصف
         document.getElementById('reviewDescExpandBtn').addEventListener('click', () => {
             const descBox = document.getElementById('reviewSeoDescBox');
             descBox.classList.toggle('expanded');
