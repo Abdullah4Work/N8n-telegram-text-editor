@@ -214,7 +214,6 @@
             color: var(--text-secondary);
             line-height: 1.5;
         }
-
         /* ===== مشغل الصوت ===== */
         .audio-player-section {
             background: var(--bg-secondary);
@@ -224,36 +223,13 @@
             box-shadow: var(--shadow-md);
             border: 2px solid var(--primary-lighter);
             transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .audio-player-section:not(.sticky):hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.3);
-        }
-        
-        .audio-player-section.sticky {
-            position: fixed;
-            top: 60px;
-            left: 14px;
-            right: 14px;
+            position: sticky;
+            top: 0;
             z-index: 150;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-            animation: slideDownSticky 0.3s ease;
-            cursor: default;
+            background: var(--bg-secondary);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        
-        @keyframes slideDownSticky {
-            from { 
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to { 
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        
+       
         .audio-section-title {
             font-size: 14px;
             font-weight: 700;
@@ -264,25 +240,7 @@
             gap: 8px;
             transition: all 0.3s ease;
         }
-        
-        .audio-player-section:not(.sticky) .audio-section-title::after {
-            content: ' (اضغط للتثبيت)';
-            font-size: 11px;
-            color: var(--text-secondary);
-            font-weight: 400;
-        }
-        
-        .audio-player-section.sticky .audio-section-title::after {
-            content: '📌';
-            margin-right: 8px;
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-        
+       
         .audio-player {
             display: flex;
             flex-direction: column;
@@ -369,7 +327,6 @@
             color: white;
             border-color: var(--primary);
         }
-
         /* ===== محرر النص ===== */
         .editor-container {
             background: var(--bg-secondary);
@@ -381,11 +338,7 @@
             position: relative;
             transition: margin-top 0.3s ease;
         }
-        
-        .editor-container.with-sticky-audio {
-            margin-top: 140px;
-        }
-        
+       
         .text-size-controls {
             position: absolute;
             top: 12px;
@@ -394,7 +347,7 @@
             gap: 6px;
             z-index: 10;
         }
-        
+       
         .text-size-btn {
             width: 36px;
             height: 36px;
@@ -411,11 +364,11 @@
             box-shadow: var(--shadow-md);
             transition: all 0.2s;
         }
-        
+       
         .text-size-btn:active {
             transform: scale(0.9);
         }
-        
+       
         .editor-label {
             font-size: 14px;
             font-weight: 700;
@@ -426,7 +379,7 @@
             gap: 6px;
             padding-left: 90px;
         }
-        
+       
         .editor-textarea {
             width: 100%;
             min-height: 300px;
@@ -440,14 +393,14 @@
             transition: all 0.3s;
             background: #FAFBFC;
         }
-        
+       
         .editor-textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
             background: white;
         }
-        
+       
         .editor-stats {
             display: flex;
             justify-content: space-between;
@@ -457,19 +410,19 @@
             font-size: 12px;
             color: var(--text-secondary);
         }
-        
+       
         .stat-item {
             display: flex;
             align-items: center;
             gap: 6px;
         }
-        
+       
         .stat-value {
             font-weight: 700;
             color: var(--primary);
             font-size: 15px;
         }
-        
+       
         .ai-correction-box {
             display: none;
             background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
@@ -595,7 +548,7 @@
             color: var(--text-primary);
             border: 2px solid var(--border-color);
         }
-        
+       
         .editor-actions {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -1026,7 +979,7 @@
                 hsl(330, 100%, 50%),
                 hsl(360, 100%, 50%)
             );
-            box-shadow: 
+            box-shadow:
                 0 4px 20px rgba(0,0,0,0.15),
                 inset 0 0 40px rgba(255,255,255,0.2);
             position: relative;
@@ -1056,7 +1009,7 @@
             border-radius: 50%;
             background: white;
             border: 4px solid #333;
-            box-shadow: 
+            box-shadow:
                 0 3px 10px rgba(0,0,0,0.4),
                 0 0 0 2px white,
                 0 0 20px rgba(0,0,0,0.2);
@@ -1660,7 +1613,7 @@
                 </div>
                 <div class="step-description">اقرأ النص أدناه وصحح الأخطاء، يمكنك الاستماع للمقطع الصوتي للمساعدة</div>
             </div>
-            
+           
             <!-- مشغل الصوت في الأعلى -->
             <div class="audio-player-section" id="audioPlayerSection">
                 <div class="audio-section-title">
@@ -1691,7 +1644,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- النص المراد تصحيحه -->
             <div class="editor-container" id="editorContainer">
                 <div class="text-size-controls">
@@ -1716,7 +1668,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- صندوق التصحيح بالذكاء الاصطناعي -->
             <div class="ai-correction-box" id="aiCorrectionBox">
                 <div class="ai-correction-header">
@@ -1755,7 +1706,6 @@
                     </button>
                 </div>
             </div>
-
             <!-- أزرار الأدوات -->
             <div class="editor-actions">
                 <button class="action-btn ai-btn" id="aiBtn">
@@ -1776,7 +1726,7 @@
                 </button>
             </div>
         </div>
-        
+       
         <!-- الخطوة 2: القالب -->
         <div class="step-content" data-step="2">
             <div class="step-header">
@@ -1799,7 +1749,7 @@
                 <div class="colors-grid" id="colorsGrid"></div>
             </div>
         </div>
-        
+       
         <!-- الخطوة 3: الألوان -->
         <div class="step-content" data-step="3">
             <div class="step-header">
@@ -1847,7 +1797,7 @@
                 </div>
             </div>
         </div>
-        
+       
         <!-- الخطوة 4: البيانات -->
         <div class="step-content" data-step="4">
             <div class="step-header">
@@ -1897,7 +1847,7 @@
                 <span id="saveTemplateBtnText">💾 حفظ التعديلات على القالب الأساسي</span>
             </button>
         </div>
-        
+       
         <!-- الخطوة 5: SEO -->
         <div class="step-content" data-step="5">
             <div class="step-header">
@@ -1938,7 +1888,7 @@
                     <span>🏷️</span>
                     <span>الكلمات المفتاحية</span>
                 </div>
-                
+               
                 <div class="tags-input-section">
                     <div class="tags-input-wrapper">
                         <input type="text" class="tags-input" id="tagInput" placeholder="أدخل كلمة مفتاحية..." maxlength="30">
@@ -1950,7 +1900,7 @@
                 <div class="tags-container" id="tagsContainer">
                     <div style="color: var(--text-secondary); font-size: 12px;">لا توجد كلمات مفتاحية بعد</div>
                 </div>
-                
+               
                 <div class="seo-stats" id="seoStats" style="display: none;">
                     <div class="seo-stat-item">
                         <div class="seo-stat-label">عدد الكلمات</div>
@@ -1980,7 +1930,7 @@
                 <div class="serp-description" id="serpDescription">وصف الفيديو سيظهر هنا...</div>
             </div>
         </div>
-        
+       
         <!-- الخطوة 6: المراجعة -->
         <div class="step-content" data-step="6">
             <div class="step-header">
@@ -2130,7 +2080,7 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         try { tg.enableClosingConfirmation(); } catch (e) {}
-        
+       
         let currentStep = 1;
         const totalSteps = 6;
         let selectedTemplate = null;
@@ -2144,12 +2094,7 @@
         let currentTextSize = 20;
         const MIN_TEXT_SIZE = 14;
         const MAX_TEXT_SIZE = 28;
-        
-        // متغيرات للتثبيت
-        let isAudioSticky = false;
-        let audioPlayerSection = null;
-        let editorContainer = null;
-        
+       
         const formData = {
             ID: null,
             binId: '',
@@ -2177,7 +2122,7 @@
             status: 'completed',
             updated_at: new Date().toISOString()
         };
-        
+       
         // دالة التحكم بحجم النص
         document.getElementById('textSizeUp').addEventListener('click', () => {
             if (currentTextSize < MAX_TEXT_SIZE) {
@@ -2185,48 +2130,14 @@
                 document.getElementById('textEditor').style.fontSize = currentTextSize + 'px';
             }
         });
-        
+       
         document.getElementById('textSizeDown').addEventListener('click', () => {
             if (currentTextSize > MIN_TEXT_SIZE) {
                 currentTextSize -= 2;
                 document.getElementById('textEditor').style.fontSize = currentTextSize + 'px';
             }
         });
-        
-        // دالة تفعيل/إلغاء التثبيت
-        function toggleAudioSticky() {
-            if (!audioPlayerSection) {
-                audioPlayerSection = document.getElementById('audioPlayerSection');
-                editorContainer = document.getElementById('editorContainer');
-            }
-            
-            if (!isAudioSticky) {
-                audioPlayerSection.classList.add('sticky');
-                editorContainer.classList.add('with-sticky-audio');
-                isAudioSticky = true;
-            } else {
-                audioPlayerSection.classList.remove('sticky');
-                editorContainer.classList.remove('with-sticky-audio');
-                isAudioSticky = false;
-            }
-        }
-        
-        // إضافة حدث النقر على المقطع الصوتي
-        setTimeout(() => {
-            audioPlayerSection = document.getElementById('audioPlayerSection');
-            if (audioPlayerSection) {
-                audioPlayerSection.addEventListener('click', (e) => {
-                    // لا تفعل التثبيت إذا كان النقر على الأزرار
-                    if (e.target.closest('.play-pause-btn') || 
-                        e.target.closest('.speed-btn') || 
-                        e.target.closest('.progress-bar')) {
-                        return;
-                    }
-                    toggleAudioSticky();
-                });
-            }
-        }, 1000);
-        
+       
         function showLoading(text, subtext = '') {
             document.getElementById('loadingText').textContent = text;
             document.getElementById('loadingSubtext').textContent = subtext;
@@ -2274,7 +2185,7 @@
                     throw new Error(errorData.message || 'فشل تحميل البيانات');
                 }
                 const result = await response.json();
-                
+               
                 if (!result.success) {
                     throw new Error(result.message || 'فشل تحميل البيانات');
                 }
@@ -2310,7 +2221,7 @@
             const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
             document.getElementById('charCount').textContent = charCount.toLocaleString('ar');
             document.getElementById('wordCount').textContent = wordCount.toLocaleString('ar');
-            
+           
             formData.corrected_full_text = text;
             validateCurrentStep();
         }
@@ -2339,11 +2250,11 @@
                     throw new Error(errorData.userMessage || errorData.message || 'فشل التصحيح');
                 }
                 const result = await response.json();
-                
+               
                 if (result.success && result.correctedText) {
                     aiCorrectedText = result.correctedText;
                     aiChangesCount = result.meta?.changesCount || 0;
-                    
+                   
                     const correctedWords = aiCorrectedText.trim().split(/\s+/).length;
                     const correctedChars = aiCorrectedText.length;
                     document.getElementById('aiCorrectionText').textContent = aiCorrectedText;
@@ -2397,7 +2308,7 @@
             }
         });
         const audioElement = document.getElementById('audioElement');
-        
+       
         document.getElementById('playPauseBtn').addEventListener('click', () => {
             if (audioElement.paused) {
                 audioElement.play();
@@ -2495,16 +2406,16 @@
             formData.series_color = color.landscape_series_color;
             formData.subseries_color = color.landscape_subseries_color;
             formData.finalseries_color = color.landscape_finalseries_color;
-            
+           
             recommendedSeriesColor = color.landscape_series_color;
             document.getElementById('mainSeriesInput').value = color.series_text || '';
             document.getElementById('subSeriesInput').value = color.sub_series_text || '';
             document.getElementById('finalSeriesInput').value = color.final_series_text || '';
-            
+           
             formData.series = color.series_text || '';
             formData.subSeries = color.sub_series_text || '';
             formData.finalSeries = color.final_series_text || '';
-            
+           
             updateCharCounters();
             const landscapeImg = document.getElementById('landscapePreview');
             const portraitImg = document.getElementById('portraitPreview');
@@ -2545,7 +2456,7 @@
             recommendedSeriesColor = seriesColor;
             formData.series_color = seriesColor;
             currentColor = seriesColor;
-            
+           
             updateColorDisplay(seriesColor);
             updateHandlePosition(seriesColor);
             document.getElementById('recommendedColorBtn').classList.add('selected');
@@ -2564,18 +2475,18 @@
             const rect = container.getBoundingClientRect();
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
-            
+           
             const rgb = hexToRgb(hexColor);
             if (!rgb) return;
-            
+           
             const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-            
+           
             const angle = hsl.h * (Math.PI / 180);
             const distance = (hsl.s / 100) * (centerX * 0.75);
-            
+           
             const x = centerX + distance * Math.cos(angle);
             const y = centerY + distance * Math.sin(angle);
-            
+           
             handle.style.left = `${x}px`;
             handle.style.top = `${y}px`;
         }
@@ -2592,33 +2503,33 @@
             const rect = colorWheelContainer.getBoundingClientRect();
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
-            
+           
             const deltaX = x - centerX;
             const deltaY = y - centerY;
             const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
             const maxDistance = centerX * 0.85;
-            
+           
             if (distance > maxDistance) return null;
-            
+           
             let angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
             if (angle < 0) angle += 360;
-            
+           
             const saturation = Math.min((distance / maxDistance) * 100, 100);
             const lightness = 50;
-            
+           
             return hslToHex(angle, saturation, lightness);
         }
         function handleColorPick(e) {
             e.preventDefault();
             e.stopPropagation();
-            
+           
             const rect = colorWheelContainer.getBoundingClientRect();
             const touch = e.touches ? e.touches[0] : e;
             const x = touch.clientX - rect.left;
             const y = touch.clientY - rect.top;
-            
+           
             const color = getColorAtPosition(x, y);
-            
+           
             if (color) {
                 updateColorDisplay(color);
                 colorPickerHandle.style.left = `${x}px`;
@@ -2630,7 +2541,7 @@
             isDragging = true;
             e.preventDefault();
         });
-        
+       
         colorPickerHandle.addEventListener('touchstart', (e) => {
             isDragging = true;
             e.preventDefault();
@@ -2681,7 +2592,7 @@
             } else {
                 const d = max - min;
                 s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-                
+               
                 switch (max) {
                     case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
                     case g: h = ((b - r) / d + 2) / 6; break;
@@ -2705,7 +2616,7 @@
                 const input = document.getElementById(field + 'Input');
                 const counter = document.getElementById(field + 'Count');
                 counter.textContent = input.value.length;
-                
+               
                 const key = field === 'mainSeries' ? 'series' : field === 'subSeries' ? 'subSeries' : field === 'finalSeries' ? 'finalSeries' : 'title';
                 formData[key] = input.value;
             });
@@ -2764,7 +2675,7 @@
                 console.log('✅ استجابة N8N:', result);
                 hideLoading();
                 alert('✅ تم حفظ التعديلات بنجاح!');
-                
+               
             } catch (error) {
                 console.error('❌ Error saving template:', error);
                 hideLoading();
@@ -2774,7 +2685,7 @@
         function addTag(tagText) {
             const trimmed = tagText.trim();
             if (!trimmed) return;
-            
+           
             if (formData.tags.includes(trimmed)) {
                 alert('⚠️ الكلمة موجودة مسبقاً');
                 return;
@@ -2799,10 +2710,10 @@
         function updateSerpPreview() {
             const title = formData.seo_title || 'عنوان الفيديو';
             const description = formData.seo_description || 'وصف الفيديو سيظهر هنا...';
-            
+           
             document.getElementById('serpTitle').textContent = title;
             document.getElementById('serpDescription').textContent = description.substring(0, 160) + (description.length > 160 ? '...' : '');
-            
+           
             if (formData.seo_title || formData.seo_description) {
                 document.getElementById('serpPreview').style.display = 'block';
             }
@@ -2829,7 +2740,7 @@
                     throw new Error(errorData.userMessage || 'فشل إنشاء SEO');
                 }
                 const result = await response.json();
-                
+               
                 if (result.success) {
                     formData.seo_title = result.title || '';
                     formData.seo_description = result.description || '';
@@ -2840,7 +2751,7 @@
                     renderTags();
                     updateSEOStats();
                     updateSerpPreview();
-                    
+                   
                     const btn = document.getElementById('seoGenerateBtn');
                     btn.classList.add('generated');
                     btn.innerHTML = '<span>✅</span><span>تم إنشاء SEO بنجاح - اضغط لإعادة الإنشاء</span>';
@@ -2871,14 +2782,14 @@
                     <span class="tag-text">${tag}</span>
                     <button class="tag-remove" data-index="${index}">×</button>
                 `;
-                
+               
                 tagEl.querySelector('.tag-remove').onclick = () => {
                     formData.tags.splice(index, 1);
                     renderTags();
                     updateSEOStats();
                     validateCurrentStep();
                 };
-                
+               
                 container.appendChild(tagEl);
             });
         }
@@ -2918,7 +2829,7 @@
                 content.classList.toggle('active', i + 1 === currentStep);
             });
             document.getElementById('btnBack').style.display = currentStep > 1 ? 'flex' : 'none';
-            
+           
             if (currentStep === totalSteps) {
                 document.getElementById('btnNext').innerHTML = '<span>إرسال</span><span>✅</span>';
                 document.getElementById('btnNext').className = 'nav-btn btn-submit';
@@ -2934,25 +2845,25 @@
         function validateCurrentStep() {
             let isValid = false;
             switch(currentStep) {
-                case 1: 
-                    isValid = formData.corrected_full_text.trim().length > 0; 
+                case 1:
+                    isValid = formData.corrected_full_text.trim().length > 0;
                     break;
-                case 2: 
-                    isValid = formData.template_id && formData.color_id; 
+                case 2:
+                    isValid = formData.template_id && formData.color_id;
                     break;
-                case 3: 
-                    isValid = formData.series_color; 
+                case 3:
+                    isValid = formData.series_color;
                     break;
-                case 4: 
-                    isValid = formData.title.trim() && formData.series.trim() && formData.subSeries.trim() && formData.finalSeries.trim(); 
+                case 4:
+                    isValid = formData.title.trim() && formData.series.trim() && formData.subSeries.trim() && formData.finalSeries.trim();
                     break;
-                case 5: 
-                    isValid = formData.seo_title.trim().length > 0 && 
-                              formData.seo_description.trim().length > 0 && 
+                case 5:
+                    isValid = formData.seo_title.trim().length > 0 &&
+                              formData.seo_description.trim().length > 0 &&
                               formData.tags.length > 0;
                     break;
-                case 6: 
-                    isValid = true; 
+                case 6:
+                    isValid = true;
                     break;
             }
             document.getElementById('btnNext').disabled = !isValid;
@@ -2963,20 +2874,12 @@
                 return;
             }
             if (currentStep < totalSteps) {
-                // إلغاء التثبيت عند الانتقال
-                if (isAudioSticky) {
-                    toggleAudioSticky();
-                }
                 currentStep++;
                 updateProgress();
             }
         }
         function prevStep() {
             if (currentStep > 1) {
-                // إلغاء التثبيت عند الرجوع
-                if (isAudioSticky) {
-                    toggleAudioSticky();
-                }
                 currentStep--;
                 updateProgress();
             }
@@ -2985,10 +2888,10 @@
         document.getElementById('btnBack').addEventListener('click', prevStep);
         function updateReview() {
             const words = formData.corrected_full_text.trim() ? formData.corrected_full_text.trim().split(/\s+/).length : 0;
-            
+           
             document.getElementById('reviewWordCount').textContent = words;
             document.getElementById('reviewCharCount').textContent = formData.corrected_full_text.length;
-            
+           
             if (aiChangesCount > 0) {
                 document.getElementById('reviewAiStats').style.display = 'flex';
                 document.getElementById('reviewAiChanges').textContent = aiChangesCount;
@@ -2996,20 +2899,20 @@
             document.getElementById('reviewTemplate').textContent = formData.template_name || '-';
             document.getElementById('reviewColor').textContent = formData.color_name || '-';
             document.getElementById('reviewSeriesColor').innerHTML = `<div style="width:18px;height:18px;background:${formData.series_color};border-radius:4px;display:inline-block;margin-left:8px"></div>${formData.series_color}`;
-            
+           
             document.getElementById('reviewMainSeries').textContent = formData.series || '-';
             document.getElementById('reviewSubSeries').textContent = formData.subSeries || '-';
             document.getElementById('reviewFinalSeries').textContent = formData.finalSeries || '-';
             document.getElementById('reviewTitle').textContent = formData.title || '-';
-            
+           
             document.getElementById('reviewSerpTitle').textContent = formData.seo_title || 'عنوان الفيديو';
             document.getElementById('reviewSerpDescription').textContent = (formData.seo_description || 'وصف الفيديو...').substring(0, 160) + ((formData.seo_description || '').length > 160 ? '...' : '');
-            
+           
             document.getElementById('reviewSeoTitleBox').textContent = formData.seo_title || '-';
             document.getElementById('reviewSeoDescBox').textContent = formData.seo_description || '-';
             const tagsPreview = document.getElementById('reviewTagsPreview');
             tagsPreview.innerHTML = '';
-            
+           
             if (formData.tags && formData.tags.length > 0) {
                 formData.tags.forEach(tag => {
                     const tagEl = document.createElement('div');
