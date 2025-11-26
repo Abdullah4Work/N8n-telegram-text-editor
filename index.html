@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, viewport-fit=cover">
     <meta name="description" content="نشر محتوى احترافي - رقيتي">
     <meta name="theme-color" content="#4A90E2">
-    <title>نشر محتوى احترافي - رقيتي</title>
+    <title>نشر محتوى احترافي - رقيتي v2</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -14,7 +14,6 @@
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
-
         :root {
             --primary: #4A90E2;
             --primary-light: #5BA3F5;
@@ -41,7 +40,6 @@
             --radius-lg: 14px;
             --radius-xl: 18px;
         }
-
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-primary);
@@ -53,7 +51,6 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
         }
-
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -68,11 +65,9 @@
             flex-direction: column;
             gap: 16px;
         }
-
         .loading-overlay.visible {
             display: flex;
         }
-
         .spinner {
             width: 50px;
             height: 50px;
@@ -81,24 +76,20 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
-
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-
         .loading-text {
             font-size: 16px;
             color: var(--text-primary);
             font-weight: 700;
         }
-
         .loading-subtext {
             font-size: 14px;
             color: var(--text-secondary);
             text-align: center;
             max-width: 280px;
         }
-
         .progress-wrapper {
             background: var(--bg-secondary);
             padding: 14px 16px;
@@ -107,7 +98,6 @@
             top: 0;
             z-index: 100;
         }
-
         .progress-steps {
             display: flex;
             justify-content: space-between;
@@ -116,26 +106,25 @@
             position: relative;
             padding: 0 8px;
         }
-
         .progress-line {
             position: absolute;
             top: 14px;
-            left: 6%;
             right: 6%;
+            left: 6%;
             height: 3px;
             background: var(--border-light);
             z-index: 1;
             border-radius: 10px;
+            direction: ltr;
         }
-
         .progress-line-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            background: linear-gradient(270deg, var(--primary), var(--primary-light));
             transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             width: 0%;
             border-radius: 10px;
+            transform-origin: right;
         }
-
         .progress-step {
             display: flex;
             flex-direction: column;
@@ -145,7 +134,6 @@
             z-index: 2;
             flex: 1;
         }
-
         .step-circle {
             width: 30px;
             height: 30px;
@@ -161,7 +149,6 @@
             transition: all 0.3s;
             box-shadow: var(--shadow-sm);
         }
-
         .progress-step.active .step-circle {
             background: var(--primary);
             border-color: var(--primary);
@@ -169,13 +156,11 @@
             transform: scale(1.1);
             box-shadow: 0 4px 12px rgba(74, 144, 226, 0.4);
         }
-
         .progress-step.completed .step-circle {
             background: var(--success);
             border-color: var(--success);
             color: white;
         }
-
         .step-label {
             font-size: 10px;
             color: var(--text-secondary);
@@ -183,18 +168,15 @@
             font-weight: 600;
             max-width: 60px;
         }
-
         .progress-step.active .step-label {
             color: var(--primary);
         }
-
         .container {
             flex: 1;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
-
         .step-content {
             display: none;
             flex: 1;
@@ -203,25 +185,21 @@
             animation: fadeInUp 0.4s ease;
             -webkit-overflow-scrolling: touch;
         }
-
         .step-content.active {
             display: flex;
             flex-direction: column;
         }
-
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .step-header {
             margin-bottom: 20px;
             padding: 16px;
             background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(92, 168, 245, 0.05));
             border-radius: 12px;
-            border-left: 4px solid var(--primary);
+            border-right: 4px solid var(--primary);
         }
-
         .step-title {
             font-size: 20px;
             font-weight: 800;
@@ -231,41 +209,98 @@
             align-items: center;
             gap: 10px;
         }
-
         .step-description {
             font-size: 13px;
             color: var(--text-secondary);
             line-height: 1.5;
         }
 
+        /* ===== مشغل الصوت ===== */
         .audio-player-section {
             background: var(--bg-secondary);
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 16px;
             box-shadow: var(--shadow-md);
+            border: 2px solid var(--primary-lighter);
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
-
+        
+        .audio-player-section:not(.sticky):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.3);
+        }
+        
+        .audio-player-section.sticky {
+            position: fixed;
+            top: 60px;
+            left: 14px;
+            right: 14px;
+            z-index: 150;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            animation: slideDownSticky 0.3s ease;
+            cursor: default;
+        }
+        
+        @keyframes slideDownSticky {
+            from { 
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .audio-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .audio-player-section:not(.sticky) .audio-section-title::after {
+            content: ' (اضغط للتثبيت)';
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+        
+        .audio-player-section.sticky .audio-section-title::after {
+            content: '📌';
+            margin-right: 8px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
         .audio-player {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
-
         .audio-controls {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-
         .play-pause-btn {
-            width: 48px;
-            height: 48px;
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             border: none;
             color: white;
-            font-size: 20px;
+            font-size: 22px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -274,51 +309,45 @@
             flex-shrink: 0;
             box-shadow: var(--shadow-md);
         }
-
         .play-pause-btn:active {
             transform: scale(0.95);
         }
-
         .audio-progress {
             flex: 1;
             display: flex;
             flex-direction: column;
             gap: 6px;
         }
-
         .progress-bar {
             width: 100%;
-            height: 6px;
+            height: 8px;
             background: var(--bg-tertiary);
             border-radius: 10px;
             overflow: hidden;
             cursor: pointer;
             position: relative;
-            direction: ltr;
+            direction: rtl;
         }
-
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            background: linear-gradient(270deg, var(--primary), var(--primary-light));
             width: 0%;
             transition: width 0.1s linear;
+            transform-origin: right;
         }
-
         .time-display {
             display: flex;
             justify-content: space-between;
-            font-size: 11px;
+            font-size: 12px;
             color: var(--text-secondary);
             font-weight: 600;
         }
-
         .speed-controls {
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
             justify-content: center;
         }
-
         .speed-btn {
             padding: 8px 12px;
             border: 2px solid var(--border-color);
@@ -332,17 +361,115 @@
             white-space: nowrap;
             min-width: 55px;
         }
-
         .speed-btn:active {
             transform: scale(0.95);
         }
-
         .speed-btn.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
         }
 
+        /* ===== محرر النص ===== */
+        .editor-container {
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            transition: margin-top 0.3s ease;
+        }
+        
+        .editor-container.with-sticky-audio {
+            margin-top: 140px;
+        }
+        
+        .text-size-controls {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+        }
+        
+        .text-size-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            font-size: 20px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+            transition: all 0.2s;
+        }
+        
+        .text-size-btn:active {
+            transform: scale(0.9);
+        }
+        
+        .editor-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding-left: 90px;
+        }
+        
+        .editor-textarea {
+            width: 100%;
+            min-height: 300px;
+            padding: 14px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 20px;
+            line-height: 1.8;
+            resize: vertical;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: #FAFBFC;
+        }
+        
+        .editor-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+            background: white;
+        }
+        
+        .editor-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 2px solid var(--border-light);
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .stat-value {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 15px;
+        }
+        
         .ai-correction-box {
             display: none;
             background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
@@ -352,24 +479,20 @@
             margin-bottom: 16px;
             box-shadow: 0 4px 16px rgba(74, 144, 226, 0.2);
         }
-
         .ai-correction-box.visible {
             display: block;
             animation: slideDown 0.4s ease;
         }
-
         @keyframes slideDown {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .ai-correction-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 12px;
         }
-
         .ai-correction-title {
             font-size: 15px;
             font-weight: 700;
@@ -378,7 +501,6 @@
             align-items: center;
             gap: 8px;
         }
-
         .ai-correction-close {
             width: 28px;
             height: 28px;
@@ -393,18 +515,16 @@
             color: var(--text-secondary);
             transition: all 0.2s;
         }
-
         .ai-correction-close:hover {
             background: var(--danger);
             color: white;
             border-color: var(--danger);
         }
-
         .ai-correction-text {
             background: white;
             padding: 14px;
             border-radius: 10px;
-            font-size: 14px;
+            font-size: 15px;
             line-height: 1.8;
             color: var(--text-primary);
             max-height: 250px;
@@ -413,7 +533,6 @@
             box-shadow: var(--shadow-sm);
             border: 1px solid rgba(0,0,0,0.05);
         }
-
         .ai-correction-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -423,7 +542,6 @@
             padding: 12px;
             border-radius: 8px;
         }
-
         .ai-stat {
             display: flex;
             flex-direction: column;
@@ -433,28 +551,23 @@
             background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(92, 168, 245, 0.05));
             border-radius: 8px;
         }
-
         .ai-stat-icon {
             font-size: 18px;
         }
-
         .ai-stat-value {
             font-size: 16px;
             font-weight: 700;
             color: var(--primary);
         }
-
         .ai-stat-label {
             font-size: 10px;
             color: var(--text-secondary);
             text-align: center;
         }
-
         .ai-correction-actions {
             display: flex;
             gap: 10px;
         }
-
         .ai-action-btn {
             flex: 1;
             padding: 12px;
@@ -469,92 +582,26 @@
             justify-content: center;
             gap: 6px;
         }
-
         .ai-action-btn:active {
             transform: scale(0.97);
         }
-
         .ai-action-btn.accept {
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             box-shadow: var(--shadow-md);
         }
-
         .ai-action-btn.reject {
             background: white;
             color: var(--text-primary);
             border: 2px solid var(--border-color);
         }
-
-        .editor-container {
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow-md);
-        }
-
-        .editor-label {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .editor-textarea {
-            width: 100%;
-            min-height: 260px;
-            padding: 14px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 15px;
-            line-height: 1.7;
-            resize: vertical;
-            font-family: inherit;
-            transition: all 0.3s;
-            background: #FAFBFC;
-        }
-
-        .editor-textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
-            background: white;
-        }
-
-        .editor-stats {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 2px solid var(--border-light);
-            font-size: 12px;
-            color: var(--text-secondary);
-        }
-
-        .stat-item {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .stat-value {
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 15px;
-        }
-
+        
         .editor-actions {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             margin-bottom: 16px;
         }
-
         .action-btn {
             padding: 12px;
             border: 2px solid var(--border-color);
@@ -570,11 +617,9 @@
             gap: 6px;
             transition: all 0.2s;
         }
-
         .action-btn:active {
             transform: scale(0.98);
         }
-
         .action-btn.ai-btn {
             grid-column: 1 / -1;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
@@ -584,14 +629,12 @@
             font-size: 15px;
             padding: 14px;
         }
-
         .templates-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 14px;
             margin-bottom: 20px;
         }
-
         .template-card {
             background: var(--bg-secondary);
             border: 3px solid var(--border-color);
@@ -602,20 +645,16 @@
             position: relative;
             box-shadow: var(--shadow-sm);
         }
-
         .template-card.large {
             grid-column: span 2;
         }
-
         .template-card:active {
             transform: scale(0.98);
         }
-
         .template-card.selected {
             border-color: var(--primary);
             box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
         }
-
         .template-preview {
             width: 100%;
             aspect-ratio: 16/9;
@@ -627,11 +666,9 @@
             background-size: cover;
             background-position: center;
         }
-
         .template-card.large .template-preview {
             font-size: 60px;
         }
-
         .template-preview::before {
             content: '';
             position: absolute;
@@ -641,7 +678,6 @@
             bottom: 0;
             background: linear-gradient(135deg, rgba(0,0,0,0.4), rgba(0,0,0,0.2));
         }
-
         .template-number {
             position: relative;
             z-index: 2;
@@ -649,11 +685,10 @@
             font-weight: 700;
             text-shadow: 0 2px 8px rgba(0,0,0,0.6);
         }
-
         .template-check {
             position: absolute;
             top: 10px;
-            right: 10px;
+            left: 10px;
             width: 32px;
             height: 32px;
             background: var(--success);
@@ -665,17 +700,14 @@
             font-size: 18px;
             z-index: 3;
         }
-
         .template-card.selected .template-check {
             display: flex;
             animation: scaleIn 0.3s ease;
         }
-
         @keyframes scaleIn {
             from { transform: scale(0); }
             to { transform: scale(1); }
         }
-
         .template-name {
             padding: 12px;
             text-align: center;
@@ -684,7 +716,6 @@
             color: var(--text-primary);
             background: linear-gradient(to bottom, white, #F8F9FA);
         }
-
         .section-title {
             font-size: 15px;
             font-weight: 700;
@@ -696,19 +727,16 @@
             padding: 12px;
             background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(92, 168, 245, 0.05));
             border-radius: 10px;
-            border-left: 3px solid var(--primary);
+            border-right: 3px solid var(--primary);
         }
-
         .colors-section {
             margin-bottom: 20px;
         }
-
         .colors-grid {
             display: flex;
             flex-direction: column;
             gap: 14px;
         }
-
         .color-option {
             width: 100%;
             aspect-ratio: 16/9;
@@ -722,24 +750,19 @@
             background-position: center;
             box-shadow: var(--shadow-sm);
         }
-
         .color-option:active {
             transform: scale(0.98);
         }
-
         .color-option.selected {
             border-color: var(--primary);
             box-shadow: 0 4px 16px rgba(74, 144, 226, 0.4);
         }
-
         .color-option .template-check {
             display: none;
         }
-
         .color-option.selected .template-check {
             display: flex;
         }
-
         .template-preview-modal {
             position: fixed;
             top: 0;
@@ -753,11 +776,9 @@
             z-index: 9999;
             padding: 20px;
         }
-
         .template-preview-modal.visible {
             display: flex;
         }
-
         .preview-content {
             background: white;
             border-radius: 18px;
@@ -768,25 +789,21 @@
             overflow-y: auto;
             animation: slideUp 0.4s ease;
         }
-
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(50px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
         .preview-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
-
         .preview-title {
             font-size: 18px;
             font-weight: 700;
             color: var(--text-primary);
         }
-
         .close-preview {
             width: 36px;
             height: 36px;
@@ -801,21 +818,17 @@
             justify-content: center;
             transition: all 0.2s;
         }
-
         .close-preview:active {
             transform: scale(0.95);
         }
-
         .preview-images {
             display: flex;
             flex-direction: column;
             gap: 18px;
         }
-
         .preview-image-wrapper {
             text-align: center;
         }
-
         .preview-image-label {
             font-size: 13px;
             font-weight: 700;
@@ -826,18 +839,15 @@
             justify-content: center;
             gap: 6px;
         }
-
         .preview-image {
             width: 100%;
             border-radius: 12px;
             box-shadow: var(--shadow-lg);
             display: none;
         }
-
         .preview-image.loaded {
             display: block;
         }
-
         .preview-image-loading {
             width: 100%;
             aspect-ratio: 16/9;
@@ -847,11 +857,9 @@
             background: var(--bg-primary);
             border-radius: 12px;
         }
-
         .preview-image-loading.hidden {
             display: none;
         }
-
         .preview-next-btn {
             width: 100%;
             padding: 14px;
@@ -869,11 +877,9 @@
             gap: 8px;
             transition: all 0.2s;
         }
-
         .preview-next-btn:active {
             transform: scale(0.98);
         }
-
         .series-color-preview {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             border-radius: 12px;
@@ -885,7 +891,6 @@
             overflow: hidden;
             border: 3px solid #2d3748;
         }
-
         .series-color-preview::before {
             content: '';
             position: absolute;
@@ -896,7 +901,6 @@
             background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
             pointer-events: none;
         }
-
         .preview-text {
             font-size: 26px;
             font-weight: 800;
@@ -906,14 +910,12 @@
             z-index: 1;
             text-shadow: 0 2px 10px rgba(0,0,0,0.5);
         }
-
         .preview-hint {
             font-size: 12px;
             color: rgba(255,255,255,0.6);
             position: relative;
             z-index: 1;
         }
-
         .recommended-color-section {
             background: var(--bg-secondary);
             border-radius: 12px;
@@ -921,7 +923,6 @@
             margin-bottom: 18px;
             box-shadow: var(--shadow-md);
         }
-
         .recommended-color-btn {
             width: 100%;
             padding: 16px;
@@ -935,22 +936,18 @@
             justify-content: space-between;
             gap: 12px;
         }
-
         .recommended-color-btn:active {
             transform: scale(0.98);
         }
-
         .recommended-color-btn.selected {
             background: var(--primary-lighter);
             border-color: var(--primary);
         }
-
         .recommended-color-info {
             display: flex;
             align-items: center;
             gap: 12px;
         }
-
         .recommended-badge {
             background: #FFD700;
             color: #000;
@@ -959,31 +956,26 @@
             font-size: 11px;
             font-weight: 700;
         }
-
         .recommended-color-preview {
             width: 48px;
             height: 48px;
             border-radius: 50%;
             border: 3px solid var(--border-color);
         }
-
         .recommended-color-text {
             text-align: right;
             flex: 1;
         }
-
         .recommended-color-title {
             font-size: 14px;
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 4px;
         }
-
         .recommended-color-subtitle {
             font-size: 12px;
             color: var(--text-secondary);
         }
-
         .custom-color-section {
             background: var(--bg-secondary);
             border-radius: 14px;
@@ -991,7 +983,6 @@
             margin-bottom: 20px;
             box-shadow: var(--shadow-md);
         }
-
         .custom-color-title {
             font-size: 14px;
             font-weight: 700;
@@ -1001,7 +992,6 @@
             align-items: center;
             gap: 8px;
         }
-
         .color-picker-wrapper {
             display: flex;
             flex-direction: column;
@@ -1009,7 +999,6 @@
             gap: 20px;
             touch-action: none;
         }
-
         .color-wheel-container {
             position: relative;
             width: 220px;
@@ -1017,7 +1006,6 @@
             margin: 0 auto;
             touch-action: none;
         }
-
         .color-wheel {
             width: 100%;
             height: 100%;
@@ -1044,7 +1032,6 @@
             position: relative;
             touch-action: none;
         }
-
         .color-wheel::before {
             content: '';
             position: absolute;
@@ -1062,7 +1049,6 @@
             );
             pointer-events: none;
         }
-
         .color-picker-handle {
             position: absolute;
             width: 28px;
@@ -1080,12 +1066,10 @@
             z-index: 10;
             touch-action: none;
         }
-
         .color-picker-handle:active {
             cursor: grabbing;
             transform: translate(-50%, -50%) scale(1.15);
         }
-
         .hex-input-wrapper {
             display: flex;
             align-items: center;
@@ -1093,7 +1077,6 @@
             width: 100%;
             max-width: 300px;
         }
-
         .hex-preview {
             width: 56px;
             height: 56px;
@@ -1102,7 +1085,6 @@
             transition: all 0.3s;
             box-shadow: var(--shadow-sm);
         }
-
         .hex-input {
             flex: 1;
             padding: 13px;
@@ -1115,17 +1097,14 @@
             direction: ltr;
             transition: all 0.3s;
         }
-
         .hex-input:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
-
         .form-group {
             margin-bottom: 20px;
         }
-
         .form-label {
             font-size: 14px;
             font-weight: 700;
@@ -1135,13 +1114,11 @@
             align-items: center;
             gap: 6px;
         }
-
         .form-hint {
             font-size: 12px;
             color: var(--text-secondary);
             margin-top: 4px;
         }
-
         .form-input {
             width: 100%;
             padding: 13px;
@@ -1152,13 +1129,11 @@
             transition: all 0.3s;
             background: white;
         }
-
         .form-input:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
-
         .char-counter {
             text-align: left;
             font-size: 11px;
@@ -1166,7 +1141,6 @@
             margin-top: 4px;
             direction: ltr;
         }
-
         .save-template-btn {
             width: 100%;
             padding: 14px;
@@ -1185,16 +1159,13 @@
             margin-top: 20px;
             box-shadow: var(--shadow-md);
         }
-
         .save-template-btn:active {
             transform: scale(0.98);
         }
-
         .save-template-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
-
         .seo-generate-btn {
             width: 100%;
             padding: 18px;
@@ -1213,20 +1184,16 @@
             margin-bottom: 20px;
             box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
         }
-
         .seo-generate-btn:active {
             transform: scale(0.98);
         }
-
         .seo-generate-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
-
         .seo-generate-btn.generated {
             background: linear-gradient(135deg, var(--success), var(--success-light));
         }
-
         .seo-section {
             background: var(--bg-secondary);
             border-radius: 12px;
@@ -1235,12 +1202,10 @@
             box-shadow: var(--shadow-md);
             border: 2px solid var(--border-color);
         }
-
         .seo-section.highlight {
             border-color: var(--primary);
             box-shadow: 0 4px 20px rgba(74, 144, 226, 0.2);
         }
-
         .seo-section-title {
             font-size: 15px;
             font-weight: 700;
@@ -1250,7 +1215,6 @@
             align-items: center;
             gap: 8px;
         }
-
         .serp-preview {
             background: white;
             border: 2px solid var(--border-color);
@@ -1259,7 +1223,6 @@
             margin-top: 16px;
             box-shadow: var(--shadow-sm);
         }
-
         .serp-preview-title {
             font-size: 13px;
             font-weight: 700;
@@ -1269,7 +1232,6 @@
             align-items: center;
             gap: 6px;
         }
-
         .serp-url {
             font-size: 12px;
             color: var(--text-secondary);
@@ -1277,7 +1239,6 @@
             direction: ltr;
             text-align: left;
         }
-
         .serp-title {
             font-size: 18px;
             font-weight: 600;
@@ -1286,17 +1247,14 @@
             line-height: 1.3;
             cursor: pointer;
         }
-
         .serp-title:hover {
             text-decoration: underline;
         }
-
         .serp-description {
             font-size: 13px;
             color: #545454;
             line-height: 1.5;
         }
-
         .form-textarea {
             width: 100%;
             min-height: 120px;
@@ -1309,23 +1267,19 @@
             background: white;
             resize: vertical;
         }
-
         .form-textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
-
         .tags-input-section {
             margin-bottom: 16px;
         }
-
         .tags-input-wrapper {
             display: flex;
             gap: 8px;
             margin-bottom: 12px;
         }
-
         .tags-input {
             flex: 1;
             padding: 13px;
@@ -1336,13 +1290,11 @@
             transition: all 0.3s;
             background: white;
         }
-
         .tags-input:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
-
         .tags-add-btn {
             padding: 13px 20px;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
@@ -1355,16 +1307,13 @@
             transition: all 0.2s;
             white-space: nowrap;
         }
-
         .tags-add-btn:active {
             transform: scale(0.95);
         }
-
         .tags-add-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-
         .tags-container {
             display: flex;
             flex-wrap: wrap;
@@ -1374,7 +1323,6 @@
             border-radius: 8px;
             min-height: 60px;
         }
-
         .tag-item {
             background: white;
             border: 2px solid var(--border-color);
@@ -1386,15 +1334,12 @@
             gap: 6px;
             transition: all 0.2s;
         }
-
         .tag-item:hover {
             border-color: var(--danger);
         }
-
         .tag-text {
             cursor: pointer;
         }
-
         .tag-remove {
             background: none;
             border: none;
@@ -1410,11 +1355,9 @@
             justify-content: center;
             transition: all 0.2s;
         }
-
         .tag-remove:hover {
             transform: scale(1.2);
         }
-
         .seo-stats {
             background: var(--bg-primary);
             border-radius: 8px;
@@ -1424,24 +1367,20 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
         }
-
         .seo-stat-item {
             display: flex;
             flex-direction: column;
             gap: 4px;
         }
-
         .seo-stat-label {
             font-size: 11px;
             color: var(--text-secondary);
         }
-
         .seo-stat-value {
             font-size: 16px;
             font-weight: 700;
             color: var(--primary);
         }
-
         .review-section {
             background: var(--bg-secondary);
             border-radius: 12px;
@@ -1449,7 +1388,6 @@
             margin-bottom: 16px;
             box-shadow: var(--shadow-md);
         }
-
         .review-section-title {
             font-size: 14px;
             font-weight: 700;
@@ -1459,7 +1397,6 @@
             align-items: center;
             gap: 6px;
         }
-
         .review-item {
             padding: 10px 0;
             border-bottom: 1px solid var(--border-light);
@@ -1468,17 +1405,14 @@
             align-items: flex-start;
             gap: 12px;
         }
-
         .review-item:last-child {
             border-bottom: none;
         }
-
         .review-label {
             font-size: 13px;
             color: var(--text-secondary);
             min-width: 80px;
         }
-
         .review-value {
             font-size: 14px;
             font-weight: 600;
@@ -1487,7 +1421,6 @@
             flex: 1;
             word-break: break-word;
         }
-
         .review-expand-btn {
             background: none;
             border: none;
@@ -1501,7 +1434,6 @@
             align-items: center;
             gap: 4px;
         }
-
         .review-tags-preview {
             display: flex;
             flex-wrap: wrap;
@@ -1510,11 +1442,9 @@
             overflow: hidden;
             transition: max-height 0.3s ease;
         }
-
         .review-tags-preview.expanded {
             max-height: none;
         }
-
         .review-tag {
             background: var(--bg-primary);
             padding: 4px 8px;
@@ -1522,18 +1452,15 @@
             font-size: 11px;
             color: var(--text-primary);
         }
-
         .review-template-images {
             display: flex;
             flex-direction: column;
             gap: 16px;
             margin-top: 16px;
         }
-
         .review-image-wrapper {
             text-align: center;
         }
-
         .review-image-label {
             font-size: 12px;
             font-weight: 700;
@@ -1544,18 +1471,15 @@
             justify-content: center;
             gap: 6px;
         }
-
         .review-image {
             width: 100%;
             border-radius: 12px;
             box-shadow: var(--shadow-md);
             display: none;
         }
-
         .review-image.loaded {
             display: block;
         }
-
         .review-image-loading {
             width: 100%;
             aspect-ratio: 16/9;
@@ -1565,11 +1489,9 @@
             background: var(--bg-primary);
             border-radius: 12px;
         }
-
         .review-image-loading.hidden {
             display: none;
         }
-
         .review-seo-title-box,
         .review-seo-desc-box {
             background: var(--bg-primary);
@@ -1579,17 +1501,14 @@
             font-size: 13px;
             line-height: 1.6;
         }
-
         .review-seo-desc-box {
             max-height: 80px;
             overflow: hidden;
             transition: max-height 0.3s ease;
         }
-
         .review-seo-desc-box.expanded {
             max-height: none;
         }
-
         .nav-buttons {
             padding: 14px;
             background: white;
@@ -1603,7 +1522,6 @@
             right: 0;
             z-index: 50;
         }
-
         .nav-btn {
             flex: 1;
             padding: 14px;
@@ -1618,50 +1536,45 @@
             justify-content: center;
             gap: 8px;
         }
-
         .nav-btn:active {
             transform: scale(0.98);
         }
-
         .nav-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
         }
-
         .btn-back {
             background: white;
             border: 2px solid var(--border-color);
             color: var(--text-primary);
         }
-
         .btn-next {
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             box-shadow: var(--shadow-md);
         }
-
         .btn-submit {
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             box-shadow: var(--shadow-md);
         }
-
         @media (max-width: 480px) {
             .step-content {
                 padding: 16px 12px 100px;
             }
-
             .color-wheel-container {
                 width: 200px;
                 height: 200px;
             }
-
             .templates-grid {
                 grid-template-columns: 1fr;
             }
-
             .template-card.large {
                 grid-column: span 1;
+            }
+            .editor-textarea {
+                font-size: 18px;
+                min-height: 250px;
             }
         }
     </style>
@@ -1672,7 +1585,6 @@
         <div class="loading-text" id="loadingText">جاري المعالجة...</div>
         <div class="loading-subtext" id="loadingSubtext"></div>
     </div>
-
     <div class="template-preview-modal" id="templatePreviewModal">
         <div class="preview-content">
             <div class="preview-header">
@@ -1707,7 +1619,6 @@
             </button>
         </div>
     </div>
-
     <div class="progress-wrapper">
         <div class="progress-steps">
             <div class="progress-line">
@@ -1739,7 +1650,6 @@
             </div>
         </div>
     </div>
-
     <div class="container">
         <!-- الخطوة 1: التصحيح -->
         <div class="step-content active" data-step="1">
@@ -1748,10 +1658,15 @@
                     <span>✍️</span>
                     <span>تصحيح النص</span>
                 </div>
-                <div class="step-description">استمع للمقطع الصوتي وصحح النص المفرغ</div>
+                <div class="step-description">اقرأ النص أدناه وصحح الأخطاء، يمكنك الاستماع للمقطع الصوتي للمساعدة</div>
             </div>
-
-            <div class="audio-player-section">
+            
+            <!-- مشغل الصوت في الأعلى -->
+            <div class="audio-player-section" id="audioPlayerSection">
+                <div class="audio-section-title">
+                    <span>🎵</span>
+                    <span>المقطع الصوتي</span>
+                </div>
                 <div class="audio-player">
                     <audio id="audioElement" style="display: none;"></audio>
                     <div class="audio-controls">
@@ -1761,8 +1676,8 @@
                                 <div class="progress-fill" id="progressFill"></div>
                             </div>
                             <div class="time-display">
-                                <span id="currentTime">0:00</span>
                                 <span id="duration">0:00</span>
+                                <span id="currentTime">0:00</span>
                             </div>
                         </div>
                     </div>
@@ -1777,6 +1692,32 @@
                 </div>
             </div>
 
+            <!-- النص المراد تصحيحه -->
+            <div class="editor-container" id="editorContainer">
+                <div class="text-size-controls">
+                    <button class="text-size-btn" id="textSizeUp" title="تكبير النص">+</button>
+                    <button class="text-size-btn" id="textSizeDown" title="تصغير النص">−</button>
+                </div>
+                <div class="editor-label">
+                    <span>📝</span>
+                    <span>النص المراد تصحيحه</span>
+                </div>
+                <textarea class="editor-textarea" id="textEditor" placeholder="جاري تحميل النص..."></textarea>
+                <div class="editor-stats">
+                    <div class="stat-item">
+                        <span>📊</span>
+                        <span class="stat-value" id="charCount">0</span>
+                        <span>حرف</span>
+                    </div>
+                    <div class="stat-item">
+                        <span>📝</span>
+                        <span class="stat-value" id="wordCount">0</span>
+                        <span>كلمة</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- صندوق التصحيح بالذكاء الاصطناعي -->
             <div class="ai-correction-box" id="aiCorrectionBox">
                 <div class="ai-correction-header">
                     <div class="ai-correction-title">
@@ -1815,6 +1756,7 @@
                 </div>
             </div>
 
+            <!-- أزرار الأدوات -->
             <div class="editor-actions">
                 <button class="action-btn ai-btn" id="aiBtn">
                     <span>🤖</span>
@@ -1833,28 +1775,8 @@
                     <span>حذف</span>
                 </button>
             </div>
-
-            <div class="editor-container">
-                <div class="editor-label">
-                    <span>📝</span>
-                    <span>النص المراد تصحيحه</span>
-                </div>
-                <textarea class="editor-textarea" id="textEditor" placeholder="جاري تحميل النص..."></textarea>
-                <div class="editor-stats">
-                    <div class="stat-item">
-                        <span>📊</span>
-                        <span class="stat-value" id="charCount">0</span>
-                        <span>حرف</span>
-                    </div>
-                    <div class="stat-item">
-                        <span>📝</span>
-                        <span class="stat-value" id="wordCount">0</span>
-                        <span>كلمة</span>
-                    </div>
-                </div>
-            </div>
         </div>
-
+        
         <!-- الخطوة 2: القالب -->
         <div class="step-content" data-step="2">
             <div class="step-header">
@@ -1877,7 +1799,7 @@
                 <div class="colors-grid" id="colorsGrid"></div>
             </div>
         </div>
-
+        
         <!-- الخطوة 3: الألوان -->
         <div class="step-content" data-step="3">
             <div class="step-header">
@@ -1887,12 +1809,10 @@
                 </div>
                 <div class="step-description">اختر اللون المناسب لاسم السلسلة</div>
             </div>
-
             <div class="series-color-preview">
                 <div class="preview-text" id="seriesPreviewText">السلسلة الرئيسية</div>
                 <div class="preview-hint">معاينة اللون المختار</div>
             </div>
-
             <div class="recommended-color-section">
                 <div class="section-title">
                     <span>⭐</span>
@@ -1910,7 +1830,6 @@
                     <div class="template-check">✓</div>
                 </button>
             </div>
-
             <div class="custom-color-section">
                 <div class="custom-color-title">
                     <span>🎨</span>
@@ -1928,7 +1847,7 @@
                 </div>
             </div>
         </div>
-
+        
         <!-- الخطوة 4: البيانات -->
         <div class="step-content" data-step="4">
             <div class="step-header">
@@ -1938,7 +1857,6 @@
                 </div>
                 <div class="step-description">أدخل العنوان والسلاسل الخاصة بالفيديو</div>
             </div>
-
             <div class="form-group">
                 <label class="form-label">
                     <span>📚</span>
@@ -1948,7 +1866,6 @@
                 <div class="form-hint">الأفضل: 4 كلمات أو أقل</div>
                 <div class="char-counter"><span id="mainSeriesCount">0</span> / 50</div>
             </div>
-
             <div class="form-group">
                 <label class="form-label">
                     <span>🔖</span>
@@ -1958,7 +1875,6 @@
                 <div class="form-hint">الأفضل: 4 كلمات أو أقل</div>
                 <div class="char-counter"><span id="subSeriesCount">0</span> / 50</div>
             </div>
-
             <div class="form-group">
                 <label class="form-label">
                     <span>🎯</span>
@@ -1968,7 +1884,6 @@
                 <div class="form-hint">الأفضل: 3 كلمات أو أقل</div>
                 <div class="char-counter"><span id="finalSeriesCount">0</span> / 50</div>
             </div>
-
             <div class="form-group">
                 <label class="form-label">
                     <span>✏️</span>
@@ -1978,12 +1893,11 @@
                 <div class="form-hint">الأفضل: 3 كلمات أو أقل</div>
                 <div class="char-counter"><span id="titleCount">0</span> / 50</div>
             </div>
-
             <button class="save-template-btn" id="saveTemplateBtn">
                 <span id="saveTemplateBtnText">💾 حفظ التعديلات على القالب الأساسي</span>
             </button>
         </div>
-
+        
         <!-- الخطوة 5: SEO -->
         <div class="step-content" data-step="5">
             <div class="step-header">
@@ -1993,12 +1907,10 @@
                 </div>
                 <div class="step-description">أدخل عنوان ووصف وكلمات مفتاحية للفيديو، أو استخدم الذكاء الاصطناعي لإنشائها تلقائياً</div>
             </div>
-
             <button class="seo-generate-btn" id="seoGenerateBtn">
                 <span>✨</span>
                 <span>إنشاء SEO بالذكاء الاصطناعي</span>
             </button>
-
             <div class="seo-section highlight">
                 <div class="seo-section-title">
                     <span>📌</span>
@@ -2010,7 +1922,6 @@
                     <div class="char-counter"><span id="seoTitleCount">0</span> / 100</div>
                 </div>
             </div>
-
             <div class="seo-section highlight">
                 <div class="seo-section-title">
                     <span>📝</span>
@@ -2022,7 +1933,6 @@
                     <div class="char-counter"><span id="seoDescCount">0</span> / 5000</div>
                 </div>
             </div>
-
             <div class="seo-section">
                 <div class="seo-section-title">
                     <span>🏷️</span>
@@ -2037,7 +1947,6 @@
                         </button>
                     </div>
                 </div>
-
                 <div class="tags-container" id="tagsContainer">
                     <div style="color: var(--text-secondary); font-size: 12px;">لا توجد كلمات مفتاحية بعد</div>
                 </div>
@@ -2061,7 +1970,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="serp-preview" id="serpPreview" style="display: none;">
                 <div class="serp-preview-title">
                     <span>🔍</span>
@@ -2072,7 +1980,7 @@
                 <div class="serp-description" id="serpDescription">وصف الفيديو سيظهر هنا...</div>
             </div>
         </div>
-
+        
         <!-- الخطوة 6: المراجعة -->
         <div class="step-content" data-step="6">
             <div class="step-header">
@@ -2082,7 +1990,6 @@
                 </div>
                 <div class="step-description">راجع جميع البيانات قبل الإرسال</div>
             </div>
-
             <div class="review-section">
                 <div class="review-section-title">
                     <span>✍️</span>
@@ -2101,7 +2008,6 @@
                     <span class="review-value" id="reviewAiChanges">-</span>
                 </div>
             </div>
-
             <div class="review-section">
                 <div class="review-section-title">
                     <span>🎨</span>
@@ -2119,7 +2025,6 @@
                     <span class="review-label">لون السلسلة:</span>
                     <span class="review-value" id="reviewSeriesColor">-</span>
                 </div>
-
                 <div class="review-template-images">
                     <div class="review-image-wrapper">
                         <div class="review-image-label">
@@ -2143,7 +2048,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="review-section">
                 <div class="review-section-title">
                     <span>📝</span>
@@ -2166,13 +2070,11 @@
                     <span class="review-value" id="reviewTitle">-</span>
                 </div>
             </div>
-
             <div class="review-section">
                 <div class="review-section-title">
                     <span>🔍</span>
                     <span>تحسين محركات البحث (SEO)</span>
                 </div>
-
                 <div class="serp-preview" id="reviewSerpPreview" style="display: block; margin-bottom: 16px;">
                     <div class="serp-preview-title">
                         <span>🔍</span>
@@ -2182,14 +2084,12 @@
                     <div class="serp-title" id="reviewSerpTitle">عنوان الفيديو</div>
                     <div class="serp-description" id="reviewSerpDescription">وصف الفيديو...</div>
                 </div>
-
                 <div class="review-item">
                     <span class="review-label">العنوان:</span>
                     <div class="review-value">
                         <div class="review-seo-title-box" id="reviewSeoTitleBox">-</div>
                     </div>
                 </div>
-
                 <div class="review-item">
                     <span class="review-label">الوصف:</span>
                     <div class="review-value">
@@ -2200,7 +2100,6 @@
                         </button>
                     </div>
                 </div>
-
                 <div class="review-item">
                     <span class="review-label">الكلمات المفتاحية:</span>
                     <div class="review-value">
@@ -2214,7 +2113,6 @@
             </div>
         </div>
     </div>
-
     <div class="nav-buttons">
         <button class="nav-btn btn-back" id="btnBack" style="display: none;">
             <span>←</span>
@@ -2225,16 +2123,14 @@
             <span>→</span>
         </button>
     </div>
-
     <script>
         const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.net';
         const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor';
         const N8N_TEMPLATE_UPDATE_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor-response';
-
         const tg = window.Telegram.WebApp;
         tg.expand();
         try { tg.enableClosingConfirmation(); } catch (e) {}
-
+        
         let currentStep = 1;
         const totalSteps = 6;
         let selectedTemplate = null;
@@ -2245,7 +2141,15 @@
         let lastAIRequestTime = 0;
         const AI_REQUEST_COOLDOWN = 10000;
         let loadedTemplatesData = [];
-
+        let currentTextSize = 20;
+        const MIN_TEXT_SIZE = 14;
+        const MAX_TEXT_SIZE = 28;
+        
+        // متغيرات للتثبيت
+        let isAudioSticky = false;
+        let audioPlayerSection = null;
+        let editorContainer = null;
+        
         const formData = {
             ID: null,
             binId: '',
@@ -2273,17 +2177,64 @@
             status: 'completed',
             updated_at: new Date().toISOString()
         };
-
+        
+        // دالة التحكم بحجم النص
+        document.getElementById('textSizeUp').addEventListener('click', () => {
+            if (currentTextSize < MAX_TEXT_SIZE) {
+                currentTextSize += 2;
+                document.getElementById('textEditor').style.fontSize = currentTextSize + 'px';
+            }
+        });
+        
+        document.getElementById('textSizeDown').addEventListener('click', () => {
+            if (currentTextSize > MIN_TEXT_SIZE) {
+                currentTextSize -= 2;
+                document.getElementById('textEditor').style.fontSize = currentTextSize + 'px';
+            }
+        });
+        
+        // دالة تفعيل/إلغاء التثبيت
+        function toggleAudioSticky() {
+            if (!audioPlayerSection) {
+                audioPlayerSection = document.getElementById('audioPlayerSection');
+                editorContainer = document.getElementById('editorContainer');
+            }
+            
+            if (!isAudioSticky) {
+                audioPlayerSection.classList.add('sticky');
+                editorContainer.classList.add('with-sticky-audio');
+                isAudioSticky = true;
+            } else {
+                audioPlayerSection.classList.remove('sticky');
+                editorContainer.classList.remove('with-sticky-audio');
+                isAudioSticky = false;
+            }
+        }
+        
+        // إضافة حدث النقر على المقطع الصوتي
+        setTimeout(() => {
+            audioPlayerSection = document.getElementById('audioPlayerSection');
+            if (audioPlayerSection) {
+                audioPlayerSection.addEventListener('click', (e) => {
+                    // لا تفعل التثبيت إذا كان النقر على الأزرار
+                    if (e.target.closest('.play-pause-btn') || 
+                        e.target.closest('.speed-btn') || 
+                        e.target.closest('.progress-bar')) {
+                        return;
+                    }
+                    toggleAudioSticky();
+                });
+            }
+        }, 1000);
+        
         function showLoading(text, subtext = '') {
             document.getElementById('loadingText').textContent = text;
             document.getElementById('loadingSubtext').textContent = subtext;
             document.getElementById('loadingOverlay').classList.add('visible');
         }
-
         function hideLoading() {
             document.getElementById('loadingOverlay').classList.remove('visible');
         }
-
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             setTimeout(() => {
@@ -2291,7 +2242,6 @@
                 document.documentElement.scrollTop = 0;
             }, 100);
         }
-
         function convertDriveUrl(url) {
             if (!url) return '';
             try {
@@ -2304,60 +2254,47 @@
                 return url;
             }
         }
-
         function formatTime(seconds) {
             if (!seconds || isNaN(seconds)) return '0:00';
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
-
         async function loadInitialData() {
             try {
                 showLoading('جاري تحميل البيانات...', 'الرجاء الانتظار');
-
                 const urlParams = new URLSearchParams(window.location.search);
                 const binId = urlParams.get('bin');
-
                 if (!binId) throw new Error('معرف البيانات غير موجود');
-
                 const response = await fetch(`${WORKER_API_URL}/get-bin-data?binId=${binId}`, {
                     method: 'GET'
                 });
-
                 if (!response.ok) {
                     const errorData = await response.json();
                     throw new Error(errorData.message || 'فشل تحميل البيانات');
                 }
-
                 const result = await response.json();
                 
                 if (!result.success) {
                     throw new Error(result.message || 'فشل تحميل البيانات');
                 }
-
                 const loadedData = result.data || {};
-
                 formData.ID = loadedData.id || '';
                 formData.binId = binId;
                 formData.audioUrl = loadedData.audioUrl || '';
                 formData.transcript_txt = loadedData.text || '';
                 formData.corrected_full_text = loadedData.text || '';
-
                 if (loadedData.templates && Array.isArray(loadedData.templates)) {
                     loadedTemplatesData = loadedData.templates;
                     console.log('✅ تم تحميل', loadedTemplatesData.length, 'قالب');
                 }
-
                 if (formData.audioUrl) {
                     document.getElementById('audioElement').src = formData.audioUrl;
                 }
-
                 if (formData.transcript_txt) {
                     document.getElementById('textEditor').value = formData.transcript_txt;
                     updateTextStats();
                 }
-
                 initializeTemplates();
                 hideLoading();
                 validateCurrentStep();
@@ -2367,49 +2304,40 @@
                 alert('❌ خطأ: ' + error.message);
             }
         }
-
         function updateTextStats() {
             const text = document.getElementById('textEditor').value || '';
             const charCount = text.length;
             const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
-
             document.getElementById('charCount').textContent = charCount.toLocaleString('ar');
             document.getElementById('wordCount').textContent = wordCount.toLocaleString('ar');
             
             formData.corrected_full_text = text;
             validateCurrentStep();
         }
-
         document.getElementById('aiBtn').addEventListener('click', async () => {
             const now = Date.now();
             if (now - lastAIRequestTime < AI_REQUEST_COOLDOWN) {
                 alert(`⏰ انتظر ${Math.ceil((AI_REQUEST_COOLDOWN - (now - lastAIRequestTime)) / 1000)} ثانية`);
                 return;
             }
-
             const textEditor = document.getElementById('textEditor');
             if (!textEditor.value.trim()) {
                 alert('⚠️ لا يوجد نص للتصحيح');
                 return;
             }
-
             showLoading('جاري التصحيح بالذكاء الاصطناعي...', 'قد يستغرق بضع ثوانٍ');
             lastAIRequestTime = now;
-
             try {
                 const originalText = textEditor.value;
-
                 const response = await fetch(`${WORKER_API_URL}/ai-correct`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ text: originalText })
                 });
-
                 if (!response.ok) {
                     const errorData = await response.json();
                     throw new Error(errorData.userMessage || errorData.message || 'فشل التصحيح');
                 }
-
                 const result = await response.json();
                 
                 if (result.success && result.correctedText) {
@@ -2418,7 +2346,6 @@
                     
                     const correctedWords = aiCorrectedText.trim().split(/\s+/).length;
                     const correctedChars = aiCorrectedText.length;
-
                     document.getElementById('aiCorrectionText').textContent = aiCorrectedText;
                     document.getElementById('aiWordCount').textContent = correctedWords;
                     document.getElementById('aiChanges').textContent = aiChangesCount;
@@ -2427,7 +2354,6 @@
                 } else {
                     throw new Error('لم يتم إرجاع نص مصحح');
                 }
-
                 hideLoading();
             } catch (error) {
                 console.error('❌ AI Error:', error);
@@ -2435,24 +2361,19 @@
                 alert('❌ ' + error.message);
             }
         });
-
         document.getElementById('aiAcceptBtn').addEventListener('click', () => {
             document.getElementById('textEditor').value = aiCorrectedText;
             formData.corrected_full_text = aiCorrectedText;
             updateTextStats();
             document.getElementById('aiCorrectionBox').classList.remove('visible');
         });
-
         document.getElementById('aiRejectBtn').addEventListener('click', () => {
             document.getElementById('aiCorrectionBox').classList.remove('visible');
         });
-
         document.getElementById('aiCorrectionClose').addEventListener('click', () => {
             document.getElementById('aiCorrectionBox').classList.remove('visible');
         });
-
         document.getElementById('textEditor').addEventListener('input', updateTextStats);
-
         document.getElementById('copyBtn').addEventListener('click', async () => {
             try {
                 await navigator.clipboard.writeText(document.getElementById('textEditor').value);
@@ -2462,7 +2383,6 @@
                 document.execCommand('copy');
             }
         });
-
         document.getElementById('pasteBtn').addEventListener('click', async () => {
             try {
                 const text = await navigator.clipboard.readText();
@@ -2470,14 +2390,12 @@
                 updateTextStats();
             } catch (err) {}
         });
-
         document.getElementById('clearBtn').addEventListener('click', () => {
             if (document.getElementById('textEditor').value.trim() && confirm('هل تريد حذف النص؟')) {
                 document.getElementById('textEditor').value = '';
                 updateTextStats();
             }
         });
-
         const audioElement = document.getElementById('audioElement');
         
         document.getElementById('playPauseBtn').addEventListener('click', () => {
@@ -2489,23 +2407,20 @@
                 document.getElementById('playPauseBtn').textContent = '▶️';
             }
         });
-
         audioElement.addEventListener('loadedmetadata', () => {
             document.getElementById('duration').textContent = formatTime(audioElement.duration);
         });
-
         audioElement.addEventListener('timeupdate', () => {
             const progress = (audioElement.currentTime / audioElement.duration) * 100;
             document.getElementById('progressFill').style.width = `${progress}%`;
             document.getElementById('currentTime').textContent = formatTime(audioElement.currentTime);
         });
-
         document.getElementById('progressBar').addEventListener('click', (e) => {
             const rect = e.currentTarget.getBoundingClientRect();
-            const percentage = (e.clientX - rect.left) / rect.width;
+            const clickX = e.clientX - rect.left;
+            const percentage = 1 - (clickX / rect.width);
             audioElement.currentTime = percentage * audioElement.duration;
         });
-
         document.querySelectorAll('.speed-btn').forEach(btn => {
             btn.addEventListener('click', () => {
                 audioElement.playbackRate = parseFloat(btn.dataset.speed);
@@ -2513,16 +2428,13 @@
                 btn.classList.add('active');
             });
         });
-
         function initializeTemplates() {
             const grid = document.getElementById('templatesGrid');
             grid.innerHTML = '';
-
             if (!loadedTemplatesData || loadedTemplatesData.length === 0) {
                 grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-secondary)">لا توجد قوالب</div>';
                 return;
             }
-
             const uniqueTemplates = {};
             loadedTemplatesData.forEach(item => {
                 if (!uniqueTemplates[item.template_id]) {
@@ -2535,13 +2447,11 @@
                 }
                 uniqueTemplates[item.template_id].colors.push(item);
             });
-
             Object.values(uniqueTemplates).forEach((template, index) => {
                 const card = document.createElement('div');
                 card.className = 'template-card';
                 if (template.id === 5) card.classList.add('large');
                 card.dataset.templateId = template.id;
-
                 card.innerHTML = `
                     <div class="template-preview" style="background-image:url('${convertDriveUrl(template.image)}')">
                         <div class="template-number">${index + 1}</div>
@@ -2549,23 +2459,18 @@
                     </div>
                     <div class="template-name">${template.name}</div>
                 `;
-
                 card.onclick = () => selectTemplate(template);
                 grid.appendChild(card);
             });
         }
-
         function selectTemplate(template) {
             document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
             document.querySelector(`[data-template-id="${template.id}"]`).classList.add('selected');
-
             selectedTemplate = template;
             formData.template_id = template.id;
             formData.template_name = template.name;
-
             const grid = document.getElementById('colorsGrid');
             grid.innerHTML = '';
-
             template.colors.forEach(color => {
                 const opt = document.createElement('div');
                 opt.className = 'color-option';
@@ -2575,16 +2480,13 @@
                 opt.onclick = () => selectColor(color);
                 grid.appendChild(opt);
             });
-
             document.getElementById('colorsSection').style.display = 'block';
             updateSaveTemplateButtonText();
             validateCurrentStep();
         }
-
         function selectColor(color) {
             document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
             document.querySelector(`[data-color-id="${color.color_id}"]`).classList.add('selected');
-
             selectedColor = color;
             formData.color_id = color.color_id;
             formData.color_name = color.color_name;
@@ -2595,7 +2497,6 @@
             formData.finalseries_color = color.landscape_finalseries_color;
             
             recommendedSeriesColor = color.landscape_series_color;
-
             document.getElementById('mainSeriesInput').value = color.series_text || '';
             document.getElementById('subSeriesInput').value = color.sub_series_text || '';
             document.getElementById('finalSeriesInput').value = color.final_series_text || '';
@@ -2605,28 +2506,22 @@
             formData.finalSeries = color.final_series_text || '';
             
             updateCharCounters();
-
             const landscapeImg = document.getElementById('landscapePreview');
             const portraitImg = document.getElementById('portraitPreview');
-
             landscapeImg.onload = () => {
                 document.getElementById('landscapeLoading').classList.add('hidden');
                 landscapeImg.classList.add('loaded');
             };
-
             portraitImg.onload = () => {
                 document.getElementById('portraitLoading').classList.add('hidden');
                 portraitImg.classList.add('loaded');
             };
-
             landscapeImg.src = convertDriveUrl(color.landscape_link);
             portraitImg.src = convertDriveUrl(color.portrait_link);
-
             document.getElementById('templatePreviewModal').classList.add('visible');
             updateSaveTemplateButtonText();
             validateCurrentStep();
         }
-
         function updateSaveTemplateButtonText() {
             const btn = document.getElementById('saveTemplateBtnText');
             if (formData.template_name && formData.template_id) {
@@ -2635,22 +2530,17 @@
                 btn.textContent = '💾 حفظ التعديلات على القالب الأساسي';
             }
         }
-
         document.getElementById('closePreview').addEventListener('click', () => {
             document.getElementById('templatePreviewModal').classList.remove('visible');
         });
-
         document.getElementById('previewNextBtn').addEventListener('click', () => {
             document.getElementById('templatePreviewModal').classList.remove('visible');
             nextStep();
         });
-
         let isDragging = false;
         let currentColor = '#b9d780';
-
         function initializeSeriesColors() {
             if (!selectedColor) return;
-
             const seriesColor = selectedColor.landscape_series_color;
             recommendedSeriesColor = seriesColor;
             formData.series_color = seriesColor;
@@ -2660,7 +2550,6 @@
             updateHandlePosition(seriesColor);
             document.getElementById('recommendedColorBtn').classList.add('selected');
         }
-
         function updateColorDisplay(color) {
             document.getElementById('seriesPreviewText').style.color = color;
             document.getElementById('hexInput').value = color;
@@ -2669,7 +2558,6 @@
             formData.series_color = color;
             currentColor = color;
         }
-
         function updateHandlePosition(hexColor) {
             const container = document.getElementById('colorWheelContainer');
             const handle = document.getElementById('colorPickerHandle');
@@ -2691,18 +2579,15 @@
             handle.style.left = `${x}px`;
             handle.style.top = `${y}px`;
         }
-
         document.getElementById('recommendedColorBtn').addEventListener('click', () => {
             if (!selectedColor) return;
             updateColorDisplay(recommendedSeriesColor);
             updateHandlePosition(recommendedSeriesColor);
             document.getElementById('recommendedColorBtn').classList.add('selected');
         });
-
         const colorWheel = document.getElementById('colorWheel');
         const colorWheelContainer = document.getElementById('colorWheelContainer');
         const colorPickerHandle = document.getElementById('colorPickerHandle');
-
         function getColorAtPosition(x, y) {
             const rect = colorWheelContainer.getBoundingClientRect();
             const centerX = rect.width / 2;
@@ -2723,7 +2608,6 @@
             
             return hslToHex(angle, saturation, lightness);
         }
-
         function handleColorPick(e) {
             e.preventDefault();
             e.stopPropagation();
@@ -2742,7 +2626,6 @@
                 document.getElementById('recommendedColorBtn').classList.remove('selected');
             }
         }
-
         colorPickerHandle.addEventListener('mousedown', (e) => {
             isDragging = true;
             e.preventDefault();
@@ -2752,43 +2635,35 @@
             isDragging = true;
             e.preventDefault();
         });
-
         document.addEventListener('mousemove', (e) => {
             if (isDragging) {
                 handleColorPick(e);
             }
         });
-
         document.addEventListener('touchmove', (e) => {
             if (isDragging) {
                 e.preventDefault();
                 handleColorPick(e);
             }
         }, { passive: false });
-
         document.addEventListener('mouseup', () => isDragging = false);
         document.addEventListener('touchend', () => isDragging = false);
-
         colorWheel.addEventListener('click', handleColorPick);
         colorWheel.addEventListener('touchstart', (e) => {
             e.preventDefault();
             handleColorPick(e);
         });
-
         document.getElementById('hexInput').addEventListener('input', (e) => {
             let value = e.target.value;
             if (!value.startsWith('#')) value = '#' + value;
             value = value.substring(0, 7);
-
             if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
                 updateColorDisplay(value);
                 updateHandlePosition(value);
                 document.getElementById('recommendedColorBtn').classList.remove('selected');
             }
-
             e.target.value = value;
         });
-
         function hexToRgb(hex) {
             const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
             return result ? {
@@ -2797,12 +2672,10 @@
                 b: parseInt(result[3], 16)
             } : null;
         }
-
         function rgbToHsl(r, g, b) {
             r /= 255; g /= 255; b /= 255;
             const max = Math.max(r, g, b), min = Math.min(r, g, b);
             let h, s, l = (max + min) / 2;
-
             if (max === min) {
                 h = s = 0;
             } else {
@@ -2815,10 +2688,8 @@
                     case b: h = ((r - g) / d + 4) / 6; break;
                 }
             }
-
             return { h: h * 360, s: s * 100, l: l * 100 };
         }
-
         function hslToHex(h, s, l) {
             l /= 100;
             const a = s * Math.min(l, 1 - l) / 100;
@@ -2829,7 +2700,6 @@
             };
             return `#${f(0)}${f(8)}${f(4)}`;
         }
-
         function updateCharCounters() {
             ['title', 'mainSeries', 'subSeries', 'finalSeries'].forEach(field => {
                 const input = document.getElementById(field + 'Input');
@@ -2840,30 +2710,24 @@
                 formData[key] = input.value;
             });
         }
-
         ['titleInput', 'mainSeriesInput', 'subSeriesInput', 'finalSeriesInput'].forEach(id => {
             document.getElementById(id).addEventListener('input', () => {
                 updateCharCounters();
                 validateCurrentStep();
             });
         });
-
         document.getElementById('saveTemplateBtn').addEventListener('click', async () => {
             if (!selectedColor) {
                 alert('⚠️ لم تختر قالباً بعد');
                 return;
             }
-
             if (!formData.series || !formData.subSeries || !formData.finalSeries) {
                 alert('⚠️ يجب ملء جميع حقول السلاسل');
                 return;
             }
-
             const confirmed = confirm('هل تريد حفظ هذه التعديلات كإعدادات افتراضية للقالب؟');
             if (!confirmed) return;
-
             showLoading('جاري حفظ التعديلات...', 'الرجاء الانتظار');
-
             try {
                 const updatePayload = {
                     type: 'template_update',
@@ -2887,22 +2751,17 @@
                     },
                     full_data: { ...formData }
                 };
-
                 console.log('📤 إرسال التحديثات إلى N8N:', updatePayload);
-
                 const response = await fetch(N8N_TEMPLATE_UPDATE_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(updatePayload)
                 });
-
                 if (!response.ok) {
                     throw new Error('فشل حفظ التعديلات على الخادم');
                 }
-
                 const result = await response.json();
                 console.log('✅ استجابة N8N:', result);
-
                 hideLoading();
                 alert('✅ تم حفظ التعديلات بنجاح!');
                 
@@ -2912,7 +2771,6 @@
                 alert('❌ فشل حفظ التعديلات: ' + error.message);
             }
         });
-
         function addTag(tagText) {
             const trimmed = tagText.trim();
             if (!trimmed) return;
@@ -2921,7 +2779,6 @@
                 alert('⚠️ الكلمة موجودة مسبقاً');
                 return;
             }
-
             formData.tags.push(trimmed);
             renderTags();
             updateSEOStats();
@@ -2929,19 +2786,16 @@
             document.getElementById('tagInput').value = '';
             validateCurrentStep();
         }
-
         document.getElementById('addTagBtn').addEventListener('click', () => {
             const input = document.getElementById('tagInput');
             addTag(input.value);
         });
-
         document.getElementById('tagInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 addTag(e.target.value);
             }
         });
-
         function updateSerpPreview() {
             const title = formData.seo_title || 'عنوان الفيديو';
             const description = formData.seo_description || 'وصف الفيديو سيظهر هنا...';
@@ -2953,16 +2807,13 @@
                 document.getElementById('serpPreview').style.display = 'block';
             }
         }
-
         document.getElementById('seoGenerateBtn').addEventListener('click', async () => {
             if (!formData.corrected_full_text.trim()) {
                 alert('⚠️ لا يوجد نص مصحح لإنشاء SEO منه');
                 return;
             }
-
             showLoading('جاري إنشاء SEO احترافي', 'يتم تحليل المحتوى وإنشاء عنوان ووصف وكلمات مفتاحية متخصصة');
             document.getElementById('seoGenerateBtn').disabled = true;
-
             try {
                 const response = await fetch(`${WORKER_API_URL}/generate-seo`, {
                     method: 'POST',
@@ -2973,22 +2824,18 @@
                         focus: 'الرقية الشرعية والعلاج الروحاني'
                     })
                 });
-
                 if (!response.ok) {
                     const errorData = await response.json();
                     throw new Error(errorData.userMessage || 'فشل إنشاء SEO');
                 }
-
                 const result = await response.json();
                 
                 if (result.success) {
                     formData.seo_title = result.title || '';
                     formData.seo_description = result.description || '';
                     formData.tags = result.tags || [];
-
                     document.getElementById('seoTitleInput').value = formData.seo_title;
                     document.getElementById('seoDescriptionInput').value = formData.seo_description;
-
                     updateSEOCounts();
                     renderTags();
                     updateSEOStats();
@@ -3000,7 +2847,6 @@
                 } else {
                     throw new Error('فشل إنشاء SEO');
                 }
-
                 hideLoading();
                 document.getElementById('seoGenerateBtn').disabled = false;
                 validateCurrentStep();
@@ -3011,16 +2857,13 @@
                 alert('❌ فشل إنشاء SEO: ' + error.message);
             }
         });
-
         function renderTags() {
             const container = document.getElementById('tagsContainer');
             container.innerHTML = '';
-
             if (!formData.tags || formData.tags.length === 0) {
                 container.innerHTML = '<div style="color:var(--text-secondary);font-size:12px">لا توجد كلمات مفتاحية بعد</div>';
                 return;
             }
-
             formData.tags.forEach((tag, index) => {
                 const tagEl = document.createElement('div');
                 tagEl.className = 'tag-item';
@@ -3039,12 +2882,10 @@
                 container.appendChild(tagEl);
             });
         }
-
         function updateSEOCounts() {
             document.getElementById('seoTitleCount').textContent = document.getElementById('seoTitleInput').value.length;
             document.getElementById('seoDescCount').textContent = document.getElementById('seoDescriptionInput').value.length;
         }
-
         function updateSEOStats() {
             const words = formData.corrected_full_text.trim() ? formData.corrected_full_text.trim().split(/\s+/).length : 0;
             document.getElementById('statWordCount').textContent = words;
@@ -3053,35 +2894,29 @@
             document.getElementById('statDescLength').textContent = formData.seo_description.length;
             document.getElementById('seoStats').style.display = 'grid';
         }
-
         document.getElementById('seoTitleInput').addEventListener('input', () => {
             formData.seo_title = document.getElementById('seoTitleInput').value;
             updateSEOCounts();
             updateSerpPreview();
             validateCurrentStep();
         });
-
         document.getElementById('seoDescriptionInput').addEventListener('input', () => {
             formData.seo_description = document.getElementById('seoDescriptionInput').value;
             updateSEOCounts();
             updateSerpPreview();
             validateCurrentStep();
         });
-
         function updateProgress() {
             const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
             document.getElementById('progressLineFill').style.width = `${progress}%`;
-
             document.querySelectorAll('.progress-step').forEach((step, i) => {
                 step.classList.remove('active', 'completed');
                 if (i + 1 < currentStep) step.classList.add('completed');
                 else if (i + 1 === currentStep) step.classList.add('active');
             });
-
             document.querySelectorAll('.step-content').forEach((content, i) => {
                 content.classList.toggle('active', i + 1 === currentStep);
             });
-
             document.getElementById('btnBack').style.display = currentStep > 1 ? 'flex' : 'none';
             
             if (currentStep === totalSteps) {
@@ -3092,13 +2927,10 @@
                 document.getElementById('btnNext').innerHTML = '<span>التالي</span><span>→</span>';
                 document.getElementById('btnNext').className = 'nav-btn btn-next';
             }
-
             if (currentStep === 3) initializeSeriesColors();
-
             scrollToTop();
             validateCurrentStep();
         }
-
         function validateCurrentStep() {
             let isValid = false;
             switch(currentStep) {
@@ -3115,7 +2947,6 @@
                     isValid = formData.title.trim() && formData.series.trim() && formData.subSeries.trim() && formData.finalSeries.trim(); 
                     break;
                 case 5: 
-                    // ✅ التعديل الرئيسي: يجب ملء جميع حقول SEO (عنوان + وصف + كلمة واحدة على الأقل)
                     isValid = formData.seo_title.trim().length > 0 && 
                               formData.seo_description.trim().length > 0 && 
                               formData.tags.length > 0;
@@ -3126,28 +2957,32 @@
             }
             document.getElementById('btnNext').disabled = !isValid;
         }
-
-        async function nextStep() {
+        function nextStep() {
             if (currentStep === totalSteps) {
-                await submitForm();
+                submitForm();
                 return;
             }
             if (currentStep < totalSteps) {
+                // إلغاء التثبيت عند الانتقال
+                if (isAudioSticky) {
+                    toggleAudioSticky();
+                }
                 currentStep++;
                 updateProgress();
             }
         }
-
         function prevStep() {
             if (currentStep > 1) {
+                // إلغاء التثبيت عند الرجوع
+                if (isAudioSticky) {
+                    toggleAudioSticky();
+                }
                 currentStep--;
                 updateProgress();
             }
         }
-
         document.getElementById('btnNext').addEventListener('click', nextStep);
         document.getElementById('btnBack').addEventListener('click', prevStep);
-
         function updateReview() {
             const words = formData.corrected_full_text.trim() ? formData.corrected_full_text.trim().split(/\s+/).length : 0;
             
@@ -3158,7 +2993,6 @@
                 document.getElementById('reviewAiStats').style.display = 'flex';
                 document.getElementById('reviewAiChanges').textContent = aiChangesCount;
             }
-
             document.getElementById('reviewTemplate').textContent = formData.template_name || '-';
             document.getElementById('reviewColor').textContent = formData.color_name || '-';
             document.getElementById('reviewSeriesColor').innerHTML = `<div style="width:18px;height:18px;background:${formData.series_color};border-radius:4px;display:inline-block;margin-left:8px"></div>${formData.series_color}`;
@@ -3173,7 +3007,6 @@
             
             document.getElementById('reviewSeoTitleBox').textContent = formData.seo_title || '-';
             document.getElementById('reviewSeoDescBox').textContent = formData.seo_description || '-';
-
             const tagsPreview = document.getElementById('reviewTagsPreview');
             tagsPreview.innerHTML = '';
             
@@ -3187,7 +3020,6 @@
             } else {
                 tagsPreview.innerHTML = '<div style="color:var(--text-secondary);font-size:12px">لا توجد كلمات مفتاحية</div>';
             }
-
             if (formData.landscape_image_url) {
                 const landscapeImg = document.getElementById('reviewLandscapeImage');
                 landscapeImg.onload = () => {
@@ -3196,7 +3028,6 @@
                 };
                 landscapeImg.src = convertDriveUrl(formData.landscape_image_url);
             }
-
             if (formData.portrait_image_url) {
                 const portraitImg = document.getElementById('reviewPortraitImage');
                 portraitImg.onload = () => {
@@ -3206,42 +3037,34 @@
                 portraitImg.src = convertDriveUrl(formData.portrait_image_url);
             }
         }
-
         document.getElementById('reviewTagsExpandBtn').addEventListener('click', () => {
             const tagsPreview = document.getElementById('reviewTagsPreview');
             tagsPreview.classList.toggle('expanded');
             document.getElementById('reviewTagsExpandText').textContent = tagsPreview.classList.contains('expanded') ? 'إخفاء' : 'عرض الكل';
             document.getElementById('reviewTagsExpandIcon').textContent = tagsPreview.classList.contains('expanded') ? '▲' : '▼';
         });
-
         document.getElementById('reviewDescExpandBtn').addEventListener('click', () => {
             const descBox = document.getElementById('reviewSeoDescBox');
             descBox.classList.toggle('expanded');
             document.getElementById('reviewDescExpandText').textContent = descBox.classList.contains('expanded') ? 'إخفاء' : 'عرض الكل';
             document.getElementById('reviewDescExpandIcon').textContent = descBox.classList.contains('expanded') ? '▲' : '▼';
         });
-
         async function submitForm() {
             showLoading('جاري الإرسال...', 'الرجاء الانتظار');
-
             try {
                 const dataToSend = {
                     ...formData,
                     timestamp: new Date().toISOString()
                 };
-
                 const response = await fetch(N8N_WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dataToSend)
                 });
-
                 if (!response.ok) throw new Error('فشل الإرسال');
-
                 try {
                     tg.sendData(JSON.stringify({ type: 'completed', id: formData.ID, status: 'completed' }));
                 } catch(e) {}
-
                 hideLoading();
                 tg.showAlert('✅ تم الإرسال بنجاح!', () => {
                     setTimeout(() => tg.close(), 500);
@@ -3252,8 +3075,7 @@
                 alert('❌ خطأ: ' + error.message);
             }
         }
-
-        console.log('🚀 App Starting...');
+        console.log('🚀 App Starting - Version 2.0...');
         updateProgress();
         loadInitialData();
     </script>
