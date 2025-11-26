@@ -223,11 +223,34 @@
             box-shadow: var(--shadow-md);
             border: 2px solid var(--primary-lighter);
             transition: all 0.3s ease;
-            position: sticky;
-            top: 70px;
+            cursor: pointer;
+        }
+       
+        .audio-player-section:not(.sticky):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.3);
+        }
+       
+        .audio-player-section.sticky {
+            position: fixed;
+            top: 60px;
+            left: 14px;
+            right: 14px;
             z-index: 150;
-            background: var(--bg-secondary);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            animation: slideDownSticky 0.3s ease;
+            cursor: default;
+        }
+       
+        @keyframes slideDownSticky {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
        
         .audio-section-title {
@@ -239,6 +262,24 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s ease;
+        }
+       
+        .audio-player-section:not(.sticky) .audio-section-title::after {
+            content: ' (اضغط للتثبيت)';
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 400;
+        }
+       
+        .audio-player-section.sticky .audio-section-title::after {
+            content: '📌';
+            margin-right: 8px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+       
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
        
         .audio-player {
@@ -337,6 +378,10 @@
             box-shadow: var(--shadow-md);
             position: relative;
             transition: margin-top 0.3s ease;
+        }
+       
+        .editor-container.with-sticky-audio {
+            margin-top: 140px;
         }
        
         .text-size-controls {
@@ -2095,6 +2140,11 @@
         const MIN_TEXT_SIZE = 14;
         const MAX_TEXT_SIZE = 28;
        
+        // متغيرات للتثبيت
+        let isAudioSticky = false;
+        let audioPlayerSection = null;
+        let editorContainer = null;
+       
         const formData = {
             ID: null,
             binId: '',
@@ -2137,6 +2187,40 @@
                 document.getElementById('textEditor').style.fontSize = currentTextSize + 'px';
             }
         });
+       
+        // دالة تفعيل/إلغاء التثبيت
+        function toggleAudioSticky() {
+            if (!audioPlayerSection) {
+                audioPlayerSection = document.getElementById('audioPlayerSection');
+                editorContainer = document.getElementById('editorContainer');
+            }
+           
+            if (!isAudioSticky) {
+                audioPlayerSection.classList.add('sticky');
+                editorContainer.classList.add('with-sticky-audio');
+                isAudioSticky = true;
+            } else {
+                audioPlayerSection.classList.remove('sticky');
+                editorContainer.classList.remove('with-sticky-audio');
+                isAudioSticky = false;
+            }
+        }
+       
+        // إضافة حدث النقر على المقطع الصوتي
+        setTimeout(() => {
+            audioPlayerSection = document.getElementById('audioPlayerSection');
+            if (audioPlayerSection) {
+                audioPlayerSection.addEventListener('click', (e) => {
+                    // لا تفعل التثبيت إذا كان النقر على الأزرار
+                    if (e.target.closest('.play-pause-btn') ||
+                        e.target.closest('.speed-btn') ||
+                        e.target.closest('.progress-bar')) {
+                        return;
+                    }
+                    toggleAudioSticky();
+                });
+            }
+        }, 1000);
        
         function showLoading(text, subtext = '') {
             document.getElementById('loadingText').textContent = text;
@@ -2874,12 +2958,20 @@
                 return;
             }
             if (currentStep < totalSteps) {
+                // إلغاء التثبيت عند الانتقال
+                if (isAudioSticky) {
+                    toggleAudioSticky();
+                }
                 currentStep++;
                 updateProgress();
             }
         }
         function prevStep() {
             if (currentStep > 1) {
+                // إلغاء التثبيت عند الرجوع
+                if (isAudioSticky) {
+                    toggleAudioSticky();
+                }
                 currentStep--;
                 updateProgress();
             }
