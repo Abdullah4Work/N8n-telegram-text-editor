@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, viewport-fit=cover">
     <meta name="description" content="نشر محتوى احترافي - رقيتي">
     <meta name="theme-color" content="#4A90E2">
-    <title>نشر محتوى احترافي - رقيتي v2</title>
+    <title>نشر محتوى احترافي - رقيتي v2.1</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -93,14 +93,14 @@
             max-width: 280px;
         }
         
-        /* ===== مشغل الصوت الثابت (عند التحرير) ===== */
+        /* ===== مشغل الصوت الثابت (عند التحرير) - مصغّر جداً ===== */
         .audio-player-fixed {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             background: var(--bg-secondary);
-            padding: 12px 16px;
+            padding: 6px 12px;
             box-shadow: var(--shadow-lg);
             z-index: 1000;
             display: none;
@@ -117,42 +117,42 @@
         .audio-fixed-content {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
         }
         .audio-fixed-controls {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
             flex: 1;
         }
         .play-pause-btn-fixed {
-            width: 44px;
-            height: 44px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             border: none;
             color: white;
-            font-size: 18px;
+            font-size: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s;
             flex-shrink: 0;
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-sm);
         }
         .play-pause-btn-fixed:active {
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
         .audio-fixed-progress {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 2px;
         }
         .progress-bar-fixed {
             width: 100%;
-            height: 6px;
+            height: 3px;
             background: var(--bg-tertiary);
             border-radius: 10px;
             overflow: hidden;
@@ -170,37 +170,56 @@
         .time-display-fixed {
             display: flex;
             justify-content: space-between;
-            font-size: 10px;
+            font-size: 8px;
             color: var(--text-secondary);
             font-weight: 600;
         }
-        /* أزرار السرعة على اليسار فوق بعض */
+        /* أزرار السرعة أفقياً + زر AI */
         .speed-controls-fixed {
             display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-right: auto;
+            gap: 3px;
+            align-items: center;
         }
         .speed-btn-fixed {
-            padding: 6px 10px;
-            border: 2px solid var(--border-color);
-            border-radius: 6px;
+            padding: 4px 6px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 4px;
             background: var(--bg-secondary);
-            font-size: 11px;
+            font-size: 9px;
             font-weight: 700;
             color: var(--text-primary);
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
-            min-width: 50px;
+            min-width: 38px;
         }
         .speed-btn-fixed:active {
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
         .speed-btn-fixed.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
+        }
+        .ai-btn-fixed {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-sm);
+            margin-right: 3px;
+        }
+        .ai-btn-fixed:active {
+            transform: scale(0.92);
         }
         
         /* ===== Progress Wrapper ===== */
@@ -335,42 +354,42 @@
             line-height: 1.4;
         }
         
-        /* ===== مشغل الصوت العادي (في الخطوة 1) ===== */
+        /* ===== مشغل الصوت العادي (في الخطوة 1) - مصغّر ===== */
         .audio-player-section {
             background: var(--bg-secondary);
-            border-radius: 10px;
-            padding: 10px;
-            margin-bottom: 12px;
+            border-radius: 8px;
+            padding: 6px 10px;
+            margin-bottom: 10px;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--primary-lighter);
         }
         .audio-section-title {
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 700;
             color: var(--primary);
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
         }
         .audio-player {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 4px;
         }
         .audio-controls {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .play-pause-btn {
-            width: 38px;
-            height: 38px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             border: none;
             color: white;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -380,17 +399,17 @@
             box-shadow: var(--shadow-sm);
         }
         .play-pause-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
         .audio-progress {
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 2px;
         }
         .progress-bar {
             width: 100%;
-            height: 4px;
+            height: 3px;
             background: var(--bg-tertiary);
             border-radius: 10px;
             overflow: hidden;
@@ -408,34 +427,55 @@
         .time-display {
             display: flex;
             justify-content: space-between;
-            font-size: 9px;
+            font-size: 8px;
             color: var(--text-secondary);
             font-weight: 600;
         }
         .speed-controls {
             display: flex;
-            gap: 4px;
+            gap: 3px;
+            align-items: center;
         }
         .speed-btn {
             flex: 1;
-            padding: 4px 2px;
-            border: 1px solid var(--border-color);
+            padding: 3px 0;
+            border: 1.5px solid var(--border-color);
             border-radius: 4px;
             background: var(--bg-secondary);
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 700;
             color: var(--text-primary);
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
+            max-width: 45px;
         }
         .speed-btn:active {
-            transform: scale(0.95);
+            transform: scale(0.92);
         }
         .speed-btn.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
+        }
+        .ai-btn-normal {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            border: none;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-sm);
+        }
+        .ai-btn-normal:active {
+            transform: scale(0.92);
         }
         
         /* ===== محرر النص ===== */
@@ -498,7 +538,7 @@
         }
         .editor-textarea {
             width: 100%;
-            min-height: 300px;
+            min-height: 400px;
             padding: 16px;
             border: 2px solid var(--border-color);
             border-radius: 10px;
@@ -660,33 +700,6 @@
             background: white;
             color: var(--text-primary);
             border: 2px solid var(--border-color);
-        }
-        
-        /* ===== زر التصحيح بالذكاء الاصطناعي (تحت المربع) ===== */
-        .ai-btn {
-            width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.2s;
-            box-shadow: var(--shadow-md);
-            margin-bottom: 16px;
-        }
-        .ai-btn:active {
-            transform: scale(0.98);
-        }
-        .ai-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
         }
         
         /* ===== أزرار الأدوات (لصق وحذف فقط) ===== */
@@ -1675,7 +1688,7 @@
             }
             .editor-textarea {
                 font-size: 17px;
-                min-height: 280px;
+                min-height: 350px;
             }
         }
     </style>
@@ -1707,6 +1720,7 @@
                 <button class="speed-btn-fixed" data-speed="0.75">0.75x</button>
                 <button class="speed-btn-fixed active" data-speed="1">1x</button>
                 <button class="speed-btn-fixed" data-speed="1.25">1.25x</button>
+                <button class="ai-btn-fixed" id="aiBtnFixed" title="تصحيح بالذكاء الاصطناعي">🤖</button>
             </div>
         </div>
     </div>
@@ -1783,7 +1797,7 @@
     <div class="container">
         <!-- الخطوة 1: التصحيح -->
         <div class="step-content active" data-step="1">
-            <!-- مشغل الصوت العادي -->
+            <!-- مشغل الصوت العادي مصغّر -->
             <div class="audio-player-section" id="audioPlayerSection">
                 <div class="audio-section-title">
                     <span>🎵</span>
@@ -1807,6 +1821,7 @@
                         <button class="speed-btn" data-speed="0.75">0.75x</button>
                         <button class="speed-btn active" data-speed="1">1x</button>
                         <button class="speed-btn" data-speed="1.25">1.25x</button>
+                        <button class="ai-btn-normal" id="aiBtnNormal" title="تصحيح بالذكاء الاصطناعي">🤖</button>
                     </div>
                 </div>
             </div>
@@ -1837,12 +1852,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- زر التصحيح بالذكاء الاصطناعي (تحت المربع) -->
-            <button class="ai-btn" id="aiBtn">
-                <span>🤖</span>
-                <span>تصحيح بالذكاء الاصطناعي</span>
-            </button>
 
             <!-- صندوق التصحيح بالذكاء الاصطناعي -->
             <div class="ai-correction-box" id="aiCorrectionBox">
@@ -2048,7 +2057,7 @@
                 </div>
                 <div class="form-group">
                     <textarea class="form-textarea" id="seoDescriptionInput" placeholder="أدخل وصف الفيديو هنا..." style="min-height: 180px;"></textarea>
-                                        <div class="form-hint">وصف احترافي شامل عن الرقية والعلاج الروحاني</div>
+                    <div class="form-hint">وصف احترافي شامل عن الرقية والعلاج الروحاني</div>
                     <div class="char-counter"><span id="seoDescCount">0</span> / 5000</div>
                 </div>
             </div>
@@ -2243,7 +2252,11 @@
         </button>
     </div>
 
-    <script>
+    <!-- ============================================ -->
+    <!-- هنا يوضع الجزء الثاني (JavaScript)           -->
+    <!-- ============================================ -->
+
+        <script>
         // ===== المتغيرات والإعدادات =====
         const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.net';
         const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor';
@@ -2340,16 +2353,10 @@
             if (isEditingMode) return;
             isEditingMode = true;
             
-            // إخفاء شريط الخطوات
             document.getElementById('progressWrapper').classList.add('hidden');
-            
-            // إظهار مشغل الصوت الثابت
             document.getElementById('audioPlayerFixed').classList.add('visible');
-            
-            // إضافة class للمحرر
             document.getElementById('editorContainer').classList.add('editing-mode');
             
-            // تحديث الوقت في المشغل الثابت
             syncFixedPlayer();
         }
 
@@ -2357,13 +2364,8 @@
             if (!isEditingMode) return;
             isEditingMode = false;
             
-            // إظهار شريط الخطوات
             document.getElementById('progressWrapper').classList.remove('hidden');
-            
-            // إخفاء مشغل الصوت الثابت
             document.getElementById('audioPlayerFixed').classList.remove('visible');
-            
-            // إزالة class من المحرر
             document.getElementById('editorContainer').classList.remove('editing-mode');
         }
 
@@ -2375,7 +2377,6 @@
             const progress = (audioElement.currentTime / audioElement.duration) * 100;
             document.getElementById('progressFillFixed').style.width = `${progress}%`;
             
-            // مزامنة حالة التشغيل
             const isPlaying = !audioElement.paused;
             document.getElementById('playPauseBtnFixed').textContent = isPlaying ? '⏸️' : '▶️';
         }
@@ -2388,7 +2389,6 @@
         });
 
         textEditor.addEventListener('blur', (e) => {
-            // تأخير صغير للتحقق من أن المستخدم لم ينتقل لعنصر آخر داخل المحرر
             setTimeout(() => {
                 if (document.activeElement !== textEditor) {
                     exitEditingMode();
@@ -2489,7 +2489,8 @@
                 document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
                 document.querySelectorAll('.speed-btn-fixed').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                document.querySelector(`.speed-btn-fixed[data-speed="${speed}"]`).classList.add('active');
+                const fixedBtn = document.querySelector(`.speed-btn-fixed[data-speed="${speed}"]`);
+                if (fixedBtn) fixedBtn.classList.add('active');
             });
         });
 
@@ -2501,7 +2502,8 @@
                 document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
                 document.querySelectorAll('.speed-btn-fixed').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                document.querySelector(`.speed-btn[data-speed="${speed}"]`).classList.add('active');
+                const normalBtn = document.querySelector(`.speed-btn[data-speed="${speed}"]`);
+                if (normalBtn) normalBtn.classList.add('active');
             });
         });
 
@@ -2572,7 +2574,7 @@
         textEditor.addEventListener('input', updateTextStats);
 
         // ===== التصحيح بالذكاء الاصطناعي =====
-        document.getElementById('aiBtn').addEventListener('click', async () => {
+        async function performAICorrection() {
             const now = Date.now();
             if (now - lastAIRequestTime < AI_REQUEST_COOLDOWN) {
                 alert(`⏰ انتظر ${Math.ceil((AI_REQUEST_COOLDOWN - (now - lastAIRequestTime)) / 1000)} ثانية`);
@@ -2622,7 +2624,13 @@
                 hideLoading();
                 alert('❌ ' + error.message);
             }
-        });
+        }
+
+        // زر AI العادي
+        document.getElementById('aiBtnNormal').addEventListener('click', performAICorrection);
+        
+        // زر AI الثابت
+        document.getElementById('aiBtnFixed').addEventListener('click', performAICorrection);
 
         document.getElementById('aiAcceptBtn').addEventListener('click', () => {
             textEditor.value = aiCorrectedText;
@@ -3219,7 +3227,6 @@
 
             if (currentStep === 3) initializeSeriesColors();
 
-            // إخفاء مشغل الصوت الثابت عند الانتقال لخطوة أخرى
             if (currentStep !== 1) {
                 exitEditingMode();
             }
