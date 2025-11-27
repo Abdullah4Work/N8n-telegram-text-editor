@@ -51,6 +51,8 @@
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
         }
+        
+        /* ===== Loading Overlay ===== */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -90,6 +92,118 @@
             text-align: center;
             max-width: 280px;
         }
+        
+        /* ===== مشغل الصوت الثابت (عند التحرير) ===== */
+        .audio-player-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            padding: 12px 16px;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            display: none;
+            border-bottom: 2px solid var(--primary);
+        }
+        .audio-player-fixed.visible {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .audio-fixed-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .audio-fixed-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+        }
+        .play-pause-btn-fixed {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
+            box-shadow: var(--shadow-md);
+        }
+        .play-pause-btn-fixed:active {
+            transform: scale(0.95);
+        }
+        .audio-fixed-progress {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .progress-bar-fixed {
+            width: 100%;
+            height: 6px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            direction: rtl;
+        }
+        .progress-fill-fixed {
+            height: 100%;
+            background: linear-gradient(270deg, var(--primary), var(--primary-light));
+            width: 0%;
+            transition: width 0.1s linear;
+            transform-origin: right;
+        }
+        .time-display-fixed {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        /* أزرار السرعة على اليسار فوق بعض */
+        .speed-controls-fixed {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-right: auto;
+        }
+        .speed-btn-fixed {
+            padding: 6px 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-secondary);
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            min-width: 50px;
+        }
+        .speed-btn-fixed:active {
+            transform: scale(0.95);
+        }
+        .speed-btn-fixed.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        /* ===== Progress Wrapper ===== */
         .progress-wrapper {
             background: var(--bg-secondary);
             padding: 14px 16px;
@@ -97,6 +211,10 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: all 0.3s ease;
+        }
+        .progress-wrapper.hidden {
+            display: none;
         }
         .progress-steps {
             display: flex;
@@ -171,6 +289,8 @@
         .progress-step.active .step-label {
             color: var(--primary);
         }
+        
+        /* ===== Container ===== */
         .container {
             flex: 1;
             display: flex;
@@ -214,7 +334,8 @@
             color: var(--text-secondary);
             line-height: 1.4;
         }
-        /* ===== مشغل الصوت المحسّن والمصغّر ===== */
+        
+        /* ===== مشغل الصوت العادي (في الخطوة 1) ===== */
         .audio-player-section {
             background: var(--bg-secondary);
             border-radius: 10px;
@@ -223,7 +344,6 @@
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--primary-lighter);
         }
-       
         .audio-section-title {
             font-size: 12px;
             font-weight: 700;
@@ -233,7 +353,6 @@
             align-items: center;
             gap: 6px;
         }
-       
         .audio-player {
             display: flex;
             flex-direction: column;
@@ -318,6 +437,7 @@
             color: white;
             border-color: var(--primary);
         }
+        
         /* ===== محرر النص ===== */
         .editor-container {
             background: var(--bg-secondary);
@@ -327,9 +447,15 @@
             margin-bottom: 16px;
             box-shadow: var(--shadow-md);
             position: relative;
+            transition: all 0.3s ease;
         }
-       
-        .text-size-controls {
+        .editor-container.editing-mode {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.15);
+        }
+        
+        /* أزرار التحكم (+ - نسخ) */
+        .text-controls {
             position: absolute;
             top: 12px;
             left: 12px;
@@ -337,15 +463,14 @@
             gap: 6px;
             z-index: 10;
         }
-       
-        .text-size-btn {
+        .control-btn {
             width: 36px;
             height: 36px;
             border-radius: 8px;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             border: none;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             cursor: pointer;
             display: flex;
@@ -354,11 +479,13 @@
             box-shadow: var(--shadow-md);
             transition: all 0.2s;
         }
-       
-        .text-size-btn:active {
+        .control-btn:active {
             transform: scale(0.9);
         }
-       
+        .control-btn.copy-btn {
+            font-size: 16px;
+        }
+        
         .editor-label {
             font-size: 16px;
             font-weight: 700;
@@ -367,9 +494,8 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            padding-left: 90px;
+            padding-left: 130px;
         }
-       
         .editor-textarea {
             width: 100%;
             min-height: 300px;
@@ -383,14 +509,12 @@
             transition: all 0.3s;
             background: #FAFBFC;
         }
-       
         .editor-textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
             background: white;
         }
-       
         .editor-stats {
             display: flex;
             justify-content: space-between;
@@ -400,19 +524,18 @@
             font-size: 13px;
             color: var(--text-secondary);
         }
-       
         .stat-item {
             display: flex;
             align-items: center;
             gap: 8px;
         }
-       
         .stat-value {
             font-weight: 700;
             color: var(--primary);
             font-size: 16px;
         }
-       
+        
+        /* ===== صندوق التصحيح AI ===== */
         .ai-correction-box {
             display: none;
             background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
@@ -424,9 +547,9 @@
         }
         .ai-correction-box.visible {
             display: block;
-            animation: slideDown 0.4s ease;
+            animation: slideDownAI 0.4s ease;
         }
-        @keyframes slideDown {
+        @keyframes slideDownAI {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
@@ -538,10 +661,38 @@
             color: var(--text-primary);
             border: 2px solid var(--border-color);
         }
-       
+        
+        /* ===== زر التصحيح بالذكاء الاصطناعي (تحت المربع) ===== */
+        .ai-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s;
+            box-shadow: var(--shadow-md);
+            margin-bottom: 16px;
+        }
+        .ai-btn:active {
+            transform: scale(0.98);
+        }
+        .ai-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        /* ===== أزرار الأدوات (لصق وحذف فقط) ===== */
         .editor-actions {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-bottom: 20px;
         }
@@ -563,15 +714,8 @@
         .action-btn:active {
             transform: scale(0.98);
         }
-        .action-btn.ai-btn {
-            grid-column: 1 / -1;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            border: none;
-            box-shadow: var(--shadow-md);
-            font-size: 16px;
-            padding: 16px;
-        }
+        
+        /* ===== باقي الأنماط (القوالب، الألوان، إلخ) ===== */
         .templates-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -706,6 +850,8 @@
         .color-option.selected .template-check {
             display: flex;
         }
+        
+        /* ===== Modal معاينة القالب ===== */
         .template-preview-modal {
             position: fixed;
             top: 0;
@@ -823,6 +969,8 @@
         .preview-next-btn:active {
             transform: scale(0.98);
         }
+        
+        /* ===== ألوان السلسلة (الخطوة 3) ===== */
         .series-color-preview {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             border-radius: 12px;
@@ -1045,6 +1193,8 @@
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
+        
+        /* ===== حقول الإدخال (الخطوة 4) ===== */
         .form-group {
             margin-bottom: 20px;
         }
@@ -1109,6 +1259,8 @@
             opacity: 0.6;
             cursor: not-allowed;
         }
+        
+        /* ===== SEO (الخطوة 5) ===== */
         .seo-generate-btn {
             width: 100%;
             padding: 18px;
@@ -1324,6 +1476,8 @@
             font-weight: 700;
             color: var(--primary);
         }
+        
+        /* ===== المراجعة (الخطوة 6) ===== */
         .review-section {
             background: var(--bg-secondary);
             border-radius: 12px;
@@ -1452,6 +1606,8 @@
         .review-seo-desc-box.expanded {
             max-height: none;
         }
+        
+        /* ===== أزرار التنقل ===== */
         .nav-buttons {
             padding: 14px;
             background: white;
@@ -1501,6 +1657,8 @@
             color: white;
             box-shadow: var(--shadow-md);
         }
+        
+        /* ===== Responsive ===== */
         @media (max-width: 480px) {
             .step-content {
                 padding: 10px 12px 100px;
@@ -1522,19 +1680,38 @@
         }
     </style>
 </head>
-
-<!-- ============================================= -->
-<!-- هنا ينتهي الجزء الأول (CSS)                  -->
-<!-- الجزء الثاني يحتوي على HTML و JavaScript    -->
-<!-- ============================================= -->
-
-
 <body>
+    <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
         <div class="loading-text" id="loadingText">جاري المعالجة...</div>
         <div class="loading-subtext" id="loadingSubtext"></div>
     </div>
+
+    <!-- مشغل الصوت الثابت (يظهر عند التحرير) -->
+    <div class="audio-player-fixed" id="audioPlayerFixed">
+        <div class="audio-fixed-content">
+            <div class="audio-fixed-controls">
+                <button class="play-pause-btn-fixed" id="playPauseBtnFixed">▶️</button>
+                <div class="audio-fixed-progress">
+                    <div class="progress-bar-fixed" id="progressBarFixed">
+                        <div class="progress-fill-fixed" id="progressFillFixed"></div>
+                    </div>
+                    <div class="time-display-fixed">
+                        <span id="durationFixed">0:00</span>
+                        <span id="currentTimeFixed">0:00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="speed-controls-fixed">
+                <button class="speed-btn-fixed" data-speed="0.75">0.75x</button>
+                <button class="speed-btn-fixed active" data-speed="1">1x</button>
+                <button class="speed-btn-fixed" data-speed="1.25">1.25x</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal معاينة القالب -->
     <div class="template-preview-modal" id="templatePreviewModal">
         <div class="preview-content">
             <div class="preview-header">
@@ -1569,7 +1746,9 @@
             </button>
         </div>
     </div>
-    <div class="progress-wrapper">
+
+    <!-- شريط التقدم (الخطوات) -->
+    <div class="progress-wrapper" id="progressWrapper">
         <div class="progress-steps">
             <div class="progress-line">
                 <div class="progress-line-fill" id="progressLineFill"></div>
@@ -1600,10 +1779,11 @@
             </div>
         </div>
     </div>
+
     <div class="container">
         <!-- الخطوة 1: التصحيح -->
         <div class="step-content active" data-step="1">
-            <!-- مشغل الصوت المصغّر -->
+            <!-- مشغل الصوت العادي -->
             <div class="audio-player-section" id="audioPlayerSection">
                 <div class="audio-section-title">
                     <span>🎵</span>
@@ -1630,18 +1810,14 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- زر AI فوق مربع النص -->
-            <button class="action-btn ai-btn" id="aiBtn" style="margin-bottom: 16px;">
-                <span>🤖</span>
-                <span>تصحيح بالذكاء الاصطناعي</span>
-            </button>
 
-            <!-- النص المراد تصحيحه -->
+            <!-- محرر النص -->
             <div class="editor-container" id="editorContainer">
-                <div class="text-size-controls">
-                    <button class="text-size-btn" id="textSizeUp" title="تكبير النص">+</button>
-                    <button class="text-size-btn" id="textSizeDown" title="تصغير النص">−</button>
+                <!-- أزرار التحكم: + - نسخ -->
+                <div class="text-controls">
+                    <button class="control-btn" id="textSizeUp" title="تكبير النص">+</button>
+                    <button class="control-btn" id="textSizeDown" title="تصغير النص">−</button>
+                    <button class="control-btn copy-btn" id="copyBtn" title="نسخ النص">📄</button>
                 </div>
                 <div class="editor-label">
                     <span>📝</span>
@@ -1661,7 +1837,13 @@
                     </div>
                 </div>
             </div>
-            
+
+            <!-- زر التصحيح بالذكاء الاصطناعي (تحت المربع) -->
+            <button class="ai-btn" id="aiBtn">
+                <span>🤖</span>
+                <span>تصحيح بالذكاء الاصطناعي</span>
+            </button>
+
             <!-- صندوق التصحيح بالذكاء الاصطناعي -->
             <div class="ai-correction-box" id="aiCorrectionBox">
                 <div class="ai-correction-header">
@@ -1700,13 +1882,9 @@
                     </button>
                 </div>
             </div>
-            
-            <!-- أزرار الأدوات -->
+
+            <!-- أزرار الأدوات (لصق وحذف فقط) -->
             <div class="editor-actions">
-                <button class="action-btn" id="copyBtn">
-                    <span>📄</span>
-                    <span>نسخ</span>
-                </button>
                 <button class="action-btn" id="pasteBtn">
                     <span>📥</span>
                     <span>لصق</span>
@@ -1717,7 +1895,7 @@
                 </button>
             </div>
         </div>
-       
+
         <!-- الخطوة 2: القالب -->
         <div class="step-content" data-step="2">
             <div class="step-header">
@@ -1740,7 +1918,7 @@
                 <div class="colors-grid" id="colorsGrid"></div>
             </div>
         </div>
-       
+
         <!-- الخطوة 3: الألوان -->
         <div class="step-content" data-step="3">
             <div class="step-header">
@@ -1788,7 +1966,7 @@
                 </div>
             </div>
         </div>
-       
+
         <!-- الخطوة 4: البيانات -->
         <div class="step-content" data-step="4">
             <div class="step-header">
@@ -1838,7 +2016,7 @@
                 <span id="saveTemplateBtnText">💾 حفظ التعديلات على القالب الأساسي</span>
             </button>
         </div>
-       
+
         <!-- الخطوة 5: SEO -->
         <div class="step-content" data-step="5">
             <div class="step-header">
@@ -1870,7 +2048,7 @@
                 </div>
                 <div class="form-group">
                     <textarea class="form-textarea" id="seoDescriptionInput" placeholder="أدخل وصف الفيديو هنا..." style="min-height: 180px;"></textarea>
-                    <div class="form-hint">وصف احترافي شامل عن الرقية والعلاج الروحاني</div>
+                                        <div class="form-hint">وصف احترافي شامل عن الرقية والعلاج الروحاني</div>
                     <div class="char-counter"><span id="seoDescCount">0</span> / 5000</div>
                 </div>
             </div>
@@ -1879,7 +2057,6 @@
                     <span>🏷️</span>
                     <span>الكلمات المفتاحية</span>
                 </div>
-               
                 <div class="tags-input-section">
                     <div class="tags-input-wrapper">
                         <input type="text" class="tags-input" id="tagInput" placeholder="أدخل كلمة مفتاحية..." maxlength="30">
@@ -1891,7 +2068,6 @@
                 <div class="tags-container" id="tagsContainer">
                     <div style="color: var(--text-secondary); font-size: 12px;">لا توجد كلمات مفتاحية بعد</div>
                 </div>
-               
                 <div class="seo-stats" id="seoStats" style="display: none;">
                     <div class="seo-stat-item">
                         <div class="seo-stat-label">عدد الكلمات</div>
@@ -1921,7 +2097,7 @@
                 <div class="serp-description" id="serpDescription">وصف الفيديو سيظهر هنا...</div>
             </div>
         </div>
-       
+
         <!-- الخطوة 6: المراجعة -->
         <div class="step-content" data-step="6">
             <div class="step-header">
@@ -2054,6 +2230,8 @@
             </div>
         </div>
     </div>
+
+    <!-- أزرار التنقل -->
     <div class="nav-buttons">
         <button class="nav-btn btn-back" id="btnBack" style="display: none;">
             <span>←</span>
@@ -2064,14 +2242,17 @@
             <span>→</span>
         </button>
     </div>
+
     <script>
-        const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.net';
+        // ===== المتغيرات والإعدادات =====
+        const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.dev';
         const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor';
         const N8N_TEMPLATE_UPDATE_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor-response';
+        
         const tg = window.Telegram.WebApp;
         tg.expand();
         try { tg.enableClosingConfirmation(); } catch (e) {}
-       
+
         let currentStep = 1;
         const totalSteps = 6;
         let selectedTemplate = null;
@@ -2082,10 +2263,11 @@
         let lastAIRequestTime = 0;
         const AI_REQUEST_COOLDOWN = 10000;
         let loadedTemplatesData = [];
-        let currentTextSize = 20;
+        let currentTextSize = 18;
         const MIN_TEXT_SIZE = 14;
         const MAX_TEXT_SIZE = 28;
-       
+        let isEditingMode = false;
+
         const formData = {
             ID: null,
             binId: '',
@@ -2113,30 +2295,18 @@
             status: 'completed',
             updated_at: new Date().toISOString()
         };
-       
-        // دالة التحكم بحجم النص
-        document.getElementById('textSizeUp').addEventListener('click', () => {
-            if (currentTextSize < MAX_TEXT_SIZE) {
-                currentTextSize += 2;
-                document.getElementById('textEditor').style.fontSize = currentTextSize + 'px';
-            }
-        });
-       
-        document.getElementById('textSizeDown').addEventListener('click', () => {
-            if (currentTextSize > MIN_TEXT_SIZE) {
-                currentTextSize -= 2;
-                document.getElementById('textEditor').style.fontSize = currentTextSize + 'px';
-            }
-        });
-       
+
+        // ===== دوال المساعدة =====
         function showLoading(text, subtext = '') {
             document.getElementById('loadingText').textContent = text;
             document.getElementById('loadingSubtext').textContent = subtext;
             document.getElementById('loadingOverlay').classList.add('visible');
         }
+
         function hideLoading() {
             document.getElementById('loadingOverlay').classList.remove('visible');
         }
+
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
             setTimeout(() => {
@@ -2144,6 +2314,7 @@
                 document.documentElement.scrollTop = 0;
             }, 100);
         }
+
         function convertDriveUrl(url) {
             if (!url) return '';
             try {
@@ -2156,47 +2327,227 @@
                 return url;
             }
         }
+
         function formatTime(seconds) {
             if (!seconds || isNaN(seconds)) return '0:00';
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
+
+        // ===== وضع التحرير (إظهار/إخفاء مشغل الصوت الثابت) =====
+        function enterEditingMode() {
+            if (isEditingMode) return;
+            isEditingMode = true;
+            
+            // إخفاء شريط الخطوات
+            document.getElementById('progressWrapper').classList.add('hidden');
+            
+            // إظهار مشغل الصوت الثابت
+            document.getElementById('audioPlayerFixed').classList.add('visible');
+            
+            // إضافة class للمحرر
+            document.getElementById('editorContainer').classList.add('editing-mode');
+            
+            // تحديث الوقت في المشغل الثابت
+            syncFixedPlayer();
+        }
+
+        function exitEditingMode() {
+            if (!isEditingMode) return;
+            isEditingMode = false;
+            
+            // إظهار شريط الخطوات
+            document.getElementById('progressWrapper').classList.remove('hidden');
+            
+            // إخفاء مشغل الصوت الثابت
+            document.getElementById('audioPlayerFixed').classList.remove('visible');
+            
+            // إزالة class من المحرر
+            document.getElementById('editorContainer').classList.remove('editing-mode');
+        }
+
+        function syncFixedPlayer() {
+            const audioElement = document.getElementById('audioElement');
+            document.getElementById('durationFixed').textContent = formatTime(audioElement.duration);
+            document.getElementById('currentTimeFixed').textContent = formatTime(audioElement.currentTime);
+            
+            const progress = (audioElement.currentTime / audioElement.duration) * 100;
+            document.getElementById('progressFillFixed').style.width = `${progress}%`;
+            
+            // مزامنة حالة التشغيل
+            const isPlaying = !audioElement.paused;
+            document.getElementById('playPauseBtnFixed').textContent = isPlaying ? '⏸️' : '▶️';
+        }
+
+        // ===== أحداث محرر النص =====
+        const textEditor = document.getElementById('textEditor');
+        
+        textEditor.addEventListener('focus', () => {
+            enterEditingMode();
+        });
+
+        textEditor.addEventListener('blur', (e) => {
+            // تأخير صغير للتحقق من أن المستخدم لم ينتقل لعنصر آخر داخل المحرر
+            setTimeout(() => {
+                if (document.activeElement !== textEditor) {
+                    exitEditingMode();
+                }
+            }, 200);
+        });
+
+        // ===== التحكم بحجم النص =====
+        document.getElementById('textSizeUp').addEventListener('click', () => {
+            if (currentTextSize < MAX_TEXT_SIZE) {
+                currentTextSize += 2;
+                textEditor.style.fontSize = currentTextSize + 'px';
+            }
+        });
+
+        document.getElementById('textSizeDown').addEventListener('click', () => {
+            if (currentTextSize > MIN_TEXT_SIZE) {
+                currentTextSize -= 2;
+                textEditor.style.fontSize = currentTextSize + 'px';
+            }
+        });
+
+        // ===== زر النسخ =====
+        document.getElementById('copyBtn').addEventListener('click', async () => {
+            try {
+                await navigator.clipboard.writeText(textEditor.value);
+                tg.showPopup({ message: '✅ تم النسخ' });
+            } catch (err) {
+                textEditor.select();
+                document.execCommand('copy');
+                tg.showPopup({ message: '✅ تم النسخ' });
+            }
+        });
+
+        // ===== مشغل الصوت =====
+        const audioElement = document.getElementById('audioElement');
+
+        // المشغل العادي
+        document.getElementById('playPauseBtn').addEventListener('click', () => {
+            if (audioElement.paused) {
+                audioElement.play();
+                document.getElementById('playPauseBtn').textContent = '⏸️';
+                document.getElementById('playPauseBtnFixed').textContent = '⏸️';
+            } else {
+                audioElement.pause();
+                document.getElementById('playPauseBtn').textContent = '▶️';
+                document.getElementById('playPauseBtnFixed').textContent = '▶️';
+            }
+        });
+
+        // المشغل الثابت
+        document.getElementById('playPauseBtnFixed').addEventListener('click', () => {
+            if (audioElement.paused) {
+                audioElement.play();
+                document.getElementById('playPauseBtn').textContent = '⏸️';
+                document.getElementById('playPauseBtnFixed').textContent = '⏸️';
+            } else {
+                audioElement.pause();
+                document.getElementById('playPauseBtn').textContent = '▶️';
+                document.getElementById('playPauseBtnFixed').textContent = '▶️';
+            }
+        });
+
+        audioElement.addEventListener('loadedmetadata', () => {
+            document.getElementById('duration').textContent = formatTime(audioElement.duration);
+            document.getElementById('durationFixed').textContent = formatTime(audioElement.duration);
+        });
+
+        audioElement.addEventListener('timeupdate', () => {
+            const progress = (audioElement.currentTime / audioElement.duration) * 100;
+            document.getElementById('progressFill').style.width = `${progress}%`;
+            document.getElementById('progressFillFixed').style.width = `${progress}%`;
+            document.getElementById('currentTime').textContent = formatTime(audioElement.currentTime);
+            document.getElementById('currentTimeFixed').textContent = formatTime(audioElement.currentTime);
+        });
+
+        // شريط التقدم العادي
+        document.getElementById('progressBar').addEventListener('click', (e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const percentage = 1 - (clickX / rect.width);
+            audioElement.currentTime = percentage * audioElement.duration;
+        });
+
+        // شريط التقدم الثابت
+        document.getElementById('progressBarFixed').addEventListener('click', (e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const percentage = 1 - (clickX / rect.width);
+            audioElement.currentTime = percentage * audioElement.duration;
+        });
+
+        // أزرار السرعة العادية
+        document.querySelectorAll('.speed-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const speed = parseFloat(btn.dataset.speed);
+                audioElement.playbackRate = speed;
+                document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.speed-btn-fixed').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelector(`.speed-btn-fixed[data-speed="${speed}"]`).classList.add('active');
+            });
+        });
+
+        // أزرار السرعة الثابتة
+        document.querySelectorAll('.speed-btn-fixed').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const speed = parseFloat(btn.dataset.speed);
+                audioElement.playbackRate = speed;
+                document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.speed-btn-fixed').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                document.querySelector(`.speed-btn[data-speed="${speed}"]`).classList.add('active');
+            });
+        });
+
+        // ===== تحميل البيانات الأولية =====
         async function loadInitialData() {
             try {
                 showLoading('جاري تحميل البيانات...', 'الرجاء الانتظار');
                 const urlParams = new URLSearchParams(window.location.search);
                 const binId = urlParams.get('bin');
                 if (!binId) throw new Error('معرف البيانات غير موجود');
+
                 const response = await fetch(`${WORKER_API_URL}/get-bin-data?binId=${binId}`, {
                     method: 'GET'
                 });
+
                 if (!response.ok) {
                     const errorData = await response.json();
                     throw new Error(errorData.message || 'فشل تحميل البيانات');
                 }
+
                 const result = await response.json();
-               
                 if (!result.success) {
                     throw new Error(result.message || 'فشل تحميل البيانات');
                 }
+
                 const loadedData = result.data || {};
                 formData.ID = loadedData.id || '';
                 formData.binId = binId;
                 formData.audioUrl = loadedData.audioUrl || '';
                 formData.transcript_txt = loadedData.text || '';
                 formData.corrected_full_text = loadedData.text || '';
+
                 if (loadedData.templates && Array.isArray(loadedData.templates)) {
                     loadedTemplatesData = loadedData.templates;
                     console.log('✅ تم تحميل', loadedTemplatesData.length, 'قالب');
                 }
+
                 if (formData.audioUrl) {
-                    document.getElementById('audioElement').src = formData.audioUrl;
+                    audioElement.src = formData.audioUrl;
                 }
+
                 if (formData.transcript_txt) {
-                    document.getElementById('textEditor').value = formData.transcript_txt;
+                    textEditor.value = formData.transcript_txt;
                     updateTextStats();
                 }
+
                 initializeTemplates();
                 hideLoading();
                 validateCurrentStep();
@@ -2206,29 +2557,36 @@
                 alert('❌ خطأ: ' + error.message);
             }
         }
+
+        // ===== تحديث إحصائيات النص =====
         function updateTextStats() {
-            const text = document.getElementById('textEditor').value || '';
+            const text = textEditor.value || '';
             const charCount = text.length;
             const wordCount = text.trim() ? text.trim().split(/\s+/).length : 0;
             document.getElementById('charCount').textContent = charCount.toLocaleString('ar');
             document.getElementById('wordCount').textContent = wordCount.toLocaleString('ar');
-           
             formData.corrected_full_text = text;
             validateCurrentStep();
         }
+
+        textEditor.addEventListener('input', updateTextStats);
+
+        // ===== التصحيح بالذكاء الاصطناعي =====
         document.getElementById('aiBtn').addEventListener('click', async () => {
             const now = Date.now();
             if (now - lastAIRequestTime < AI_REQUEST_COOLDOWN) {
                 alert(`⏰ انتظر ${Math.ceil((AI_REQUEST_COOLDOWN - (now - lastAIRequestTime)) / 1000)} ثانية`);
                 return;
             }
-            const textEditor = document.getElementById('textEditor');
+
             if (!textEditor.value.trim()) {
                 alert('⚠️ لا يوجد نص للتصحيح');
                 return;
             }
+
             showLoading('جاري التصحيح بالذكاء الاصطناعي...', 'قد يستغرق بضع ثوانٍ');
             lastAIRequestTime = now;
+
             try {
                 const originalText = textEditor.value;
                 const response = await fetch(`${WORKER_API_URL}/ai-correct`, {
@@ -2236,18 +2594,20 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ text: originalText })
                 });
+
                 if (!response.ok) {
                     const errorData = await response.json();
                     throw new Error(errorData.userMessage || errorData.message || 'فشل التصحيح');
                 }
+
                 const result = await response.json();
-               
                 if (result.success && result.correctedText) {
                     aiCorrectedText = result.correctedText;
                     aiChangesCount = result.meta?.changesCount || 0;
-                   
+
                     const correctedWords = aiCorrectedText.trim().split(/\s+/).length;
                     const correctedChars = aiCorrectedText.length;
+
                     document.getElementById('aiCorrectionText').textContent = aiCorrectedText;
                     document.getElementById('aiWordCount').textContent = correctedWords;
                     document.getElementById('aiChanges').textContent = aiChangesCount;
@@ -2263,80 +2623,50 @@
                 alert('❌ ' + error.message);
             }
         });
+
         document.getElementById('aiAcceptBtn').addEventListener('click', () => {
-            document.getElementById('textEditor').value = aiCorrectedText;
+            textEditor.value = aiCorrectedText;
             formData.corrected_full_text = aiCorrectedText;
             updateTextStats();
             document.getElementById('aiCorrectionBox').classList.remove('visible');
         });
+
         document.getElementById('aiRejectBtn').addEventListener('click', () => {
             document.getElementById('aiCorrectionBox').classList.remove('visible');
         });
+
         document.getElementById('aiCorrectionClose').addEventListener('click', () => {
             document.getElementById('aiCorrectionBox').classList.remove('visible');
         });
-        document.getElementById('textEditor').addEventListener('input', updateTextStats);
-        document.getElementById('copyBtn').addEventListener('click', async () => {
-            try {
-                await navigator.clipboard.writeText(document.getElementById('textEditor').value);
-                tg.showPopup({ message: '✅ تم النسخ' });
-            } catch (err) {
-                document.getElementById('textEditor').select();
-                document.execCommand('copy');
-            }
-        });
+
+        // ===== أزرار الأدوات =====
         document.getElementById('pasteBtn').addEventListener('click', async () => {
             try {
                 const text = await navigator.clipboard.readText();
-                document.getElementById('textEditor').value = text;
+                textEditor.value = text;
                 updateTextStats();
-            } catch (err) {}
+            } catch (err) {
+                console.log('Paste failed');
+            }
         });
+
         document.getElementById('clearBtn').addEventListener('click', () => {
-            if (document.getElementById('textEditor').value.trim() && confirm('هل تريد حذف النص؟')) {
-                document.getElementById('textEditor').value = '';
+            if (textEditor.value.trim() && confirm('هل تريد حذف النص؟')) {
+                textEditor.value = '';
                 updateTextStats();
             }
         });
-        const audioElement = document.getElementById('audioElement');
-       
-        document.getElementById('playPauseBtn').addEventListener('click', () => {
-            if (audioElement.paused) {
-                audioElement.play();
-                document.getElementById('playPauseBtn').textContent = '⏸️';
-            } else {
-                audioElement.pause();
-                document.getElementById('playPauseBtn').textContent = '▶️';
-            }
-        });
-        audioElement.addEventListener('loadedmetadata', () => {
-            document.getElementById('duration').textContent = formatTime(audioElement.duration);
-        });
-        audioElement.addEventListener('timeupdate', () => {
-            const progress = (audioElement.currentTime / audioElement.duration) * 100;
-            document.getElementById('progressFill').style.width = `${progress}%`;
-            document.getElementById('currentTime').textContent = formatTime(audioElement.currentTime);
-        });
-        document.getElementById('progressBar').addEventListener('click', (e) => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const percentage = 1 - (clickX / rect.width);
-            audioElement.currentTime = percentage * audioElement.duration;
-        });
-        document.querySelectorAll('.speed-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                audioElement.playbackRate = parseFloat(btn.dataset.speed);
-                document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            });
-        });
+
+        // ===== القوالب =====
         function initializeTemplates() {
             const grid = document.getElementById('templatesGrid');
             grid.innerHTML = '';
+
             if (!loadedTemplatesData || loadedTemplatesData.length === 0) {
                 grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-secondary)">لا توجد قوالب</div>';
                 return;
             }
+
             const uniqueTemplates = {};
             loadedTemplatesData.forEach(item => {
                 if (!uniqueTemplates[item.template_id]) {
@@ -2349,6 +2679,7 @@
                 }
                 uniqueTemplates[item.template_id].colors.push(item);
             });
+
             Object.values(uniqueTemplates).forEach((template, index) => {
                 const card = document.createElement('div');
                 card.className = 'template-card';
@@ -2365,14 +2696,17 @@
                 grid.appendChild(card);
             });
         }
+
         function selectTemplate(template) {
             document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
             document.querySelector(`[data-template-id="${template.id}"]`).classList.add('selected');
             selectedTemplate = template;
             formData.template_id = template.id;
             formData.template_name = template.name;
+
             const grid = document.getElementById('colorsGrid');
             grid.innerHTML = '';
+
             template.colors.forEach(color => {
                 const opt = document.createElement('div');
                 opt.className = 'color-option';
@@ -2382,14 +2716,17 @@
                 opt.onclick = () => selectColor(color);
                 grid.appendChild(opt);
             });
+
             document.getElementById('colorsSection').style.display = 'block';
             updateSaveTemplateButtonText();
             validateCurrentStep();
         }
+
         function selectColor(color) {
             document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
             document.querySelector(`[data-color-id="${color.color_id}"]`).classList.add('selected');
             selectedColor = color;
+
             formData.color_id = color.color_id;
             formData.color_name = color.color_name;
             formData.landscape_image_url = color.landscape_link;
@@ -2397,19 +2734,21 @@
             formData.series_color = color.landscape_series_color;
             formData.subseries_color = color.landscape_subseries_color;
             formData.finalseries_color = color.landscape_finalseries_color;
-           
+
             recommendedSeriesColor = color.landscape_series_color;
             document.getElementById('mainSeriesInput').value = color.series_text || '';
             document.getElementById('subSeriesInput').value = color.sub_series_text || '';
             document.getElementById('finalSeriesInput').value = color.final_series_text || '';
-           
+
             formData.series = color.series_text || '';
             formData.subSeries = color.sub_series_text || '';
             formData.finalSeries = color.final_series_text || '';
-           
+
             updateCharCounters();
+
             const landscapeImg = document.getElementById('landscapePreview');
             const portraitImg = document.getElementById('portraitPreview');
+
             landscapeImg.onload = () => {
                 document.getElementById('landscapeLoading').classList.add('hidden');
                 landscapeImg.classList.add('loaded');
@@ -2418,12 +2757,15 @@
                 document.getElementById('portraitLoading').classList.add('hidden');
                 portraitImg.classList.add('loaded');
             };
+
             landscapeImg.src = convertDriveUrl(color.landscape_link);
             portraitImg.src = convertDriveUrl(color.portrait_link);
             document.getElementById('templatePreviewModal').classList.add('visible');
+
             updateSaveTemplateButtonText();
             validateCurrentStep();
         }
+
         function updateSaveTemplateButtonText() {
             const btn = document.getElementById('saveTemplateBtnText');
             if (formData.template_name && formData.template_id) {
@@ -2432,26 +2774,32 @@
                 btn.textContent = '💾 حفظ التعديلات على القالب الأساسي';
             }
         }
+
         document.getElementById('closePreview').addEventListener('click', () => {
             document.getElementById('templatePreviewModal').classList.remove('visible');
         });
+
         document.getElementById('previewNextBtn').addEventListener('click', () => {
             document.getElementById('templatePreviewModal').classList.remove('visible');
             nextStep();
         });
+
+        // ===== ألوان السلسلة =====
         let isDragging = false;
         let currentColor = '#b9d780';
+
         function initializeSeriesColors() {
             if (!selectedColor) return;
             const seriesColor = selectedColor.landscape_series_color;
             recommendedSeriesColor = seriesColor;
             formData.series_color = seriesColor;
             currentColor = seriesColor;
-           
+
             updateColorDisplay(seriesColor);
             updateHandlePosition(seriesColor);
             document.getElementById('recommendedColorBtn').classList.add('selected');
         }
+
         function updateColorDisplay(color) {
             document.getElementById('seriesPreviewText').style.color = color;
             document.getElementById('hexInput').value = color;
@@ -2460,67 +2808,71 @@
             formData.series_color = color;
             currentColor = color;
         }
+
         function updateHandlePosition(hexColor) {
             const container = document.getElementById('colorWheelContainer');
             const handle = document.getElementById('colorPickerHandle');
             const rect = container.getBoundingClientRect();
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
-           
+
             const rgb = hexToRgb(hexColor);
             if (!rgb) return;
-           
+
             const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
-           
             const angle = hsl.h * (Math.PI / 180);
             const distance = (hsl.s / 100) * (centerX * 0.75);
-           
+
             const x = centerX + distance * Math.cos(angle);
             const y = centerY + distance * Math.sin(angle);
-           
+
             handle.style.left = `${x}px`;
             handle.style.top = `${y}px`;
         }
+
         document.getElementById('recommendedColorBtn').addEventListener('click', () => {
             if (!selectedColor) return;
             updateColorDisplay(recommendedSeriesColor);
             updateHandlePosition(recommendedSeriesColor);
             document.getElementById('recommendedColorBtn').classList.add('selected');
         });
+
         const colorWheel = document.getElementById('colorWheel');
         const colorWheelContainer = document.getElementById('colorWheelContainer');
         const colorPickerHandle = document.getElementById('colorPickerHandle');
+
         function getColorAtPosition(x, y) {
             const rect = colorWheelContainer.getBoundingClientRect();
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
-           
+
             const deltaX = x - centerX;
             const deltaY = y - centerY;
             const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
             const maxDistance = centerX * 0.85;
-           
+
             if (distance > maxDistance) return null;
-           
+
             let angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
             if (angle < 0) angle += 360;
-           
+
             const saturation = Math.min((distance / maxDistance) * 100, 100);
             const lightness = 50;
-           
+
             return hslToHex(angle, saturation, lightness);
         }
+
         function handleColorPick(e) {
             e.preventDefault();
             e.stopPropagation();
-           
+
             const rect = colorWheelContainer.getBoundingClientRect();
             const touch = e.touches ? e.touches[0] : e;
             const x = touch.clientX - rect.left;
             const y = touch.clientY - rect.top;
-           
+
             const color = getColorAtPosition(x, y);
-           
+
             if (color) {
                 updateColorDisplay(color);
                 colorPickerHandle.style.left = `${x}px`;
@@ -2528,33 +2880,37 @@
                 document.getElementById('recommendedColorBtn').classList.remove('selected');
             }
         }
+
         colorPickerHandle.addEventListener('mousedown', (e) => {
             isDragging = true;
             e.preventDefault();
         });
-       
+
         colorPickerHandle.addEventListener('touchstart', (e) => {
             isDragging = true;
             e.preventDefault();
         });
+
         document.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                handleColorPick(e);
-            }
+            if (isDragging) handleColorPick(e);
         });
+
         document.addEventListener('touchmove', (e) => {
             if (isDragging) {
                 e.preventDefault();
                 handleColorPick(e);
             }
         }, { passive: false });
+
         document.addEventListener('mouseup', () => isDragging = false);
         document.addEventListener('touchend', () => isDragging = false);
+
         colorWheel.addEventListener('click', handleColorPick);
         colorWheel.addEventListener('touchstart', (e) => {
             e.preventDefault();
             handleColorPick(e);
         });
+
         document.getElementById('hexInput').addEventListener('input', (e) => {
             let value = e.target.value;
             if (!value.startsWith('#')) value = '#' + value;
@@ -2566,6 +2922,8 @@
             }
             e.target.value = value;
         });
+
+        // دوال تحويل الألوان
         function hexToRgb(hex) {
             const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
             return result ? {
@@ -2574,16 +2932,17 @@
                 b: parseInt(result[3], 16)
             } : null;
         }
+
         function rgbToHsl(r, g, b) {
             r /= 255; g /= 255; b /= 255;
             const max = Math.max(r, g, b), min = Math.min(r, g, b);
             let h, s, l = (max + min) / 2;
+
             if (max === min) {
                 h = s = 0;
             } else {
                 const d = max - min;
                 s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-               
                 switch (max) {
                     case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
                     case g: h = ((b - r) / d + 2) / 6; break;
@@ -2592,6 +2951,7 @@
             }
             return { h: h * 360, s: s * 100, l: l * 100 };
         }
+
         function hslToHex(h, s, l) {
             l /= 100;
             const a = s * Math.min(l, 1 - l) / 100;
@@ -2602,22 +2962,27 @@
             };
             return `#${f(0)}${f(8)}${f(4)}`;
         }
+
+        // ===== حقول البيانات =====
         function updateCharCounters() {
             ['title', 'mainSeries', 'subSeries', 'finalSeries'].forEach(field => {
                 const input = document.getElementById(field + 'Input');
                 const counter = document.getElementById(field + 'Count');
                 counter.textContent = input.value.length;
-               
+
                 const key = field === 'mainSeries' ? 'series' : field === 'subSeries' ? 'subSeries' : field === 'finalSeries' ? 'finalSeries' : 'title';
                 formData[key] = input.value;
             });
         }
+
         ['titleInput', 'mainSeriesInput', 'subSeriesInput', 'finalSeriesInput'].forEach(id => {
             document.getElementById(id).addEventListener('input', () => {
                 updateCharCounters();
                 validateCurrentStep();
             });
         });
+
+        // حفظ القالب
         document.getElementById('saveTemplateBtn').addEventListener('click', async () => {
             if (!selectedColor) {
                 alert('⚠️ لم تختر قالباً بعد');
@@ -2627,9 +2992,12 @@
                 alert('⚠️ يجب ملء جميع حقول السلاسل');
                 return;
             }
+
             const confirmed = confirm('هل تريد حفظ هذه التعديلات كإعدادات افتراضية للقالب؟');
             if (!confirmed) return;
+
             showLoading('جاري حفظ التعديلات...', 'الرجاء الانتظار');
+
             try {
                 const updatePayload = {
                     type: 'template_update',
@@ -2653,34 +3021,34 @@
                     },
                     full_data: { ...formData }
                 };
-                console.log('📤 إرسال التحديثات إلى N8N:', updatePayload);
+
                 const response = await fetch(N8N_TEMPLATE_UPDATE_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(updatePayload)
                 });
-                if (!response.ok) {
-                    throw new Error('فشل حفظ التعديلات على الخادم');
-                }
-                const result = await response.json();
-                console.log('✅ استجابة N8N:', result);
+
+                if (!response.ok) throw new Error('فشل حفظ التعديلات على الخادم');
+
                 hideLoading();
                 alert('✅ تم حفظ التعديلات بنجاح!');
-               
             } catch (error) {
                 console.error('❌ Error saving template:', error);
                 hideLoading();
                 alert('❌ فشل حفظ التعديلات: ' + error.message);
             }
         });
+
+        // ===== SEO =====
         function addTag(tagText) {
             const trimmed = tagText.trim();
             if (!trimmed) return;
-           
+
             if (formData.tags.includes(trimmed)) {
                 alert('⚠️ الكلمة موجودة مسبقاً');
                 return;
             }
+
             formData.tags.push(trimmed);
             renderTags();
             updateSEOStats();
@@ -2688,34 +3056,39 @@
             document.getElementById('tagInput').value = '';
             validateCurrentStep();
         }
+
         document.getElementById('addTagBtn').addEventListener('click', () => {
-            const input = document.getElementById('tagInput');
-            addTag(input.value);
+            addTag(document.getElementById('tagInput').value);
         });
+
         document.getElementById('tagInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
                 addTag(e.target.value);
             }
         });
+
         function updateSerpPreview() {
             const title = formData.seo_title || 'عنوان الفيديو';
             const description = formData.seo_description || 'وصف الفيديو سيظهر هنا...';
-           
+
             document.getElementById('serpTitle').textContent = title;
             document.getElementById('serpDescription').textContent = description.substring(0, 160) + (description.length > 160 ? '...' : '');
-           
+
             if (formData.seo_title || formData.seo_description) {
                 document.getElementById('serpPreview').style.display = 'block';
             }
         }
+
         document.getElementById('seoGenerateBtn').addEventListener('click', async () => {
             if (!formData.corrected_full_text.trim()) {
                 alert('⚠️ لا يوجد نص مصحح لإنشاء SEO منه');
                 return;
             }
+
             showLoading('جاري إنشاء SEO احترافي', 'يتم تحليل المحتوى وإنشاء عنوان ووصف وكلمات مفتاحية متخصصة');
             document.getElementById('seoGenerateBtn').disabled = true;
+
             try {
                 const response = await fetch(`${WORKER_API_URL}/generate-seo`, {
                     method: 'POST',
@@ -2726,29 +3099,33 @@
                         focus: 'الرقية الشرعية والعلاج الروحاني'
                     })
                 });
+
                 if (!response.ok) {
                     const errorData = await response.json();
                     throw new Error(errorData.userMessage || 'فشل إنشاء SEO');
                 }
+
                 const result = await response.json();
-               
                 if (result.success) {
                     formData.seo_title = result.title || '';
                     formData.seo_description = result.description || '';
                     formData.tags = result.tags || [];
+
                     document.getElementById('seoTitleInput').value = formData.seo_title;
                     document.getElementById('seoDescriptionInput').value = formData.seo_description;
+
                     updateSEOCounts();
                     renderTags();
                     updateSEOStats();
                     updateSerpPreview();
-                   
+
                     const btn = document.getElementById('seoGenerateBtn');
                     btn.classList.add('generated');
                     btn.innerHTML = '<span>✅</span><span>تم إنشاء SEO بنجاح - اضغط لإعادة الإنشاء</span>';
                 } else {
                     throw new Error('فشل إنشاء SEO');
                 }
+
                 hideLoading();
                 document.getElementById('seoGenerateBtn').disabled = false;
                 validateCurrentStep();
@@ -2759,13 +3136,16 @@
                 alert('❌ فشل إنشاء SEO: ' + error.message);
             }
         });
+
         function renderTags() {
             const container = document.getElementById('tagsContainer');
             container.innerHTML = '';
+
             if (!formData.tags || formData.tags.length === 0) {
                 container.innerHTML = '<div style="color:var(--text-secondary);font-size:12px">لا توجد كلمات مفتاحية بعد</div>';
                 return;
             }
+
             formData.tags.forEach((tag, index) => {
                 const tagEl = document.createElement('div');
                 tagEl.className = 'tag-item';
@@ -2773,21 +3153,21 @@
                     <span class="tag-text">${tag}</span>
                     <button class="tag-remove" data-index="${index}">×</button>
                 `;
-               
                 tagEl.querySelector('.tag-remove').onclick = () => {
                     formData.tags.splice(index, 1);
                     renderTags();
                     updateSEOStats();
                     validateCurrentStep();
                 };
-               
                 container.appendChild(tagEl);
             });
         }
+
         function updateSEOCounts() {
             document.getElementById('seoTitleCount').textContent = document.getElementById('seoTitleInput').value.length;
             document.getElementById('seoDescCount').textContent = document.getElementById('seoDescriptionInput').value.length;
         }
+
         function updateSEOStats() {
             const words = formData.corrected_full_text.trim() ? formData.corrected_full_text.trim().split(/\s+/).length : 0;
             document.getElementById('statWordCount').textContent = words;
@@ -2796,31 +3176,38 @@
             document.getElementById('statDescLength').textContent = formData.seo_description.length;
             document.getElementById('seoStats').style.display = 'grid';
         }
+
         document.getElementById('seoTitleInput').addEventListener('input', () => {
             formData.seo_title = document.getElementById('seoTitleInput').value;
             updateSEOCounts();
             updateSerpPreview();
             validateCurrentStep();
         });
+
         document.getElementById('seoDescriptionInput').addEventListener('input', () => {
             formData.seo_description = document.getElementById('seoDescriptionInput').value;
             updateSEOCounts();
             updateSerpPreview();
             validateCurrentStep();
         });
+
+        // ===== التنقل والتقدم =====
         function updateProgress() {
             const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
             document.getElementById('progressLineFill').style.width = `${progress}%`;
+
             document.querySelectorAll('.progress-step').forEach((step, i) => {
                 step.classList.remove('active', 'completed');
                 if (i + 1 < currentStep) step.classList.add('completed');
                 else if (i + 1 === currentStep) step.classList.add('active');
             });
+
             document.querySelectorAll('.step-content').forEach((content, i) => {
                 content.classList.toggle('active', i + 1 === currentStep);
             });
+
             document.getElementById('btnBack').style.display = currentStep > 1 ? 'flex' : 'none';
-           
+
             if (currentStep === totalSteps) {
                 document.getElementById('btnNext').innerHTML = '<span>إرسال</span><span>✅</span>';
                 document.getElementById('btnNext').className = 'nav-btn btn-submit';
@@ -2829,13 +3216,21 @@
                 document.getElementById('btnNext').innerHTML = '<span>التالي</span><span>→</span>';
                 document.getElementById('btnNext').className = 'nav-btn btn-next';
             }
+
             if (currentStep === 3) initializeSeriesColors();
+
+            // إخفاء مشغل الصوت الثابت عند الانتقال لخطوة أخرى
+            if (currentStep !== 1) {
+                exitEditingMode();
+            }
+
             scrollToTop();
             validateCurrentStep();
         }
+
         function validateCurrentStep() {
             let isValid = false;
-            switch(currentStep) {
+            switch (currentStep) {
                 case 1:
                     isValid = formData.corrected_full_text.trim().length > 0;
                     break;
@@ -2850,8 +3245,8 @@
                     break;
                 case 5:
                     isValid = formData.seo_title.trim().length > 0 &&
-                              formData.seo_description.trim().length > 0 &&
-                              formData.tags.length > 0;
+                        formData.seo_description.trim().length > 0 &&
+                        formData.tags.length > 0;
                     break;
                 case 6:
                     isValid = true;
@@ -2859,6 +3254,7 @@
             }
             document.getElementById('btnNext').disabled = !isValid;
         }
+
         function nextStep() {
             if (currentStep === totalSteps) {
                 submitForm();
@@ -2869,41 +3265,47 @@
                 updateProgress();
             }
         }
+
         function prevStep() {
             if (currentStep > 1) {
                 currentStep--;
                 updateProgress();
             }
         }
+
         document.getElementById('btnNext').addEventListener('click', nextStep);
         document.getElementById('btnBack').addEventListener('click', prevStep);
+
+        // ===== المراجعة =====
         function updateReview() {
             const words = formData.corrected_full_text.trim() ? formData.corrected_full_text.trim().split(/\s+/).length : 0;
-           
+
             document.getElementById('reviewWordCount').textContent = words;
             document.getElementById('reviewCharCount').textContent = formData.corrected_full_text.length;
-           
+
             if (aiChangesCount > 0) {
                 document.getElementById('reviewAiStats').style.display = 'flex';
                 document.getElementById('reviewAiChanges').textContent = aiChangesCount;
             }
+
             document.getElementById('reviewTemplate').textContent = formData.template_name || '-';
             document.getElementById('reviewColor').textContent = formData.color_name || '-';
             document.getElementById('reviewSeriesColor').innerHTML = `<div style="width:18px;height:18px;background:${formData.series_color};border-radius:4px;display:inline-block;margin-left:8px"></div>${formData.series_color}`;
-           
+
             document.getElementById('reviewMainSeries').textContent = formData.series || '-';
             document.getElementById('reviewSubSeries').textContent = formData.subSeries || '-';
             document.getElementById('reviewFinalSeries').textContent = formData.finalSeries || '-';
             document.getElementById('reviewTitle').textContent = formData.title || '-';
-           
+
             document.getElementById('reviewSerpTitle').textContent = formData.seo_title || 'عنوان الفيديو';
             document.getElementById('reviewSerpDescription').textContent = (formData.seo_description || 'وصف الفيديو...').substring(0, 160) + ((formData.seo_description || '').length > 160 ? '...' : '');
-           
+
             document.getElementById('reviewSeoTitleBox').textContent = formData.seo_title || '-';
             document.getElementById('reviewSeoDescBox').textContent = formData.seo_description || '-';
+
             const tagsPreview = document.getElementById('reviewTagsPreview');
             tagsPreview.innerHTML = '';
-           
+
             if (formData.tags && formData.tags.length > 0) {
                 formData.tags.forEach(tag => {
                     const tagEl = document.createElement('div');
@@ -2914,6 +3316,7 @@
             } else {
                 tagsPreview.innerHTML = '<div style="color:var(--text-secondary);font-size:12px">لا توجد كلمات مفتاحية</div>';
             }
+
             if (formData.landscape_image_url) {
                 const landscapeImg = document.getElementById('reviewLandscapeImage');
                 landscapeImg.onload = () => {
@@ -2922,6 +3325,7 @@
                 };
                 landscapeImg.src = convertDriveUrl(formData.landscape_image_url);
             }
+
             if (formData.portrait_image_url) {
                 const portraitImg = document.getElementById('reviewPortraitImage');
                 portraitImg.onload = () => {
@@ -2931,18 +3335,22 @@
                 portraitImg.src = convertDriveUrl(formData.portrait_image_url);
             }
         }
+
         document.getElementById('reviewTagsExpandBtn').addEventListener('click', () => {
             const tagsPreview = document.getElementById('reviewTagsPreview');
             tagsPreview.classList.toggle('expanded');
             document.getElementById('reviewTagsExpandText').textContent = tagsPreview.classList.contains('expanded') ? 'إخفاء' : 'عرض الكل';
             document.getElementById('reviewTagsExpandIcon').textContent = tagsPreview.classList.contains('expanded') ? '▲' : '▼';
         });
+
         document.getElementById('reviewDescExpandBtn').addEventListener('click', () => {
             const descBox = document.getElementById('reviewSeoDescBox');
             descBox.classList.toggle('expanded');
             document.getElementById('reviewDescExpandText').textContent = descBox.classList.contains('expanded') ? 'إخفاء' : 'عرض الكل';
             document.getElementById('reviewDescExpandIcon').textContent = descBox.classList.contains('expanded') ? '▲' : '▼';
         });
+
+        // ===== الإرسال النهائي =====
         async function submitForm() {
             showLoading('جاري الإرسال...', 'الرجاء الانتظار');
             try {
@@ -2950,15 +3358,19 @@
                     ...formData,
                     timestamp: new Date().toISOString()
                 };
+
                 const response = await fetch(N8N_WEBHOOK_URL, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dataToSend)
                 });
+
                 if (!response.ok) throw new Error('فشل الإرسال');
+
                 try {
                     tg.sendData(JSON.stringify({ type: 'completed', id: formData.ID, status: 'completed' }));
-                } catch(e) {}
+                } catch (e) {}
+
                 hideLoading();
                 tg.showAlert('✅ تم الإرسال بنجاح!', () => {
                     setTimeout(() => tg.close(), 500);
@@ -2969,7 +3381,9 @@
                 alert('❌ خطأ: ' + error.message);
             }
         }
-        console.log('🚀 App Starting - Version 2.0...');
+
+        // ===== التشغيل =====
+        console.log('🚀 App Starting - Version 2.1...');
         updateProgress();
         loadInitialData();
     </script>
