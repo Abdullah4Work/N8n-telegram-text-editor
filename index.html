@@ -214,160 +214,6 @@
             color: var(--text-secondary);
             line-height: 1.5;
         }
-        /* ===== مشغل الصوت ===== */
-        .audio-player-section {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow-md);
-            border: 2px solid var(--primary-lighter);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-       
-        .audio-player-section:not(.sticky):hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.3);
-        }
-       
-        .audio-player-section.sticky {
-            position: fixed;
-            top: 60px;
-            left: 14px;
-            right: 14px;
-            z-index: 150;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-            animation: slideDownSticky 0.3s ease;
-            cursor: default;
-        }
-       
-        @keyframes slideDownSticky {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-       
-        .audio-section-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-       
-        .audio-player-section:not(.sticky) .audio-section-title::after {
-            content: ' (اضغط للتثبيت)';
-            font-size: 11px;
-            color: var(--text-secondary);
-            font-weight: 400;
-        }
-       
-        .audio-player-section.sticky .audio-section-title::after {
-            content: '📌';
-            margin-right: 8px;
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-       
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-       
-        .audio-player {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .audio-controls {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .play-pause-btn {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border: none;
-            color: white;
-            font-size: 22px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            flex-shrink: 0;
-            box-shadow: var(--shadow-md);
-        }
-        .play-pause-btn:active {
-            transform: scale(0.95);
-        }
-        .audio-progress {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--bg-tertiary);
-            border-radius: 10px;
-            overflow: hidden;
-            cursor: pointer;
-            position: relative;
-            direction: rtl;
-        }
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(270deg, var(--primary), var(--primary-light));
-            width: 0%;
-            transition: width 0.1s linear;
-            transform-origin: right;
-        }
-        .time-display {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
-        .speed-controls {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        .speed-btn {
-            padding: 8px 12px;
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            background: var(--bg-secondary);
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: all 0.2s;
-            white-space: nowrap;
-            min-width: 55px;
-        }
-        .speed-btn:active {
-            transform: scale(0.95);
-        }
-        .speed-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
         /* ===== محرر النص ===== */
         .editor-container {
             background: var(--bg-secondary);
@@ -378,10 +224,6 @@
             box-shadow: var(--shadow-md);
             position: relative;
             transition: margin-top 0.3s ease;
-        }
-       
-        .editor-container.with-sticky-audio {
-            margin-top: 140px;
         }
        
         .text-size-controls {
@@ -1651,45 +1493,7 @@
     <div class="container">
         <!-- الخطوة 1: التصحيح -->
         <div class="step-content active" data-step="1">
-            <div class="step-header">
-                <div class="step-title">
-                    <span>✍️</span>
-                    <span>تصحيح النص</span>
-                </div>
-                <div class="step-description">اقرأ النص أدناه وصحح الأخطاء، يمكنك الاستماع للمقطع الصوتي للمساعدة</div>
-            </div>
-           
-            <!-- مشغل الصوت في الأعلى -->
-            <div class="audio-player-section" id="audioPlayerSection">
-                <div class="audio-section-title">
-                    <span>🎵</span>
-                    <span>المقطع الصوتي</span>
-                </div>
-                <div class="audio-player">
-                    <audio id="audioElement" style="display: none;"></audio>
-                    <div class="audio-controls">
-                        <button class="play-pause-btn" id="playPauseBtn">▶️</button>
-                        <div class="audio-progress">
-                            <div class="progress-bar" id="progressBar">
-                                <div class="progress-fill" id="progressFill"></div>
-                            </div>
-                            <div class="time-display">
-                                <span id="duration">0:00</span>
-                                <span id="currentTime">0:00</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="speed-controls">
-                        <button class="speed-btn" data-speed="0.5">0.5x</button>
-                        <button class="speed-btn" data-speed="0.75">0.75x</button>
-                        <button class="speed-btn active" data-speed="1">1x</button>
-                        <button class="speed-btn" data-speed="1.25">1.25x</button>
-                        <button class="speed-btn" data-speed="1.5">1.5x</button>
-                        <button class="speed-btn" data-speed="2">2x</button>
-                    </div>
-                </div>
-            </div>
-            <!-- النص المراد تصحيحه -->
+            <!-- النص المراد تصحيحه - تم رفعه للأعلى وإزالة النص التوجيهي -->
             <div class="editor-container" id="editorContainer">
                 <div class="text-size-controls">
                     <button class="text-size-btn" id="textSizeUp" title="تكبير النص">+</button>
@@ -2140,11 +1944,6 @@
         const MIN_TEXT_SIZE = 14;
         const MAX_TEXT_SIZE = 28;
        
-        // متغيرات للتثبيت
-        let isAudioSticky = false;
-        let audioPlayerSection = null;
-        let editorContainer = null;
-       
         const formData = {
             ID: null,
             binId: '',
@@ -2188,40 +1987,6 @@
             }
         });
        
-        // دالة تفعيل/إلغاء التثبيت
-        function toggleAudioSticky() {
-            if (!audioPlayerSection) {
-                audioPlayerSection = document.getElementById('audioPlayerSection');
-                editorContainer = document.getElementById('editorContainer');
-            }
-           
-            if (!isAudioSticky) {
-                audioPlayerSection.classList.add('sticky');
-                editorContainer.classList.add('with-sticky-audio');
-                isAudioSticky = true;
-            } else {
-                audioPlayerSection.classList.remove('sticky');
-                editorContainer.classList.remove('with-sticky-audio');
-                isAudioSticky = false;
-            }
-        }
-       
-        // إضافة حدث النقر على المقطع الصوتي
-        setTimeout(() => {
-            audioPlayerSection = document.getElementById('audioPlayerSection');
-            if (audioPlayerSection) {
-                audioPlayerSection.addEventListener('click', (e) => {
-                    // لا تفعل التثبيت إذا كان النقر على الأزرار
-                    if (e.target.closest('.play-pause-btn') ||
-                        e.target.closest('.speed-btn') ||
-                        e.target.closest('.progress-bar')) {
-                        return;
-                    }
-                    toggleAudioSticky();
-                });
-            }
-        }, 1000);
-       
         function showLoading(text, subtext = '') {
             document.getElementById('loadingText').textContent = text;
             document.getElementById('loadingSubtext').textContent = subtext;
@@ -2248,12 +2013,6 @@
             } catch (error) {
                 return url;
             }
-        }
-        function formatTime(seconds) {
-            if (!seconds || isNaN(seconds)) return '0:00';
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
         async function loadInitialData() {
             try {
@@ -2282,9 +2041,6 @@
                 if (loadedData.templates && Array.isArray(loadedData.templates)) {
                     loadedTemplatesData = loadedData.templates;
                     console.log('✅ تم تحميل', loadedTemplatesData.length, 'قالب');
-                }
-                if (formData.audioUrl) {
-                    document.getElementById('audioElement').src = formData.audioUrl;
                 }
                 if (formData.transcript_txt) {
                     document.getElementById('textEditor').value = formData.transcript_txt;
@@ -2390,38 +2146,6 @@
                 document.getElementById('textEditor').value = '';
                 updateTextStats();
             }
-        });
-        const audioElement = document.getElementById('audioElement');
-       
-        document.getElementById('playPauseBtn').addEventListener('click', () => {
-            if (audioElement.paused) {
-                audioElement.play();
-                document.getElementById('playPauseBtn').textContent = '⏸️';
-            } else {
-                audioElement.pause();
-                document.getElementById('playPauseBtn').textContent = '▶️';
-            }
-        });
-        audioElement.addEventListener('loadedmetadata', () => {
-            document.getElementById('duration').textContent = formatTime(audioElement.duration);
-        });
-        audioElement.addEventListener('timeupdate', () => {
-            const progress = (audioElement.currentTime / audioElement.duration) * 100;
-            document.getElementById('progressFill').style.width = `${progress}%`;
-            document.getElementById('currentTime').textContent = formatTime(audioElement.currentTime);
-        });
-        document.getElementById('progressBar').addEventListener('click', (e) => {
-            const rect = e.currentTarget.getBoundingClientRect();
-            const clickX = e.clientX - rect.left;
-            const percentage = 1 - (clickX / rect.width);
-            audioElement.currentTime = percentage * audioElement.duration;
-        });
-        document.querySelectorAll('.speed-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                audioElement.playbackRate = parseFloat(btn.dataset.speed);
-                document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-            });
         });
         function initializeTemplates() {
             const grid = document.getElementById('templatesGrid');
@@ -2958,20 +2682,12 @@
                 return;
             }
             if (currentStep < totalSteps) {
-                // إلغاء التثبيت عند الانتقال
-                if (isAudioSticky) {
-                    toggleAudioSticky();
-                }
                 currentStep++;
                 updateProgress();
             }
         }
         function prevStep() {
             if (currentStep > 1) {
-                // إلغاء التثبيت عند الرجوع
-                if (isAudioSticky) {
-                    toggleAudioSticky();
-                }
                 currentStep--;
                 updateProgress();
             }
