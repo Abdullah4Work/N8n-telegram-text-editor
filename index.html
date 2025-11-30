@@ -2566,11 +2566,17 @@
         const audioElement = document.getElementById('audioElement');
 
         // المشغل العادي
-        document.getElementById('playPauseBtn').addEventListener('click', (e) => {
+        document.getElementById('playPauseBtn').addEventListener('click', async (e) => {
             e.preventDefault();
             e.stopPropagation();
             if (audioElement.paused) {
-                audioElement.play();
+                try {
+                    await audioElement.play();
+                } catch (error) {
+                    console.error('Audio play error:', error);
+                    alert('⚠️ خطأ في تشغيل الصوت');
+                    return;
+                }
                 document.getElementById('playPauseBtn').textContent = '⏸️';
                 document.getElementById('playPauseBtnFixed').textContent = '⏸️';
             } else {
@@ -2581,11 +2587,17 @@
         });
 
         // المشغل الثابت - مع الحفاظ على وضع التحرير
-        document.getElementById('playPauseBtnFixed').addEventListener('click', (e) => {
+        document.getElementById('playPauseBtnFixed').addEventListener('click', async (e) => {
             e.preventDefault();
             e.stopPropagation();
             if (audioElement.paused) {
-                audioElement.play();
+                try {
+                    await audioElement.play();
+                } catch (error) {
+                    console.error('Audio play error:', error);
+                    alert('⚠️ خطأ في تشغيل الصوت');
+                    return;
+                }
                 document.getElementById('playPauseBtn').textContent = '⏸️';
                 document.getElementById('playPauseBtnFixed').textContent = '⏸️';
             } else {
@@ -2700,6 +2712,8 @@
 
                 if (formData.audioUrl) {
                     audioElement.src = formData.audioUrl;
+                    audioElement.load(); // إضافة هذا السطر مهم جداً
+                    console.log('🎵 Audio loaded:', formData.audioUrl);
                 }
 
                 if (formData.transcript_txt) {
