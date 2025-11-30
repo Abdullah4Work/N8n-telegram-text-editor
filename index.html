@@ -365,8 +365,10 @@
             line-height: 1.4;
             direction: rtl;
         }
-        
-        /* ===== مشغل الصوت العادي (في الخطوة 1) - مصغّر ===== */
+
+        /* هنا يوضع الجزء الثاني */
+
+                /* ===== مشغل الصوت العادي (في الخطوة 1) - مصغّر ===== */
         .audio-player-section {
             background: var(--bg-secondary);
             border-radius: 8px;
@@ -854,7 +856,10 @@
             color: var(--text-primary);
             background: linear-gradient(to bottom, white, #F8F9FA);
         }
-        .section-title {
+
+        /* هنا يوضع الجزء الثالث */
+
+                .section-title {
             font-size: 16px;
             font-weight: 700;
             color: var(--text-primary);
@@ -1563,8 +1568,10 @@
             font-weight: 700;
             color: var(--primary);
         }
-        
-        /* ===== المراجعة (الخطوة 6) ===== */
+
+        /* هنا يوضع الجزء الرابع */
+
+                /* ===== المراجعة (الخطوة 6) ===== */
         .review-section {
             background: var(--bg-secondary);
             border-radius: 12px;
@@ -2323,7 +2330,6 @@
                 </div>
             </div>
         </div>
-        
     </div>
 
     <!-- أزرار التنقل -->
@@ -2338,13 +2344,11 @@
         </button>
     </div>
 
-    <!-- ============================================ -->
-    <!-- هنا يوضع الجزء الثاني (JavaScript)           -->
-    <!-- ============================================ -->
+    <!-- هنا يوضع الجزء الخامس (JavaScript) -->
 
         <script>
         // ===== المتغيرات والإعدادات =====
-        const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.net';
+        const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.dev';
         const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor';
         const N8N_TEMPLATE_UPDATE_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor-response';
         
@@ -2434,6 +2438,16 @@
             return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
 
+        // ===== دالة لإعادة التركيز على محرر النص =====
+        function refocusTextEditor() {
+            const textEditor = document.getElementById('textEditor');
+            if (isEditingMode && document.activeElement !== textEditor) {
+                setTimeout(() => {
+                    textEditor.focus();
+                }, 50);
+            }
+        }
+
         // ===== وضع التحرير (إظهار/إخفاء مشغل الصوت الثابت) =====
         function enterEditingMode() {
             if (isEditingMode) return;
@@ -2492,30 +2506,51 @@
         });
 
         textEditor.addEventListener('blur', (e) => {
+            // تأخير أطول للتحقق من أن المستخدم لم يضغط على أزرار المشغل
             setTimeout(() => {
-                if (document.activeElement !== textEditor) {
-                    exitEditingMode();
+                const activeElement = document.activeElement;
+                const audioPlayerFixed = document.getElementById('audioPlayerFixed');
+                
+                // إذا كان العنصر النشط داخل مشغل الصوت الثابت، لا تخرج من وضع التحرير
+                if (audioPlayerFixed.contains(activeElement)) {
+                    return;
                 }
-            }, 200);
+                
+                // إذا كان العنصر النشط هو محرر النص، لا تخرج
+                if (activeElement === textEditor) {
+                    return;
+                }
+                
+                // خروج من وضع التحرير فقط إذا كان التركيز خارج المحرر والمشغل
+                exitEditingMode();
+            }, 300);
         });
 
         // ===== التحكم بحجم النص =====
-        document.getElementById('textSizeUp').addEventListener('click', () => {
+        document.getElementById('textSizeUp').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             if (currentTextSize < MAX_TEXT_SIZE) {
                 currentTextSize += 2;
                 textEditor.style.fontSize = currentTextSize + 'px';
             }
+            refocusTextEditor();
         });
 
-        document.getElementById('textSizeDown').addEventListener('click', () => {
+        document.getElementById('textSizeDown').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             if (currentTextSize > MIN_TEXT_SIZE) {
                 currentTextSize -= 2;
                 textEditor.style.fontSize = currentTextSize + 'px';
             }
+            refocusTextEditor();
         });
 
         // ===== زر النسخ =====
-        document.getElementById('copyBtn').addEventListener('click', async () => {
+        document.getElementById('copyBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             try {
                 await navigator.clipboard.writeText(textEditor.value);
                 tg.showPopup({ message: '✅ تم النسخ' });
@@ -2524,13 +2559,16 @@
                 document.execCommand('copy');
                 tg.showPopup({ message: '✅ تم النسخ' });
             }
+            refocusTextEditor();
         });
 
         // ===== مشغل الصوت =====
         const audioElement = document.getElementById('audioElement');
 
         // المشغل العادي
-        document.getElementById('playPauseBtn').addEventListener('click', () => {
+        document.getElementById('playPauseBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             if (audioElement.paused) {
                 audioElement.play();
                 document.getElementById('playPauseBtn').textContent = '⏸️';
@@ -2542,8 +2580,10 @@
             }
         });
 
-        // المشغل الثابت
-        document.getElementById('playPauseBtnFixed').addEventListener('click', () => {
+        // المشغل الثابت - مع الحفاظ على وضع التحرير
+        document.getElementById('playPauseBtnFixed').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             if (audioElement.paused) {
                 audioElement.play();
                 document.getElementById('playPauseBtn').textContent = '⏸️';
@@ -2553,6 +2593,8 @@
                 document.getElementById('playPauseBtn').textContent = '▶️';
                 document.getElementById('playPauseBtnFixed').textContent = '▶️';
             }
+            // إعادة التركيز على محرر النص
+            refocusTextEditor();
         });
 
         audioElement.addEventListener('loadedmetadata', () => {
@@ -2570,23 +2612,31 @@
 
         // شريط التقدم العادي
         document.getElementById('progressBar').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             const rect = e.currentTarget.getBoundingClientRect();
             const clickX = e.clientX - rect.left;
             const percentage = 1 - (clickX / rect.width);
             audioElement.currentTime = percentage * audioElement.duration;
         });
 
-        // شريط التقدم الثابت
+        // شريط التقدم الثابت - مع الحفاظ على وضع التحرير
         document.getElementById('progressBarFixed').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             const rect = e.currentTarget.getBoundingClientRect();
             const clickX = e.clientX - rect.left;
             const percentage = 1 - (clickX / rect.width);
             audioElement.currentTime = percentage * audioElement.duration;
+            // إعادة التركيز على محرر النص
+            refocusTextEditor();
         });
 
         // أزرار السرعة العادية
         document.querySelectorAll('.speed-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 const speed = parseFloat(btn.dataset.speed);
                 audioElement.playbackRate = speed;
                 document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
@@ -2597,9 +2647,11 @@
             });
         });
 
-        // أزرار السرعة الثابتة
+        // أزرار السرعة الثابتة - مع الحفاظ على وضع التحرير
         document.querySelectorAll('.speed-btn-fixed').forEach(btn => {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 const speed = parseFloat(btn.dataset.speed);
                 audioElement.playbackRate = speed;
                 document.querySelectorAll('.speed-btn').forEach(b => b.classList.remove('active'));
@@ -2607,6 +2659,8 @@
                 btn.classList.add('active');
                 const normalBtn = document.querySelector(`.speed-btn[data-speed="${speed}"]`);
                 if (normalBtn) normalBtn.classList.add('active');
+                // إعادة التركيز على محرر النص
+                refocusTextEditor();
             });
         });
 
@@ -2730,28 +2784,41 @@
         }
 
         // زر AI العادي
-        document.getElementById('aiBtnNormal').addEventListener('click', performAICorrection);
+        document.getElementById('aiBtnNormal').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            performAICorrection();
+        });
         
-        // زر AI الثابت
-        document.getElementById('aiBtnFixed').addEventListener('click', performAICorrection);
+        // زر AI الثابت - مع الحفاظ على وضع التحرير
+        document.getElementById('aiBtnFixed').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            performAICorrection();
+        });
 
         document.getElementById('aiAcceptBtn').addEventListener('click', () => {
             textEditor.value = aiCorrectedText;
             formData.corrected_full_text = aiCorrectedText;
             updateTextStats();
             document.getElementById('aiCorrectionBox').classList.remove('visible');
+            refocusTextEditor();
         });
 
         document.getElementById('aiRejectBtn').addEventListener('click', () => {
             document.getElementById('aiCorrectionBox').classList.remove('visible');
+            refocusTextEditor();
         });
 
         document.getElementById('aiCorrectionClose').addEventListener('click', () => {
             document.getElementById('aiCorrectionBox').classList.remove('visible');
+            refocusTextEditor();
         });
 
         // ===== أزرار الأدوات =====
-        document.getElementById('pasteBtn').addEventListener('click', async () => {
+        document.getElementById('pasteBtn').addEventListener('click', async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             try {
                 const text = await navigator.clipboard.readText();
                 textEditor.value = text;
@@ -2761,14 +2828,18 @@
             }
         });
 
-        document.getElementById('clearBtn').addEventListener('click', () => {
+        document.getElementById('clearBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             if (textEditor.value.trim() && confirm('هل تريد حذف النص؟')) {
                 textEditor.value = '';
                 updateTextStats();
             }
         });
 
-        // ===== القوالب =====
+        /* هنا يوضع الجزء السادس */
+
+                    // ===== القوالب =====
         function initializeTemplates() {
             const grid = document.getElementById('templatesGrid');
             grid.innerHTML = '';
@@ -3302,7 +3373,9 @@
             validateCurrentStep();
         });
 
-        // ===== التنقل والتقدم =====
+        /* هنا يوضع الجزء السابع والأخير */
+
+                    // ===== التنقل والتقدم =====
         function updateProgress() {
             const progress = ((currentStep - 1) / (totalSteps - 1)) * 100;
             document.getElementById('progressLineFill').style.width = `${progress}%`;
@@ -3494,10 +3567,9 @@
         }
 
         // ===== التشغيل =====
-        console.log('🚀 App Starting - Version 2.2 Fixed...');
+        console.log('🚀 App Starting - Version 2.3 Fixed...');
         updateProgress();
         loadInitialData();
     </script>
 </body>
 </html>
-    
