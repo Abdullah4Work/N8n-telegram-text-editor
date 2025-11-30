@@ -2354,8 +2354,11 @@
         
         const tg = window.Telegram.WebApp;
         tg.expand();
-        try { tg.enableClosingConfirmation(); } catch (e) {}
-
+        // تفعيل Closing Confirmation فقط إذا كان مدعوماً
+        if (tg.isVersionAtLeast('6.2')) {
+            try { tg.enableClosingConfirmation(); } catch (e) {}
+        }
+        
         let currentStep = 1;
         const totalSteps = 6;
         let selectedTemplate = null;
@@ -2553,7 +2556,16 @@
             e.stopPropagation();
             try {
                 await navigator.clipboard.writeText(textEditor.value);
-                tg.showPopup({ message: '✅ تم النسخ' });
+                // استخدام HapticFeedback بدلاً من showPopup
+                if (tg.HapticFeedback) {
+                    tg.HapticFeedback.notificationOccurred('success');
+                }
+                // عرض رسالة بسيطة
+                const tempMsg = document.createElement('div');
+                tempMsg.textContent = '✅ تم النسخ';
+                tempMsg.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#27AE60;color:white;padding:12px 24px;border-radius:8px;z-index:99999;font-weight:700;';
+                document.body.appendChild(tempMsg);
+                setTimeout(() => tempMsg.remove(), 1500);
             } catch (err) {
                 textEditor.select();
                 document.execCommand('copy');
@@ -3549,7 +3561,7 @@
         });
 
         // ===== الإرسال النهائي =====
-        async function submitForm() {
+                async function submitForm() {
             showLoading('جاري الإرسال...', 'الرجاء الانتظار');
             try {
                 const dataToSend = {
@@ -3567,12 +3579,22 @@
 
                 try {
                     tg.sendData(JSON.stringify({ type: 'completed', id: formData.ID, status: 'completed' }));
-                } catch (e) {}
+                } catch (e) {
+                    console.log('SendData not available');
+                }
 
                 hideLoading();
-                tg.showAlert('✅ تم الإرسال بنجاح!', () => {
-                    setTimeout(() => tg.close(), 500);
-                });
+                
+                // استخدام showAlert فقط إذا كان مدعوماً
+                if (tg.isVersionAtLeast('6.2')) {
+                    tg.showAlert('✅ تم الإرسال بنجاح!', () => {
+                        setTimeout(() => tg.close(), 500);
+                    });
+                } else {
+                    // استخدام alert عادي للنسخ القديمة
+                    alert('✅ تم الإرسال بنجاح!');
+                    setTimeout(() => tg.close(), 1000);
+                }
             } catch (error) {
                 console.error('❌ Error:', error);
                 hideLoading();
