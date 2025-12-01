@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, viewport-fit=cover">
     <meta name="description" content="نشر محتوى احترافي - رقيتي">
     <meta name="theme-color" content="#4A90E2">
-    <title>نشر محتوى احترافي - رقيتي v2.8</title>
+    <title>نشر محتوى احترافي - رقيتي v2.9</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -110,7 +110,7 @@
             transform: scale(0.95);
         }
         
-        /* ===== مشغل الصوت الثابت (عند التحرير) ===== */
+        /* ===== مشغل الصوت الثابت ===== */
         .audio-player-fixed {
             position: fixed;
             top: 0;
@@ -631,7 +631,7 @@
             display: flex;
         }
 
-        /* ===== هنا يوضع باقي CSS في الجزء الثاني ===== */
+        /* ===== هنا يوضع الجزء الثاني ===== */
 
                 /* ===== Modal معاينة القالب ===== */
         .template-preview-modal {
@@ -755,7 +755,7 @@
             transform: scale(0.98);
         }
 
-        /* ===== ألوان السلسلة (الخطوة 3) ===== */
+        /* ===== ألوان السلسلة ===== */
         .series-color-preview {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             border-radius: 12px;
@@ -961,7 +961,7 @@
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
         
-        /* ===== حقول الإدخال (الخطوة 4) ===== */
+        /* ===== حقول الإدخال ===== */
         .form-group {
             margin-bottom: 20px;
             direction: rtl;
@@ -1028,7 +1028,7 @@
             transform: scale(0.98);
         }
         
-        /* ===== SEO (الخطوة 5) ===== */
+        /* ===== SEO ===== */
         .seo-generate-btn {
             width: 100%;
             padding: 18px;
@@ -1252,7 +1252,7 @@
             color: var(--primary);
         }
         
-        /* ===== المراجعة (الخطوة 6) ===== */
+        /* ===== المراجعة ===== */
         .review-section {
             background: var(--bg-secondary);
             border-radius: 12px;
@@ -1391,7 +1391,7 @@
             max-height: none;
         }
         
-        /* ===== شريط التنقل - تصميم منفصل ===== */
+        /* ===== شريط التنقل ===== */
         .bottom-nav-wrapper {
             position: fixed;
             bottom: 0;
@@ -1413,8 +1413,6 @@
             gap: 16px;
             direction: rtl;
         }
-        
-        /* دائرة الخطوة - منفصلة على اليمين */
         .step-indicator-badge {
             position: relative;
             width: 56px;
@@ -1464,8 +1462,6 @@
             color: rgba(255,255,255,0.9);
             font-weight: 700;
         }
-        
-        /* الأزرار */
         .nav-buttons {
             display: flex;
             gap: 12px;
@@ -1544,7 +1540,7 @@
         <button class="skip-correction-btn" id="skipCorrectionBtn" style="display:none;">⏭️ تخطي التصحيح</button>
     </div>
 
-    <!-- مشغل الصوت الثابت (يظهر عند التحرير) -->
+    <!-- مشغل الصوت الثابت -->
     <div class="audio-player-fixed" id="audioPlayerFixed">
         <div class="audio-fixed-content">
             <div class="audio-fixed-controls">
@@ -1744,37 +1740,25 @@
                 <div class="step-description">أدخل العنوان والسلاسل الخاصة بالفيديو</div>
             </div>
             <div class="form-group">
-                <label class="form-label">
-                    <span>📚</span>
-                    <span>السلسلة الرئيسية</span>
-                </label>
+                <label class="form-label"><span>📚</span><span>السلسلة الرئيسية</span></label>
                 <input type="text" class="form-input" id="mainSeriesInput" placeholder="مثال: الرقية الشرعية" maxlength="50">
                 <div class="form-hint">الأفضل: 4 كلمات أو أقل</div>
                 <div class="char-counter"><span id="mainSeriesCount">0</span> / 50</div>
             </div>
             <div class="form-group">
-                <label class="form-label">
-                    <span>🔖</span>
-                    <span>السلسلة الفرعية</span>
-                </label>
+                <label class="form-label"><span>🔖</span><span>السلسلة الفرعية</span></label>
                 <input type="text" class="form-input" id="subSeriesInput" placeholder="مثال: علاج السحر" maxlength="50">
                 <div class="form-hint">الأفضل: 4 كلمات أو أقل</div>
                 <div class="char-counter"><span id="subSeriesCount">0</span> / 50</div>
             </div>
             <div class="form-group">
-                <label class="form-label">
-                    <span>🎯</span>
-                    <span>اسم المخطط</span>
-                </label>
+                <label class="form-label"><span>🎯</span><span>اسم المخطط</span></label>
                 <input type="text" class="form-input" id="finalSeriesInput" placeholder="مثال: الجزء الأول" maxlength="50">
                 <div class="form-hint">الأفضل: 3 كلمات أو أقل</div>
                 <div class="char-counter"><span id="finalSeriesCount">0</span> / 50</div>
             </div>
             <div class="form-group">
-                <label class="form-label">
-                    <span>✏️</span>
-                    <span>اسم الدرس (العنوان)</span>
-                </label>
+                <label class="form-label"><span>✏️</span><span>اسم الدرس (العنوان)</span></label>
                 <input type="text" class="form-input" id="titleInput" placeholder="مثال: أعراض المس" maxlength="50">
                 <div class="form-hint">سيُستخدم كعنوان في SEO</div>
                 <div class="char-counter"><span id="titleCount">0</span> / 50</div>
@@ -1787,10 +1771,7 @@
         <!-- الخطوة 5: SEO -->
         <div class="step-content" data-step="5">
             <div class="step-header">
-                <div class="step-title">
-                    <span>🔍</span>
-                    <span>تحسين محركات البحث (SEO)</span>
-                </div>
+                <div class="step-title"><span>🔍</span><span>تحسين محركات البحث (SEO)</span></div>
                 <div class="step-description">عنوان ووصف وكلمات مفتاحية للفيديو</div>
             </div>
             <button class="seo-generate-btn" id="seoGenerateBtn">
@@ -1798,10 +1779,7 @@
                 <span>إنشاء SEO بالذكاء الاصطناعي</span>
             </button>
             <div class="seo-section highlight">
-                <div class="seo-section-title">
-                    <span>📌</span>
-                    <span>عنوان الفيديو</span>
-                </div>
+                <div class="seo-section-title"><span>📌</span><span>عنوان الفيديو</span></div>
                 <div class="form-group">
                     <textarea class="form-textarea" id="seoTitleInput" placeholder="أدخل عنوان الفيديو هنا..." rows="2" style="min-height: 60px;"></textarea>
                     <div class="form-hint">الأفضل: 60-70 حرف</div>
@@ -1809,10 +1787,7 @@
                 </div>
             </div>
             <div class="seo-section highlight">
-                <div class="seo-section-title">
-                    <span>📝</span>
-                    <span>وصف الفيديو</span>
-                </div>
+                <div class="seo-section-title"><span>📝</span><span>وصف الفيديو</span></div>
                 <div class="form-group">
                     <textarea class="form-textarea" id="seoDescriptionInput" placeholder="أدخل وصف الفيديو هنا..." style="min-height: 180px;"></textarea>
                     <div class="form-hint">وصف احترافي شامل</div>
@@ -1820,10 +1795,7 @@
                 </div>
             </div>
             <div class="seo-section">
-                <div class="seo-section-title">
-                    <span>🏷️</span>
-                    <span>الكلمات المفتاحية</span>
-                </div>
+                <div class="seo-section-title"><span>🏷️</span><span>الكلمات المفتاحية</span></div>
                 <div class="tags-input-section">
                     <div class="tags-input-wrapper">
                         <input type="text" class="tags-input" id="tagInput" placeholder="أدخل كلمة مفتاحية..." maxlength="30">
@@ -1834,29 +1806,14 @@
                     <div style="color: var(--text-secondary); font-size: 12px;">لا توجد كلمات مفتاحية بعد</div>
                 </div>
                 <div class="seo-stats" id="seoStats" style="display: none;">
-                    <div class="seo-stat-item">
-                        <div class="seo-stat-label">عدد الكلمات</div>
-                        <div class="seo-stat-value" id="statWordCount">0</div>
-                    </div>
-                    <div class="seo-stat-item">
-                        <div class="seo-stat-label">عدد الأحرف</div>
-                        <div class="seo-stat-value" id="statCharCount">0</div>
-                    </div>
-                    <div class="seo-stat-item">
-                        <div class="seo-stat-label">الكلمات المفتاحية</div>
-                        <div class="seo-stat-value" id="statTagsCount">0</div>
-                    </div>
-                    <div class="seo-stat-item">
-                        <div class="seo-stat-label">طول الوصف</div>
-                        <div class="seo-stat-value" id="statDescLength">0</div>
-                    </div>
+                    <div class="seo-stat-item"><div class="seo-stat-label">عدد الكلمات</div><div class="seo-stat-value" id="statWordCount">0</div></div>
+                    <div class="seo-stat-item"><div class="seo-stat-label">عدد الأحرف</div><div class="seo-stat-value" id="statCharCount">0</div></div>
+                    <div class="seo-stat-item"><div class="seo-stat-label">الكلمات المفتاحية</div><div class="seo-stat-value" id="statTagsCount">0</div></div>
+                    <div class="seo-stat-item"><div class="seo-stat-label">طول الوصف</div><div class="seo-stat-value" id="statDescLength">0</div></div>
                 </div>
             </div>
             <div class="serp-preview" id="serpPreview" style="display: none;">
-                <div class="serp-preview-title">
-                    <span>🔍</span>
-                    <span>معاينة نتيجة البحث</span>
-                </div>
+                <div class="serp-preview-title"><span>🔍</span><span>معاينة نتيجة البحث</span></div>
                 <div class="serp-url">https://www.youtube.com/watch</div>
                 <div class="serp-title" id="serpTitle">عنوان الفيديو</div>
                 <div class="serp-description" id="serpDescription">وصف الفيديو سيظهر هنا...</div>
@@ -1866,126 +1823,63 @@
         <!-- الخطوة 6: المراجعة -->
         <div class="step-content" data-step="6">
             <div class="step-header">
-                <div class="step-title">
-                    <span>✅</span>
-                    <span>المراجعة النهائية</span>
-                </div>
+                <div class="step-title"><span>✅</span><span>المراجعة النهائية</span></div>
                 <div class="step-description">راجع جميع البيانات قبل الإرسال</div>
             </div>
             <div class="review-section">
-                <div class="review-section-title">
-                    <span>✍️</span>
-                    <span>النص المصحح</span>
-                </div>
-                <div class="review-item">
-                    <span class="review-label">عدد الكلمات:</span>
-                    <span class="review-value" id="reviewWordCount">-</span>
-                </div>
-                <div class="review-item">
-                    <span class="review-label">عدد الأحرف:</span>
-                    <span class="review-value" id="reviewCharCount">-</span>
-                </div>
+                <div class="review-section-title"><span>✍️</span><span>النص المصحح</span></div>
+                <div class="review-item"><span class="review-label">عدد الكلمات:</span><span class="review-value" id="reviewWordCount">-</span></div>
+                <div class="review-item"><span class="review-label">عدد الأحرف:</span><span class="review-value" id="reviewCharCount">-</span></div>
             </div>
             <div class="review-section">
-                <div class="review-section-title">
-                    <span>🎨</span>
-                    <span>التصميم</span>
-                </div>
-                <div class="review-item">
-                    <span class="review-label">القالب:</span>
-                    <span class="review-value" id="reviewTemplate">-</span>
-                </div>
-                <div class="review-item">
-                    <span class="review-label">اللون:</span>
-                    <span class="review-value" id="reviewColor">-</span>
-                </div>
-                <div class="review-item">
-                    <span class="review-label">لون السلسلة:</span>
-                    <span class="review-value" id="reviewSeriesColor">-</span>
-                </div>
+                <div class="review-section-title"><span>🎨</span><span>التصميم</span></div>
+                <div class="review-item"><span class="review-label">القالب:</span><span class="review-value" id="reviewTemplate">-</span></div>
+                <div class="review-item"><span class="review-label">اللون:</span><span class="review-value" id="reviewColor">-</span></div>
+                <div class="review-item"><span class="review-label">لون السلسلة:</span><span class="review-value" id="reviewSeriesColor">-</span></div>
                 <div class="review-template-images">
                     <div class="review-image-wrapper">
-                        <div class="review-image-label">
-                            <span>🖼️</span>
-                            <span>الصورة الأفقية</span>
-                        </div>
-                        <div class="review-image-loading" id="reviewLandscapeLoading">
-                            <div class="spinner"></div>
-                        </div>
+                        <div class="review-image-label"><span>🖼️</span><span>الصورة الأفقية</span></div>
+                        <div class="review-image-loading" id="reviewLandscapeLoading"><div class="spinner"></div></div>
                         <img src="" alt="Landscape" class="review-image" id="reviewLandscapeImage">
                     </div>
                     <div class="review-image-wrapper">
-                        <div class="review-image-label">
-                            <span>📱</span>
-                            <span>الصورة العمودية</span>
-                        </div>
-                        <div class="review-image-loading" id="reviewPortraitLoading">
-                            <div class="spinner"></div>
-                        </div>
+                        <div class="review-image-label"><span>📱</span><span>الصورة العمودية</span></div>
+                        <div class="review-image-loading" id="reviewPortraitLoading"><div class="spinner"></div></div>
                         <img src="" alt="Portrait" class="review-image" id="reviewPortraitImage">
                     </div>
                 </div>
             </div>
             <div class="review-section">
-                <div class="review-section-title">
-                    <span>📝</span>
-                    <span>البيانات</span>
-                </div>
-                <div class="review-item">
-                    <span class="review-label">السلسلة الرئيسية:</span>
-                    <span class="review-value" id="reviewMainSeries">-</span>
-                </div>
-                <div class="review-item">
-                    <span class="review-label">السلسلة الفرعية:</span>
-                    <span class="review-value" id="reviewSubSeries">-</span>
-                </div>
-                <div class="review-item">
-                    <span class="review-label">اسم المخطط:</span>
-                    <span class="review-value" id="reviewFinalSeries">-</span>
-                </div>
-                <div class="review-item">
-                    <span class="review-label">اسم الدرس:</span>
-                    <span class="review-value" id="reviewTitle">-</span>
-                </div>
+                <div class="review-section-title"><span>📝</span><span>البيانات</span></div>
+                <div class="review-item"><span class="review-label">السلسلة الرئيسية:</span><span class="review-value" id="reviewMainSeries">-</span></div>
+                <div class="review-item"><span class="review-label">السلسلة الفرعية:</span><span class="review-value" id="reviewSubSeries">-</span></div>
+                <div class="review-item"><span class="review-label">اسم المخطط:</span><span class="review-value" id="reviewFinalSeries">-</span></div>
+                <div class="review-item"><span class="review-label">اسم الدرس:</span><span class="review-value" id="reviewTitle">-</span></div>
             </div>
             <div class="review-section">
-                <div class="review-section-title">
-                    <span>🔍</span>
-                    <span>SEO</span>
-                </div>
+                <div class="review-section-title"><span>🔍</span><span>SEO</span></div>
                 <div class="serp-preview" id="reviewSerpPreview" style="display: block; margin-bottom: 16px;">
-                    <div class="serp-preview-title">
-                        <span>🔍</span>
-                        <span>معاينة نتيجة البحث</span>
-                    </div>
+                    <div class="serp-preview-title"><span>🔍</span><span>معاينة نتيجة البحث</span></div>
                     <div class="serp-url">https://www.youtube.com/watch</div>
                     <div class="serp-title" id="reviewSerpTitle">عنوان الفيديو</div>
                     <div class="serp-description" id="reviewSerpDescription">وصف الفيديو...</div>
                 </div>
                 <div class="review-item">
                     <span class="review-label">العنوان:</span>
-                    <div class="review-value">
-                        <div class="review-seo-title-box" id="reviewSeoTitleBox">-</div>
-                    </div>
+                    <div class="review-value"><div class="review-seo-title-box" id="reviewSeoTitleBox">-</div></div>
                 </div>
                 <div class="review-item">
                     <span class="review-label">الوصف:</span>
                     <div class="review-value">
                         <div class="review-seo-desc-box" id="reviewSeoDescBox">-</div>
-                        <button class="review-expand-btn" id="reviewDescExpandBtn">
-                            <span id="reviewDescExpandText">عرض الكل</span>
-                            <span id="reviewDescExpandIcon">▼</span>
-                        </button>
+                        <button class="review-expand-btn" id="reviewDescExpandBtn"><span id="reviewDescExpandText">عرض الكل</span><span id="reviewDescExpandIcon">▼</span></button>
                     </div>
                 </div>
                 <div class="review-item">
                     <span class="review-label">الكلمات المفتاحية:</span>
                     <div class="review-value">
                         <div class="review-tags-preview" id="reviewTagsPreview"></div>
-                        <button class="review-expand-btn" id="reviewTagsExpandBtn">
-                            <span id="reviewTagsExpandText">عرض الكل</span>
-                            <span id="reviewTagsExpandIcon">▼</span>
-                        </button>
+                        <button class="review-expand-btn" id="reviewTagsExpandBtn"><span id="reviewTagsExpandText">عرض الكل</span><span id="reviewTagsExpandIcon">▼</span></button>
                     </div>
                 </div>
             </div>
@@ -2003,14 +1897,8 @@
                 </div>
             </div>
             <div class="nav-buttons">
-                <button class="nav-btn btn-back" id="btnBack" style="display: none;">
-                    <span>←</span>
-                    <span>السابق</span>
-                </button>
-                <button class="nav-btn btn-next" id="btnNext" disabled>
-                    <span>التالي</span>
-                    <span>→</span>
-                </button>
+                <button class="nav-btn btn-back" id="btnBack" style="display: none;"><span>←</span><span>السابق</span></button>
+                <button class="nav-btn btn-next" id="btnNext" disabled><span>التالي</span><span>→</span></button>
             </div>
         </div>
     </div>
@@ -2144,11 +2032,9 @@
 
         function startKeyboardMonitoring() {
             if (keyboardCheckInterval) return;
-            
             keyboardCheckInterval = setInterval(() => {
                 const currentHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
                 const heightDiff = initialViewportHeight - currentHeight;
-                
                 if (heightDiff > 150) {
                     hideNavigationControls();
                 } else {
@@ -2203,10 +2089,6 @@
             startKeyboardMonitoring();
         });
 
-        textEditor.addEventListener('blur', () => {
-            // لا نفعل شيء هنا، نترك المراقبة للكيبورد
-        });
-
         // ===== التحكم بحجم النص =====
         document.getElementById('textSizeUp').addEventListener('click', (e) => {
             e.preventDefault();
@@ -2244,64 +2126,53 @@
             refocusTextEditor();
         });
 
-        // ===== مشغل الصوت - مع حل مشكلة CORS =====
+        // ===== مشغل الصوت =====
         const audioElement = document.getElementById('audioElement');
         let audioLoaded = false;
 
         // تحميل الصوت عبر Proxy لحل مشكلة CORS
         async function loadAudioWithProxy(url) {
-            console.log('🎵 محاولة تحميل الصوت:', url);
+            console.log('🎵 تحميل الصوت:', url);
             
             try {
-                // الطريقة 1: تحميل عبر Proxy Worker
-                showLoading('جاري تحميل الصوت...', 'قد يستغرق بضع ثوانٍ', '');
-                
+                // محاولة تحميل عبر Proxy
                 const proxyUrl = `${WORKER_API_URL}/proxy-audio?url=${encodeURIComponent(url)}`;
-                console.log('🔄 استخدام Proxy:', proxyUrl);
+                console.log('🔄 Proxy URL:', proxyUrl);
                 
                 const response = await fetch(proxyUrl);
                 
                 if (response.ok) {
                     const blob = await response.blob();
-                    
-                    // تنظيف URL السابق
-                    if (audioBlobUrl) {
-                        URL.revokeObjectURL(audioBlobUrl);
-                    }
-                    
+                    if (audioBlobUrl) URL.revokeObjectURL(audioBlobUrl);
                     audioBlobUrl = URL.createObjectURL(blob);
                     audioElement.src = audioBlobUrl;
                     audioElement.load();
-                    
                     console.log('✅ تم تحميل الصوت عبر Proxy');
                     audioLoaded = true;
-                    hideLoading();
                     return true;
+                } else {
+                    throw new Error('Proxy failed');
                 }
             } catch (proxyError) {
-                console.log('⚠️ فشل Proxy:', proxyError.message);
+                console.log('⚠️ فشل Proxy، محاولة مباشرة...');
+                
+                // محاولة تحميل مباشر
+                try {
+                    audioElement.src = url;
+                    audioElement.load();
+                    audioLoaded = true;
+                    console.log('✅ تحميل مباشر');
+                    return true;
+                } catch (directError) {
+                    console.error('❌ فشل التحميل:', directError);
+                    return false;
+                }
             }
-            
-            // الطريقة 2: تحميل مباشر (للاختبار على الكمبيوتر)
-            try {
-                console.log('🔄 محاولة التحميل المباشر...');
-                audioElement.src = url;
-                audioElement.load();
-                audioLoaded = true;
-                hideLoading();
-                return true;
-            } catch (directError) {
-                console.error('❌ فشل التحميل المباشر:', directError);
-            }
-            
-            hideLoading();
-            console.error('❌ فشل تحميل الصوت بجميع الطرق');
-            return false;
         }
 
         // أحداث الصوت
         audioElement.addEventListener('loadedmetadata', () => {
-            console.log('✅ تم تحميل معلومات الصوت');
+            console.log('✅ معلومات الصوت جاهزة');
             document.getElementById('duration').textContent = formatTime(audioElement.duration);
             document.getElementById('durationFixed').textContent = formatTime(audioElement.duration);
             audioLoaded = true;
@@ -2313,10 +2184,8 @@
         });
 
         audioElement.addEventListener('error', (e) => {
-            console.error('❌ خطأ في الصوت:', e);
-            if (audioElement.error) {
-                console.error('تفاصيل الخطأ:', audioElement.error.message);
-            }
+            console.error('❌ خطأ في الصوت');
+            audioLoaded = false;
         });
 
         audioElement.addEventListener('timeupdate', () => {
@@ -2335,24 +2204,21 @@
         // زر التشغيل/الإيقاف
         async function toggleAudioPlayback() {
             if (!audioLoaded) {
-                showToast('⏳ جاري تحميل الصوت...', true);
+                showToast('⏳ الصوت غير جاهز', true);
                 return;
             }
-            
             try {
                 if (audioElement.paused) {
                     await audioElement.play();
                     document.getElementById('playPauseBtn').textContent = '⏸️';
                     document.getElementById('playPauseBtnFixed').textContent = '⏸️';
-                    console.log('▶️ تشغيل الصوت');
                 } else {
                     audioElement.pause();
                     document.getElementById('playPauseBtn').textContent = '▶️';
                     document.getElementById('playPauseBtnFixed').textContent = '▶️';
-                    console.log('⏸️ إيقاف الصوت');
                 }
             } catch (error) {
-                console.error('❌ خطأ في التشغيل:', error);
+                console.error('❌ خطأ التشغيل:', error);
                 showToast('⚠️ خطأ في تشغيل الصوت', true);
             }
         }
@@ -2373,7 +2239,6 @@
         // شريط التقدم
         document.getElementById('progressBar').addEventListener('click', (e) => {
             if (!audioLoaded || !audioElement.duration) return;
-            e.preventDefault();
             const rect = e.currentTarget.getBoundingClientRect();
             const percentage = 1 - ((e.clientX - rect.left) / rect.width);
             audioElement.currentTime = percentage * audioElement.duration;
@@ -2381,7 +2246,6 @@
 
         document.getElementById('progressBarFixed').addEventListener('click', (e) => {
             if (!audioLoaded || !audioElement.duration) return;
-            e.preventDefault();
             e.stopPropagation();
             const rect = e.currentTarget.getBoundingClientRect();
             const percentage = 1 - ((e.clientX - rect.left) / rect.width);
@@ -2397,8 +2261,7 @@
                 audioElement.playbackRate = speed;
                 document.querySelectorAll('.speed-btn, .speed-btn-fixed').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                const fixedBtn = document.querySelector(`.speed-btn-fixed[data-speed="${speed}"]`);
-                if (fixedBtn) fixedBtn.classList.add('active');
+                document.querySelector(`.speed-btn-fixed[data-speed="${speed}"]`)?.classList.add('active');
             });
         });
 
@@ -2410,8 +2273,7 @@
                 audioElement.playbackRate = speed;
                 document.querySelectorAll('.speed-btn, .speed-btn-fixed').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                const normalBtn = document.querySelector(`.speed-btn[data-speed="${speed}"]`);
-                if (normalBtn) normalBtn.classList.add('active');
+                document.querySelector(`.speed-btn[data-speed="${speed}"]`)?.classList.add('active');
                 refocusTextEditor();
             });
         });
@@ -2426,7 +2288,8 @@
         // ===== تحميل البيانات =====
         async function loadInitialData() {
             try {
-                showLoading('جاري تحميل البيانات...', 'الرجاء الانتظار', '1/3');
+                showLoading('جاري تحميل البيانات...', 'الرجاء الانتظار', '1/2');
+                
                 const urlParams = new URLSearchParams(window.location.search);
                 const binId = urlParams.get('bin');
                 if (!binId) throw new Error('معرف البيانات غير موجود');
@@ -2455,7 +2318,7 @@
                     console.log('✅ تم تحميل', loadedTemplatesData.length, 'قالب');
                 }
 
-                // تحميل الصوت عبر Proxy
+                // تحميل الصوت
                 if (formData.audioUrl) {
                     await loadAudioWithProxy(formData.audioUrl);
                 }
@@ -2475,7 +2338,7 @@
             }
         }
 
-        // ===== التصحيح التلقائي بالذكاء الاصطناعي =====
+        // ===== التصحيح التلقائي =====
         async function performAutoAICorrection() {
             if (!textEditor.value.trim()) {
                 hideLoading();
@@ -2483,7 +2346,7 @@
                 return;
             }
 
-            showLoading('جاري التصحيح بالذكاء الاصطناعي...', 'قد يستغرق بضع ثوانٍ', '3/3');
+            showLoading('جاري التصحيح بالذكاء الاصطناعي...', 'قد يستغرق بضع ثوانٍ', '2/2');
             document.getElementById('skipCorrectionBtn').style.display = 'block';
             skipCorrection = false;
 
@@ -2514,10 +2377,8 @@
                 validateCurrentStep();
             } catch (error) {
                 console.error('❌ AI Error:', error);
-                if (!skipCorrection) {
-                    hideLoading();
-                    validateCurrentStep();
-                }
+                hideLoading();
+                validateCurrentStep();
             }
         }
 
@@ -2692,12 +2553,9 @@
             const deltaX = x - centerX, deltaY = y - centerY;
             const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
             const maxDistance = centerX * 0.85;
-
             if (distance > maxDistance) return null;
-
             let angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
             if (angle < 0) angle += 360;
-
             return hslToHex(angle, Math.min((distance / maxDistance) * 100, 100), 50);
         }
 
@@ -2708,7 +2566,6 @@
             const touch = e.touches ? e.touches[0] : e;
             const x = touch.clientX - rect.left, y = touch.clientY - rect.top;
             const color = getColorAtPosition(x, y);
-
             if (color) {
                 updateColorDisplay(color);
                 colorPickerHandle.style.left = `${x}px`;
@@ -2791,10 +2648,9 @@
         document.getElementById('saveTemplateBtn').addEventListener('click', async () => {
             if (!selectedColor) { showToast('⚠️ لم تختر قالباً بعد', true); return; }
             if (!formData.series || !formData.subSeries || !formData.finalSeries) { showToast('⚠️ يجب ملء جميع حقول السلاسل', true); return; }
-
             if (!confirm('هل تريد حفظ هذه التعديلات كإعدادات افتراضية للقالب؟')) return;
 
-            showLoading('جاري حفظ التعديلات...', 'الرجاء الانتظار', '');
+            showLoading('جاري حفظ التعديلات...', '', '');
 
             try {
                 const response = await fetch(N8N_TEMPLATE_UPDATE_URL, {
@@ -2802,13 +2658,12 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ type: 'template_update', template_data: { ...formData } })
                 });
-
                 if (!response.ok) throw new Error('فشل حفظ التعديلات');
                 hideLoading();
-                showToast('✅ تم حفظ التعديلات بنجاح!');
+                showToast('✅ تم حفظ التعديلات!');
             } catch (error) {
                 hideLoading();
-                showToast('❌ فشل حفظ التعديلات: ' + error.message, true);
+                showToast('❌ ' + error.message, true);
             }
         });
 
@@ -2864,9 +2719,8 @@
                     updateSEOStats();
                     updateSerpPreview();
 
-                    const btn = document.getElementById('seoGenerateBtn');
-                    btn.classList.add('generated');
-                    btn.innerHTML = '<span>✅</span><span>تم إنشاء SEO - اضغط لإعادة الإنشاء</span>';
+                    document.getElementById('seoGenerateBtn').classList.add('generated');
+                    document.getElementById('seoGenerateBtn').innerHTML = '<span>✅</span><span>تم إنشاء SEO - اضغط لإعادة الإنشاء</span>';
                 }
 
                 hideLoading();
@@ -2875,7 +2729,7 @@
             } catch (error) {
                 hideLoading();
                 document.getElementById('seoGenerateBtn').disabled = false;
-                showToast('❌ فشل إنشاء SEO: ' + error.message, true);
+                showToast('❌ ' + error.message, true);
             }
         });
 
@@ -3048,11 +2902,7 @@
                 try { tg.sendData(JSON.stringify({ type: 'completed', id: formData.ID, status: 'completed' })); } catch (e) {}
 
                 hideLoading();
-                
-                // تنظيف Blob URL
-                if (audioBlobUrl) {
-                    URL.revokeObjectURL(audioBlobUrl);
-                }
+                if (audioBlobUrl) URL.revokeObjectURL(audioBlobUrl);
                 
                 if (tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) {
                     tg.showAlert('✅ تم الإرسال بنجاح!', () => setTimeout(() => tg.close(), 500));
@@ -3062,12 +2912,12 @@
                 }
             } catch (error) {
                 hideLoading();
-                showToast('❌ خطأ: ' + error.message, true);
+                showToast('❌ ' + error.message, true);
             }
         }
 
         // ===== التشغيل =====
-        console.log('🚀 App v2.8 Starting...');
+        console.log('🚀 App v2.9 Starting...');
         updateProgress();
         loadInitialData();
     </script>
@@ -3075,4 +2925,3 @@
 </html>
 
 <!-- ===== نهاية الكود ===== -->
-
