@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, viewport-fit=cover">
     <meta name="description" content="نشر محتوى احترافي - رقيتي">
     <meta name="theme-color" content="#4A90E2">
-    <title>نشر محتوى احترافي - رقيتي v2.5</title>
+    <title>نشر محتوى احترافي - رقيتي v2.6</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -94,6 +94,22 @@
             font-weight: 700;
             margin-top: 8px;
         }
+        /* زر تخطي التصحيح */
+        .skip-correction-btn {
+            margin-top: 12px;
+            padding: 10px 20px;
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .skip-correction-btn:active {
+            transform: scale(0.95);
+        }
         
         /* ===== مشغل الصوت الثابت (عند التحرير) ===== */
         .audio-player-fixed {
@@ -102,7 +118,7 @@
             left: 0;
             right: 0;
             background: var(--bg-secondary);
-            padding: 6px 12px;
+            padding: 8px 12px;
             box-shadow: var(--shadow-lg);
             z-index: 1000;
             display: none;
@@ -131,13 +147,13 @@
             direction: rtl;
         }
         .play-pause-btn-fixed {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             border: none;
             color: white;
-            font-size: 14px;
+            font-size: 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -157,7 +173,7 @@
         }
         .progress-bar-fixed {
             width: 100%;
-            height: 3px;
+            height: 4px;
             background: var(--bg-tertiary);
             border-radius: 10px;
             overflow: hidden;
@@ -175,31 +191,30 @@
         .time-display-fixed {
             display: flex;
             justify-content: space-between;
-            font-size: 8px;
+            font-size: 9px;
             color: var(--text-secondary);
             font-weight: 600;
             direction: rtl;
         }
         .speed-controls-fixed {
-            display: flex;
-            gap: 2px;
-            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3px;
             direction: rtl;
-            flex-wrap: wrap;
-            max-width: 180px;
+            max-width: 160px;
         }
         .speed-btn-fixed {
-            padding: 3px 4px;
+            padding: 5px 2px;
             border: 1.5px solid var(--border-color);
-            border-radius: 4px;
+            border-radius: 5px;
             background: var(--bg-secondary);
-            font-size: 8px;
+            font-size: 10px;
             font-weight: 700;
             color: var(--text-primary);
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
-            min-width: 28px;
+            white-space: nowrap;
         }
         .speed-btn-fixed:active {
             transform: scale(0.92);
@@ -231,7 +246,6 @@
             display: flex;
             flex-direction: column;
         }
-        /* وضع التحرير - مساحة أكبر */
         .step-content.editing-active {
             padding-bottom: 20px;
         }
@@ -268,7 +282,7 @@
         .audio-player-section {
             background: var(--bg-secondary);
             border-radius: 8px;
-            padding: 6px 10px;
+            padding: 8px 10px;
             margin-bottom: 10px;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--primary-lighter);
@@ -279,10 +293,10 @@
             display: none;
         }
         .audio-section-title {
-            font-size: 10px;
+            font-size: 11px;
             font-weight: 700;
             color: var(--primary);
-            margin-bottom: 5px;
+            margin-bottom: 6px;
             display: flex;
             align-items: center;
             gap: 4px;
@@ -291,23 +305,23 @@
         .audio-player {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
             direction: rtl;
         }
         .audio-controls {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             direction: rtl;
         }
         .play-pause-btn {
-            width: 32px;
-            height: 32px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             border: none;
             color: white;
-            font-size: 14px;
+            font-size: 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -323,11 +337,11 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 3px;
         }
         .progress-bar {
             width: 100%;
-            height: 3px;
+            height: 4px;
             background: var(--bg-tertiary);
             border-radius: 10px;
             overflow: hidden;
@@ -345,31 +359,28 @@
         .time-display {
             display: flex;
             justify-content: space-between;
-            font-size: 8px;
+            font-size: 10px;
             color: var(--text-secondary);
             font-weight: 600;
             direction: rtl;
         }
         .speed-controls {
-            display: flex;
-            gap: 2px;
-            align-items: center;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 4px;
             direction: rtl;
-            flex-wrap: wrap;
         }
         .speed-btn {
-            flex: 1;
-            padding: 3px 0;
+            padding: 6px 2px;
             border: 1.5px solid var(--border-color);
-            border-radius: 4px;
+            border-radius: 6px;
             background: var(--bg-secondary);
-            font-size: 8px;
+            font-size: 11px;
             font-weight: 700;
             color: var(--text-primary);
             cursor: pointer;
             transition: all 0.2s;
             text-align: center;
-            min-width: 32px;
         }
         .speed-btn:active {
             transform: scale(0.92);
@@ -394,7 +405,7 @@
         }
         .editor-container.editing-mode {
             border-color: var(--primary);
-            margin-top: 48px;
+            margin-top: 52px;
             box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.15);
         }
         .text-controls {
@@ -479,140 +490,6 @@
             font-weight: 700;
             color: var(--primary);
             font-size: 16px;
-        }
-        
-        /* ===== صندوق التصحيح AI ===== */
-        .ai-correction-box {
-            display: none;
-            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
-            border: 2px solid var(--primary);
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.2);
-            direction: rtl;
-        }
-        .ai-correction-box.visible {
-            display: block;
-            animation: slideDownAI 0.4s ease;
-        }
-        @keyframes slideDownAI {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .ai-correction-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 14px;
-            direction: rtl;
-        }
-        .ai-correction-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--primary-dark);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            direction: rtl;
-        }
-        .ai-correction-close {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: white;
-            border: 2px solid var(--border-color);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: var(--text-secondary);
-            transition: all 0.2s;
-        }
-        .ai-correction-close:hover {
-            background: var(--danger);
-            color: white;
-            border-color: var(--danger);
-        }
-        .ai-correction-text {
-            background: white;
-            padding: 16px;
-            border-radius: 10px;
-            font-size: 16px;
-            line-height: 1.8;
-            color: var(--text-primary);
-            max-height: 280px;
-            overflow-y: auto;
-            margin-bottom: 14px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid rgba(0,0,0,0.05);
-            direction: rtl;
-            text-align: right;
-        }
-        .ai-correction-stats {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 14px;
-            background: white;
-            padding: 14px;
-            border-radius: 8px;
-            direction: rtl;
-        }
-        .ai-stat {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            padding: 10px;
-            background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(92, 168, 245, 0.05));
-            border-radius: 8px;
-        }
-        .ai-stat-icon {
-            font-size: 20px;
-        }
-        .ai-stat-value {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        .ai-stat-label {
-            font-size: 12px;
-            color: var(--text-secondary);
-            text-align: center;
-        }
-        .ai-correction-actions {
-            display: flex;
-            gap: 12px;
-            direction: rtl;
-        }
-        .ai-action-btn {
-            flex: 1;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .ai-action-btn:active {
-            transform: scale(0.97);
-        }
-        .ai-action-btn.accept {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            box-shadow: var(--shadow-md);
-        }
-        .ai-action-btn.reject {
-            background: white;
-            color: var(--text-primary);
-            border: 2px solid var(--border-color);
         }
         
         /* ===== القوالب ===== */
@@ -1016,14 +893,7 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: conic-gradient(
-                from 0deg,
-                hsl(0, 100%, 50%), hsl(30, 100%, 50%), hsl(60, 100%, 50%),
-                hsl(90, 100%, 50%), hsl(120, 100%, 50%), hsl(150, 100%, 50%),
-                hsl(180, 100%, 50%), hsl(210, 100%, 50%), hsl(240, 100%, 50%),
-                hsl(270, 100%, 50%), hsl(300, 100%, 50%), hsl(330, 100%, 50%),
-                hsl(360, 100%, 50%)
-            );
+            background: conic-gradient(from 0deg, hsl(0, 100%, 50%), hsl(30, 100%, 50%), hsl(60, 100%, 50%), hsl(90, 100%, 50%), hsl(120, 100%, 50%), hsl(150, 100%, 50%), hsl(180, 100%, 50%), hsl(210, 100%, 50%), hsl(240, 100%, 50%), hsl(270, 100%, 50%), hsl(300, 100%, 50%), hsl(330, 100%, 50%), hsl(360, 100%, 50%));
             box-shadow: 0 4px 20px rgba(0,0,0,0.15), inset 0 0 40px rgba(255,255,255,0.2);
             position: relative;
             touch-action: none;
@@ -1157,10 +1027,6 @@
         }
         .save-template-btn:active {
             transform: scale(0.98);
-        }
-        .save-template-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
         }
         
         /* ===== SEO (الخطوة 5) ===== */
@@ -1507,8 +1373,7 @@
         .review-image-loading.hidden {
             display: none;
         }
-        .review-seo-title-box,
-        .review-seo-desc-box {
+        .review-seo-title-box, .review-seo-desc-box {
             background: var(--bg-primary);
             border-radius: 8px;
             padding: 12px;
@@ -1527,7 +1392,7 @@
             max-height: none;
         }
         
-        /* ===== شريط التنقل السفلي الجديد ===== */
+        /* ===== شريط التنقل مع مؤشر الخطوة المدمج ===== */
         .bottom-nav-wrapper {
             position: fixed;
             bottom: 0;
@@ -1539,14 +1404,20 @@
             direction: rtl;
             transition: transform 0.3s ease;
         }
-        /* إخفاء عند التحرير في الخطوة 1 */
         .bottom-nav-wrapper.hidden {
             transform: translateY(100%);
         }
-        .nav-buttons {
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             padding: 10px 14px;
+            position: relative;
+        }
+        .nav-buttons {
             display: flex;
             gap: 12px;
+            flex: 1;
             direction: rtl;
         }
         .nav-btn {
@@ -1586,44 +1457,58 @@
             box-shadow: var(--shadow-md);
         }
         
-        /* ===== مؤشر الخطوة الجديد (دائرة واحدة) ===== */
-        .step-indicator {
-            position: fixed;
-            bottom: 70px;
-            right: 14px;
-            z-index: 99;
-            transition: transform 0.3s ease;
+        /* مؤشر الخطوة المدمج - دائرة نابضة بالطاقة */
+        .step-indicator-badge {
+            position: relative;
+            width: 56px;
+            height: 56px;
+            flex-shrink: 0;
         }
-        /* إخفاء عند التحرير */
-        .step-indicator.hidden {
-            transform: translateY(150px);
-        }
-        .step-circle-badge {
-            width: 50px;
-            height: 50px;
+        .step-pulse-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             border: 3px solid var(--primary);
-            background: white;
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            opacity: 0.6;
+        }
+        @keyframes pulse-ring {
+            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.4; }
+            100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+        }
+        .step-circle-main {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            flex-direction: column;
-            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
-            cursor: pointer;
-            transition: all 0.3s;
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.5);
+            z-index: 2;
+            animation: glow-pulse 2s ease-in-out infinite;
         }
-        .step-circle-badge:active {
-            transform: scale(0.95);
+        @keyframes glow-pulse {
+            0%, 100% { box-shadow: 0 4px 20px rgba(74, 144, 226, 0.5), 0 0 30px rgba(74, 144, 226, 0.3); }
+            50% { box-shadow: 0 6px 30px rgba(74, 144, 226, 0.7), 0 0 50px rgba(74, 144, 226, 0.5); }
         }
         .step-number {
-            font-size: 18px;
-            font-weight: 800;
-            color: var(--primary);
+            font-size: 20px;
+            font-weight: 900;
+            color: white;
             line-height: 1;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
         .step-total {
             font-size: 9px;
-            color: var(--text-secondary);
+            color: rgba(255,255,255,0.9);
             font-weight: 700;
         }
         
@@ -1659,6 +1544,7 @@
         <div class="loading-text" id="loadingText">جاري تحميل البيانات...</div>
         <div class="loading-subtext" id="loadingSubtext">الرجاء الانتظار</div>
         <div class="loading-step" id="loadingStep">1/2</div>
+        <button class="skip-correction-btn" id="skipCorrectionBtn" style="display:none;">⏭️ تخطي التصحيح</button>
     </div>
 
     <!-- مشغل الصوت الثابت (يظهر عند التحرير) -->
@@ -1727,14 +1613,13 @@
     <div class="container">
         <!-- الخطوة 1: التصحيح -->
         <div class="step-content active" data-step="1">
-            <!-- مشغل الصوت العادي -->
             <div class="audio-player-section" id="audioPlayerSection">
                 <div class="audio-section-title">
                     <span>🎵</span>
                     <span>المقطع الصوتي</span>
                 </div>
                 <div class="audio-player">
-                    <audio id="audioElement" style="display: none;"></audio>
+                    <audio id="audioElement" style="display: none;" preload="metadata" playsinline webkit-playsinline></audio>
                     <div class="audio-controls">
                         <button class="play-pause-btn" id="playPauseBtn">▶️</button>
                         <div class="audio-progress">
@@ -1759,46 +1644,6 @@
                 </div>
             </div>
 
-            <!-- صندوق التصحيح بالذكاء الاصطناعي -->
-            <div class="ai-correction-box" id="aiCorrectionBox">
-                <div class="ai-correction-header">
-                    <div class="ai-correction-title">
-                        <span>✅</span>
-                        <span>النص المصحح بالذكاء الاصطناعي</span>
-                    </div>
-                    <button class="ai-correction-close" id="aiCorrectionClose">×</button>
-                </div>
-                <div class="ai-correction-text" id="aiCorrectionText"></div>
-                <div class="ai-correction-stats">
-                    <div class="ai-stat">
-                        <div class="ai-stat-icon">📝</div>
-                        <div class="ai-stat-value" id="aiWordCount">0</div>
-                        <div class="ai-stat-label">كلمة</div>
-                    </div>
-                    <div class="ai-stat">
-                        <div class="ai-stat-icon">✏️</div>
-                        <div class="ai-stat-value" id="aiChanges">0</div>
-                        <div class="ai-stat-label">تعديل</div>
-                    </div>
-                    <div class="ai-stat">
-                        <div class="ai-stat-icon">🔤</div>
-                        <div class="ai-stat-value" id="aiChars">0</div>
-                        <div class="ai-stat-label">حرف</div>
-                    </div>
-                </div>
-                <div class="ai-correction-actions">
-                    <button class="ai-action-btn accept" id="aiAcceptBtn">
-                        <span>✓</span>
-                        <span>قبول التصحيح</span>
-                    </button>
-                    <button class="ai-action-btn reject" id="aiRejectBtn">
-                        <span>✗</span>
-                        <span>رفض</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- محرر النص -->
             <div class="editor-container" id="editorContainer">
                 <div class="text-controls">
                     <button class="control-btn" id="textSizeUp" title="تكبير النص">+</button>
@@ -1807,7 +1652,7 @@
                 </div>
                 <div class="editor-label">
                     <span>📝</span>
-                    <span>النص المراد تصحيحه</span>
+                    <span>النص المصحح</span>
                 </div>
                 <textarea class="editor-textarea" id="textEditor" placeholder="جاري تحميل النص..."></textarea>
                 <div class="editor-stats">
@@ -1938,7 +1783,7 @@
                     <span>اسم الدرس (العنوان)</span>
                 </label>
                 <input type="text" class="form-input" id="titleInput" placeholder="مثال: أعراض المس" maxlength="50">
-                <div class="form-hint">سيُستخدم كعنوان في SEO - الأفضل: 3 كلمات أو أقل</div>
+                <div class="form-hint">سيُستخدم كعنوان في SEO</div>
                 <div class="char-counter"><span id="titleCount">0</span> / 50</div>
             </div>
             <button class="save-template-btn" id="saveTemplateBtn">
@@ -2154,25 +1999,26 @@
         </div>
     </div>
 
-    <!-- مؤشر الخطوة (دائرة واحدة) -->
-    <div class="step-indicator" id="stepIndicator">
-        <div class="step-circle-badge">
-            <div class="step-number" id="stepNumber">1</div>
-            <div class="step-total">من 6</div>
-        </div>
-    </div>
-
-    <!-- شريط التنقل السفلي -->
+    <!-- شريط التنقل مع مؤشر الخطوة المدمج -->
     <div class="bottom-nav-wrapper" id="bottomNavWrapper">
-        <div class="nav-buttons">
-            <button class="nav-btn btn-back" id="btnBack" style="display: none;">
-                <span>←</span>
-                <span>السابق</span>
-            </button>
-            <button class="nav-btn btn-next" id="btnNext" disabled>
-                <span>التالي</span>
-                <span>→</span>
-            </button>
+        <div class="nav-container">
+            <div class="nav-buttons">
+                <button class="nav-btn btn-back" id="btnBack" style="display: none;">
+                    <span>←</span>
+                    <span>السابق</span>
+                </button>
+                <button class="nav-btn btn-next" id="btnNext" disabled>
+                    <span>التالي</span>
+                    <span>→</span>
+                </button>
+            </div>
+            <div class="step-indicator-badge">
+                <div class="step-pulse-ring"></div>
+                <div class="step-circle-main">
+                    <div class="step-number" id="stepNumber">1</div>
+                    <div class="step-total">من 6</div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -2195,15 +2041,13 @@
         let selectedTemplate = null;
         let selectedColor = null;
         let recommendedSeriesColor = '#b9d780';
-        let aiCorrectedText = '';
-        let aiChangesCount = 0;
         let loadedTemplatesData = [];
         let currentTextSize = 18;
         const MIN_TEXT_SIZE = 14;
         const MAX_TEXT_SIZE = 28;
         let isEditingMode = false;
-        let isKeyboardVisible = false;
         let audioCaption = '';
+        let skipCorrection = false;
 
         const formData = {
             ID: null,
@@ -2243,6 +2087,7 @@
 
         function hideLoading() {
             document.getElementById('loadingOverlay').classList.remove('visible');
+            document.getElementById('skipCorrectionBtn').style.display = 'none';
         }
 
         function scrollToTop() {
@@ -2289,19 +2134,46 @@
         }
 
         // ===== إدارة الكيبورد والتنقل =====
+        let initialViewportHeight = window.innerHeight;
+        let keyboardCheckInterval = null;
+
         function hideNavigationControls() {
             if (currentStep !== 1) return;
-            isKeyboardVisible = true;
             document.getElementById('bottomNavWrapper').classList.add('hidden');
-            document.getElementById('stepIndicator').classList.add('hidden');
-            document.querySelector('.step-content.active').classList.add('editing-active');
+            document.querySelector('.step-content.active')?.classList.add('editing-active');
         }
 
         function showNavigationControls() {
-            isKeyboardVisible = false;
             document.getElementById('bottomNavWrapper').classList.remove('hidden');
-            document.getElementById('stepIndicator').classList.remove('hidden');
             document.querySelector('.step-content.active')?.classList.remove('editing-active');
+        }
+
+        // مراقبة الكيبورد
+        function startKeyboardMonitoring() {
+            if (keyboardCheckInterval) return;
+            
+            keyboardCheckInterval = setInterval(() => {
+                const currentHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+                const heightDiff = initialViewportHeight - currentHeight;
+                
+                if (heightDiff > 150) {
+                    // الكيبورد مفتوح
+                    hideNavigationControls();
+                } else {
+                    // الكيبورد مغلق
+                    if (document.activeElement !== textEditor) {
+                        showNavigationControls();
+                        exitEditingMode();
+                    }
+                }
+            }, 200);
+        }
+
+        function stopKeyboardMonitoring() {
+            if (keyboardCheckInterval) {
+                clearInterval(keyboardCheckInterval);
+                keyboardCheckInterval = null;
+            }
         }
 
         // ===== وضع التحرير =====
@@ -2337,31 +2209,11 @@
         textEditor.addEventListener('focus', () => {
             enterEditingMode();
             hideNavigationControls();
+            startKeyboardMonitoring();
         });
 
-        textEditor.addEventListener('blur', (e) => {
-            setTimeout(() => {
-                const activeElement = document.activeElement;
-                const audioPlayerFixed = document.getElementById('audioPlayerFixed');
-                
-                if (audioPlayerFixed.contains(activeElement) || activeElement === textEditor) return;
-                
-                exitEditingMode();
-                showNavigationControls();
-            }, 300);
-        });
-
-        // كشف إخفاء الكيبورد
-        window.visualViewport?.addEventListener('resize', () => {
-            if (currentStep === 1) {
-                if (window.visualViewport.height < window.innerHeight * 0.75) {
-                    hideNavigationControls();
-                } else {
-                    if (document.activeElement !== textEditor) {
-                        showNavigationControls();
-                    }
-                }
-            }
+        textEditor.addEventListener('blur', () => {
+            // لا نفعل شيء هنا، نترك المراقبة للكيبورد
         });
 
         // ===== التحكم بحجم النص =====
@@ -2404,21 +2256,36 @@
         // ===== مشغل الصوت =====
         const audioElement = document.getElementById('audioElement');
 
+        // إصلاح تشغيل الصوت على الجوال
+        function initAudioForMobile() {
+            audioElement.load();
+            const playPromise = audioElement.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    audioElement.pause();
+                }).catch(() => {});
+            }
+        }
+
         document.getElementById('playPauseBtn').addEventListener('click', async (e) => {
             e.preventDefault();
             e.stopPropagation();
             try {
                 if (audioElement.paused) {
-                    await audioElement.play();
-                    document.getElementById('playPauseBtn').textContent = '⏸️';
-                    document.getElementById('playPauseBtnFixed').textContent = '⏸️';
+                    const playPromise = audioElement.play();
+                    if (playPromise !== undefined) {
+                        await playPromise;
+                        document.getElementById('playPauseBtn').textContent = '⏸️';
+                        document.getElementById('playPauseBtnFixed').textContent = '⏸️';
+                    }
                 } else {
                     audioElement.pause();
                     document.getElementById('playPauseBtn').textContent = '▶️';
                     document.getElementById('playPauseBtnFixed').textContent = '▶️';
                 }
             } catch (error) {
-                console.error('Audio error:', error);
+                console.error('Audio play error:', error);
+                showToast('⚠️ خطأ في تشغيل الصوت');
             }
         });
 
@@ -2427,16 +2294,19 @@
             e.stopPropagation();
             try {
                 if (audioElement.paused) {
-                    await audioElement.play();
-                    document.getElementById('playPauseBtn').textContent = '⏸️';
-                    document.getElementById('playPauseBtnFixed').textContent = '⏸️';
+                    const playPromise = audioElement.play();
+                    if (playPromise !== undefined) {
+                        await playPromise;
+                        document.getElementById('playPauseBtn').textContent = '⏸️';
+                        document.getElementById('playPauseBtnFixed').textContent = '⏸️';
+                    }
                 } else {
                     audioElement.pause();
                     document.getElementById('playPauseBtn').textContent = '▶️';
                     document.getElementById('playPauseBtnFixed').textContent = '▶️';
                 }
             } catch (error) {
-                console.error('Audio error:', error);
+                console.error('Audio play error:', error);
             }
             refocusTextEditor();
         });
@@ -2497,6 +2367,13 @@
             });
         });
 
+        // ===== زر تخطي التصحيح =====
+        document.getElementById('skipCorrectionBtn').addEventListener('click', () => {
+            skipCorrection = true;
+            hideLoading();
+            validateCurrentStep();
+        });
+
         // ===== تحميل البيانات + التصحيح التلقائي =====
         async function loadInitialData() {
             try {
@@ -2532,6 +2409,8 @@
                 if (formData.audioUrl) {
                     audioElement.src = formData.audioUrl;
                     audioElement.load();
+                    // تجهيز الصوت للجوال
+                    setTimeout(() => initAudioForMobile(), 500);
                 }
 
                 if (formData.transcript_txt) {
@@ -2549,7 +2428,7 @@
             }
         }
 
-        // ===== التصحيح التلقائي بالذكاء الاصطناعي =====
+        // ===== التصحيح التلقائي بالذكاء الاصطناعي (مباشر) =====
         async function performAutoAICorrection() {
             if (!textEditor.value.trim()) {
                 hideLoading();
@@ -2558,6 +2437,8 @@
             }
 
             showLoading('جاري التصحيح بالذكاء الاصطناعي...', 'قد يستغرق بضع ثوانٍ', '2/2');
+            document.getElementById('skipCorrectionBtn').style.display = 'block';
+            skipCorrection = false;
 
             try {
                 const response = await fetch(`${WORKER_API_URL}/ai-correct`, {
@@ -2566,47 +2447,34 @@
                     body: JSON.stringify({ text: textEditor.value })
                 });
 
+                if (skipCorrection) {
+                    hideLoading();
+                    validateCurrentStep();
+                    return;
+                }
+
                 if (!response.ok) throw new Error('فشل التصحيح');
 
                 const result = await response.json();
                 if (result.success && result.correctedText) {
-                    aiCorrectedText = result.correctedText;
-                    aiChangesCount = result.meta?.changesCount || 0;
-
-                    const correctedWords = aiCorrectedText.trim().split(/\s+/).length;
-                    const correctedChars = aiCorrectedText.length;
-
-                    document.getElementById('aiCorrectionText').textContent = aiCorrectedText;
-                    document.getElementById('aiWordCount').textContent = correctedWords;
-                    document.getElementById('aiChanges').textContent = aiChangesCount;
-                    document.getElementById('aiChars').textContent = correctedChars;
-                    document.getElementById('aiCorrectionBox').classList.add('visible');
+                    // تطبيق التصحيح مباشرة
+                    textEditor.value = result.correctedText;
+                    formData.corrected_full_text = result.correctedText;
+                    updateTextStats();
+                    
+                    showToast('✅ تم التصحيح بنجاح');
                 }
                 
                 hideLoading();
                 validateCurrentStep();
             } catch (error) {
                 console.error('❌ AI Error:', error);
-                hideLoading();
-                validateCurrentStep();
+                if (!skipCorrection) {
+                    hideLoading();
+                    validateCurrentStep();
+                }
             }
         }
-
-        // ===== أحداث صندوق التصحيح =====
-        document.getElementById('aiAcceptBtn').addEventListener('click', () => {
-            textEditor.value = aiCorrectedText;
-            formData.corrected_full_text = aiCorrectedText;
-            updateTextStats();
-            document.getElementById('aiCorrectionBox').classList.remove('visible');
-        });
-
-        document.getElementById('aiRejectBtn').addEventListener('click', () => {
-            document.getElementById('aiCorrectionBox').classList.remove('visible');
-        });
-
-        document.getElementById('aiCorrectionClose').addEventListener('click', () => {
-            document.getElementById('aiCorrectionBox').classList.remove('visible');
-        });
 
         // ===== تحديث إحصائيات النص =====
         function updateTextStats() {
@@ -2932,11 +2800,7 @@
                 const response = await fetch(`${WORKER_API_URL}/generate-seo`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        text: formData.corrected_full_text,
-                        title: formData.title,
-                        context: 'ruqyah_islamic_healing'
-                    })
+                    body: JSON.stringify({ text: formData.corrected_full_text, title: formData.title, context: 'ruqyah_islamic_healing' })
                 });
 
                 if (!response.ok) throw new Error('فشل إنشاء SEO');
@@ -3045,6 +2909,7 @@
             if (currentStep !== 1) {
                 exitEditingMode();
                 showNavigationControls();
+                stopKeyboardMonitoring();
             }
 
             scrollToTop();
@@ -3152,7 +3017,7 @@
         }
 
         // ===== التشغيل =====
-        console.log('🚀 App v2.5 Starting...');
+        console.log('🚀 App v2.6 Starting...');
         updateProgress();
         loadInitialData();
     </script>
