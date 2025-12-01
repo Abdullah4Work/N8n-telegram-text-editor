@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, viewport-fit=cover">
     <meta name="description" content="نشر محتوى احترافي - رقيتي">
     <meta name="theme-color" content="#4A90E2">
-    <title>نشر محتوى احترافي - رقيتي v2.4</title>
+    <title>نشر محتوى احترافي - رقيتي v2.5</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -182,23 +182,25 @@
         }
         .speed-controls-fixed {
             display: flex;
-            gap: 3px;
+            gap: 2px;
             align-items: center;
             direction: rtl;
+            flex-wrap: wrap;
+            max-width: 180px;
         }
         .speed-btn-fixed {
-    padding: 3px 4px;
-    border: 1.5px solid var(--border-color);
-    border-radius: 4px;
-    background: var(--bg-secondary);
-    font-size: 8px;
-    font-weight: 700;
-    color: var(--text-primary);
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-    min-width: 28px;
-}
+            padding: 3px 4px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--bg-secondary);
+            font-size: 8px;
+            font-weight: 700;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            min-width: 28px;
+        }
         .speed-btn-fixed:active {
             transform: scale(0.92);
         }
@@ -220,7 +222,7 @@
             display: none;
             flex: 1;
             overflow-y: auto;
-            padding: 12px 14px 140px;
+            padding: 12px 14px 100px;
             animation: fadeInUp 0.4s ease;
             -webkit-overflow-scrolling: touch;
             direction: rtl;
@@ -228,6 +230,10 @@
         .step-content.active {
             display: flex;
             flex-direction: column;
+        }
+        /* وضع التحرير - مساحة أكبر */
+        .step-content.editing-active {
+            padding-bottom: 20px;
         }
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
@@ -346,24 +352,24 @@
         }
         .speed-controls {
             display: flex;
-            gap: 3px;
+            gap: 2px;
             align-items: center;
             direction: rtl;
+            flex-wrap: wrap;
         }
         .speed-btn {
-    flex: 1;
-    padding: 3px 0;
-    border: 1.5px solid var(--border-color);
-    border-radius: 4px;
-    background: var(--bg-secondary);
-    font-size: 8px;
-    font-weight: 700;
-    color: var(--text-primary);
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-    min-width: 32px;
-}
+            flex: 1;
+            padding: 3px 0;
+            border: 1.5px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--bg-secondary);
+            font-size: 8px;
+            font-weight: 700;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            min-width: 32px;
         }
         .speed-btn:active {
             transform: scale(0.92);
@@ -1531,6 +1537,11 @@
             box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
             z-index: 100;
             direction: rtl;
+            transition: transform 0.3s ease;
+        }
+        /* إخفاء عند التحرير في الخطوة 1 */
+        .bottom-nav-wrapper.hidden {
+            transform: translateY(100%);
         }
         .nav-buttons {
             padding: 10px 14px;
@@ -1575,67 +1586,54 @@
             box-shadow: var(--shadow-md);
         }
         
-        /* ===== مؤشر الخطوات السفلي ===== */
-        .steps-indicator {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 14px;
-            background: var(--bg-primary);
-            border-top: 1px solid var(--border-light);
+        /* ===== مؤشر الخطوة الجديد (دائرة واحدة) ===== */
+        .step-indicator {
+            position: fixed;
+            bottom: 70px;
+            right: 14px;
+            z-index: 99;
+            transition: transform 0.3s ease;
         }
-        .step-dot {
+        /* إخفاء عند التحرير */
+        .step-indicator.hidden {
+            transform: translateY(150px);
+        }
+        .step-circle-badge {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            background: white;
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 2px;
+            justify-content: center;
+            flex-direction: column;
+            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
             cursor: pointer;
             transition: all 0.3s;
-            opacity: 0.5;
         }
-        .step-dot.active {
-            opacity: 1;
+        .step-circle-badge:active {
+            transform: scale(0.95);
         }
-        .step-dot.completed {
-            opacity: 0.8;
-        }
-        .step-dot-circle {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--border-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 11px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            transition: all 0.3s;
-        }
-        .step-dot.active .step-dot-circle {
-            background: var(--primary);
-            color: white;
-            transform: scale(1.1);
-        }
-        .step-dot.completed .step-dot-circle {
-            background: var(--success);
-            color: white;
-        }
-        .step-dot-label {
-            font-size: 8px;
-            color: var(--text-secondary);
-            font-weight: 600;
-            white-space: nowrap;
-        }
-        .step-dot.active .step-dot-label {
+        .step-number {
+            font-size: 18px;
+            font-weight: 800;
             color: var(--primary);
+            line-height: 1;
+        }
+        .step-total {
+            font-size: 9px;
+            color: var(--text-secondary);
+            font-weight: 700;
         }
         
         /* ===== Responsive ===== */
         @media (max-width: 480px) {
             .step-content {
-                padding: 10px 12px 130px;
+                padding: 10px 12px 100px;
+            }
+            .step-content.editing-active {
+                padding-bottom: 20px;
             }
             .color-wheel-container {
                 width: 200px;
@@ -1650,9 +1648,6 @@
             .editor-textarea {
                 font-size: 17px;
                 min-height: 350px;
-            }
-            .step-dot-label {
-                font-size: 7px;
             }
         }
     </style>
@@ -1682,13 +1677,13 @@
                 </div>
             </div>
             <div class="speed-controls-fixed">
-    <button class="speed-btn-fixed" data-speed="0.5">0.5x</button>
-    <button class="speed-btn-fixed" data-speed="0.65">0.65x</button>
-    <button class="speed-btn-fixed" data-speed="0.8">0.8x</button>
-    <button class="speed-btn-fixed active" data-speed="1">1x</button>
-    <button class="speed-btn-fixed" data-speed="1.25">1.25x</button>
-    <button class="speed-btn-fixed" data-speed="1.5">1.5x</button>
-    <button class="speed-btn-fixed" data-speed="2">2x</button>
+                <button class="speed-btn-fixed" data-speed="0.5">0.5x</button>
+                <button class="speed-btn-fixed" data-speed="0.65">0.65x</button>
+                <button class="speed-btn-fixed" data-speed="0.8">0.8x</button>
+                <button class="speed-btn-fixed active" data-speed="1">1x</button>
+                <button class="speed-btn-fixed" data-speed="1.25">1.25x</button>
+                <button class="speed-btn-fixed" data-speed="1.5">1.5x</button>
+                <button class="speed-btn-fixed" data-speed="2">2x</button>
             </div>
         </div>
     </div>
@@ -1753,13 +1748,13 @@
                         </div>
                     </div>
                     <div class="speed-controls">
-                    <button class="speed-btn" data-speed="0.5">0.5x</button>
-                    <button class="speed-btn" data-speed="0.65">0.65x</button>
-                    <button class="speed-btn" data-speed="0.8">0.8x</button>
-                    <button class="speed-btn active" data-speed="1">1x</button>
-                    <button class="speed-btn" data-speed="1.25">1.25x</button>
-                    <button class="speed-btn" data-speed="1.5">1.5x</button>
-                    <button class="speed-btn" data-speed="2">2x</button>
+                        <button class="speed-btn" data-speed="0.5">0.5x</button>
+                        <button class="speed-btn" data-speed="0.65">0.65x</button>
+                        <button class="speed-btn" data-speed="0.8">0.8x</button>
+                        <button class="speed-btn active" data-speed="1">1x</button>
+                        <button class="speed-btn" data-speed="1.25">1.25x</button>
+                        <button class="speed-btn" data-speed="1.5">1.5x</button>
+                        <button class="speed-btn" data-speed="2">2x</button>
                     </div>
                 </div>
             </div>
@@ -2159,34 +2154,16 @@
         </div>
     </div>
 
-    <!-- شريط التنقل السفلي -->
-    <div class="bottom-nav-wrapper">
-        <div class="steps-indicator" id="stepsIndicator">
-            <div class="step-dot active" data-step="1">
-                <div class="step-dot-circle">1</div>
-                <div class="step-dot-label">التصحيح</div>
-            </div>
-            <div class="step-dot" data-step="2">
-                <div class="step-dot-circle">2</div>
-                <div class="step-dot-label">القالب</div>
-            </div>
-            <div class="step-dot" data-step="3">
-                <div class="step-dot-circle">3</div>
-                <div class="step-dot-label">الألوان</div>
-            </div>
-            <div class="step-dot" data-step="4">
-                <div class="step-dot-circle">4</div>
-                <div class="step-dot-label">البيانات</div>
-            </div>
-            <div class="step-dot" data-step="5">
-                <div class="step-dot-circle">5</div>
-                <div class="step-dot-label">SEO</div>
-            </div>
-            <div class="step-dot" data-step="6">
-                <div class="step-dot-circle">6</div>
-                <div class="step-dot-label">المراجعة</div>
-            </div>
+    <!-- مؤشر الخطوة (دائرة واحدة) -->
+    <div class="step-indicator" id="stepIndicator">
+        <div class="step-circle-badge">
+            <div class="step-number" id="stepNumber">1</div>
+            <div class="step-total">من 6</div>
         </div>
+    </div>
+
+    <!-- شريط التنقل السفلي -->
+    <div class="bottom-nav-wrapper" id="bottomNavWrapper">
         <div class="nav-buttons">
             <button class="nav-btn btn-back" id="btnBack" style="display: none;">
                 <span>←</span>
@@ -2203,7 +2180,7 @@
 
         <script>
         // ===== المتغيرات والإعدادات =====
-        const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.dev';
+        const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.net';
         const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor';
         const N8N_TEMPLATE_UPDATE_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor-response';
         
@@ -2225,7 +2202,8 @@
         const MIN_TEXT_SIZE = 14;
         const MAX_TEXT_SIZE = 28;
         let isEditingMode = false;
-        let audioCaption = ''; // لحفظ caption الصوت
+        let isKeyboardVisible = false;
+        let audioCaption = '';
 
         const formData = {
             ID: null,
@@ -2310,6 +2288,22 @@
             }
         }
 
+        // ===== إدارة الكيبورد والتنقل =====
+        function hideNavigationControls() {
+            if (currentStep !== 1) return;
+            isKeyboardVisible = true;
+            document.getElementById('bottomNavWrapper').classList.add('hidden');
+            document.getElementById('stepIndicator').classList.add('hidden');
+            document.querySelector('.step-content.active').classList.add('editing-active');
+        }
+
+        function showNavigationControls() {
+            isKeyboardVisible = false;
+            document.getElementById('bottomNavWrapper').classList.remove('hidden');
+            document.getElementById('stepIndicator').classList.remove('hidden');
+            document.querySelector('.step-content.active')?.classList.remove('editing-active');
+        }
+
         // ===== وضع التحرير =====
         function enterEditingMode() {
             if (isEditingMode) return;
@@ -2340,15 +2334,34 @@
         // ===== أحداث محرر النص =====
         const textEditor = document.getElementById('textEditor');
         
-        textEditor.addEventListener('focus', () => enterEditingMode());
+        textEditor.addEventListener('focus', () => {
+            enterEditingMode();
+            hideNavigationControls();
+        });
 
         textEditor.addEventListener('blur', (e) => {
             setTimeout(() => {
                 const activeElement = document.activeElement;
                 const audioPlayerFixed = document.getElementById('audioPlayerFixed');
+                
                 if (audioPlayerFixed.contains(activeElement) || activeElement === textEditor) return;
+                
                 exitEditingMode();
+                showNavigationControls();
             }, 300);
+        });
+
+        // كشف إخفاء الكيبورد
+        window.visualViewport?.addEventListener('resize', () => {
+            if (currentStep === 1) {
+                if (window.visualViewport.height < window.innerHeight * 0.75) {
+                    hideNavigationControls();
+                } else {
+                    if (document.activeElement !== textEditor) {
+                        showNavigationControls();
+                    }
+                }
+            }
         });
 
         // ===== التحكم بحجم النص =====
@@ -2505,7 +2518,6 @@
                 formData.transcript_txt = loadedData.text || '';
                 formData.corrected_full_text = loadedData.text || '';
                 
-                // حفظ caption الصوت لاستخدامه كعنوان
                 audioCaption = loadedData.caption || loadedData.audioCaption || '';
                 if (audioCaption) {
                     document.getElementById('titleInput').value = audioCaption;
@@ -2528,8 +2540,6 @@
                 }
 
                 initializeTemplates();
-                
-                // بدء التصحيح التلقائي بالذكاء الاصطناعي
                 await performAutoAICorrection();
                 
             } catch (error) {
@@ -2924,7 +2934,7 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         text: formData.corrected_full_text,
-                        title: formData.title, // استخدام اسم الدرس كعنوان
+                        title: formData.title,
                         context: 'ruqyah_islamic_healing'
                     })
                 });
@@ -3006,11 +3016,7 @@
 
         // ===== التنقل =====
         function updateProgress() {
-            document.querySelectorAll('.step-dot').forEach((dot, i) => {
-                dot.classList.remove('active', 'completed');
-                if (i + 1 < currentStep) dot.classList.add('completed');
-                else if (i + 1 === currentStep) dot.classList.add('active');
-            });
+            document.getElementById('stepNumber').textContent = currentStep;
 
             document.querySelectorAll('.step-content').forEach((content, i) => {
                 content.classList.toggle('active', i + 1 === currentStep);
@@ -3029,7 +3035,6 @@
 
             if (currentStep === 3) initializeSeriesColors();
             
-            // ضبط عنوان SEO من اسم الدرس عند الانتقال للخطوة 5
             if (currentStep === 5 && formData.title && !formData.seo_title) {
                 formData.seo_title = formData.title;
                 document.getElementById('seoTitleInput').value = formData.title;
@@ -3037,7 +3042,10 @@
                 updateSerpPreview();
             }
 
-            if (currentStep !== 1) exitEditingMode();
+            if (currentStep !== 1) {
+                exitEditingMode();
+                showNavigationControls();
+            }
 
             scrollToTop();
             validateCurrentStep();
@@ -3144,7 +3152,7 @@
         }
 
         // ===== التشغيل =====
-        console.log('🚀 App v2.4 Starting...');
+        console.log('🚀 App v2.5 Starting...');
         updateProgress();
         loadInitialData();
     </script>
