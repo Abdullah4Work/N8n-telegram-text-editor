@@ -2634,8 +2634,8 @@
         // إعادة تحديد القالب إذا كان محددًا
         if (selectedTemplate) {
             const isSelectedTemplateLow = loadedTemplatesData.some(t => 
-                t.template_id === selectedTemplate.id && t.is_low_quality === 'true'
-            );
+    t.template_id === selectedTemplate.id && (t.isLowQuality === true || t.isLowQuality === 'true')
+);
             
             // إذا كان القالب المحدد لا يطابق الفلتر الجديد، نلغي التحديد
             if ((showLowQuality && !isSelectedTemplateLow) || (!showLowQuality && isSelectedTemplateLow)) {
@@ -2648,10 +2648,13 @@
     });
 
     // ===== تصفية القوالب حسب الجودة =====
-    function filterTemplatesByQuality(templates) {
-        const targetQuality = showLowQuality ? 'true' : 'false';
-        return templates.filter(t => t.is_low_quality === targetQuality);
-    }
+function filterTemplatesByQuality(templates) {
+    return templates.filter(t => {
+        // ✅ استخدم isLowQuality بدلاً من is_low_quality
+        const isLow = t.isLowQuality === true || t.isLowQuality === 'true';
+        return showLowQuality ? isLow : !isLow;
+    });
+}
 
     // ===== تهيئة القوالب =====
     function initializeTemplates() {
