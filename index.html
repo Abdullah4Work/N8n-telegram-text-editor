@@ -2625,27 +2625,45 @@
     // ⭐ القوالب - مع تصفية الجودة
     // ═════════════════════════════════════════════════════════════════════════
 
-    // ===== مفتاح تبديل الجودة =====
-    document.getElementById('qualityToggle').addEventListener('change', (e) => {
-        showLowQuality = e.target.checked;
-        console.log('🔄 تبديل الجودة:', showLowQuality ? 'منخفضة' : 'عالية');
-        initializeTemplates();
+   // ===== مفتاح تبديل الجودة =====
+document.getElementById('qualityToggle').addEventListener('change', (e) => {
+    showLowQuality = e.target.checked;
+    console.log('🔄 تبديل الجودة:', showLowQuality ? 'منخفضة' : 'عالية');
+    
+    // ✅ تحديث نص السويتش
+    const highQualityText = document.querySelector('.quality-option:first-child');
+    const lowQualityText = document.querySelector('.quality-option:last-child');
+    
+    if (showLowQuality) {
+        highQualityText.style.opacity = '0.5';
+        highQualityText.style.fontWeight = '400';
+        lowQualityText.style.opacity = '1';
+        lowQualityText.style.fontWeight = '700';
+        lowQualityText.style.color = 'var(--primary)';
+    } else {
+        highQualityText.style.opacity = '1';
+        highQualityText.style.fontWeight = '700';
+        highQualityText.style.color = 'var(--primary)';
+        lowQualityText.style.opacity = '0.5';
+        lowQualityText.style.fontWeight = '400';
+    }
+    
+    initializeTemplates();
+    
+    // إعادة تحديد القالب إذا كان محددًا
+    if (selectedTemplate) {
+        const isSelectedTemplateLow = loadedTemplatesData.some(t => 
+            t.template_id === selectedTemplate.id && (t.isLowQuality === true || t.isLowQuality === 'true')
+        );
         
-        // إعادة تحديد القالب إذا كان محددًا
-        if (selectedTemplate) {
-            const isSelectedTemplateLow = loadedTemplatesData.some(t => 
-    t.template_id === selectedTemplate.id && (t.isLowQuality === true || t.isLowQuality === 'true')
-);
-            
-            // إذا كان القالب المحدد لا يطابق الفلتر الجديد، نلغي التحديد
-            if ((showLowQuality && !isSelectedTemplateLow) || (!showLowQuality && isSelectedTemplateLow)) {
-                selectedTemplate = null;
-                selectedColor = null;
-                document.getElementById('colorsSection').style.display = 'none';
-                validateCurrentStep();
-            }
+        if ((showLowQuality && !isSelectedTemplateLow) || (!showLowQuality && isSelectedTemplateLow)) {
+            selectedTemplate = null;
+            selectedColor = null;
+            document.getElementById('colorsSection').style.display = 'none';
+            validateCurrentStep();
         }
-    });
+    }
+});
 
     // ===== تصفية القوالب حسب الجودة =====
 function filterTemplatesByQuality(templates) {
