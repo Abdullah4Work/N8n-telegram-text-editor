@@ -2665,74 +2665,104 @@ document.getElementById('qualityToggle').addEventListener('change', (e) => {
     }
 });
 
-    // ===== تصفية القوالب حسب الجودة =====
+// ===== تصفية القوالب حسب الجودة =====
 function filterTemplatesByQuality(templates) {
     return templates.filter(t => {
-        // ✅ استخدم isLowQuality بدلاً من is_low_quality
-        const isLow = t.isLowQuality === true || t.isLowQuality === 'true';
+        // ✅ تحقق من جودة القالب
+        const isLow = t.isLowQuality === true || 
+                      t.isLowQuality === 'true' ||
+                      t.isLowQuality === "true"; // احتياط للـ string
+        
+        // إذا السويتش على منخفض، أظهر المنخفضة فقط
+        // إذا السويتش على عالي، أظهر العالية فقط
         return showLowQuality ? isLow : !isLow;
     });
 }
 
-    // ===== تهيئة القوالب =====
-    function initializeTemplates() {
-        const grid = document.getElementById('templatesGrid');
-        grid.innerHTML = '';
+    // ═════════════════════════════════════════════════════════════════════════
+// ⭐ تهيئة القوالب - محدثة بالكامل
+// ═════════════════════════════════════════════════════════════════════════
 
-        if (!loadedTemplatesData || loadedTemplatesData.length === 0) {
-            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-secondary)">لا توجد قوالب</div>';
-            return;
-        }
+function initializeTemplates() {
+    const grid = document.getElementById('templatesGrid');
+    grid.innerHTML = '';
 
-        // تصفية القوالب حسب الجودة
-        const filteredTemplates = filterTemplatesByQuality(loadedTemplatesData);
-
-        if (filteredTemplates.length === 0) {
-            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-secondary)">
-                لا توجد قوالب ${showLowQuality ? 'منخفضة الجودة' : 'عالية الجودة'}
-            </div>`;
-            return;
-        }
-
-        // تجميع القوالب الفريدة
-        const uniqueTemplates = {};
-        filteredTemplates.forEach(item => {
-            if (!uniqueTemplates[item.template_id]) {
-                uniqueTemplates[item.template_id] = { 
-                    id: item.template_id, 
-                    name: item.template_name, 
-                    image: item.landscape_link, 
-                    isLowQuality: item.is_low_quality === 'true',
-                    colors: [] 
-                };
-            }
-            uniqueTemplates[item.template_id].colors.push(item);
-        });
-
-        // عرض القوالب
-        Object.values(uniqueTemplates).forEach((template, index) => {
-            const card = document.createElement('div');
-            card.className = 'template-card';
-            if (template.id === 5 || template.id === 10) card.classList.add('large');
-            card.dataset.templateId = template.id;
-            
-            // تحديد نص ولون شارة الجودة
-            const qualityBadgeHTML = template.isLowQuality 
-                ? '<div class="quality-badge low"><span>🔻</span><span>جودة منخفضة</span></div>'
-                : '<div class="quality-badge high"><span>✨</span><span>جودة عالية</span></div>';
-            
-            card.innerHTML = `
-                <div class="template-preview" style="background-image:url('${convertDriveUrl(template.image)}')">
-                    ${qualityBadgeHTML}
-                    <div class="template-number">${index + 1}</div>
-                    <div class="template-check">✓</div>
-                </div>
-                <div class="template-name">${template.name}</div>
-            `;
-            card.onclick = () => selectTemplate(template);
-            grid.appendChild(card);
-        });
+    if (!loadedTemplatesData || loadedTemplatesData.length === 0) {
+        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-secondary)">لا توجد قوالب</div>';
+        return;
     }
+
+    // تصفية القوالب حسب الجودة
+    const filteredTemplates = filterTemplatesByQuality(loadedTemplatesData);
+
+    console.log(`🔍 فلتر الجودة: ${showLowQuality ? 'منخفضة' : 'عالية'}`);
+    console.log(`📊 القوالب المفلترة: ${filteredTemplates.length} من ${loadedTemplatesData.length}`);
+
+    if (filteredTemplates.length === 0) {
+        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-secondary)">
+            لا توجد قوالب ${showLowQuality ? 'منخفضة الجودة' : 'عالية الجودة'}
+        </div>`;
+        return;
+    }
+
+    // تجميع القوالب الفريدة
+    const uniqueTemplates = {};
+    filteredTemplates.forEach(item => {
+        if (!uniqueTemplates[item.template_id]) {
+            // ✅ المهم: نحدد الجودة من أول عنصر في المجموعة
+            const isLow = item.isLowQuality === true || item.isLowQuality === 'true';
+            
+            uniqueTemplates[item.template_id] = { 
+                id: item.template_id, 
+                name: item.template_name, 
+                image: item.landscape_link,
+                // ✅ استخدم قيمة isLowQuality من البيانات الأصلية
+                isLowQuality: isLow,
+                colors: [] 
+            };
+            
+            console.log(`📌 Template ${item.template_id}: ${isLow ? 'منخفض' : 'عالي'} الجودة`);
+        }
+        uniqueTemplates[item.template_id].colors.push(item);
+    });
+
+    // عرض القوالب
+    Object.values(uniqueTemplates).forEach((template, index) => {
+        const card = document.createElement('div');
+        card.className = 'template-card';
+        
+        // القوالب الكبيرة
+        if (template.id === 5 || template.id === 10) {
+            card.classList.add('large');
+        }
+        
+        card.dataset.templateId = template.id;
+        
+        // ✅ تحديد Badge الصحيح بناءً على الجودة الحقيقية للقالب
+        let qualityBadgeHTML = '';
+        if (template.isLowQuality) {
+            // قالب منخفض الجودة
+            qualityBadgeHTML = '<div class="quality-badge low"><span>🔻</span><span>جودة منخفضة</span></div>';
+        } else {
+            // قالب عالي الجودة
+            qualityBadgeHTML = '<div class="quality-badge high"><span>✨</span><span>جودة عالية</span></div>';
+        }
+        
+        card.innerHTML = `
+            <div class="template-preview" style="background-image:url('${convertDriveUrl(template.image)}')">
+                ${qualityBadgeHTML}
+                <div class="template-number">${index + 1}</div>
+                <div class="template-check">✓</div>
+            </div>
+            <div class="template-name">${template.name}</div>
+        `;
+        
+        card.onclick = () => selectTemplate(template);
+        grid.appendChild(card);
+    });
+    
+    console.log(`✅ تم عرض ${Object.keys(uniqueTemplates).length} قالب`);
+}
 
     function selectTemplate(template) {
         document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
