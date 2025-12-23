@@ -490,6 +490,88 @@
         }
         
         /* ===== القوالب ===== */
+        /* مفتاح تبديل الجودة */
+        .quality-toggle-container {
+            background: var(--bg-secondary);
+            padding: 12px;
+            margin-bottom: 16px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .quality-toggle-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .quality-toggle-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .quality-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--bg-tertiary);
+            transition: .4s;
+            border-radius: 34px;
+        }
+        
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        input:checked + .toggle-slider {
+            background-color: var(--primary);
+        }
+        
+        input:checked + .toggle-slider:before {
+            transform: translateX(30px);
+        }
+        
+        /* بطاقة القالب */
         .templates-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -566,6 +648,31 @@
             display: flex;
             animation: scaleIn 0.3s ease;
         }
+        
+        /* علامة جودة القالب */
+        .quality-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            color: white;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .quality-badge.high {
+            background: var(--success);
+        }
+        
+        .quality-badge.low {
+            background: var(--warning);
+        }
+        
         @keyframes scaleIn {
             from { transform: scale(0); }
             to { transform: scale(1); }
@@ -1757,6 +1864,29 @@
                 </div>
                 <div class="step-description">اختر القالب المناسب ثم اختر اللون</div>
             </div>
+            
+            <!-- مفتاح تبديل جودة القوالب -->
+            <div class="quality-toggle-container">
+                <div class="quality-toggle-label">
+                    <span>🔄</span>
+                    <span>نوع جودة القالب</span>
+                </div>
+                <div class="quality-toggle-wrapper">
+                    <div class="quality-option">
+                        <span>✨</span>
+                        <span>جودة عالية</span>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="qualityToggle">
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <div class="quality-option">
+                        <span>🔻</span>
+                        <span>جودة منخفضة</span>
+                    </div>
+                </div>
+            </div>
+            
             <div class="section-title">
                 <span>📐</span>
                 <span>القوالب المتاحة</span>
@@ -2059,7 +2189,11 @@
 
     <!-- ===== هنا يوضع الجزء الثاني (JavaScript) ===== -->
 
-    <script>
+        <script>
+    // ═════════════════════════════════════════════════════════════════════════
+    // ⭐ JavaScript - الجزء الثاني الكامل
+    // ═════════════════════════════════════════════════════════════════════════
+    
     // ===== المتغيرات والإعدادات =====
     const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.net';
     const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor';
@@ -2084,6 +2218,7 @@
     let audioCaption = '';
     let skipCorrection = false;
     let audioBlobUrl = null;
+    let showLowQuality = false; // متغير لتتبع حالة تبديل الجودة
     
     // متغيرات عجلات الألوان
     let seriesColorDragging = false;
@@ -2166,9 +2301,6 @@
         setTimeout(() => toast.remove(), 2000);
     }
 
-    // ===== شريط التنقل - دائماً ظاهر =====
-    // تم إزالة وظائف إخفاء/إظهار الشريط السفلي في الخطوة 1
-    
     // ===== وضع التحرير =====
     function enterEditingMode() {
         document.getElementById('audioPlayerSection').classList.add('hidden');
@@ -2197,10 +2329,6 @@
     
     textEditor.addEventListener('focus', () => {
         enterEditingMode();
-    });
-
-    textEditor.addEventListener('blur', () => {
-        // لا نخرج من وضع التحرير عند فقدان التركيز
     });
 
     // ===== التحكم بحجم النص =====
@@ -2493,7 +2621,39 @@
 
     textEditor.addEventListener('input', updateTextStats);
 
-    // ===== القوالب =====
+    // ═════════════════════════════════════════════════════════════════════════
+    // ⭐ القوالب - مع تصفية الجودة
+    // ═════════════════════════════════════════════════════════════════════════
+
+    // ===== مفتاح تبديل الجودة =====
+    document.getElementById('qualityToggle').addEventListener('change', (e) => {
+        showLowQuality = e.target.checked;
+        console.log('🔄 تبديل الجودة:', showLowQuality ? 'منخفضة' : 'عالية');
+        initializeTemplates();
+        
+        // إعادة تحديد القالب إذا كان محددًا
+        if (selectedTemplate) {
+            const isSelectedTemplateLow = loadedTemplatesData.some(t => 
+                t.template_id === selectedTemplate.id && t.is_low_quality === 'true'
+            );
+            
+            // إذا كان القالب المحدد لا يطابق الفلتر الجديد، نلغي التحديد
+            if ((showLowQuality && !isSelectedTemplateLow) || (!showLowQuality && isSelectedTemplateLow)) {
+                selectedTemplate = null;
+                selectedColor = null;
+                document.getElementById('colorsSection').style.display = 'none';
+                validateCurrentStep();
+            }
+        }
+    });
+
+    // ===== تصفية القوالب حسب الجودة =====
+    function filterTemplatesByQuality(templates) {
+        const targetQuality = showLowQuality ? 'true' : 'false';
+        return templates.filter(t => t.is_low_quality === targetQuality);
+    }
+
+    // ===== تهيئة القوالب =====
     function initializeTemplates() {
         const grid = document.getElementById('templatesGrid');
         grid.innerHTML = '';
@@ -2503,21 +2663,46 @@
             return;
         }
 
+        // تصفية القوالب حسب الجودة
+        const filteredTemplates = filterTemplatesByQuality(loadedTemplatesData);
+
+        if (filteredTemplates.length === 0) {
+            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-secondary)">
+                لا توجد قوالب ${showLowQuality ? 'منخفضة الجودة' : 'عالية الجودة'}
+            </div>`;
+            return;
+        }
+
+        // تجميع القوالب الفريدة
         const uniqueTemplates = {};
-        loadedTemplatesData.forEach(item => {
+        filteredTemplates.forEach(item => {
             if (!uniqueTemplates[item.template_id]) {
-                uniqueTemplates[item.template_id] = { id: item.template_id, name: item.template_name, image: item.landscape_link, colors: [] };
+                uniqueTemplates[item.template_id] = { 
+                    id: item.template_id, 
+                    name: item.template_name, 
+                    image: item.landscape_link, 
+                    isLowQuality: item.is_low_quality === 'true',
+                    colors: [] 
+                };
             }
             uniqueTemplates[item.template_id].colors.push(item);
         });
 
+        // عرض القوالب
         Object.values(uniqueTemplates).forEach((template, index) => {
             const card = document.createElement('div');
             card.className = 'template-card';
-            if (template.id === 5) card.classList.add('large');
+            if (template.id === 5 || template.id === 10) card.classList.add('large');
             card.dataset.templateId = template.id;
+            
+            // تحديد نص ولون شارة الجودة
+            const qualityBadgeHTML = template.isLowQuality 
+                ? '<div class="quality-badge low"><span>🔻</span><span>جودة منخفضة</span></div>'
+                : '<div class="quality-badge high"><span>✨</span><span>جودة عالية</span></div>';
+            
             card.innerHTML = `
                 <div class="template-preview" style="background-image:url('${convertDriveUrl(template.image)}')">
+                    ${qualityBadgeHTML}
                     <div class="template-number">${index + 1}</div>
                     <div class="template-check">✓</div>
                 </div>
@@ -2889,6 +3074,12 @@
         }
     });
 
+    <!-- ===== هنا يوضع الجزء الثالث (باقي JavaScript) ===== -->
+
+        // ═════════════════════════════════════════════════════════════════════════
+    // ⭐ SEO - الجزء الثالث والأخير
+    // ═════════════════════════════════════════════════════════════════════════
+
     // ===== SEO =====
     function addTag(tagText) {
         const trimmed = tagText.trim();
@@ -2999,7 +3190,10 @@
         validateCurrentStep();
     });
 
-    // ===== التنقل =====
+    // ═════════════════════════════════════════════════════════════════════════
+    // ⭐ التنقل بين الخطوات
+    // ═════════════════════════════════════════════════════════════════════════
+
     function updateProgress() {
         document.getElementById('stepNumber').textContent = currentStep;
 
@@ -3060,7 +3254,10 @@
     document.getElementById('btnNext').addEventListener('click', nextStep);
     document.getElementById('btnBack').addEventListener('click', prevStep);
 
-    // ===== المراجعة =====
+    // ═════════════════════════════════════════════════════════════════════════
+    // ⭐ المراجعة النهائية
+    // ═════════════════════════════════════════════════════════════════════════
+
     function updateReview() {
         const words = formData.corrected_full_text.trim() ? formData.corrected_full_text.trim().split(/\s+/).length : 0;
         document.getElementById('reviewWordCount').textContent = words;
@@ -3115,7 +3312,10 @@
         document.getElementById('reviewDescExpandIcon').textContent = el.classList.contains('expanded') ? '▲' : '▼';
     });
 
-    // ===== الإرسال =====
+    // ═════════════════════════════════════════════════════════════════════════
+    // ⭐ الإرسال النهائي
+    // ═════════════════════════════════════════════════════════════════════════
+
     async function submitForm() {
         showLoading('جاري الإرسال...', 'الرجاء الانتظار', '');
         try {
@@ -3144,8 +3344,12 @@
         }
     }
 
-    // ===== التشغيل =====
+    // ═════════════════════════════════════════════════════════════════════════
+    // ⭐ بدء التطبيق
+    // ═════════════════════════════════════════════════════════════════════════
+
     console.log('🚀 App v3.0 Starting...');
+    console.log('✨ تم إضافة ميزة تصفية القوالب حسب الجودة');
     updateProgress();
     loadInitialData();
 </script>
