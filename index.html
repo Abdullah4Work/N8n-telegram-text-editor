@@ -1219,6 +1219,106 @@
         .save-template-btn:active {
             transform: scale(0.98);
         }
+
+        /* ===== البطاقة الإعلانية (اختيارية) ===== */
+        .promo-card-section {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.08), rgba(230, 126, 34, 0.08));
+            border: 2px dashed var(--warning);
+            border-radius: 14px;
+            padding: 18px;
+            margin-top: 28px;
+            margin-bottom: 20px;
+            direction: rtl;
+            position: relative;
+            overflow: hidden;
+        }
+        .promo-card-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(243, 156, 18, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .promo-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        .promo-card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .promo-optional-badge {
+            padding: 4px 10px;
+            background: var(--warning);
+            color: white;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+        .promo-card-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1;
+        }
+        .promo-input-group {
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        .promo-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .promo-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+            direction: rtl;
+            text-align: right;
+        }
+        .promo-input:focus {
+            outline: none;
+            border-color: var(--warning);
+            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
+        }
+        .promo-input::placeholder {
+            color: var(--text-light);
+            font-size: 13px;
+        }
+        .promo-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .promo-example {
+            font-size: 11px;
+            color: var(--warning);
+            margin-top: 4px;
+            font-weight: 600;
+        }
         
         /* ===== SEO ===== */
         .seo-generate-btn {
@@ -2040,6 +2140,41 @@
                 <div class="form-hint">سيُستخدم كعنوان في SEO</div>
                 <div class="char-counter"><span id="titleCount">0</span> / 50</div>
             </div>
+
+            <!-- ✨ البطاقة الإعلانية (اختيارية) ✨ -->
+            <div class="promo-card-section">
+                <div class="promo-card-header">
+                    <div class="promo-card-title">
+                        <span>🎁</span>
+                        <span>البطاقة الإعلانية</span>
+                    </div>
+                    <div class="promo-optional-badge">اختياري</div>
+                </div>
+                <div class="promo-card-description">
+                    أضف بطاقة إعلانية تشويقية لجذب المشاهدين - يمكنك ملء العنوان فقط أو كلاهما أو تركهما فارغين
+                </div>
+                
+                <div class="promo-input-group">
+                    <div class="promo-label">
+                        <span>📌</span>
+                        <span>عنوان البطاقة</span>
+                    </div>
+                    <input type="text" class="promo-input" id="promoTitleInput" placeholder="شاهد لنهاية الفيديو لمعرفة صفات الزهريين" maxlength="100">
+                    <div class="promo-example">مثال: شاهد لنهاية الفيديو لمعرفة صفات الزهريين</div>
+                    <div class="char-counter"><span id="promoTitleCount">0</span> / 100</div>
+                </div>
+
+                <div class="promo-input-group">
+                    <div class="promo-label">
+                        <span>📄</span>
+                        <span>وصف البطاقة</span>
+                    </div>
+                    <textarea class="promo-input promo-textarea" id="promoDescInput" placeholder="تعرف على صفات الزهريين ومن هم ولماذا الاستهداف عليهم شديد" maxlength="200"></textarea>
+                    <div class="promo-example">مثال: تعرف على صفات الزهريين ومن هم ولماذا الاستهداف عليهم شديد</div>
+                    <div class="char-counter"><span id="promoDescCount">0</span> / 200</div>
+                </div>
+            </div>
+
             <button class="save-template-btn" id="saveTemplateBtn">
                 <span id="saveTemplateBtnText">💾 حفظ التعديلات على القالب الأساسي</span>
             </button>
@@ -2139,6 +2274,15 @@
                 <div class="review-item"><span class="review-label">السلسلة الفرعية:</span><span class="review-value" id="reviewSubSeries">-</span></div>
                 <div class="review-item"><span class="review-label">اسم المخطط:</span><span class="review-value" id="reviewFinalSeries">-</span></div>
                 <div class="review-item"><span class="review-label">اسم الدرس:</span><span class="review-value" id="reviewTitle">-</span></div>
+                <!-- البطاقة الإعلانية في المراجعة -->
+                <div class="review-item" id="reviewPromoTitleItem" style="display:none;">
+                    <span class="review-label">🎁 عنوان البطاقة:</span>
+                    <span class="review-value" id="reviewPromoTitle">-</span>
+                </div>
+                <div class="review-item" id="reviewPromoDescItem" style="display:none;">
+                    <span class="review-label">📄 وصف البطاقة:</span>
+                    <span class="review-value" id="reviewPromoDesc">-</span>
+                </div>
             </div>
             <div class="review-section">
                 <div class="review-section-title"><span>🔍</span><span>SEO</span></div>
@@ -2189,7 +2333,7 @@
 
     <!-- ===== هنا يوضع الجزء الثاني (JavaScript) ===== -->
 
-        <script>
+    <script>
     // ═════════════════════════════════════════════════════════════════════════
     // ⭐ JavaScript - الجزء الثاني الكامل
     // ═════════════════════════════════════════════════════════════════════════
@@ -2218,7 +2362,7 @@
     let audioCaption = '';
     let skipCorrection = false;
     let audioBlobUrl = null;
-    let showLowQuality = false; // متغير لتتبع حالة تبديل الجودة
+    let showLowQuality = false;
     
     // متغيرات عجلات الألوان
     let seriesColorDragging = false;
@@ -2248,6 +2392,9 @@
         seo_title: '',
         seo_description: '',
         tags: [],
+        // ✨ إضافة حقول البطاقة الإعلانية ✨
+        promo_card_title: '',
+        promo_card_description: '',
         status: 'completed',
         updated_at: new Date().toISOString()
     };
@@ -2625,144 +2772,130 @@
     // ⭐ القوالب - مع تصفية الجودة
     // ═════════════════════════════════════════════════════════════════════════
 
-   // ===== مفتاح تبديل الجودة =====
-document.getElementById('qualityToggle').addEventListener('change', (e) => {
-    showLowQuality = e.target.checked;
-    console.log('🔄 تبديل الجودة:', showLowQuality ? 'منخفضة' : 'عالية');
-    
-    // ✅ تحديث نص السويتش
-    const highQualityText = document.querySelector('.quality-option:first-child');
-    const lowQualityText = document.querySelector('.quality-option:last-child');
-    
-    if (showLowQuality) {
-        highQualityText.style.opacity = '0.5';
-        highQualityText.style.fontWeight = '400';
-        lowQualityText.style.opacity = '1';
-        lowQualityText.style.fontWeight = '700';
-        lowQualityText.style.color = 'var(--primary)';
-    } else {
-        highQualityText.style.opacity = '1';
-        highQualityText.style.fontWeight = '700';
-        highQualityText.style.color = 'var(--primary)';
-        lowQualityText.style.opacity = '0.5';
-        lowQualityText.style.fontWeight = '400';
-    }
-    
-    initializeTemplates();
-    
-    // إعادة تحديد القالب إذا كان محددًا
-    if (selectedTemplate) {
-        const isSelectedTemplateLow = loadedTemplatesData.some(t => 
-            t.template_id === selectedTemplate.id && (t.isLowQuality === true || t.isLowQuality === 'true')
-        );
-        
-        if ((showLowQuality && !isSelectedTemplateLow) || (!showLowQuality && isSelectedTemplateLow)) {
-            selectedTemplate = null;
-            selectedColor = null;
-            document.getElementById('colorsSection').style.display = 'none';
-            validateCurrentStep();
-        }
-    }
-});
+    // ===== مفتاح تبديل الجودة =====
+    document.getElementById('qualityToggle').addEventListener('change', (e) => {
+        showLowQuality = e.target.checked;
+        console.log('🔄 تبديل الجودة:', showLowQuality ? 'منخفضة' : 'عالية');
 
-// ===== تصفية القوالب حسب الجودة =====
-function filterTemplatesByQuality(templates) {
-    return templates.filter(t => {
-        // ✅ تحقق من جودة القالب
-        const isLow = t.isLowQuality === true || 
-                      t.isLowQuality === 'true' ||
-                      t.isLowQuality === "true"; // احتياط للـ string
+        const highQualityText = document.querySelector('.quality-option:first-child');
+        const lowQualityText = document.querySelector('.quality-option:last-child');
         
-        // إذا السويتش على منخفض، أظهر المنخفضة فقط
-        // إذا السويتش على عالي، أظهر العالية فقط
-        return showLowQuality ? isLow : !isLow;
+        if (showLowQuality) {
+            highQualityText.style.opacity = '0.5';
+            highQualityText.style.fontWeight = '400';
+            lowQualityText.style.opacity = '1';
+            lowQualityText.style.fontWeight = '700';
+            lowQualityText.style.color = 'var(--primary)';
+        } else {
+            highQualityText.style.opacity = '1';
+            highQualityText.style.fontWeight = '700';
+            highQualityText.style.color = 'var(--primary)';
+            lowQualityText.style.opacity = '0.5';
+            lowQualityText.style.fontWeight = '400';
+        }
+        
+        initializeTemplates();
+        
+        if (selectedTemplate) {
+            const isSelectedTemplateLow = loadedTemplatesData.some(t => 
+                t.template_id === selectedTemplate.id && (t.isLowQuality === true || t.isLowQuality === 'true')
+            );
+            
+            if ((showLowQuality && !isSelectedTemplateLow) || (!showLowQuality && isSelectedTemplateLow)) {
+                selectedTemplate = null;
+                selectedColor = null;
+                document.getElementById('colorsSection').style.display = 'none';
+                validateCurrentStep();
+            }
+        }
     });
-}
+
+    // ===== تصفية القوالب حسب الجودة =====
+    function filterTemplatesByQuality(templates) {
+        return templates.filter(t => {
+            const isLow = t.isLowQuality === true || 
+                          t.isLowQuality === 'true' ||
+                          t.isLowQuality === "true";
+            
+            return showLowQuality ? isLow : !isLow;
+        });
+    }
 
     // ═════════════════════════════════════════════════════════════════════════
-// ⭐ تهيئة القوالب - محدثة بالكامل
-// ═════════════════════════════════════════════════════════════════════════
+    // ⭐ تهيئة القوالب - محدثة بالكامل
+    // ═════════════════════════════════════════════════════════════════════════
 
-function initializeTemplates() {
-    const grid = document.getElementById('templatesGrid');
-    grid.innerHTML = '';
+    function initializeTemplates() {
+        const grid = document.getElementById('templatesGrid');
+        grid.innerHTML = '';
 
-    if (!loadedTemplatesData || loadedTemplatesData.length === 0) {
-        grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-secondary)">لا توجد قوالب</div>';
-        return;
-    }
+        if (!loadedTemplatesData || loadedTemplatesData.length === 0) {
+            grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-secondary)">لا توجد قوالب</div>';
+            return;
+        }
 
-    // تصفية القوالب حسب الجودة
-    const filteredTemplates = filterTemplatesByQuality(loadedTemplatesData);
+        const filteredTemplates = filterTemplatesByQuality(loadedTemplatesData);
 
-    console.log(`🔍 فلتر الجودة: ${showLowQuality ? 'منخفضة' : 'عالية'}`);
-    console.log(`📊 القوالب المفلترة: ${filteredTemplates.length} من ${loadedTemplatesData.length}`);
+        console.log(`🔍 فلتر الجودة: ${showLowQuality ? 'منخفضة' : 'عالية'}`);
+        console.log(`📊 القوالب المفلترة: ${filteredTemplates.length} من ${loadedTemplatesData.length}`);
 
-    if (filteredTemplates.length === 0) {
-        grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-secondary)">
-            لا توجد قوالب ${showLowQuality ? 'منخفضة الجودة' : 'عالية الجودة'}
-        </div>`;
-        return;
-    }
+        if (filteredTemplates.length === 0) {
+            grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-secondary)">
+                لا توجد قوالب ${showLowQuality ? 'منخفضة الجودة' : 'عالية الجودة'}
+            </div>`;
+            return;
+        }
 
-    // تجميع القوالب الفريدة
-    const uniqueTemplates = {};
-    filteredTemplates.forEach(item => {
-        if (!uniqueTemplates[item.template_id]) {
-            // ✅ المهم: نحدد الجودة من أول عنصر في المجموعة
-            const isLow = item.isLowQuality === true || item.isLowQuality === 'true';
+        const uniqueTemplates = {};
+        filteredTemplates.forEach(item => {
+            if (!uniqueTemplates[item.template_id]) {
+                const isLow = item.isLowQuality === true || item.isLowQuality === 'true';
+                
+                uniqueTemplates[item.template_id] = { 
+                    id: item.template_id, 
+                    name: item.template_name, 
+                    image: item.landscape_link,
+                    isLowQuality: isLow,
+                    colors: [] 
+                };
+                
+                console.log(`📌 Template ${item.template_id}: ${isLow ? 'منخفض' : 'عالي'} الجودة`);
+            }
+            uniqueTemplates[item.template_id].colors.push(item);
+        });
+
+        Object.values(uniqueTemplates).forEach((template, index) => {
+            const card = document.createElement('div');
+            card.className = 'template-card';
             
-            uniqueTemplates[item.template_id] = { 
-                id: item.template_id, 
-                name: item.template_name, 
-                image: item.landscape_link,
-                // ✅ استخدم قيمة isLowQuality من البيانات الأصلية
-                isLowQuality: isLow,
-                colors: [] 
-            };
+            if (template.id === 5 || template.id === 10) {
+                card.classList.add('large');
+            }
             
-            console.log(`📌 Template ${item.template_id}: ${isLow ? 'منخفض' : 'عالي'} الجودة`);
-        }
-        uniqueTemplates[item.template_id].colors.push(item);
-    });
-
-    // عرض القوالب
-    Object.values(uniqueTemplates).forEach((template, index) => {
-        const card = document.createElement('div');
-        card.className = 'template-card';
+            card.dataset.templateId = template.id;
+            
+            let qualityBadgeHTML = '';
+            if (template.isLowQuality) {
+                qualityBadgeHTML = '<div class="quality-badge low"><span>📦</span><span>جودة منخفضة</span></div>';
+            } else {
+                qualityBadgeHTML = '<div class="quality-badge high"><span>✅</span><span>جودة عالية</span></div>';
+            }
+            
+            card.innerHTML = `
+                <div class="template-preview" style="background-image:url('${convertDriveUrl(template.image)}')">
+                    ${qualityBadgeHTML}
+                    <div class="template-number">${index + 1}</div>
+                    <div class="template-check">✓</div>
+                </div>
+                <div class="template-name">${template.name}</div>
+            `;
+            
+            card.onclick = () => selectTemplate(template);
+            grid.appendChild(card);
+        });
         
-        // القوالب الكبيرة
-        if (template.id === 5 || template.id === 10) {
-            card.classList.add('large');
-        }
-        
-        card.dataset.templateId = template.id;
-        
-        // ✅ تحديد Badge الصحيح بناءً على الجودة الحقيقية للقالب
-        let qualityBadgeHTML = '';
-        if (template.isLowQuality) {
-            // قالب منخفض الجودة
-            qualityBadgeHTML = '<div class="quality-badge low"><span>📦</span><span>جودة منخفضة</span></div>';
-        } else {
-            // قالب عالي الجودة
-            qualityBadgeHTML = '<div class="quality-badge high"><span>✅</span><span>جودة عالية</span></div>';
-        }
-        
-        card.innerHTML = `
-            <div class="template-preview" style="background-image:url('${convertDriveUrl(template.image)}')">
-                ${qualityBadgeHTML}
-                <div class="template-number">${index + 1}</div>
-                <div class="template-check">✓</div>
-            </div>
-            <div class="template-name">${template.name}</div>
-        `;
-        
-        card.onclick = () => selectTemplate(template);
-        grid.appendChild(card);
-    });
-    
-    console.log(`✅ تم عرض ${Object.keys(uniqueTemplates).length} قالب`);
-}
+        console.log(`✅ تم عرض ${Object.keys(uniqueTemplates).length} قالب`);
+    }
 
     function selectTemplate(template) {
         document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
@@ -2839,14 +2972,12 @@ function initializeTemplates() {
     function initializeColorPickers() {
         if (!selectedColor) return;
         
-        // تهيئة لون السلسلة
         recommendedSeriesColor = selectedColor.landscape_series_color;
         formData.series_color = recommendedSeriesColor;
         updateSeriesColorDisplay(recommendedSeriesColor);
         updateSeriesHandlePosition(recommendedSeriesColor);
         document.getElementById('recommendedSeriesColorBtn').classList.add('selected');
         
-        // تهيئة لون العنوان
         formData.title_color = recommendedTitleColor;
         updateTitleColorDisplay(recommendedTitleColor);
         updateTitleHandlePosition(recommendedTitleColor);
@@ -3085,7 +3216,7 @@ function initializeTemplates() {
         return `#${f(0)}${f(8)}${f(4)}`;
     }
 
-    // ===== حقول البيانات =====
+    // ✨✨✨ حقول البيانات + البطاقة الإعلانية ✨✨✨
     function updateCharCounters() {
         ['title', 'mainSeries', 'subSeries', 'finalSeries'].forEach(field => {
             const input = document.getElementById(field + 'Input');
@@ -3094,6 +3225,16 @@ function initializeTemplates() {
             const key = field === 'mainSeries' ? 'series' : field === 'subSeries' ? 'subSeries' : field === 'finalSeries' ? 'finalSeries' : 'title';
             formData[key] = input.value;
         });
+
+        // ✨ تحديث عدادات البطاقة الإعلانية ✨
+        const promoTitle = document.getElementById('promoTitleInput').value;
+        const promoDesc = document.getElementById('promoDescInput').value;
+        
+        document.getElementById('promoTitleCount').textContent = promoTitle.length;
+        document.getElementById('promoDescCount').textContent = promoDesc.length;
+        
+        formData.promo_card_title = promoTitle;
+        formData.promo_card_description = promoDesc;
     }
 
     ['titleInput', 'mainSeriesInput', 'subSeriesInput', 'finalSeriesInput'].forEach(id => {
@@ -3101,6 +3242,15 @@ function initializeTemplates() {
             updateCharCounters();
             validateCurrentStep();
         });
+    });
+
+    // ✨ Event Listeners للبطاقة الإعلانية ✨
+    document.getElementById('promoTitleInput').addEventListener('input', () => {
+        updateCharCounters();
+    });
+
+    document.getElementById('promoDescInput').addEventListener('input', () => {
+        updateCharCounters();
     });
 
     document.getElementById('saveTemplateBtn').addEventListener('click', async () => {
@@ -3306,7 +3456,7 @@ function initializeTemplates() {
     document.getElementById('btnBack').addEventListener('click', prevStep);
 
     // ═════════════════════════════════════════════════════════════════════════
-    // ⭐ المراجعة النهائية
+    // ⭐ المراجعة النهائية (مع البطاقة الإعلانية)
     // ═════════════════════════════════════════════════════════════════════════
 
     function updateReview() {
@@ -3328,6 +3478,25 @@ function initializeTemplates() {
         document.getElementById('reviewSubSeries').textContent = formData.subSeries || '-';
         document.getElementById('reviewFinalSeries').textContent = formData.finalSeries || '-';
         document.getElementById('reviewTitle').textContent = formData.title || '-';
+
+        // ✨ عرض البطاقة الإعلانية في المراجعة ✨
+        const promoTitleItem = document.getElementById('reviewPromoTitleItem');
+        const promoDescItem = document.getElementById('reviewPromoDescItem');
+        
+        if (formData.promo_card_title && formData.promo_card_title.trim()) {
+            promoTitleItem.style.display = 'flex';
+            document.getElementById('reviewPromoTitle').textContent = formData.promo_card_title;
+        } else {
+            promoTitleItem.style.display = 'none';
+        }
+
+        if (formData.promo_card_description && formData.promo_card_description.trim()) {
+            promoDescItem.style.display = 'flex';
+            document.getElementById('reviewPromoDesc').textContent = formData.promo_card_description;
+        } else {
+            promoDescItem.style.display = 'none';
+        }
+
         document.getElementById('reviewSerpTitle').textContent = formData.seo_title || 'عنوان الفيديو';
         document.getElementById('reviewSerpDescription').textContent = (formData.seo_description || '').substring(0, 160) + ((formData.seo_description || '').length > 160 ? '...' : '');
         document.getElementById('reviewSeoTitleBox').textContent = formData.seo_title || '-';
@@ -3364,21 +3533,39 @@ function initializeTemplates() {
     });
 
     // ═════════════════════════════════════════════════════════════════════════
-    // ⭐ الإرسال النهائي
+    // ⭐ الإرسال النهائي (مع البطاقة الإعلانية)
     // ═════════════════════════════════════════════════════════════════════════
 
     async function submitForm() {
         showLoading('جاري الإرسال...', 'الرجاء الانتظار', '');
+        
         try {
+            // ✨ التأكد من إرسال البطاقة الإعلانية مع البيانات ✨
+            const finalData = {
+                ...formData,
+                promo_card_title: formData.promo_card_title || '',
+                promo_card_description: formData.promo_card_description || '',
+                timestamp: new Date().toISOString()
+            };
+
+            console.log('📤 إرسال البيانات:', finalData);
+
             const response = await fetch(N8N_WEBHOOK_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...formData, timestamp: new Date().toISOString() })
+                body: JSON.stringify(finalData)
             });
 
             if (!response.ok) throw new Error('فشل الإرسال');
 
-            try { tg.sendData(JSON.stringify({ type: 'completed', id: formData.ID, status: 'completed' })); } catch (e) {}
+            try { 
+                tg.sendData(JSON.stringify({ 
+                    type: 'completed', 
+                    id: formData.ID, 
+                    status: 'completed',
+                    has_promo_card: !!(formData.promo_card_title || formData.promo_card_description)
+                })); 
+            } catch (e) {}
 
             hideLoading();
             if (audioBlobUrl) URL.revokeObjectURL(audioBlobUrl);
@@ -3392,6 +3579,7 @@ function initializeTemplates() {
         } catch (error) {
             hideLoading();
             showToast('❌ ' + error.message, true);
+            console.error('❌ خطأ الإرسال:', error);
         }
     }
 
@@ -3399,8 +3587,9 @@ function initializeTemplates() {
     // ⭐ بدء التطبيق
     // ═════════════════════════════════════════════════════════════════════════
 
-    console.log('🚀 App v3.0 Starting...');
+    console.log('🚀 App v3.1 Starting...');
     console.log('✅ تم إضافة ميزة تصفية القوالب حسب الجودة');
+    console.log('✨ تم إضافة البطاقة الإعلانية الاختيارية');
     updateProgress();
     loadInitialData();
 </script>
