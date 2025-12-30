@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, viewport-fit=cover">
     <meta name="description" content="نشر محتوى احترافي - رقيتي">
     <meta name="theme-color" content="#4A90E2">
-    <title>نشر محتوى احترافي - رقيتي v3.0</title>
+    <title>نشر محتوى احترافي - رقيتي v3.1</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -490,7 +490,6 @@
         }
         
         /* ===== القوالب ===== */
-        /* مفتاح تبديل الجودة */
         .quality-toggle-container {
             background: var(--bg-secondary);
             padding: 12px;
@@ -571,7 +570,6 @@
             transform: translateX(30px);
         }
         
-        /* بطاقة القالب */
         .templates-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -649,7 +647,6 @@
             animation: scaleIn 0.3s ease;
         }
         
-        /* علامة جودة القالب */
         .quality-badge {
             position: absolute;
             top: 10px;
@@ -1220,7 +1217,7 @@
             transform: scale(0.98);
         }
 
-        /* ===== البطاقة الإعلانية (اختيارية) ===== */
+        /* ===== البطاقة الإعلانية ===== */
         .promo-card-section {
             background: linear-gradient(135deg, rgba(243, 156, 18, 0.08), rgba(230, 126, 34, 0.08));
             border: 2px dashed var(--warning);
@@ -1965,7 +1962,6 @@
                 <div class="step-description">اختر القالب المناسب ثم اختر اللون</div>
             </div>
             
-            <!-- مفتاح تبديل جودة القوالب -->
             <div class="quality-toggle-container">
                 <div class="quality-toggle-label">
                     <span>🔄</span>
@@ -2011,7 +2007,6 @@
                 <div class="step-description">اختر الألوان المناسبة للسلسلة واسم الدرس</div>
             </div>
 
-            <!-- معاينة مزدوجة -->
             <div class="dual-preview-container">
                 <div class="preview-series-text" id="previewSeriesText">السلسلة الرئيسية</div>
                 <div class="preview-label">لون السلسلة</div>
@@ -2020,7 +2015,6 @@
                 <div class="preview-label">لون العنوان</div>
             </div>
 
-            <!-- لون السلسلة -->
             <div class="color-picker-card" id="seriesColorCard">
                 <div class="color-picker-card-header">
                     <div class="color-picker-card-title">
@@ -2063,7 +2057,6 @@
                 </div>
             </div>
 
-            <!-- لون العنوان -->
             <div class="color-picker-card" id="titleColorCard">
                 <div class="color-picker-card-header">
                     <div class="color-picker-card-title">
@@ -2141,7 +2134,6 @@
                 <div class="char-counter"><span id="titleCount">0</span> / 50</div>
             </div>
 
-            <!-- ✨ البطاقة الإعلانية (اختيارية) ✨ -->
             <div class="promo-card-section">
                 <div class="promo-card-header">
                     <div class="promo-card-title">
@@ -2274,7 +2266,6 @@
                 <div class="review-item"><span class="review-label">السلسلة الفرعية:</span><span class="review-value" id="reviewSubSeries">-</span></div>
                 <div class="review-item"><span class="review-label">اسم المخطط:</span><span class="review-value" id="reviewFinalSeries">-</span></div>
                 <div class="review-item"><span class="review-label">اسم الدرس:</span><span class="review-value" id="reviewTitle">-</span></div>
-                <!-- البطاقة الإعلانية في المراجعة -->
                 <div class="review-item" id="reviewPromoTitleItem" style="display:none;">
                     <span class="review-label">🎁 عنوان البطاقة:</span>
                     <span class="review-value" id="reviewPromoTitle">-</span>
@@ -2314,7 +2305,6 @@
         </div>
     </div>
 
-    <!-- شريط التنقل -->
     <div class="bottom-nav-wrapper" id="bottomNavWrapper">
         <div class="nav-container">
             <div class="step-indicator-badge">
@@ -2331,11 +2321,11 @@
         </div>
     </div>
 
-    <!-- ===== هنا يوضع الجزء الثاني (JavaScript) ===== -->
+    <!-- ✨✨✨ هنا يوضع الجزء الثاني (JavaScript) ✨✨✨ -->
 
-    <script>
+        <script>
     // ═════════════════════════════════════════════════════════════════════════
-    // ⭐ JavaScript - الجزء الثاني الكامل
+    // ⭐ JavaScript - الجزء الثاني الكامل مع التعديلات المحدثة
     // ═════════════════════════════════════════════════════════════════════════
     
     // ===== المتغيرات والإعدادات =====
@@ -2364,7 +2354,6 @@
     let audioBlobUrl = null;
     let showLowQuality = false;
     
-    // متغيرات عجلات الألوان
     let seriesColorDragging = false;
     let titleColorDragging = false;
 
@@ -2392,7 +2381,6 @@
         seo_title: '',
         seo_description: '',
         tags: [],
-        // ✨ إضافة حقول البطاقة الإعلانية ✨
         promo_card_title: '',
         promo_card_description: '',
         status: 'completed',
@@ -2478,7 +2466,6 @@
         enterEditingMode();
     });
 
-    // ===== التحكم بحجم النص =====
     document.getElementById('textSizeUp').addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -2497,7 +2484,6 @@
         }
     });
 
-    // ===== زر النسخ =====
     document.getElementById('copyBtn').addEventListener('click', async (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -2654,7 +2640,6 @@
         });
     });
 
-    // ===== زر تخطي التصحيح =====
     document.getElementById('skipCorrectionBtn').addEventListener('click', () => {
         skipCorrection = true;
         hideLoading();
@@ -2713,7 +2698,6 @@
         }
     }
 
-    // ===== التصحيح التلقائي =====
     async function performAutoAICorrection() {
         if (!textEditor.value.trim()) {
             hideLoading();
@@ -2757,7 +2741,6 @@
         }
     }
 
-    // ===== تحديث إحصائيات النص =====
     function updateTextStats() {
         const text = textEditor.value || '';
         document.getElementById('charCount').textContent = text.length.toLocaleString('ar');
@@ -2772,7 +2755,6 @@
     // ⭐ القوالب - مع تصفية الجودة
     // ═════════════════════════════════════════════════════════════════════════
 
-    // ===== مفتاح تبديل الجودة =====
     document.getElementById('qualityToggle').addEventListener('change', (e) => {
         showLowQuality = e.target.checked;
         console.log('🔄 تبديل الجودة:', showLowQuality ? 'منخفضة' : 'عالية');
@@ -2810,7 +2792,6 @@
         }
     });
 
-    // ===== تصفية القوالب حسب الجودة =====
     function filterTemplatesByQuality(templates) {
         return templates.filter(t => {
             const isLow = t.isLowQuality === true || 
@@ -2820,10 +2801,6 @@
             return showLowQuality ? isLow : !isLow;
         });
     }
-
-    // ═════════════════════════════════════════════════════════════════════════
-    // ⭐ تهيئة القوالب - محدثة بالكامل
-    // ═════════════════════════════════════════════════════════════════════════
 
     function initializeTemplates() {
         const grid = document.getElementById('templatesGrid');
@@ -2921,6 +2898,7 @@
         validateCurrentStep();
     }
 
+    // ✨✨✨ تحديث دالة selectColor - مع تحميل البطاقة الإعلانية ✨✨✨
     function selectColor(color) {
         document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
         document.querySelector(`[data-color-id="${color.color_id}"]`).classList.add('selected');
@@ -2936,6 +2914,8 @@
         formData.title_color = recommendedTitleColor;
 
         recommendedSeriesColor = color.landscape_series_color;
+        
+        // ✨ تحميل السلاسل ✨
         document.getElementById('mainSeriesInput').value = color.series_text || '';
         document.getElementById('subSeriesInput').value = color.sub_series_text || '';
         document.getElementById('finalSeriesInput').value = color.final_series_text || '';
@@ -2943,6 +2923,18 @@
         formData.series = color.series_text || '';
         formData.subSeries = color.sub_series_text || '';
         formData.finalSeries = color.final_series_text || '';
+
+        // ✨✨✨ تحميل بيانات البطاقة الإعلانية من التيمبلت ✨✨✨
+        document.getElementById('promoTitleInput').value = color.promo_card_title || '';
+        document.getElementById('promoDescInput').value = color.promo_card_description || '';
+        
+        formData.promo_card_title = color.promo_card_title || '';
+        formData.promo_card_description = color.promo_card_description || '';
+
+        console.log('✅ تم تحميل بيانات البطاقة الإعلانية:', {
+            title: formData.promo_card_title,
+            description: formData.promo_card_description
+        });
 
         updateCharCounters();
 
@@ -2984,7 +2976,6 @@
         document.getElementById('recommendedTitleColorBtn').classList.add('selected');
     }
 
-    // ===== لون السلسلة =====
     function updateSeriesColorDisplay(color) {
         document.getElementById('previewSeriesText').style.color = color;
         document.getElementById('seriesHexInput').value = color;
@@ -3084,7 +3075,6 @@
         e.target.value = value;
     });
 
-    // ===== لون العنوان =====
     function updateTitleColorDisplay(color) {
         document.getElementById('previewTitleText').style.color = color;
         document.getElementById('titleHexInput').value = color;
@@ -3182,7 +3172,6 @@
         e.target.value = value;
     });
 
-    // ===== دوال تحويل الألوان =====
     function hexToRgb(hex) {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : null;
@@ -3216,7 +3205,7 @@
         return `#${f(0)}${f(8)}${f(4)}`;
     }
 
-    // ✨✨✨ حقول البيانات + البطاقة الإعلانية ✨✨✨
+    // ✨✨✨ حقول البيانات + البطاقة الإعلانية - محدثة ✨✨✨
     function updateCharCounters() {
         ['title', 'mainSeries', 'subSeries', 'finalSeries'].forEach(field => {
             const input = document.getElementById(field + 'Input');
@@ -3253,31 +3242,70 @@
         updateCharCounters();
     });
 
+    // ✨✨✨ زر حفظ القالب - محدث بالكامل ✨✨✨
     document.getElementById('saveTemplateBtn').addEventListener('click', async () => {
-        if (!selectedColor) { showToast('⚠️ لم تختر قالباً بعد', true); return; }
-        if (!formData.series || !formData.subSeries || !formData.finalSeries) { showToast('⚠️ يجب ملء جميع حقول السلاسل', true); return; }
+        if (!selectedColor) { 
+            showToast('⚠️ لم تختر قالباً بعد', true); 
+            return; 
+        }
+        if (!formData.series || !formData.subSeries || !formData.finalSeries) { 
+            showToast('⚠️ يجب ملء جميع حقول السلاسل', true); 
+            return; 
+        }
         if (!confirm('هل تريد حفظ هذه التعديلات كإعدادات افتراضية للقالب؟')) return;
 
         showLoading('جاري حفظ التعديلات...', '', '');
 
         try {
+            // ✨ البيانات المرسلة تتضمن البطاقة الإعلانية ✨
+            const templateUpdateData = {
+                type: 'template_update',
+                template_id: formData.template_id,
+                color_id: formData.color_id,
+                series_text: formData.series,
+                sub_series_text: formData.subSeries,
+                final_series_text: formData.finalSeries,
+                promo_card_title: formData.promo_card_title || '',
+                promo_card_description: formData.promo_card_description || '',
+                series_color: formData.series_color,
+                title_color: formData.title_color,
+                updated_at: new Date().toISOString()
+            };
+
+            console.log('💾 حفظ التيمبلت:', templateUpdateData);
+
             const response = await fetch(N8N_TEMPLATE_UPDATE_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ type: 'template_update', template_data: { ...formData } })
+                body: JSON.stringify(templateUpdateData)
             });
+            
             if (!response.ok) throw new Error('فشل حفظ التعديلات');
+            
             hideLoading();
-            showToast('✅ تم حفظ التعديلات!');
+            showToast('✅ تم حفظ التعديلات بنجاح!');
+            
+            // ✨ تحديث البيانات المحملة محلياً ✨
+            if (selectedColor) {
+                selectedColor.series_text = formData.series;
+                selectedColor.sub_series_text = formData.subSeries;
+                selectedColor.final_series_text = formData.finalSeries;
+                selectedColor.promo_card_title = formData.promo_card_title;
+                selectedColor.promo_card_description = formData.promo_card_description;
+                
+                console.log('✅ تم تحديث البيانات المحلية مع البطاقة الإعلانية');
+            }
+            
         } catch (error) {
             hideLoading();
             showToast('❌ ' + error.message, true);
+            console.error('❌ خطأ الحفظ:', error);
         }
     });
 
-    <!-- ===== هنا يوضع الجزء الثالث (باقي JavaScript) ===== -->
+    <!-- ✨✨✨ هنا يوضع الجزء الثالث (SEO والمراجعة والإرسال) ✨✨✨ -->
 
-        // ═════════════════════════════════════════════════════════════════════════
+            // ═════════════════════════════════════════════════════════════════════════
     // ⭐ SEO - الجزء الثالث والأخير
     // ═════════════════════════════════════════════════════════════════════════
 
@@ -3456,7 +3484,7 @@
     document.getElementById('btnBack').addEventListener('click', prevStep);
 
     // ═════════════════════════════════════════════════════════════════════════
-    // ⭐ المراجعة النهائية (مع البطاقة الإعلانية)
+    // ⭐ المراجعة النهائية (مع البطاقة الإعلانية) ✨✨✨
     // ═════════════════════════════════════════════════════════════════════════
 
     function updateReview() {
@@ -3479,13 +3507,14 @@
         document.getElementById('reviewFinalSeries').textContent = formData.finalSeries || '-';
         document.getElementById('reviewTitle').textContent = formData.title || '-';
 
-        // ✨ عرض البطاقة الإعلانية في المراجعة ✨
+        // ✨✨✨ عرض البطاقة الإعلانية في المراجعة ✨✨✨
         const promoTitleItem = document.getElementById('reviewPromoTitleItem');
         const promoDescItem = document.getElementById('reviewPromoDescItem');
         
         if (formData.promo_card_title && formData.promo_card_title.trim()) {
             promoTitleItem.style.display = 'flex';
             document.getElementById('reviewPromoTitle').textContent = formData.promo_card_title;
+            console.log('✅ عرض عنوان البطاقة في المراجعة:', formData.promo_card_title);
         } else {
             promoTitleItem.style.display = 'none';
         }
@@ -3493,6 +3522,7 @@
         if (formData.promo_card_description && formData.promo_card_description.trim()) {
             promoDescItem.style.display = 'flex';
             document.getElementById('reviewPromoDesc').textContent = formData.promo_card_description;
+            console.log('✅ عرض وصف البطاقة في المراجعة:', formData.promo_card_description);
         } else {
             promoDescItem.style.display = 'none';
         }
@@ -3533,14 +3563,14 @@
     });
 
     // ═════════════════════════════════════════════════════════════════════════
-    // ⭐ الإرسال النهائي (مع البطاقة الإعلانية)
+    // ⭐ الإرسال النهائي (مع البطاقة الإعلانية) ✨✨✨
     // ═════════════════════════════════════════════════════════════════════════
 
     async function submitForm() {
         showLoading('جاري الإرسال...', 'الرجاء الانتظار', '');
         
         try {
-            // ✨ التأكد من إرسال البطاقة الإعلانية مع البيانات ✨
+            // ✨✨✨ التأكد من إرسال البطاقة الإعلانية مع البيانات ✨✨✨
             const finalData = {
                 ...formData,
                 promo_card_title: formData.promo_card_title || '',
@@ -3548,7 +3578,12 @@
                 timestamp: new Date().toISOString()
             };
 
-            console.log('📤 إرسال البيانات:', finalData);
+            console.log('📤 إرسال البيانات النهائية:', finalData);
+            console.log('🎁 البطاقة الإعلانية:', {
+                title: finalData.promo_card_title,
+                description: finalData.promo_card_description,
+                has_data: !!(finalData.promo_card_title || finalData.promo_card_description)
+            });
 
             const response = await fetch(N8N_WEBHOOK_URL, {
                 method: 'POST',
@@ -3565,7 +3600,9 @@
                     status: 'completed',
                     has_promo_card: !!(formData.promo_card_title || formData.promo_card_description)
                 })); 
-            } catch (e) {}
+            } catch (e) {
+                console.log('⚠️ تعذر إرسال بيانات Telegram:', e);
+            }
 
             hideLoading();
             if (audioBlobUrl) URL.revokeObjectURL(audioBlobUrl);
@@ -3590,6 +3627,7 @@
     console.log('🚀 App v3.1 Starting...');
     console.log('✅ تم إضافة ميزة تصفية القوالب حسب الجودة');
     console.log('✨ تم إضافة البطاقة الإعلانية الاختيارية');
+    console.log('💾 البطاقة الإعلانية تُحفظ مع كل تيمبلت');
     updateProgress();
     loadInitialData();
 </script>
