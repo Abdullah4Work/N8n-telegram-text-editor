@@ -3395,13 +3395,19 @@
         updateTimestampStats();
     }
 
-    // أحداث السحب والإفلات
+        // ═══════════════════════════════════════════════════════════════════════════
+    // 🔄 أحداث السحب والإفلات مع السكرول التلقائي
+    // ═══════════════════════════════════════════════════════════════════════════
+
     function handleDragStart(e) {
         draggedElement = this;
         draggedIndex = parseInt(this.dataset.index);
         this.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
         e.dataTransfer.setData('text/plain', draggedIndex);
+        
+        // بدء مراقبة موقع المؤشر للسكرول التلقائي
+        document.addEventListener('dragover', handleAutoScroll, { passive: false });
     }
 
     function handleDragOver(e) {
@@ -3424,6 +3430,9 @@
         e.stopPropagation();
         e.preventDefault();
         
+        // إيقاف السكرول التلقائي
+        stopAutoScroll();
+        
         if (this !== draggedElement && this.classList.contains('timestamp-word-item')) {
             const dropIndex = parseInt(this.dataset.index);
             
@@ -3435,7 +3444,6 @@
             
             timestampsModified = true;
             
-            // إعادة رسم العناصر
             displayedWordsCount = 0;
             renderTimestampWords();
             setupScrollListener();
@@ -3446,11 +3454,67 @@
     }
 
     function handleDragEnd(e) {
+        // إيقاف السكرول التلقائي
+        stopAutoScroll();
+        document.removeEventListener('dragover', handleAutoScroll);
+        
         document.querySelectorAll('.timestamp-word-item').forEach(item => {
             item.classList.remove('dragging', 'drag-over');
         });
         draggedElement = null;
         draggedIndex = -1;
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🔄 دوال السكرول التلقائي أثناء السحب
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function handleAutoScroll(e) {
+        const container = document.getElementById('timestampWordsList');
+        if (!container || !draggedElement) return;
+        
+        const containerRect = container.getBoundingClientRect();
+        const mouseY = e.clientY;
+        
+        // حساب المسافة من الحواف
+        const distanceFromTop = mouseY - containerRect.top;
+        const distanceFromBottom = containerRect.bottom - mouseY;
+        
+        // إيقاف أي سكرول سابق
+        stopAutoScroll();
+        
+        // سكرول للأعلى إذا كان قريب من الحافة العلوية
+        if (distanceFromTop < AUTO_SCROLL_ZONE && distanceFromTop > 0) {
+            const speed = Math.max(1, AUTO_SCROLL_SPEED * (1 - distanceFromTop / AUTO_SCROLL_ZONE));
+            autoScrollInterval = setInterval(() => {
+                container.scrollTop -= speed;
+                // تحميل المزيد إذا وصلنا للنهاية
+                if (container.scrollTop <= 0) {
+                    stopAutoScroll();
+                }
+            }, 16);
+        }
+        // سكرول للأسفل إذا كان قريب من الحافة السفلية
+        else if (distanceFromBottom < AUTO_SCROLL_ZONE && distanceFromBottom > 0) {
+            const speed = Math.max(1, AUTO_SCROLL_SPEED * (1 - distanceFromBottom / AUTO_SCROLL_ZONE));
+            autoScrollInterval = setInterval(() => {
+                container.scrollTop += speed;
+                // تحميل المزيد من الكلمات إذا وصلنا للنهاية
+                const scrollTop = container.scrollTop;
+                const scrollHeight = container.scrollHeight;
+                const clientHeight = container.clientHeight;
+                if (scrollTop + clientHeight >= scrollHeight - 50) {
+                    loadMoreWords();
+                }
+            }, 16);
+        }
+    }
+
+    function stopAutoScroll() {
+        if (autoScrollInterval) {
+            clearInterval(autoScrollInterval);
+            autoScrollInterval = null;
+        }
     }
 
     function showAddWordModal(position) {
@@ -3628,6 +3692,15 @@
             }
         }
     });
+
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🔄 متغيرات السكرول التلقائي أثناء السحب
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    let autoScrollInterval = null;
+    const AUTO_SCROLL_SPEED = 8; // سرعة السكرول (بكسل)
+    const AUTO_SCROLL_ZONE = 60; // المنطقة من الحافة التي تفعل السكرول (بكسل)
 
     // هنا يوضع الجزء الخامس
 
