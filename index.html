@@ -494,33 +494,52 @@
             color: var(--primary);
             font-size: 16px;
         }
+        
 
-        /* ═══════════════════════════════════════════════════════════════════
-           ⏱️ زر تبديل محرر التواقيت
-           ═══════════════════════════════════════════════════════════════════ */
-        .timestamp-mode-toggle {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 14px;
-            background: linear-gradient(135deg, var(--warning), #E67E22);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s ease;
-            z-index: 15;
-        }
-        .timestamp-mode-toggle:active { transform: scale(0.95); }
-        .timestamp-mode-toggle.active {
-            background: linear-gradient(135deg, var(--success), var(--success-light));
-        }
+/* ═══════════════════════════════════════════════════════════════════
+   ⏱️ زر تبديل محرر التواقيت - محدث
+═══════════════════════════════════════════════════════════════════ */
+.editor-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    gap: 12px;
+}
+
+.editor-label {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    direction: rtl;
+    margin-bottom: 0; /* إزالة margin-bottom لأنه في صف */
+    padding-left: 0; /* إزالة padding */
+}
+
+.timestamp-mode-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, var(--warning), #E67E22);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+.timestamp-mode-toggle:active { transform: scale(0.95); }
+.timestamp-mode-toggle.active {
+    background: linear-gradient(135deg, var(--success), var(--success-light));
+}
 
         /* ═══════════════════════════════════════════════════════════════════
            ⏱️ محرر التواقيت
@@ -2131,24 +2150,32 @@
                 </div>
             </div>
 
-            <!-- محرر النص العادي -->
-            <div class="editor-container" id="editorContainer">
-                <button class="timestamp-mode-toggle" id="timestampModeToggle">
-                    <span>⏱️</span>
-                    <span>تحرير التواقيت</span>
-                </button>
-                <div class="text-controls">
-                    <button class="control-btn" id="textSizeUp" title="تكبير النص">+</button>
-                    <button class="control-btn" id="textSizeDown" title="تصغير النص">−</button>
-                    <button class="control-btn copy-btn" id="copyBtn" title="نسخ النص">📄</button>
-                </div>
-                <div class="editor-label"><span>📝</span><span>النص المصحح</span></div>
-                <textarea class="editor-textarea" id="textEditor" placeholder="جاري تحميل النص..."></textarea>
-                <div class="editor-stats">
-                    <div class="stat-item"><span>📊</span><span class="stat-value" id="charCount">0</span><span>حرف</span></div>
-                    <div class="stat-item"><span>📝</span><span class="stat-value" id="wordCount">0</span><span>كلمة</span></div>
-                </div>
-            </div>
+<!-- محرر النص العادي -->
+<div class="editor-container" id="editorContainer">
+    <div class="text-controls">
+        <button class="control-btn" id="textSizeUp" title="تكبير النص">+</button>
+        <button class="control-btn" id="textSizeDown" title="تصغير النص">−</button>
+        <button class="control-btn copy-btn" id="copyBtn" title="نسخ النص">📄</button>
+    </div>
+    
+    <!-- ✨ صف العنوان وزر التواقيت معاً ✨ -->
+    <div class="editor-header-row">
+        <div class="editor-label">
+            <span>📝</span>
+            <span>النص المصحح</span>
+        </div>
+        <button class="timestamp-mode-toggle" id="timestampModeToggle">
+            <span>⏱️</span>
+            <span>تحرير التواقيت</span>
+        </button>
+    </div>
+    
+    <textarea class="editor-textarea" id="textEditor" placeholder="جاري تحميل النص..."></textarea>
+    <div class="editor-stats">
+        <div class="stat-item"><span>📊</span><span class="stat-value" id="charCount">0</span><span>حرف</span></div>
+        <div class="stat-item"><span>📝</span><span class="stat-value" id="wordCount">0</span><span>كلمة</span></div>
+    </div>
+</div>
 
             <!-- محرر التواقيت -->
             <div class="timestamp-editor-container" id="timestampEditorContainer">
