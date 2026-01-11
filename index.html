@@ -2126,337 +2126,26 @@
     let titleColorDragging = false;
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // ⏱️ متغيرات محرر التواقيت المحسنة
+    // ⏱️ محرر التواقيت المحسّن والسريع - بدون تأخير
     // ═══════════════════════════════════════════════════════════════════════════
-    
+
     let timestampModeActive = false;
     let wordsWithTimestamps = [];
     let originalTimestamps = [];
     let timestampsModified = false;
-    let averageSpeechRate = 0.3; // متوسط مدة الكلمة الواحدة بالثواني
-    let insertPosition = -1; // موقع إضافة الكلمة الجديدة
+    let averageSpeechRate = 0.3;
+    let insertPosition = -1;
     let draggedElement = null;
     let draggedIndex = -1;
+    let debounceTimer = null;
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    // 📝 بيانات النموذج
-    // ═══════════════════════════════════════════════════════════════════════════
-    
-    const formData = {
-        ID: null,
-        binId: '',
-        audioUrl: '',
-        transcript_txt: '',
-        corrected_full_text: '',
-        words_timestamps: [],
-        landscape_image_url: null,
-        portrait_image_url: null,
-        title: '',
-        series: '',
-        subSeries: '',
-        finalSeries: '',
-        template_id: null,
-        template_name: null,
-        color_id: null,
-        color_name: null,
-        series_color: '#b9d780',
-        subseries_color: '#ebbd27',
-        finalseries_color: '#fce74e',
-        title_color: '#ebbd27',
-        caption_color: '#ffffff',
-        seo_title: '',
-        seo_description: '',
-        tags: [],
-        promo_card_title: '',
-        promo_card_description: '',
-        status: 'completed',
-        updated_at: new Date().toISOString()
-    };
-
-    // ═══════════════════════════════════════════════════════════════════════════
-    // 🔧 دوال المساعدة العامة
-    // ═══════════════════════════════════════════════════════════════════════════
-
-    function showLoading(text, subtext = '', step = '') {
-        document.getElementById('loadingText').textContent = text;
-        document.getElementById('loadingSubtext').textContent = subtext;
-        document.getElementById('loadingStep').textContent = step;
-        document.getElementById('loadingOverlay').classList.add('visible');
+    // دالة debounce لتقليل عدد التحديثات
+    function debounce(func, wait) {
+        return function executedFunction(...args) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => func(...args), wait);
+        };
     }
-
-    function hideLoading() {
-        document.getElementById('loadingOverlay').classList.remove('visible');
-        document.getElementById('skipCorrectionBtn').style.display = 'none';
-    }
-
-    function scrollToTop() {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-        setTimeout(() => {
-            document.body.scrollTop = 0;
-            document.documentElement.scrollTop = 0;
-        }, 100);
-    }
-
-    function convertDriveUrl(url) {
-        if (!url) return '';
-        try {
-            const fileIdMatch = url.match(/[?&]id=([^&]+)/);
-            if (fileIdMatch && fileIdMatch[1]) {
-                return `https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w1000`;
-            }
-            return url;
-        } catch (error) {
-            return url;
-        }
-    }
-
-    function formatTime(seconds) {
-        if (!seconds || isNaN(seconds)) return '0:00';
-        const mins = Math.floor(seconds / 60);
-        const secs = Math.floor(seconds % 60);
-        return `${mins}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    function formatTimeDetailed(seconds) {
-        if (!seconds || isNaN(seconds)) return '0.000';
-        return parseFloat(seconds).toFixed(3);
-    }
-
-    function showToast(message, isError = false) {
-        const toast = document.createElement('div');
-        toast.textContent = message;
-        toast.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: ${isError ? '#E74C3C' : '#27AE60'};
-            color: white;
-            padding: 12px 24px;
-            border-radius: 8px;
-            z-index: 99999;
-            font-weight: 700;
-            text-align: center;
-            max-width: 80%;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-        `;
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 2000);
-    }
-
-    function escapeHtml(text) {
-        const div = document.createElement('div');
-        div.textContent = text;
-        return div.innerHTML;
-    }
-
-    // هنا يوضع الجزء الرابع
-    
-    // ═══════════════════════════════════════════════════════════════════════════
-    // 🎵 مشغل الصوت
-    // ═══════════════════════════════════════════════════════════════════════════
-
-    const audioElement = document.getElementById('audioElement');
-    let audioLoaded = false;
-
-    async function loadAudioWithProxy(url) {
-        console.log('🎵 تحميل الصوت:', url);
-        
-        try {
-            const proxyUrl = `${WORKER_API_URL}/proxy-audio?url=${encodeURIComponent(url)}`;
-            const response = await fetch(proxyUrl);
-            
-            if (response.ok) {
-                const blob = await response.blob();
-                if (audioBlobUrl) URL.revokeObjectURL(audioBlobUrl);
-                audioBlobUrl = URL.createObjectURL(blob);
-                audioElement.src = audioBlobUrl;
-                audioElement.load();
-                console.log('✅ تم تحميل الصوت');
-                audioLoaded = true;
-                return true;
-            } else {
-                throw new Error('Proxy failed');
-            }
-        } catch (proxyError) {
-            console.log('⚠️ فشل Proxy، محاولة مباشرة...');
-            try {
-                audioElement.src = url;
-                audioElement.load();
-                audioLoaded = true;
-                return true;
-            } catch (directError) {
-                console.error('❌ فشل التحميل:', directError);
-                return false;
-            }
-        }
-    }
-
-    async function toggleAudioPlayback() {
-        if (!audioLoaded) {
-            showToast('⏳ الصوت غير جاهز', true);
-            return;
-        }
-        try {
-            if (audioElement.paused) {
-                await audioElement.play();
-                document.getElementById('playPauseBtn').textContent = '⏸️';
-                document.getElementById('playPauseBtnFixed').textContent = '⏸️';
-            } else {
-                audioElement.pause();
-                document.getElementById('playPauseBtn').textContent = '▶️';
-                document.getElementById('playPauseBtnFixed').textContent = '▶️';
-            }
-        } catch (error) {
-            console.error('❌ خطأ التشغيل:', error);
-            showToast('⚠️ خطأ في تشغيل الصوت', true);
-        }
-    }
-
-    function playWordAudio(startTime, endTime) {
-        if (!audioLoaded) {
-            showToast('⏳ الصوت غير جاهز', true);
-            return;
-        }
-        
-        audioElement.currentTime = startTime;
-        audioElement.play();
-        
-        const checkEnd = setInterval(() => {
-            if (audioElement.currentTime >= endTime) {
-                audioElement.pause();
-                clearInterval(checkEnd);
-            }
-        }, 50);
-        
-        setTimeout(() => {
-            clearInterval(checkEnd);
-            audioElement.pause();
-        }, (endTime - startTime + 0.5) * 1000);
-    }
-
-    // أحداث الصوت
-    audioElement.addEventListener('loadedmetadata', () => {
-        document.getElementById('duration').textContent = formatTime(audioElement.duration);
-        document.getElementById('durationFixed').textContent = formatTime(audioElement.duration);
-        audioLoaded = true;
-    });
-
-    audioElement.addEventListener('canplaythrough', () => { audioLoaded = true; });
-    audioElement.addEventListener('error', () => { audioLoaded = false; });
-
-    audioElement.addEventListener('timeupdate', () => {
-        const progress = audioElement.duration ? (audioElement.currentTime / audioElement.duration) * 100 : 0;
-        document.getElementById('progressFill').style.width = `${progress}%`;
-        document.getElementById('progressFillFixed').style.width = `${progress}%`;
-        document.getElementById('currentTime').textContent = formatTime(audioElement.currentTime);
-        document.getElementById('currentTimeFixed').textContent = formatTime(audioElement.currentTime);
-    });
-
-    audioElement.addEventListener('ended', () => {
-        document.getElementById('playPauseBtn').textContent = '▶️';
-        document.getElementById('playPauseBtnFixed').textContent = '▶️';
-    });
-
-    document.getElementById('playPauseBtn').addEventListener('click', toggleAudioPlayback);
-    document.getElementById('playPauseBtnFixed').addEventListener('click', toggleAudioPlayback);
-
-    document.getElementById('progressBar').addEventListener('click', (e) => {
-        if (!audioLoaded || !audioElement.duration) return;
-        const rect = e.currentTarget.getBoundingClientRect();
-        const percentage = 1 - ((e.clientX - rect.left) / rect.width);
-        audioElement.currentTime = percentage * audioElement.duration;
-    });
-
-    document.getElementById('progressBarFixed').addEventListener('click', (e) => {
-        if (!audioLoaded || !audioElement.duration) return;
-        const rect = e.currentTarget.getBoundingClientRect();
-        const percentage = 1 - ((e.clientX - rect.left) / rect.width);
-        audioElement.currentTime = percentage * audioElement.duration;
-    });
-
-    document.querySelectorAll('.speed-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const speed = parseFloat(btn.dataset.speed);
-            audioElement.playbackRate = speed;
-            document.querySelectorAll('.speed-btn, .speed-btn-fixed').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.querySelector(`.speed-btn-fixed[data-speed="${speed}"]`)?.classList.add('active');
-        });
-    });
-
-    document.querySelectorAll('.speed-btn-fixed').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const speed = parseFloat(btn.dataset.speed);
-            audioElement.playbackRate = speed;
-            document.querySelectorAll('.speed-btn, .speed-btn-fixed').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            document.querySelector(`.speed-btn[data-speed="${speed}"]`)?.classList.add('active');
-        });
-    });
-
-    // ═══════════════════════════════════════════════════════════════════════════
-    // ✏️ محرر النص
-    // ═══════════════════════════════════════════════════════════════════════════
-
-    const textEditor = document.getElementById('textEditor');
-
-    function enterEditingMode() {
-        document.getElementById('audioPlayerSection').classList.add('hidden');
-        document.getElementById('audioPlayerFixed').classList.add('visible');
-        document.getElementById('editorContainer').classList.add('editing-mode');
-    }
-
-    function exitEditingMode() {
-        document.getElementById('audioPlayerSection').classList.remove('hidden');
-        document.getElementById('audioPlayerFixed').classList.remove('visible');
-        document.getElementById('editorContainer').classList.remove('editing-mode');
-    }
-
-    textEditor.addEventListener('focus', enterEditingMode);
-
-    document.getElementById('textSizeUp').addEventListener('click', (e) => {
-        e.preventDefault();
-        if (currentTextSize < MAX_TEXT_SIZE) {
-            currentTextSize += 2;
-            textEditor.style.fontSize = currentTextSize + 'px';
-        }
-    });
-
-    document.getElementById('textSizeDown').addEventListener('click', (e) => {
-        e.preventDefault();
-        if (currentTextSize > MIN_TEXT_SIZE) {
-            currentTextSize -= 2;
-            textEditor.style.fontSize = currentTextSize + 'px';
-        }
-    });
-
-    document.getElementById('copyBtn').addEventListener('click', async (e) => {
-        e.preventDefault();
-        try {
-            await navigator.clipboard.writeText(textEditor.value);
-            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            showToast('✅ تم النسخ');
-        } catch (err) {
-            textEditor.select();
-            document.execCommand('copy');
-            showToast('✅ تم النسخ');
-        }
-    });
-
-    function updateTextStats() {
-        const text = textEditor.value || '';
-        document.getElementById('charCount').textContent = text.length.toLocaleString('ar');
-        document.getElementById('wordCount').textContent = (text.trim() ? text.trim().split(/\s+/).length : 0).toLocaleString('ar');
-        formData.corrected_full_text = text;
-        validateCurrentStep();
-    }
-
-    textEditor.addEventListener('input', updateTextStats);
-
-    // ═══════════════════════════════════════════════════════════════════════════
-    // ⏱️ محرر التواقيت المحسن والذكي
-    // ═══════════════════════════════════════════════════════════════════════════
 
     function calculateAverageSpeechRate() {
         if (wordsWithTimestamps.length === 0) {
@@ -2467,31 +2156,30 @@
         let totalDuration = 0;
         let validWords = 0;
         
-        wordsWithTimestamps.forEach(word => {
+        for (let i = 0; i < Math.min(wordsWithTimestamps.length, 50); i++) {
+            const word = wordsWithTimestamps[i];
             const duration = word.end - word.start;
-            if (duration > 0 && duration < 2) { // استبعاد القيم الشاذة
+            if (duration > 0.05 && duration < 2) {
                 totalDuration += duration;
                 validWords++;
             }
-        });
+        }
         
         averageSpeechRate = validWords > 0 ? totalDuration / validWords : 0.3;
     }
 
     function calculateWordDuration(word) {
-        // حساب مدة الكلمة بناء على عدد الأحرف
-        const baseTime = 0.2; // الحد الأدنى للكلمة
-        const charTime = 0.05; // وقت إضافي لكل حرف
+        const baseTime = 0.2;
+        const charTime = 0.04;
         const wordLength = word.length;
         
         let duration = baseTime + (wordLength * charTime);
         
-        // تعديل بناءً على متوسط سرعة القارئ
         if (averageSpeechRate > 0) {
             duration = duration * (averageSpeechRate / 0.3);
         }
         
-        return Math.min(Math.max(duration, 0.15), 2); // بين 0.15 و 2 ثانية
+        return Math.min(Math.max(duration, 0.15), 2);
     }
 
     function toggleTimestampMode() {
@@ -2556,6 +2244,7 @@
         }
     }
 
+    // دالة محسنة لرسم العناصر بدون إعادة بناء كل شيء
     function renderTimestampWords() {
         const container = document.getElementById('timestampWordsList');
         container.innerHTML = '';
@@ -2570,19 +2259,18 @@
             return;
         }
         
+        const fragment = document.createDocumentFragment();
+        
         // زر الإضافة في البداية
-        const firstInsertBtn = createInsertButton(0);
-        container.appendChild(firstInsertBtn);
+        fragment.appendChild(createInsertButton(0));
         
-        wordsWithTimestamps.forEach((word, index) => {
-            const item = createWordElement(word, index);
-            container.appendChild(item);
-            
-            // زر الإضافة بعد كل كلمة
-            const insertBtn = createInsertButton(index + 1);
-            container.appendChild(insertBtn);
-        });
+        // استخدام حلقة عادية أسرع من forEach
+        for (let i = 0; i < wordsWithTimestamps.length; i++) {
+            fragment.appendChild(createWordElement(wordsWithTimestamps[i], i));
+            fragment.appendChild(createInsertButton(i + 1));
+        }
         
+        container.appendChild(fragment);
         attachTimestampEvents();
         updateTimestampStats();
     }
@@ -2629,13 +2317,13 @@
             </div>
         `;
         
-        // إضافة أحداث السحب والإفلات
-        item.addEventListener('dragstart', handleDragStart);
+        // أحداث السحب والإفلات بطريقة محسنة
+        item.addEventListener('dragstart', handleDragStart, { passive: true });
         item.addEventListener('dragover', handleDragOver);
         item.addEventListener('drop', handleDrop);
-        item.addEventListener('dragend', handleDragEnd);
-        item.addEventListener('dragenter', handleDragEnter);
-        item.addEventListener('dragleave', handleDragLeave);
+        item.addEventListener('dragend', handleDragEnd, { passive: true });
+        item.addEventListener('dragenter', handleDragEnter, { passive: true });
+        item.addEventListener('dragleave', handleDragLeave, { passive: true });
         
         return item;
     }
@@ -2653,54 +2341,51 @@
         const modal = document.getElementById('addWordModal');
         const input = document.getElementById('newWordInput');
         
-        // حساب التوقيت المقترح
         let suggestedStart = 0;
         let suggestedEnd = 0.5;
         
         if (position === 0) {
-            // الإضافة في البداية
             if (wordsWithTimestamps.length > 0) {
-                suggestedEnd = wordsWithTimestamps[0].start;
+                suggestedEnd = Math.max(0, wordsWithTimestamps[0].start - 0.05);
                 suggestedStart = Math.max(0, suggestedEnd - 0.5);
             }
         } else if (position >= wordsWithTimestamps.length) {
-            // الإضافة في النهاية
             const lastWord = wordsWithTimestamps[wordsWithTimestamps.length - 1];
             suggestedStart = lastWord.end + 0.1;
             suggestedEnd = suggestedStart + 0.5;
         } else {
-            // الإضافة بين كلمتين
             const prevWord = wordsWithTimestamps[position - 1];
             const nextWord = wordsWithTimestamps[position];
             const gap = nextWord.start - prevWord.end;
             
             if (gap >= 0.3) {
-                // هناك فجوة كافية
-                suggestedStart = prevWord.end + (gap * 0.2);
-                suggestedEnd = nextWord.start - (gap * 0.2);
+                suggestedStart = prevWord.end + (gap * 0.3);
+                suggestedEnd = prevWord.end + (gap * 0.7);
             } else {
-                // فجوة صغيرة - نحتاج لتوسيع المساحة
                 suggestedStart = prevWord.end + 0.05;
-                suggestedEnd = suggestedStart + 0.3;
+                suggestedEnd = suggestedStart + 0.25;
             }
         }
         
-        // عرض التوقيت المقترح
         document.getElementById('suggestedStart').textContent = suggestedStart.toFixed(3);
         document.getElementById('suggestedEnd').textContent = suggestedEnd.toFixed(3);
         document.getElementById('suggestedDuration').textContent = (suggestedEnd - suggestedStart).toFixed(3);
         
         input.value = '';
-        input.focus();
         modal.classList.add('visible');
         
-        // تحديث التوقيت عند كتابة الكلمة
-        input.oninput = () => {
-            const duration = calculateWordDuration(input.value);
-            const newEnd = suggestedStart + duration;
-            document.getElementById('suggestedEnd').textContent = newEnd.toFixed(3);
-            document.getElementById('suggestedDuration').textContent = duration.toFixed(3);
-        };
+        // تأخير التركيز لضمان ظهور المودال أولاً
+        setTimeout(() => input.focus(), 100);
+        
+        // تحديث مبسط
+        input.oninput = debounce(() => {
+            if (input.value.trim()) {
+                const duration = calculateWordDuration(input.value);
+                const newEnd = suggestedStart + duration;
+                document.getElementById('suggestedEnd').textContent = newEnd.toFixed(3);
+                document.getElementById('suggestedDuration').textContent = duration.toFixed(3);
+            }
+        }, 150);
     }
 
     function confirmAddWord() {
@@ -2721,32 +2406,22 @@
             end: suggestedEnd
         };
         
-        // إضافة الكلمة في الموقع المحدد
         wordsWithTimestamps.splice(insertPosition, 0, newWord);
         
-        // إذا كانت هناك تداخلات، نحرك الكلمات التالية
+        // تعديل بسيط فقط للكلمة التالية إذا كان هناك تداخل
         if (insertPosition < wordsWithTimestamps.length - 1) {
-            adjustFollowingTimestamps(insertPosition);
+            const nextWord = wordsWithTimestamps[insertPosition + 1];
+            if (nextWord.start < suggestedEnd + 0.05) {
+                const shift = (suggestedEnd + 0.05) - nextWord.start;
+                nextWord.start += shift;
+                nextWord.end += shift;
+            }
         }
         
         timestampsModified = true;
         renderTimestampWords();
-        showToast('✅ تمت إضافة الكلمة بنجاح');
+        showToast('✅ تمت إضافة الكلمة');
         closeAddWordModal();
-    }
-
-    function adjustFollowingTimestamps(fromIndex) {
-        // تعديل التواقيت التالية لتجنب التداخل
-        for (let i = fromIndex + 1; i < wordsWithTimestamps.length; i++) {
-            const prevWord = wordsWithTimestamps[i - 1];
-            const currentWord = wordsWithTimestamps[i];
-            
-            if (currentWord.start < prevWord.end + 0.05) {
-                const shift = (prevWord.end + 0.05) - currentWord.start;
-                currentWord.start += shift;
-                currentWord.end += shift;
-            }
-        }
     }
 
     function closeAddWordModal() {
@@ -2755,18 +2430,17 @@
         document.getElementById('newWordInput').value = '';
     }
 
-    // أحداث السحب والإفلات
+    // أحداث السحب والإفلات المحسنة
     function handleDragStart(e) {
         draggedElement = this;
         draggedIndex = parseInt(this.dataset.index);
         this.classList.add('dragging');
         e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/html', this.innerHTML);
     }
 
     function handleDragOver(e) {
-        if (e.preventDefault) {
-            e.preventDefault();
-        }
+        e.preventDefault();
         e.dataTransfer.dropEffect = 'move';
         return false;
     }
@@ -2782,33 +2456,34 @@
     }
 
     function handleDrop(e) {
-        if (e.stopPropagation) {
-            e.stopPropagation();
-        }
+        e.stopPropagation();
+        e.preventDefault();
         
         if (this !== draggedElement && this.classList.contains('timestamp-word-item')) {
             const dropIndex = parseInt(this.dataset.index);
             
-            // نقل العنصر
+            // نقل العنصر بدون إعادة حساب التواقيت
             const movedWord = wordsWithTimestamps[draggedIndex];
             wordsWithTimestamps.splice(draggedIndex, 1);
             
-            if (dropIndex > draggedIndex) {
-                wordsWithTimestamps.splice(dropIndex - 1, 0, movedWord);
-            } else {
-                wordsWithTimestamps.splice(dropIndex, 0, movedWord);
-            }
+            const newIndex = dropIndex > draggedIndex ? dropIndex - 1 : dropIndex;
+            wordsWithTimestamps.splice(newIndex, 0, movedWord);
             
             timestampsModified = true;
-            renderTimestampWords();
-            showToast('✅ تم نقل الكلمة');
+            
+            // إعادة رسم سريعة
+            requestAnimationFrame(() => {
+                renderTimestampWords();
+                showToast('✅ تم نقل الكلمة');
+            });
         }
         
         return false;
     }
 
     function handleDragEnd(e) {
-        document.querySelectorAll('.timestamp-word-item').forEach(item => {
+        const items = document.querySelectorAll('.timestamp-word-item');
+        items.forEach(item => {
             item.classList.remove('dragging', 'drag-over');
         });
         draggedElement = null;
@@ -2816,27 +2491,24 @@
     }
 
     function attachTimestampEvents() {
-        // أحداث الإدخال
-        document.querySelectorAll('.word-text-input, .time-input').forEach(input => {
-            input.addEventListener('change', handleTimestampInputChange);
-            input.addEventListener('blur', handleTimestampInputChange);
+        // استخدام delegation للأحداث - أسرع بكثير
+        const container = document.getElementById('timestampWordsList');
+        
+        container.addEventListener('change', (e) => {
+            if (e.target.matches('.word-text-input, .time-input')) {
+                handleTimestampInputChange(e);
+            }
         });
         
-        // أزرار التشغيل
-        document.querySelectorAll('.word-action-btn.play-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const index = parseInt(e.currentTarget.dataset.index);
+        container.addEventListener('click', (e) => {
+            if (e.target.matches('.word-action-btn.play-btn')) {
+                const index = parseInt(e.target.dataset.index);
                 const word = wordsWithTimestamps[index];
                 if (word) playWordAudio(word.start, word.end);
-            });
-        });
-        
-        // أزرار الحذف
-        document.querySelectorAll('.word-action-btn.delete-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const index = parseInt(e.currentTarget.dataset.index);
+            } else if (e.target.matches('.word-action-btn.delete-btn')) {
+                const index = parseInt(e.target.dataset.index);
                 deleteWord(index);
-            });
+            }
         });
     }
 
@@ -2850,49 +2522,34 @@
         } else {
             const numValue = parseFloat(value) || 0;
             wordsWithTimestamps[index][field] = numValue;
-            
-            // التحقق من التداخل وإصلاحه
-            if (field === 'end' && index < wordsWithTimestamps.length - 1) {
-                if (numValue > wordsWithTimestamps[index + 1].start) {
-                    wordsWithTimestamps[index + 1].start = numValue + 0.05;
-                    adjustFollowingTimestamps(index + 1);
-                }
-            } else if (field === 'start' && index > 0) {
-                if (numValue < wordsWithTimestamps[index - 1].end) {
-                    wordsWithTimestamps[index - 1].end = numValue - 0.05;
-                }
-            }
         }
         
         timestampsModified = true;
-        updateTimestampStats();
+        
+        // تحديث الإحصائيات بتأخير بسيط
+        debounce(updateTimestampStats, 200)();
     }
 
     function deleteWord(index) {
         if (confirm(`هل تريد حذف الكلمة "${wordsWithTimestamps[index].text}"؟`)) {
             wordsWithTimestamps.splice(index, 1);
             timestampsModified = true;
-            renderTimestampWords();
-            showToast('✅ تم حذف الكلمة');
+            
+            requestAnimationFrame(() => {
+                renderTimestampWords();
+                showToast('✅ تم حذف الكلمة');
+            });
         }
     }
 
     function sortTimestamps() {
         wordsWithTimestamps.sort((a, b) => a.start - b.start);
-        
-        // إصلاح التداخلات بعد الترتيب
-        for (let i = 1; i < wordsWithTimestamps.length; i++) {
-            if (wordsWithTimestamps[i].start < wordsWithTimestamps[i - 1].end) {
-                wordsWithTimestamps[i].start = wordsWithTimestamps[i - 1].end + 0.05;
-                if (wordsWithTimestamps[i].end <= wordsWithTimestamps[i].start) {
-                    wordsWithTimestamps[i].end = wordsWithTimestamps[i].start + 0.3;
-                }
-            }
-        }
-        
         timestampsModified = true;
-        renderTimestampWords();
-        showToast('✅ تم ترتيب الكلمات');
+        
+        requestAnimationFrame(() => {
+            renderTimestampWords();
+            showToast('✅ تم ترتيب الكلمات');
+        });
     }
 
     function updateTimestampStats() {
@@ -2906,21 +2563,20 @@
         }
         
         let modifiedCount = 0;
-        wordsWithTimestamps.forEach((word, i) => {
-            if (originalTimestamps[i]) {
-                if (word.text !== originalTimestamps[i].text ||
-                    Math.abs(word.start - originalTimestamps[i].start) > 0.001 ||
-                    Math.abs(word.end - originalTimestamps[i].end) > 0.001) {
-                    modifiedCount++;
-                }
-            } else {
+        const len = Math.min(wordsWithTimestamps.length, originalTimestamps.length);
+        
+        for (let i = 0; i < len; i++) {
+            const word = wordsWithTimestamps[i];
+            const original = originalTimestamps[i];
+            
+            if (word.text !== original.text ||
+                Math.abs(word.start - original.start) > 0.001 ||
+                Math.abs(word.end - original.end) > 0.001) {
                 modifiedCount++;
             }
-        });
-        
-        if (originalTimestamps.length > wordsWithTimestamps.length) {
-            modifiedCount += (originalTimestamps.length - wordsWithTimestamps.length);
         }
+        
+        modifiedCount += Math.abs(wordsWithTimestamps.length - originalTimestamps.length);
         
         document.getElementById('modifiedCount').textContent = modifiedCount;
     }
@@ -2949,7 +2605,18 @@
     // إضافة حدث Enter للنافذة المنبثقة
     document.getElementById('newWordInput').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
+            e.preventDefault();
             confirmAddWord();
+        }
+    });
+
+    // إضافة حدث Escape لإغلاق المودال
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('addWordModal');
+            if (modal.classList.contains('visible')) {
+                closeAddWordModal();
+            }
         }
     });
 
