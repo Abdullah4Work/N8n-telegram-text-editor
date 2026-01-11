@@ -5,15 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, viewport-fit=cover">
     <meta name="description" content="نشر محتوى احترافي - رقيتي">
     <meta name="theme-color" content="#4A90E2">
-    <title>نشر محتوى احترافي - رقيتي v3.1</title>
+    <title>نشر محتوى احترافي - رقيتي v3.2</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
+        /* ═══════════════════════════════════════════════════════════════════
+           🎨 المتغيرات الأساسية والإعدادات العامة
+           ═══════════════════════════════════════════════════════════════════ */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
         }
+        
         :root {
             --primary: #4A90E2;
             --primary-light: #5BA3F5;
@@ -35,7 +39,10 @@
             --shadow-sm: 0 2px 4px rgba(0,0,0,0.06);
             --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
             --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+            --timestamp-bg: #FFF3E0;
+            --timestamp-border: #FF9800;
         }
+        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-primary);
@@ -48,8 +55,10 @@
             -webkit-font-smoothing: antialiased;
             direction: rtl;
         }
-        
-        /* ===== Loading Overlay ===== */
+
+        /* ═══════════════════════════════════════════════════════════════════
+           ⏳ Loading Overlay - شاشة التحميل
+           ═══════════════════════════════════════════════════════════════════ */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -64,9 +73,8 @@
             flex-direction: column;
             gap: 16px;
         }
-        .loading-overlay.visible {
-            display: flex;
-        }
+        .loading-overlay.visible { display: flex; }
+        
         .spinner {
             width: 50px;
             height: 50px;
@@ -75,9 +83,8 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        
         .loading-text {
             font-size: 16px;
             color: var(--text-primary);
@@ -107,11 +114,11 @@
             cursor: pointer;
             transition: all 0.2s;
         }
-        .skip-correction-btn:active {
-            transform: scale(0.95);
-        }
-        
-        /* ===== مشغل الصوت الثابت ===== */
+        .skip-correction-btn:active { transform: scale(0.95); }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           🎵 مشغل الصوت الثابت (Fixed Audio Player)
+           ═══════════════════════════════════════════════════════════════════ */
         .audio-player-fixed {
             position: fixed;
             top: 0;
@@ -162,9 +169,8 @@
             flex-shrink: 0;
             box-shadow: var(--shadow-sm);
         }
-        .play-pause-btn-fixed:active {
-            transform: scale(0.92);
-        }
+        .play-pause-btn-fixed:active { transform: scale(0.92); }
+        
         .audio-fixed-progress {
             flex: 1;
             display: flex;
@@ -216,16 +222,16 @@
             text-align: center;
             white-space: nowrap;
         }
-        .speed-btn-fixed:active {
-            transform: scale(0.92);
-        }
+        .speed-btn-fixed:active { transform: scale(0.92); }
         .speed-btn-fixed.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
         }
-        
-        /* ===== Container ===== */
+
+        /* ═══════════════════════════════════════════════════════════════════
+           📦 Container والخطوات الأساسية
+           ═══════════════════════════════════════════════════════════════════ */
         .container {
             flex: 1;
             display: flex;
@@ -274,8 +280,10 @@
             line-height: 1.4;
             direction: rtl;
         }
-        
-        /* ===== مشغل الصوت العادي ===== */
+
+        /* ═══════════════════════════════════════════════════════════════════
+           🎵 مشغل الصوت العادي
+           ═══════════════════════════════════════════════════════════════════ */
         .audio-player-section {
             background: var(--bg-secondary);
             border-radius: 8px;
@@ -286,9 +294,8 @@
             transition: all 0.3s ease;
             direction: rtl;
         }
-        .audio-player-section.hidden {
-            display: none;
-        }
+        .audio-player-section.hidden { display: none; }
+        
         .audio-section-title {
             font-size: 11px;
             font-weight: 700;
@@ -327,9 +334,8 @@
             flex-shrink: 0;
             box-shadow: var(--shadow-sm);
         }
-        .play-pause-btn:active {
-            transform: scale(0.92);
-        }
+        .play-pause-btn:active { transform: scale(0.92); }
+        
         .audio-progress {
             flex: 1;
             display: flex;
@@ -379,16 +385,16 @@
             transition: all 0.2s;
             text-align: center;
         }
-        .speed-btn:active {
-            transform: scale(0.92);
-        }
+        .speed-btn:active { transform: scale(0.92); }
         .speed-btn.active {
             background: var(--primary);
             color: white;
             border-color: var(--primary);
         }
-        
-        /* ===== محرر النص ===== */
+
+        /* ═══════════════════════════════════════════════════════════════════
+           ✏️ محرر النص الأساسي
+           ═══════════════════════════════════════════════════════════════════ */
         .editor-container {
             background: var(--bg-secondary);
             border: 2px solid var(--border-color);
@@ -405,6 +411,8 @@
             margin-top: 52px;
             box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.15);
         }
+        .editor-container.hidden { display: none; }
+        
         .text-controls {
             position: absolute;
             top: 12px;
@@ -429,12 +437,9 @@
             box-shadow: var(--shadow-md);
             transition: all 0.2s;
         }
-        .control-btn:active {
-            transform: scale(0.9);
-        }
-        .control-btn.copy-btn {
-            font-size: 16px;
-        }
+        .control-btn:active { transform: scale(0.9); }
+        .control-btn.copy-btn { font-size: 16px; }
+        
         .editor-label {
             font-size: 16px;
             font-weight: 700;
@@ -488,8 +493,392 @@
             color: var(--primary);
             font-size: 16px;
         }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           ⏱️ زر تبديل وضع تحرير التواقيت (Toggle Button)
+           ═══════════════════════════════════════════════════════════════════ */
+        .timestamp-mode-toggle {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: linear-gradient(135deg, var(--warning), #E67E22);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            z-index: 15;
+        }
+        .timestamp-mode-toggle:active { transform: scale(0.95); }
+        .timestamp-mode-toggle.active {
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+        }
+        .timestamp-mode-toggle .toggle-icon {
+            font-size: 16px;
+            transition: transform 0.3s;
+        }
+        .timestamp-mode-toggle.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           ⏱️ محرر التواقيت (Timestamp Editor)
+           ═══════════════════════════════════════════════════════════════════ */
+        .timestamp-editor-container {
+            display: none;
+            background: var(--bg-secondary);
+            border: 2px solid var(--timestamp-border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-md);
+            direction: rtl;
+            animation: fadeInUp 0.3s ease;
+        }
+        .timestamp-editor-container.visible { display: block; }
         
-        /* ===== القوالب ===== */
+        .timestamp-editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-light);
+        }
+        .timestamp-editor-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .timestamp-editor-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .timestamp-action-btn {
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+        }
+        .timestamp-action-btn.add-btn {
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+            color: white;
+        }
+        .timestamp-action-btn.sort-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+        .timestamp-action-btn:active { transform: scale(0.95); }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           📜 قائمة الكلمات مع التواقيت
+           ═══════════════════════════════════════════════════════════════════ */
+        .timestamp-words-list {
+            max-height: 450px;
+            overflow-y: auto;
+            padding: 8px;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .timestamp-word-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            transition: all 0.2s;
+            direction: rtl;
+        }
+        .timestamp-word-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+        .timestamp-word-item:last-child { margin-bottom: 0; }
+        
+        .word-index {
+            width: 32px;
+            height: 32px;
+            background: var(--primary-lighter);
+            color: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .word-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        
+        .word-text-input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: inherit;
+            direction: rtl;
+            text-align: right;
+            transition: all 0.2s;
+        }
+        .word-text-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        
+        .word-times {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        .time-input-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .time-input-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .time-input {
+            width: 70px;
+            padding: 6px 8px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+            direction: ltr;
+            transition: all 0.2s;
+        }
+        .time-input:focus {
+            outline: none;
+            border-color: var(--timestamp-border);
+            box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1);
+        }
+        .time-input.start-time { background: #E8F5E9; }
+        .time-input.end-time { background: #FFEBEE; }
+        
+        .word-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .word-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        .word-action-btn.delete-btn {
+            background: #FFEBEE;
+            color: var(--danger);
+        }
+        .word-action-btn.delete-btn:hover {
+            background: var(--danger);
+            color: white;
+        }
+        .word-action-btn.insert-btn {
+            background: #E8F5E9;
+            color: var(--success);
+        }
+        .word-action-btn.insert-btn:hover {
+            background: var(--success);
+            color: white;
+        }
+        .word-action-btn.play-btn {
+            background: var(--primary-lighter);
+            color: var(--primary);
+        }
+        .word-action-btn.play-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+        .word-action-btn:active { transform: scale(0.9); }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           📊 إحصائيات التواقيت
+           ═══════════════════════════════════════════════════════════════════ */
+        .timestamp-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 14px;
+            padding: 12px;
+            background: var(--timestamp-bg);
+            border-radius: 8px;
+            border: 1px solid var(--timestamp-border);
+        }
+        .timestamp-stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        .timestamp-stat-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--warning);
+        }
+        .timestamp-stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           🔔 Modal لإضافة كلمة جديدة
+           ═══════════════════════════════════════════════════════════════════ */
+        .add-word-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+        .add-word-modal.visible { display: flex; }
+        
+        .add-word-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .add-word-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .add-word-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .close-modal-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: none;
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .add-word-form { display: flex; flex-direction: column; gap: 16px; }
+        
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .form-field-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .form-field-input {
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .form-field-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .form-field-input.time-field {
+            font-family: 'Courier New', monospace;
+            direction: ltr;
+            text-align: center;
+        }
+        
+        .add-word-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+        .modal-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .modal-btn.cancel-btn {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        .modal-btn.confirm-btn {
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+            color: white;
+        }
+        .modal-btn:active { transform: scale(0.98); }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           ➡️ يتبع في الجزء الثاني: باقي CSS (القوالب، الألوان، SEO، التنقل)
+           ═══════════════════════════════════════════════════════════════════ */
+
+                /* ═══════════════════════════════════════════════════════════════════
+           🎨 القوالب والألوان
+           ═══════════════════════════════════════════════════════════════════ */
         .quality-toggle-container {
             background: var(--bg-secondary);
             padding: 12px;
@@ -500,7 +889,6 @@
             flex-direction: column;
             gap: 8px;
         }
-        
         .quality-toggle-label {
             font-size: 14px;
             font-weight: 700;
@@ -509,13 +897,11 @@
             align-items: center;
             gap: 6px;
         }
-        
         .quality-toggle-wrapper {
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
-        
         .quality-option {
             display: flex;
             align-items: center;
@@ -523,20 +909,17 @@
             font-size: 13px;
             color: var(--text-secondary);
         }
-        
         .toggle-switch {
             position: relative;
             display: inline-block;
             width: 60px;
             height: 30px;
         }
-        
         .toggle-switch input {
             opacity: 0;
             width: 0;
             height: 0;
         }
-        
         .toggle-slider {
             position: absolute;
             cursor: pointer;
@@ -548,7 +931,6 @@
             transition: .4s;
             border-radius: 34px;
         }
-        
         .toggle-slider:before {
             position: absolute;
             content: "";
@@ -561,15 +943,9 @@
             border-radius: 50%;
             box-shadow: 0 2px 5px rgba(0,0,0,0.2);
         }
-        
-        input:checked + .toggle-slider {
-            background-color: var(--primary);
-        }
-        
-        input:checked + .toggle-slider:before {
-            transform: translateX(30px);
-        }
-        
+        input:checked + .toggle-slider { background-color: var(--primary); }
+        input:checked + .toggle-slider:before { transform: translateX(30px); }
+
         .templates-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -587,12 +963,8 @@
             position: relative;
             box-shadow: var(--shadow-sm);
         }
-        .template-card.large {
-            grid-column: span 2;
-        }
-        .template-card:active {
-            transform: scale(0.98);
-        }
+        .template-card.large { grid-column: span 2; }
+        .template-card:active { transform: scale(0.98); }
         .template-card.selected {
             border-color: var(--primary);
             box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
@@ -608,9 +980,7 @@
             background-size: cover;
             background-position: center;
         }
-        .template-card.large .template-preview {
-            font-size: 60px;
-        }
+        .template-card.large .template-preview { font-size: 60px; }
         .template-preview::before {
             content: '';
             position: absolute;
@@ -646,7 +1016,6 @@
             display: flex;
             animation: scaleIn 0.3s ease;
         }
-        
         .quality-badge {
             position: absolute;
             top: 10px;
@@ -661,15 +1030,8 @@
             align-items: center;
             gap: 4px;
         }
-        
-        .quality-badge.high {
-            background: var(--success);
-        }
-        
-        .quality-badge.low {
-            background: var(--warning);
-        }
-        
+        .quality-badge.high { background: var(--success); }
+        .quality-badge.low { background: var(--warning); }
         @keyframes scaleIn {
             from { transform: scale(0); }
             to { transform: scale(1); }
@@ -719,21 +1081,17 @@
             background-position: center;
             box-shadow: var(--shadow-sm);
         }
-        .color-option:active {
-            transform: scale(0.98);
-        }
+        .color-option:active { transform: scale(0.98); }
         .color-option.selected {
             border-color: var(--primary);
             box-shadow: 0 4px 16px rgba(74, 144, 226, 0.4);
         }
-        .color-option .template-check {
-            display: none;
-        }
-        .color-option.selected .template-check {
-            display: flex;
-        }
+        .color-option .template-check { display: none; }
+        .color-option.selected .template-check { display: flex; }
 
-        /* ===== Modal معاينة القالب ===== */
+        /* ═══════════════════════════════════════════════════════════════════
+           🖼️ Modal معاينة القالب
+           ═══════════════════════════════════════════════════════════════════ */
         .template-preview-modal {
             position: fixed;
             top: 0;
@@ -747,9 +1105,7 @@
             z-index: 9999;
             padding: 20px;
         }
-        .template-preview-modal.visible {
-            display: flex;
-        }
+        .template-preview-modal.visible { display: flex; }
         .preview-content {
             background: white;
             border-radius: 18px;
@@ -760,10 +1116,6 @@
             overflow-y: auto;
             animation: slideUp 0.4s ease;
             direction: rtl;
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
         }
         .preview-header {
             display: flex;
@@ -791,17 +1143,13 @@
             justify-content: center;
             transition: all 0.2s;
         }
-        .close-preview:active {
-            transform: scale(0.95);
-        }
+        .close-preview:active { transform: scale(0.95); }
         .preview-images {
             display: flex;
             flex-direction: column;
             gap: 18px;
         }
-        .preview-image-wrapper {
-            text-align: center;
-        }
+        .preview-image-wrapper { text-align: center; }
         .preview-image-label {
             font-size: 14px;
             font-weight: 700;
@@ -819,9 +1167,7 @@
             box-shadow: var(--shadow-lg);
             display: none;
         }
-        .preview-image.loaded {
-            display: block;
-        }
+        .preview-image.loaded { display: block; }
         .preview-image-loading {
             width: 100%;
             aspect-ratio: 16/9;
@@ -831,9 +1177,7 @@
             background: var(--bg-primary);
             border-radius: 12px;
         }
-        .preview-image-loading.hidden {
-            display: none;
-        }
+        .preview-image-loading.hidden { display: none; }
         .preview-next-btn {
             width: 100%;
             padding: 16px;
@@ -851,11 +1195,11 @@
             gap: 8px;
             transition: all 0.2s;
         }
-        .preview-next-btn:active {
-            transform: scale(0.98);
-        }
+        .preview-next-btn:active { transform: scale(0.98); }
 
-        /* ===== ألوان السلسلة والعنوان ===== */
+        /* ═══════════════════════════════════════════════════════════════════
+           🎨 ألوان السلسلة والعنوان
+           ═══════════════════════════════════════════════════════════════════ */
         .color-picker-card {
             background: var(--bg-secondary);
             border-radius: 16px;
@@ -899,7 +1243,6 @@
             background: linear-gradient(135deg, #ebbd27, #f5c842);
             color: #5c4a00;
         }
-        
         .dual-preview-container {
             background: linear-gradient(135deg, #1a1a2e, #16213e);
             border-radius: 14px;
@@ -945,7 +1288,6 @@
             position: relative;
             z-index: 1;
         }
-        
         .recommended-color-section {
             margin-bottom: 16px;
             direction: rtl;
@@ -964,9 +1306,7 @@
             gap: 12px;
             direction: rtl;
         }
-        .recommended-color-btn:active {
-            transform: scale(0.98);
-        }
+        .recommended-color-btn:active { transform: scale(0.98); }
         .recommended-color-btn.selected {
             border-color: var(--primary);
             background: var(--primary-lighter);
@@ -1017,7 +1357,6 @@
             font-size: 11px;
             color: var(--text-secondary);
         }
-        
         .custom-color-toggle {
             width: 100%;
             padding: 12px;
@@ -1046,7 +1385,6 @@
             color: var(--primary);
             background: var(--primary-lighter);
         }
-        
         .custom-color-panel {
             display: none;
             padding: 16px;
@@ -1055,14 +1393,11 @@
             margin-top: 12px;
             animation: fadeIn 0.3s ease;
         }
-        .custom-color-panel.visible {
-            display: block;
-        }
+        .custom-color-panel.visible { display: block; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
         .color-picker-wrapper {
             display: flex;
             flex-direction: column;
@@ -1149,8 +1484,10 @@
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
-        
-        /* ===== حقول الإدخال ===== */
+
+        /* ═══════════════════════════════════════════════════════════════════
+           📝 حقول الإدخال والنماذج
+           ═══════════════════════════════════════════════════════════════════ */
         .form-group {
             margin-bottom: 20px;
             direction: rtl;
@@ -1213,11 +1550,11 @@
             margin-top: 20px;
             box-shadow: var(--shadow-md);
         }
-        .save-template-btn:active {
-            transform: scale(0.98);
-        }
+        .save-template-btn:active { transform: scale(0.98); }
 
-        /* ===== البطاقة الإعلانية ===== */
+        /* ═══════════════════════════════════════════════════════════════════
+           🎁 البطاقة الإعلانية
+           ═══════════════════════════════════════════════════════════════════ */
         .promo-card-section {
             background: linear-gradient(135deg, rgba(243, 156, 18, 0.08), rgba(230, 126, 34, 0.08));
             border: 2px dashed var(--warning);
@@ -1316,8 +1653,10 @@
             margin-top: 4px;
             font-weight: 600;
         }
-        
-        /* ===== SEO ===== */
+
+        /* ═══════════════════════════════════════════════════════════════════
+           🔍 SEO
+           ═══════════════════════════════════════════════════════════════════ */
         .seo-generate-btn {
             width: 100%;
             padding: 18px;
@@ -1336,9 +1675,7 @@
             margin-bottom: 20px;
             box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
         }
-        .seo-generate-btn:active {
-            transform: scale(0.98);
-        }
+        .seo-generate-btn:active { transform: scale(0.98); }
         .seo-generate-btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
@@ -1405,9 +1742,7 @@
             direction: rtl;
             text-align: right;
         }
-        .serp-title:hover {
-            text-decoration: underline;
-        }
+        .serp-title:hover { text-decoration: underline; }
         .serp-description {
             font-size: 13px;
             color: #545454;
@@ -1473,9 +1808,7 @@
             transition: all 0.2s;
             white-space: nowrap;
         }
-        .tags-add-btn:active {
-            transform: scale(0.95);
-        }
+        .tags-add-btn:active { transform: scale(0.95); }
         .tags-container {
             display: flex;
             flex-wrap: wrap;
@@ -1498,9 +1831,7 @@
             transition: all 0.2s;
             direction: rtl;
         }
-        .tag-item:hover {
-            border-color: var(--danger);
-        }
+        .tag-item:hover { border-color: var(--danger); }
         .tag-remove {
             background: none;
             border: none;
@@ -1540,8 +1871,10 @@
             font-weight: 700;
             color: var(--primary);
         }
-        
-        /* ===== المراجعة ===== */
+
+        /* ═══════════════════════════════════════════════════════════════════
+           ✅ المراجعة النهائية
+           ═══════════════════════════════════════════════════════════════════ */
         .review-section {
             background: var(--bg-secondary);
             border-radius: 12px;
@@ -1569,9 +1902,7 @@
             gap: 12px;
             direction: rtl;
         }
-        .review-item:last-child {
-            border-bottom: none;
-        }
+        .review-item:last-child { border-bottom: none; }
         .review-label {
             font-size: 13px;
             color: var(--text-secondary);
@@ -1609,9 +1940,7 @@
             transition: max-height 0.3s ease;
             direction: rtl;
         }
-        .review-tags-preview.expanded {
-            max-height: none;
-        }
+        .review-tags-preview.expanded { max-height: none; }
         .review-tag {
             background: var(--bg-primary);
             padding: 4px 8px;
@@ -1626,9 +1955,7 @@
             margin-top: 16px;
             direction: rtl;
         }
-        .review-image-wrapper {
-            text-align: center;
-        }
+        .review-image-wrapper { text-align: center; }
         .review-image-label {
             font-size: 12px;
             font-weight: 700;
@@ -1646,9 +1973,7 @@
             box-shadow: var(--shadow-md);
             display: none;
         }
-        .review-image.loaded {
-            display: block;
-        }
+        .review-image.loaded { display: block; }
         .review-image-loading {
             width: 100%;
             aspect-ratio: 16/9;
@@ -1658,9 +1983,7 @@
             background: var(--bg-primary);
             border-radius: 12px;
         }
-        .review-image-loading.hidden {
-            display: none;
-        }
+        .review-image-loading.hidden { display: none; }
         .review-seo-title-box, .review-seo-desc-box {
             background: var(--bg-primary);
             border-radius: 8px;
@@ -1676,9 +1999,7 @@
             overflow: hidden;
             transition: max-height 0.3s ease;
         }
-        .review-seo-desc-box.expanded {
-            max-height: none;
-        }
+        .review-seo-desc-box.expanded { max-height: none; }
         .review-color-box {
             display: flex;
             align-items: center;
@@ -1690,8 +2011,10 @@
             border-radius: 4px;
             border: 2px solid var(--border-color);
         }
-        
-        /* ===== شريط التنقل ===== */
+
+        /* ═══════════════════════════════════════════════════════════════════
+           🧭 شريط التنقل السفلي
+           ═══════════════════════════════════════════════════════════════════ */
         .bottom-nav-wrapper {
             position: fixed;
             bottom: 0;
@@ -1778,9 +2101,7 @@
             justify-content: center;
             gap: 8px;
         }
-        .nav-btn:active {
-            transform: scale(0.98);
-        }
+        .nav-btn:active { transform: scale(0.98); }
         .nav-btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -1800,31 +2121,25 @@
             color: white;
             box-shadow: var(--shadow-md);
         }
-        
-        /* ===== Responsive ===== */
+
+        /* ═══════════════════════════════════════════════════════════════════
+           📱 Responsive
+           ═══════════════════════════════════════════════════════════════════ */
         @media (max-width: 480px) {
-            .step-content {
-                padding: 10px 12px 100px;
-            }
-            .color-wheel-container {
-                width: 160px;
-                height: 160px;
-            }
-            .templates-grid {
-                grid-template-columns: 1fr;
-            }
-            .template-card.large {
-                grid-column: span 1;
-            }
-            .editor-textarea {
-                font-size: 17px;
-                min-height: 350px;
-            }
+            .step-content { padding: 10px 12px 100px; }
+            .color-wheel-container { width: 160px; height: 160px; }
+            .templates-grid { grid-template-columns: 1fr; }
+            .template-card.large { grid-column: span 1; }
+            .editor-textarea { font-size: 17px; min-height: 350px; }
+            .timestamp-word-item { flex-wrap: wrap; }
+            .word-times { width: 100%; justify-content: space-between; }
         }
     </style>
 </head>
 <body>
-    <!-- Loading Overlay -->
+    <!-- ═══════════════════════════════════════════════════════════════════
+         ⏳ Loading Overlay
+         ═══════════════════════════════════════════════════════════════════ -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="spinner"></div>
         <div class="loading-text" id="loadingText">جاري تحميل البيانات...</div>
@@ -1833,7 +2148,9 @@
         <button class="skip-correction-btn" id="skipCorrectionBtn" style="display:none;">⏭️ تخطي التصحيح</button>
     </div>
 
-    <!-- مشغل الصوت الثابت -->
+    <!-- ═══════════════════════════════════════════════════════════════════
+         🎵 مشغل الصوت الثابت
+         ═══════════════════════════════════════════════════════════════════ -->
     <div class="audio-player-fixed" id="audioPlayerFixed">
         <div class="audio-fixed-content">
             <div class="audio-fixed-controls">
@@ -1858,7 +2175,9 @@
         </div>
     </div>
 
-    <!-- Modal معاينة القالب -->
+    <!-- ═══════════════════════════════════════════════════════════════════
+         🖼️ Modal معاينة القالب
+         ═══════════════════════════════════════════════════════════════════ -->
     <div class="template-preview-modal" id="templatePreviewModal">
         <div class="preview-content">
             <div class="preview-header">
@@ -1867,41 +2186,63 @@
             </div>
             <div class="preview-images">
                 <div class="preview-image-wrapper">
-                    <div class="preview-image-label">
-                        <span>🖼️</span>
-                        <span>الصورة الأفقية</span>
-                    </div>
-                    <div class="preview-image-loading" id="landscapeLoading">
-                        <div class="spinner"></div>
-                    </div>
+                    <div class="preview-image-label"><span>🖼️</span><span>الصورة الأفقية</span></div>
+                    <div class="preview-image-loading" id="landscapeLoading"><div class="spinner"></div></div>
                     <img src="" alt="Landscape" class="preview-image" id="landscapePreview">
                 </div>
                 <div class="preview-image-wrapper">
-                    <div class="preview-image-label">
-                        <span>📱</span>
-                        <span>الصورة العمودية</span>
-                    </div>
-                    <div class="preview-image-loading" id="portraitLoading">
-                        <div class="spinner"></div>
-                    </div>
+                    <div class="preview-image-label"><span>📱</span><span>الصورة العمودية</span></div>
+                    <div class="preview-image-loading" id="portraitLoading"><div class="spinner"></div></div>
                     <img src="" alt="Portrait" class="preview-image" id="portraitPreview">
                 </div>
             </div>
-            <button class="preview-next-btn" id="previewNextBtn">
-                <span>التالي</span>
-                <span>→</span>
-            </button>
+            <button class="preview-next-btn" id="previewNextBtn"><span>التالي</span><span>→</span></button>
         </div>
     </div>
 
-    <div class="container">
-        <!-- الخطوة 1: التصحيح -->
-        <div class="step-content active" data-step="1">
-            <div class="audio-player-section" id="audioPlayerSection">
-                <div class="audio-section-title">
-                    <span>🎵</span>
-                    <span>المقطع الصوتي</span>
+    <!-- ═══════════════════════════════════════════════════════════════════
+         🔔 Modal إضافة كلمة جديدة
+         ═══════════════════════════════════════════════════════════════════ -->
+    <div class="add-word-modal" id="addWordModal">
+        <div class="add-word-content">
+            <div class="add-word-header">
+                <div class="add-word-title">➕ إضافة كلمة جديدة</div>
+                <button class="close-modal-btn" id="closeAddWordModal">×</button>
+            </div>
+            <div class="add-word-form">
+                <div class="form-field">
+                    <label class="form-field-label">الكلمة</label>
+                    <input type="text" class="form-field-input" id="newWordText" placeholder="اكتب الكلمة هنا...">
                 </div>
+                <div class="form-field">
+                    <label class="form-field-label">وقت البداية (ثانية)</label>
+                    <input type="number" step="0.001" class="form-field-input time-field" id="newWordStart" placeholder="0.000">
+                </div>
+                <div class="form-field">
+                    <label class="form-field-label">وقت النهاية (ثانية)</label>
+                    <input type="number" step="0.001" class="form-field-input time-field" id="newWordEnd" placeholder="0.000">
+                </div>
+                <input type="hidden" id="insertAtIndex" value="-1">
+                <div class="add-word-actions">
+                    <button class="modal-btn cancel-btn" id="cancelAddWord">إلغاء</button>
+                    <button class="modal-btn confirm-btn" id="confirmAddWord">✅ إضافة</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         📦 Container الرئيسي
+         ═══════════════════════════════════════════════════════════════════ -->
+    <div class="container">
+        
+        <!-- ═══════════════════════════════════════════════════════════════
+             📝 الخطوة 1: التصحيح + محرر التواقيت
+             ═══════════════════════════════════════════════════════════════ -->
+        <div class="step-content active" data-step="1">
+            <!-- مشغل الصوت العادي -->
+            <div class="audio-player-section" id="audioPlayerSection">
+                <div class="audio-section-title"><span>🎵</span><span>المقطع الصوتي</span></div>
                 <div class="audio-player">
                     <audio id="audioElement" style="display: none;" preload="auto" playsinline webkit-playsinline></audio>
                     <div class="audio-controls">
@@ -1926,87 +2267,91 @@
                 </div>
             </div>
 
+            <!-- محرر النص العادي -->
             <div class="editor-container" id="editorContainer">
+                <!-- زر تبديل وضع التواقيت -->
+                <button class="timestamp-mode-toggle" id="timestampModeToggle">
+                    <span class="toggle-icon">⏱️</span>
+                    <span>تحرير التواقيت</span>
+                </button>
+                
                 <div class="text-controls">
                     <button class="control-btn" id="textSizeUp" title="تكبير النص">+</button>
                     <button class="control-btn" id="textSizeDown" title="تصغير النص">−</button>
                     <button class="control-btn copy-btn" id="copyBtn" title="نسخ النص">📄</button>
                 </div>
-                <div class="editor-label">
-                    <span>📝</span>
-                    <span>النص المصحح</span>
-                </div>
+                <div class="editor-label"><span>📝</span><span>النص المصحح</span></div>
                 <textarea class="editor-textarea" id="textEditor" placeholder="جاري تحميل النص..."></textarea>
                 <div class="editor-stats">
-                    <div class="stat-item">
-                        <span>📊</span>
-                        <span class="stat-value" id="charCount">0</span>
-                        <span>حرف</span>
+                    <div class="stat-item"><span>📊</span><span class="stat-value" id="charCount">0</span><span>حرف</span></div>
+                    <div class="stat-item"><span>📝</span><span class="stat-value" id="wordCount">0</span><span>كلمة</span></div>
+                </div>
+            </div>
+
+            <!-- محرر التواقيت -->
+            <div class="timestamp-editor-container" id="timestampEditorContainer">
+                <div class="timestamp-editor-header">
+                    <div class="timestamp-editor-title"><span>⏱️</span><span>محرر التواقيت</span></div>
+                    <div class="timestamp-editor-actions">
+                        <button class="timestamp-action-btn sort-btn" id="sortTimestampsBtn"><span>🔄</span><span>ترتيب</span></button>
+                        <button class="timestamp-action-btn add-btn" id="addNewWordBtn"><span>➕</span><span>إضافة كلمة</span></button>
                     </div>
-                    <div class="stat-item">
-                        <span>📝</span>
-                        <span class="stat-value" id="wordCount">0</span>
-                        <span>كلمة</span>
+                </div>
+                <div class="timestamp-words-list" id="timestampWordsList">
+                    <!-- سيتم ملؤها ديناميكياً -->
+                </div>
+                <div class="timestamp-stats">
+                    <div class="timestamp-stat-item">
+                        <div class="timestamp-stat-value" id="totalWordsCount">0</div>
+                        <div class="timestamp-stat-label">كلمة</div>
+                    </div>
+                    <div class="timestamp-stat-item">
+                        <div class="timestamp-stat-value" id="totalDuration">0:00</div>
+                        <div class="timestamp-stat-label">المدة الكلية</div>
+                    </div>
+                    <div class="timestamp-stat-item">
+                        <div class="timestamp-stat-value" id="modifiedCount">0</div>
+                        <div class="timestamp-stat-label">تم تعديلها</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- الخطوة 2: القالب -->
+        <!-- ═══════════════════════════════════════════════════════════════
+             🎨 الخطوة 2: القالب
+             ═══════════════════════════════════════════════════════════════ -->
         <div class="step-content" data-step="2">
             <div class="step-header">
-                <div class="step-title">
-                    <span>🎨</span>
-                    <span>اختر القالب واللون</span>
-                </div>
+                <div class="step-title"><span>🎨</span><span>اختر القالب واللون</span></div>
                 <div class="step-description">اختر القالب المناسب ثم اختر اللون</div>
             </div>
-            
             <div class="quality-toggle-container">
-                <div class="quality-toggle-label">
-                    <span>🔄</span>
-                    <span>نوع جودة القالب</span>
-                </div>
+                <div class="quality-toggle-label"><span>🔄</span><span>نوع جودة القالب</span></div>
                 <div class="quality-toggle-wrapper">
-                    <div class="quality-option">
-                        <span>✅</span>
-                        <span>جودة عالية</span>
-                    </div>
+                    <div class="quality-option"><span>✅</span><span>جودة عالية</span></div>
                     <label class="toggle-switch">
                         <input type="checkbox" id="qualityToggle">
                         <span class="toggle-slider"></span>
                     </label>
-                    <div class="quality-option">
-                        <span>📦</span>
-                        <span>جودة منخفضة</span>
-                    </div>
+                    <div class="quality-option"><span>📦</span><span>جودة منخفضة</span></div>
                 </div>
             </div>
-            
-            <div class="section-title">
-                <span>📐</span>
-                <span>القوالب المتاحة</span>
-            </div>
+            <div class="section-title"><span>📐</span><span>القوالب المتاحة</span></div>
             <div class="templates-grid" id="templatesGrid"></div>
             <div class="colors-section" id="colorsSection" style="display: none;">
-                <div class="section-title">
-                    <span>🎨</span>
-                    <span>اختر اللون</span>
-                </div>
+                <div class="section-title"><span>🎨</span><span>اختر اللون</span></div>
                 <div class="colors-grid" id="colorsGrid"></div>
             </div>
         </div>
 
-        <!-- الخطوة 3: الألوان -->
+        <!-- ═══════════════════════════════════════════════════════════════
+             🎨 الخطوة 3: الألوان
+             ═══════════════════════════════════════════════════════════════ -->
         <div class="step-content" data-step="3">
             <div class="step-header">
-                <div class="step-title">
-                    <span>🎨</span>
-                    <span>ألوان السلسلة والعنوان</span>
-                </div>
+                <div class="step-title"><span>🎨</span><span>ألوان السلسلة والعنوان</span></div>
                 <div class="step-description">اختر الألوان المناسبة للسلسلة واسم الدرس</div>
             </div>
-
             <div class="dual-preview-container">
                 <div class="preview-series-text" id="previewSeriesText">السلسلة الرئيسية</div>
                 <div class="preview-label">لون السلسلة</div>
@@ -2014,16 +2359,12 @@
                 <div class="preview-title-text" id="previewTitleText">اسم الدرس</div>
                 <div class="preview-label">لون العنوان</div>
             </div>
-
+            <!-- لون السلسلة -->
             <div class="color-picker-card" id="seriesColorCard">
                 <div class="color-picker-card-header">
-                    <div class="color-picker-card-title">
-                        <span>📚</span>
-                        <span>لون السلسلة الرئيسية</span>
-                    </div>
+                    <div class="color-picker-card-title"><span>📚</span><span>لون السلسلة الرئيسية</span></div>
                     <div class="color-picker-card-badge badge-series">أخضر</div>
                 </div>
-                
                 <div class="recommended-color-section">
                     <button class="recommended-color-btn selected" id="recommendedSeriesColorBtn">
                         <div class="recommended-color-info">
@@ -2037,12 +2378,7 @@
                         <div class="template-check">✓</div>
                     </button>
                 </div>
-
-                <button class="custom-color-toggle" id="seriesCustomToggle">
-                    <span>🎨</span>
-                    <span>اختيار لون مخصص</span>
-                </button>
-
+                <button class="custom-color-toggle" id="seriesCustomToggle"><span>🎨</span><span>اختيار لون مخصص</span></button>
                 <div class="custom-color-panel" id="seriesCustomPanel">
                     <div class="color-picker-wrapper">
                         <div class="color-wheel-container" id="seriesColorWheelContainer">
@@ -2056,16 +2392,12 @@
                     </div>
                 </div>
             </div>
-
+            <!-- لون العنوان -->
             <div class="color-picker-card" id="titleColorCard">
                 <div class="color-picker-card-header">
-                    <div class="color-picker-card-title">
-                        <span>✏️</span>
-                        <span>لون اسم الدرس (العنوان)</span>
-                    </div>
+                    <div class="color-picker-card-title"><span>✏️</span><span>لون اسم الدرس (العنوان)</span></div>
                     <div class="color-picker-card-badge badge-title">ذهبي</div>
                 </div>
-                
                 <div class="recommended-color-section">
                     <button class="recommended-color-btn gold-border selected" id="recommendedTitleColorBtn">
                         <div class="recommended-color-info">
@@ -2079,12 +2411,7 @@
                         <div class="template-check">✓</div>
                     </button>
                 </div>
-
-                <button class="custom-color-toggle" id="titleCustomToggle">
-                    <span>🎨</span>
-                    <span>اختيار لون مخصص</span>
-                </button>
-
+                <button class="custom-color-toggle" id="titleCustomToggle"><span>🎨</span><span>اختيار لون مخصص</span></button>
                 <div class="custom-color-panel" id="titleCustomPanel">
                     <div class="color-picker-wrapper">
                         <div class="color-wheel-container" id="titleColorWheelContainer">
@@ -2100,13 +2427,12 @@
             </div>
         </div>
 
-        <!-- الخطوة 4: البيانات -->
+        <!-- ═══════════════════════════════════════════════════════════════
+             📝 الخطوة 4: البيانات
+             ═══════════════════════════════════════════════════════════════ -->
         <div class="step-content" data-step="4">
             <div class="step-header">
-                <div class="step-title">
-                    <span>📝</span>
-                    <span>معلومات الفيديو</span>
-                </div>
+                <div class="step-title"><span>📝</span><span>معلومات الفيديو</span></div>
                 <div class="step-description">أدخل العنوان والسلاسل الخاصة بالفيديو</div>
             </div>
             <div class="form-group">
@@ -2133,55 +2459,38 @@
                 <div class="form-hint">سيُستخدم كعنوان في SEO</div>
                 <div class="char-counter"><span id="titleCount">0</span> / 50</div>
             </div>
-
+            <!-- البطاقة الإعلانية -->
             <div class="promo-card-section">
                 <div class="promo-card-header">
-                    <div class="promo-card-title">
-                        <span>🎁</span>
-                        <span>البطاقة الإعلانية</span>
-                    </div>
+                    <div class="promo-card-title"><span>🎁</span><span>البطاقة الإعلانية</span></div>
                     <div class="promo-optional-badge">اختياري</div>
                 </div>
-                <div class="promo-card-description">
-                    أضف بطاقة إعلانية تشويقية لجذب المشاهدين - يمكنك ملء العنوان فقط أو كلاهما أو تركهما فارغين
-                </div>
-                
+                <div class="promo-card-description">أضف بطاقة إعلانية تشويقية لجذب المشاهدين</div>
                 <div class="promo-input-group">
-                    <div class="promo-label">
-                        <span>🗃</span>
-                        <span>عنوان البطاقة</span>
-                    </div>
+                    <div class="promo-label"><span>🗃</span><span>عنوان البطاقة</span></div>
                     <input type="text" class="promo-input" id="promoTitleInput" placeholder="شاهد لنهاية الفيديو لمعرفة صفات الزهريين" maxlength="100">
                     <div class="promo-example">مثال: شاهد لنهاية الفيديو لمعرفة صفات الزهريين</div>
                     <div class="char-counter"><span id="promoTitleCount">0</span> / 100</div>
                 </div>
-
                 <div class="promo-input-group">
-                    <div class="promo-label">
-                        <span>📄</span>
-                        <span>وصف البطاقة</span>
-                    </div>
-                    <textarea class="promo-input promo-textarea" id="promoDescInput" placeholder="تعرف على صفات الزهريين ومن هم ولماذا الاستهداف عليهم شديد" maxlength="200"></textarea>
+                    <div class="promo-label"><span>📄</span><span>وصف البطاقة</span></div>
+                    <textarea class="promo-input promo-textarea" id="promoDescInput" placeholder="تعرف على صفات الزهريين..." maxlength="200"></textarea>
                     <div class="promo-example">مثال: تعرف على صفات الزهريين ومن هم ولماذا الاستهداف عليهم شديد</div>
                     <div class="char-counter"><span id="promoDescCount">0</span> / 200</div>
                 </div>
             </div>
-
-            <button class="save-template-btn" id="saveTemplateBtn">
-                <span id="saveTemplateBtnText">💾 حفظ التعديلات على القالب الأساسي</span>
-            </button>
+            <button class="save-template-btn" id="saveTemplateBtn"><span id="saveTemplateBtnText">💾 حفظ التعديلات على القالب الأساسي</span></button>
         </div>
 
-        <!-- الخطوة 5: SEO -->
+        <!-- ═══════════════════════════════════════════════════════════════
+             🔍 الخطوة 5: SEO
+             ═══════════════════════════════════════════════════════════════ -->
         <div class="step-content" data-step="5">
             <div class="step-header">
                 <div class="step-title"><span>🔍</span><span>تحسين محركات البحث (SEO)</span></div>
                 <div class="step-description">عنوان ووصف وكلمات مفتاحية للفيديو</div>
             </div>
-            <button class="seo-generate-btn" id="seoGenerateBtn">
-                <span>✅</span>
-                <span>إنشاء SEO بالذكاء الاصطناعي</span>
-            </button>
+            <button class="seo-generate-btn" id="seoGenerateBtn"><span>✅</span><span>إنشاء SEO بالذكاء الاصطناعي</span></button>
             <div class="seo-section highlight">
                 <div class="seo-section-title"><span>🗃</span><span>عنوان الفيديو</span></div>
                 <div class="form-group">
@@ -2224,7 +2533,9 @@
             </div>
         </div>
 
-        <!-- الخطوة 6: المراجعة -->
+        <!-- ═══════════════════════════════════════════════════════════════
+             ✅ الخطوة 6: المراجعة
+             ═══════════════════════════════════════════════════════════════ -->
         <div class="step-content" data-step="6">
             <div class="step-header">
                 <div class="step-title"><span>✅</span><span>المراجعة النهائية</span></div>
@@ -2234,19 +2545,14 @@
                 <div class="review-section-title"><span>✍️</span><span>النص المصحح</span></div>
                 <div class="review-item"><span class="review-label">عدد الكلمات:</span><span class="review-value" id="reviewWordCount">-</span></div>
                 <div class="review-item"><span class="review-label">عدد الأحرف:</span><span class="review-value" id="reviewCharCount">-</span></div>
+                <div class="review-item"><span class="review-label">تواقيت معدلة:</span><span class="review-value" id="reviewTimestampCount">-</span></div>
             </div>
             <div class="review-section">
                 <div class="review-section-title"><span>🎨</span><span>التصميم</span></div>
                 <div class="review-item"><span class="review-label">القالب:</span><span class="review-value" id="reviewTemplate">-</span></div>
                 <div class="review-item"><span class="review-label">اللون:</span><span class="review-value" id="reviewColor">-</span></div>
-                <div class="review-item">
-                    <span class="review-label">لون السلسلة:</span>
-                    <span class="review-value" id="reviewSeriesColor">-</span>
-                </div>
-                <div class="review-item">
-                    <span class="review-label">لون العنوان:</span>
-                    <span class="review-value" id="reviewTitleColor">-</span>
-                </div>
+                <div class="review-item"><span class="review-label">لون السلسلة:</span><span class="review-value" id="reviewSeriesColor">-</span></div>
+                <div class="review-item"><span class="review-label">لون العنوان:</span><span class="review-value" id="reviewTitleColor">-</span></div>
                 <div class="review-template-images">
                     <div class="review-image-wrapper">
                         <div class="review-image-label"><span>🖼️</span><span>الصورة الأفقية</span></div>
@@ -2266,14 +2572,8 @@
                 <div class="review-item"><span class="review-label">السلسلة الفرعية:</span><span class="review-value" id="reviewSubSeries">-</span></div>
                 <div class="review-item"><span class="review-label">اسم المخطط:</span><span class="review-value" id="reviewFinalSeries">-</span></div>
                 <div class="review-item"><span class="review-label">اسم الدرس:</span><span class="review-value" id="reviewTitle">-</span></div>
-                <div class="review-item" id="reviewPromoTitleItem" style="display:none;">
-                    <span class="review-label">🎁 عنوان البطاقة:</span>
-                    <span class="review-value" id="reviewPromoTitle">-</span>
-                </div>
-                <div class="review-item" id="reviewPromoDescItem" style="display:none;">
-                    <span class="review-label">📄 وصف البطاقة:</span>
-                    <span class="review-value" id="reviewPromoDesc">-</span>
-                </div>
+                <div class="review-item" id="reviewPromoTitleItem" style="display:none;"><span class="review-label">🎁 عنوان البطاقة:</span><span class="review-value" id="reviewPromoTitle">-</span></div>
+                <div class="review-item" id="reviewPromoDescItem" style="display:none;"><span class="review-label">📄 وصف البطاقة:</span><span class="review-value" id="reviewPromoDesc">-</span></div>
             </div>
             <div class="review-section">
                 <div class="review-section-title"><span>🔍</span><span>SEO</span></div>
@@ -2305,6 +2605,9 @@
         </div>
     </div>
 
+    <!-- ═══════════════════════════════════════════════════════════════════
+         🧭 شريط التنقل السفلي
+         ═══════════════════════════════════════════════════════════════════ -->
     <div class="bottom-nav-wrapper" id="bottomNavWrapper">
         <div class="nav-container">
             <div class="step-indicator-badge">
@@ -2321,24 +2624,31 @@
         </div>
     </div>
 
-    <!-- ✨✨✨ هنا يوضع الجزء الثاني (JavaScript) ✨✨✨ -->
+    <!-- ═══════════════════════════════════════════════════════════════════
+         ➡️ يتبع في الجزء الثالث: JavaScript - المتغيرات والدوال الأساسية
+         ═══════════════════════════════════════════════════════════════════ -->
+
 
         <script>
-    // ═════════════════════════════════════════════════════════════════════════
-    // ⭐ JavaScript - الجزء الثاني الكامل مع التعديلات المحدثة
-    // ═════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🔧 الجزء 1: المتغيرات والإعدادات الأساسية
+    // ═══════════════════════════════════════════════════════════════════════════
     
-    // ===== المتغيرات والإعدادات =====
-    const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.net';
+    const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.dev';
     const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor';
     const N8N_TEMPLATE_UPDATE_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor-response';
     
+    // Telegram WebApp
     const tg = window.Telegram.WebApp;
     tg.expand();
     if (tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) {
         try { tg.enableClosingConfirmation(); } catch (e) {}
     }
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 📊 متغيرات الحالة العامة
+    // ═══════════════════════════════════════════════════════════════════════════
+    
     let currentStep = 1;
     const totalSteps = 6;
     let selectedTemplate = null;
@@ -2353,16 +2663,29 @@
     let skipCorrection = false;
     let audioBlobUrl = null;
     let showLowQuality = false;
-    
     let seriesColorDragging = false;
     let titleColorDragging = false;
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ⏱️ متغيرات محرر التواقيت (الميزة الجديدة)
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    let timestampModeActive = false;           // هل وضع التواقيت مفعل؟
+    let wordsWithTimestamps = [];              // مصفوفة الكلمات مع التواقيت
+    let originalTimestamps = [];               // النسخة الأصلية للمقارنة
+    let timestampsModified = false;            // هل تم تعديل التواقيت؟
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 📝 بيانات النموذج الرئيسية
+    // ═══════════════════════════════════════════════════════════════════════════
+    
     const formData = {
         ID: null,
         binId: '',
         audioUrl: '',
         transcript_txt: '',
         corrected_full_text: '',
+        words_timestamps: [],                  // ⏱️ التواقيت المعدلة
         landscape_image_url: null,
         portrait_image_url: null,
         title: '',
@@ -2387,7 +2710,11 @@
         updated_at: new Date().toISOString()
     };
 
-    // ===== دوال المساعدة =====
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🔧 الجزء 2: دوال المساعدة العامة
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /** عرض شاشة التحميل */
     function showLoading(text, subtext = '', step = '') {
         document.getElementById('loadingText').textContent = text;
         document.getElementById('loadingSubtext').textContent = subtext;
@@ -2395,11 +2722,13 @@
         document.getElementById('loadingOverlay').classList.add('visible');
     }
 
+    /** إخفاء شاشة التحميل */
     function hideLoading() {
         document.getElementById('loadingOverlay').classList.remove('visible');
         document.getElementById('skipCorrectionBtn').style.display = 'none';
     }
 
+    /** التمرير لأعلى الصفحة */
     function scrollToTop() {
         window.scrollTo({ top: 0, behavior: 'smooth' });
         setTimeout(() => {
@@ -2408,6 +2737,7 @@
         }, 100);
     }
 
+    /** تحويل رابط Google Drive */
     function convertDriveUrl(url) {
         if (!url) return '';
         try {
@@ -2421,6 +2751,7 @@
         }
     }
 
+    /** تنسيق الوقت (ثواني -> دقائق:ثواني) */
     function formatTime(seconds) {
         if (!seconds || isNaN(seconds)) return '0:00';
         const mins = Math.floor(seconds / 60);
@@ -2428,87 +2759,48 @@
         return `${mins}:${secs.toString().padStart(2, '0')}`;
     }
 
+    /** تنسيق الوقت بالمللي ثانية للعرض */
+    function formatTimeDetailed(seconds) {
+        if (!seconds || isNaN(seconds)) return '0.000';
+        return parseFloat(seconds).toFixed(3);
+    }
+
+    /** عرض رسالة Toast */
     function showToast(message, isError = false) {
         const toast = document.createElement('div');
         toast.textContent = message;
-        toast.style.cssText = `position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:${isError ? '#E74C3C' : '#27AE60'};color:white;padding:12px 24px;border-radius:8px;z-index:99999;font-weight:700;text-align:center;max-width:80%;`;
+        toast.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: ${isError ? '#E74C3C' : '#27AE60'};
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            z-index: 99999;
+            font-weight: 700;
+            text-align: center;
+            max-width: 80%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        `;
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 2000);
     }
 
-    // ===== وضع التحرير =====
-    function enterEditingMode() {
-        document.getElementById('audioPlayerSection').classList.add('hidden');
-        document.getElementById('audioPlayerFixed').classList.add('visible');
-        document.getElementById('editorContainer').classList.add('editing-mode');
-        syncFixedPlayer();
-    }
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🎵 الجزء 3: مشغل الصوت
+    // ═══════════════════════════════════════════════════════════════════════════
 
-    function exitEditingMode() {
-        document.getElementById('audioPlayerSection').classList.remove('hidden');
-        document.getElementById('audioPlayerFixed').classList.remove('visible');
-        document.getElementById('editorContainer').classList.remove('editing-mode');
-    }
-
-    function syncFixedPlayer() {
-        const audioElement = document.getElementById('audioElement');
-        document.getElementById('durationFixed').textContent = formatTime(audioElement.duration);
-        document.getElementById('currentTimeFixed').textContent = formatTime(audioElement.currentTime);
-        const progress = audioElement.duration ? (audioElement.currentTime / audioElement.duration) * 100 : 0;
-        document.getElementById('progressFillFixed').style.width = `${progress}%`;
-        document.getElementById('playPauseBtnFixed').textContent = audioElement.paused ? '▶️' : '⏸️';
-    }
-
-    // ===== أحداث محرر النص =====
-    const textEditor = document.getElementById('textEditor');
-    
-    textEditor.addEventListener('focus', () => {
-        enterEditingMode();
-    });
-
-    document.getElementById('textSizeUp').addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (currentTextSize < MAX_TEXT_SIZE) {
-            currentTextSize += 2;
-            textEditor.style.fontSize = currentTextSize + 'px';
-        }
-    });
-
-    document.getElementById('textSizeDown').addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        if (currentTextSize > MIN_TEXT_SIZE) {
-            currentTextSize -= 2;
-            textEditor.style.fontSize = currentTextSize + 'px';
-        }
-    });
-
-    document.getElementById('copyBtn').addEventListener('click', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        try {
-            await navigator.clipboard.writeText(textEditor.value);
-            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            showToast('✅ تم النسخ');
-        } catch (err) {
-            textEditor.select();
-            document.execCommand('copy');
-            showToast('✅ تم النسخ');
-        }
-    });
-
-    // ===== مشغل الصوت =====
     const audioElement = document.getElementById('audioElement');
     let audioLoaded = false;
 
+    /** تحميل الصوت عبر Proxy */
     async function loadAudioWithProxy(url) {
         console.log('🎵 تحميل الصوت:', url);
         
         try {
             const proxyUrl = `${WORKER_API_URL}/proxy-audio?url=${encodeURIComponent(url)}`;
-            console.log('🔄 Proxy URL:', proxyUrl);
-            
             const response = await fetch(proxyUrl);
             
             if (response.ok) {
@@ -2525,12 +2817,10 @@
             }
         } catch (proxyError) {
             console.log('⚠️ فشل Proxy، محاولة مباشرة...');
-            
             try {
                 audioElement.src = url;
                 audioElement.load();
                 audioLoaded = true;
-                console.log('✅ تحميل مباشر');
                 return true;
             } catch (directError) {
                 console.error('❌ فشل التحميل:', directError);
@@ -2539,36 +2829,7 @@
         }
     }
 
-    audioElement.addEventListener('loadedmetadata', () => {
-        console.log('✅ معلومات الصوت جاهزة');
-        document.getElementById('duration').textContent = formatTime(audioElement.duration);
-        document.getElementById('durationFixed').textContent = formatTime(audioElement.duration);
-        audioLoaded = true;
-    });
-
-    audioElement.addEventListener('canplaythrough', () => {
-        console.log('✅ الصوت جاهز للتشغيل');
-        audioLoaded = true;
-    });
-
-    audioElement.addEventListener('error', (e) => {
-        console.error('❌ خطأ في الصوت');
-        audioLoaded = false;
-    });
-
-    audioElement.addEventListener('timeupdate', () => {
-        const progress = audioElement.duration ? (audioElement.currentTime / audioElement.duration) * 100 : 0;
-        document.getElementById('progressFill').style.width = `${progress}%`;
-        document.getElementById('progressFillFixed').style.width = `${progress}%`;
-        document.getElementById('currentTime').textContent = formatTime(audioElement.currentTime);
-        document.getElementById('currentTimeFixed').textContent = formatTime(audioElement.currentTime);
-    });
-
-    audioElement.addEventListener('ended', () => {
-        document.getElementById('playPauseBtn').textContent = '▶️';
-        document.getElementById('playPauseBtnFixed').textContent = '▶️';
-    });
-
+    /** تشغيل/إيقاف الصوت */
     async function toggleAudioPlayback() {
         if (!audioLoaded) {
             showToast('⏳ الصوت غير جاهز', true);
@@ -2590,18 +2851,64 @@
         }
     }
 
+    /** تشغيل كلمة معينة */
+    function playWordAudio(startTime, endTime) {
+        if (!audioLoaded) {
+            showToast('⏳ الصوت غير جاهز', true);
+            return;
+        }
+        
+        audioElement.currentTime = startTime;
+        audioElement.play();
+        
+        const checkEnd = setInterval(() => {
+            if (audioElement.currentTime >= endTime) {
+                audioElement.pause();
+                clearInterval(checkEnd);
+            }
+        }, 50);
+        
+        setTimeout(() => {
+            clearInterval(checkEnd);
+            audioElement.pause();
+        }, (endTime - startTime + 0.5) * 1000);
+    }
+
+    // أحداث مشغل الصوت
+    audioElement.addEventListener('loadedmetadata', () => {
+        document.getElementById('duration').textContent = formatTime(audioElement.duration);
+        document.getElementById('durationFixed').textContent = formatTime(audioElement.duration);
+        audioLoaded = true;
+    });
+
+    audioElement.addEventListener('canplaythrough', () => { audioLoaded = true; });
+    audioElement.addEventListener('error', () => { audioLoaded = false; });
+
+    audioElement.addEventListener('timeupdate', () => {
+        const progress = audioElement.duration ? (audioElement.currentTime / audioElement.duration) * 100 : 0;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+        document.getElementById('progressFillFixed').style.width = `${progress}%`;
+        document.getElementById('currentTime').textContent = formatTime(audioElement.currentTime);
+        document.getElementById('currentTimeFixed').textContent = formatTime(audioElement.currentTime);
+    });
+
+    audioElement.addEventListener('ended', () => {
+        document.getElementById('playPauseBtn').textContent = '▶️';
+        document.getElementById('playPauseBtnFixed').textContent = '▶️';
+    });
+
+    // أزرار التشغيل
     document.getElementById('playPauseBtn').addEventListener('click', (e) => {
         e.preventDefault();
-        e.stopPropagation();
         toggleAudioPlayback();
     });
 
     document.getElementById('playPauseBtnFixed').addEventListener('click', (e) => {
         e.preventDefault();
-        e.stopPropagation();
         toggleAudioPlayback();
     });
 
+    // شريط التقدم
     document.getElementById('progressBar').addEventListener('click', (e) => {
         if (!audioLoaded || !audioElement.duration) return;
         const rect = e.currentTarget.getBoundingClientRect();
@@ -2611,15 +2918,14 @@
 
     document.getElementById('progressBarFixed').addEventListener('click', (e) => {
         if (!audioLoaded || !audioElement.duration) return;
-        e.stopPropagation();
         const rect = e.currentTarget.getBoundingClientRect();
         const percentage = 1 - ((e.clientX - rect.left) / rect.width);
         audioElement.currentTime = percentage * audioElement.duration;
     });
 
+    // أزرار السرعة
     document.querySelectorAll('.speed-btn').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            e.preventDefault();
             const speed = parseFloat(btn.dataset.speed);
             audioElement.playbackRate = speed;
             document.querySelectorAll('.speed-btn, .speed-btn-fixed').forEach(b => b.classList.remove('active'));
@@ -2630,8 +2936,6 @@
 
     document.querySelectorAll('.speed-btn-fixed').forEach(btn => {
         btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            e.stopPropagation();
             const speed = parseFloat(btn.dataset.speed);
             audioElement.playbackRate = speed;
             document.querySelectorAll('.speed-btn, .speed-btn-fixed').forEach(b => b.classList.remove('active'));
@@ -2640,13 +2944,390 @@
         });
     });
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ✏️ الجزء 4: محرر النص + وضع التحرير
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const textEditor = document.getElementById('textEditor');
+
+    /** الدخول لوضع التحرير (مشغل صوت ثابت) */
+    function enterEditingMode() {
+        document.getElementById('audioPlayerSection').classList.add('hidden');
+        document.getElementById('audioPlayerFixed').classList.add('visible');
+        document.getElementById('editorContainer').classList.add('editing-mode');
+        syncFixedPlayer();
+    }
+
+    /** الخروج من وضع التحرير */
+    function exitEditingMode() {
+        document.getElementById('audioPlayerSection').classList.remove('hidden');
+        document.getElementById('audioPlayerFixed').classList.remove('visible');
+        document.getElementById('editorContainer').classList.remove('editing-mode');
+    }
+
+    /** مزامنة المشغل الثابت */
+    function syncFixedPlayer() {
+        document.getElementById('durationFixed').textContent = formatTime(audioElement.duration);
+        document.getElementById('currentTimeFixed').textContent = formatTime(audioElement.currentTime);
+        const progress = audioElement.duration ? (audioElement.currentTime / audioElement.duration) * 100 : 0;
+        document.getElementById('progressFillFixed').style.width = `${progress}%`;
+        document.getElementById('playPauseBtnFixed').textContent = audioElement.paused ? '▶️' : '⏸️';
+    }
+
+    // تفعيل وضع التحرير عند التركيز
+    textEditor.addEventListener('focus', enterEditingMode);
+
+    // أزرار تحكم النص
+    document.getElementById('textSizeUp').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (currentTextSize < MAX_TEXT_SIZE) {
+            currentTextSize += 2;
+            textEditor.style.fontSize = currentTextSize + 'px';
+        }
+    });
+
+    document.getElementById('textSizeDown').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (currentTextSize > MIN_TEXT_SIZE) {
+            currentTextSize -= 2;
+            textEditor.style.fontSize = currentTextSize + 'px';
+        }
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            await navigator.clipboard.writeText(textEditor.value);
+            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            showToast('✅ تم النسخ');
+        } catch (err) {
+            textEditor.select();
+            document.execCommand('copy');
+            showToast('✅ تم النسخ');
+        }
+    });
+
+    /** تحديث إحصائيات النص */
+    function updateTextStats() {
+        const text = textEditor.value || '';
+        document.getElementById('charCount').textContent = text.length.toLocaleString('ar');
+        document.getElementById('wordCount').textContent = (text.trim() ? text.trim().split(/\s+/).length : 0).toLocaleString('ar');
+        formData.corrected_full_text = text;
+        validateCurrentStep();
+    }
+
+    textEditor.addEventListener('input', updateTextStats);
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ⏱️ الجزء 5: محرر التواقيت (الميزة الجديدة الرئيسية)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /** تبديل وضع محرر التواقيت */
+    function toggleTimestampMode() {
+        timestampModeActive = !timestampModeActive;
+        const toggle = document.getElementById('timestampModeToggle');
+        const editorContainer = document.getElementById('editorContainer');
+        const timestampContainer = document.getElementById('timestampEditorContainer');
+        
+        if (timestampModeActive) {
+            toggle.classList.add('active');
+            toggle.innerHTML = '<span class="toggle-icon">📝</span><span>العودة للنص</span>';
+            editorContainer.classList.add('hidden');
+            timestampContainer.classList.add('visible');
+            renderTimestampWords();
+        } else {
+            toggle.classList.remove('active');
+            toggle.innerHTML = '<span class="toggle-icon">⏱️</span><span>تحرير التواقيت</span>';
+            editorContainer.classList.remove('hidden');
+            timestampContainer.classList.remove('visible');
+            syncTextFromTimestamps();
+        }
+    }
+
+    /** تحميل التواقيت من JSON */
+    function loadTimestampsFromData(timestampsJson) {
+        try {
+            if (typeof timestampsJson === 'string') {
+                wordsWithTimestamps = JSON.parse(timestampsJson);
+            } else if (Array.isArray(timestampsJson)) {
+                wordsWithTimestamps = timestampsJson;
+            } else {
+                wordsWithTimestamps = [];
+            }
+            
+            // حفظ نسخة أصلية للمقارنة
+            originalTimestamps = JSON.parse(JSON.stringify(wordsWithTimestamps));
+            
+            console.log('✅ تم تحميل', wordsWithTimestamps.length, 'كلمة مع التواقيت');
+        } catch (error) {
+            console.error('❌ خطأ في تحميل التواقيت:', error);
+            wordsWithTimestamps = [];
+        }
+    }
+
+    /** عرض قائمة الكلمات مع التواقيت */
+    function renderTimestampWords() {
+        const container = document.getElementById('timestampWordsList');
+        container.innerHTML = '';
+        
+        if (wordsWithTimestamps.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                    <div style="font-size: 40px; margin-bottom: 12px;">⏱️</div>
+                    <div>لا توجد تواقيت متاحة</div>
+                </div>
+            `;
+            return;
+        }
+        
+        wordsWithTimestamps.forEach((word, index) => {
+            const item = document.createElement('div');
+            item.className = 'timestamp-word-item';
+            item.dataset.index = index;
+            
+            item.innerHTML = `
+                <div class="word-index">${index + 1}</div>
+                <div class="word-content">
+                    <input type="text" 
+                           class="word-text-input" 
+                           value="${escapeHtml(word.text)}" 
+                           data-field="text" 
+                           data-index="${index}"
+                           placeholder="الكلمة...">
+                    <div class="word-times">
+                        <div class="time-input-group">
+                            <span class="time-input-label">البداية:</span>
+                            <input type="number" 
+                                   step="0.001" 
+                                   class="time-input start-time" 
+                                   value="${formatTimeDetailed(word.start)}" 
+                                   data-field="start" 
+                                   data-index="${index}">
+                        </div>
+                        <div class="time-input-group">
+                            <span class="time-input-label">النهاية:</span>
+                            <input type="number" 
+                                   step="0.001" 
+                                   class="time-input end-time" 
+                                   value="${formatTimeDetailed(word.end)}" 
+                                   data-field="end" 
+                                   data-index="${index}">
+                        </div>
+                    </div>
+                </div>
+                <div class="word-actions">
+                    <button class="word-action-btn play-btn" data-index="${index}" title="تشغيل">▶️</button>
+                    <button class="word-action-btn insert-btn" data-index="${index}" title="إضافة بعد">➕</button>
+                    <button class="word-action-btn delete-btn" data-index="${index}" title="حذف">🗑️</button>
+                </div>
+            `;
+            
+            container.appendChild(item);
+        });
+        
+        // إضافة أحداث الإدخال
+        attachTimestampInputEvents();
+        updateTimestampStats();
+    }
+
+    /** إرفاق أحداث حقول التواقيت */
+    function attachTimestampInputEvents() {
+        // أحداث تغيير النص والتوقيت
+        document.querySelectorAll('.word-text-input, .time-input').forEach(input => {
+            input.addEventListener('change', handleTimestampInputChange);
+            input.addEventListener('blur', handleTimestampInputChange);
+        });
+        
+        // أحداث أزرار الإجراءات
+        document.querySelectorAll('.word-action-btn.play-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const index = parseInt(e.currentTarget.dataset.index);
+                const word = wordsWithTimestamps[index];
+                if (word) playWordAudio(word.start, word.end);
+            });
+        });
+        
+        document.querySelectorAll('.word-action-btn.insert-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const index = parseInt(e.currentTarget.dataset.index);
+                openAddWordModal(index + 1);
+            });
+        });
+        
+        document.querySelectorAll('.word-action-btn.delete-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const index = parseInt(e.currentTarget.dataset.index);
+                deleteWord(index);
+            });
+        });
+    }
+
+    /** معالجة تغيير قيمة الإدخال */
+    function handleTimestampInputChange(e) {
+        const index = parseInt(e.target.dataset.index);
+        const field = e.target.dataset.field;
+        let value = e.target.value;
+        
+        if (field === 'text') {
+            wordsWithTimestamps[index].text = value;
+        } else {
+            wordsWithTimestamps[index][field] = parseFloat(value) || 0;
+        }
+        
+        timestampsModified = true;
+        updateTimestampStats();
+    }
+
+    /** حذف كلمة */
+    function deleteWord(index) {
+        if (confirm(`هل تريد حذف الكلمة "${wordsWithTimestamps[index].text}"؟`)) {
+            wordsWithTimestamps.splice(index, 1);
+            timestampsModified = true;
+            renderTimestampWords();
+            showToast('✅ تم حذف الكلمة');
+        }
+    }
+
+    /** فتح نافذة إضافة كلمة */
+    function openAddWordModal(insertAtIndex = -1) {
+        document.getElementById('insertAtIndex').value = insertAtIndex;
+        document.getElementById('newWordText').value = '';
+        
+        // اقتراح توقيت بناءً على الموقع
+        if (insertAtIndex > 0 && insertAtIndex <= wordsWithTimestamps.length) {
+            const prevWord = wordsWithTimestamps[insertAtIndex - 1];
+            document.getElementById('newWordStart').value = formatTimeDetailed(prevWord.end);
+            document.getElementById('newWordEnd').value = formatTimeDetailed(prevWord.end + 0.5);
+        } else if (insertAtIndex === 0 && wordsWithTimestamps.length > 0) {
+            document.getElementById('newWordStart').value = '0.000';
+            document.getElementById('newWordEnd').value = formatTimeDetailed(wordsWithTimestamps[0].start);
+        } else {
+            const lastEnd = wordsWithTimestamps.length > 0 ? 
+                wordsWithTimestamps[wordsWithTimestamps.length - 1].end : 0;
+            document.getElementById('newWordStart').value = formatTimeDetailed(lastEnd);
+            document.getElementById('newWordEnd').value = formatTimeDetailed(lastEnd + 0.5);
+        }
+        
+        document.getElementById('addWordModal').classList.add('visible');
+    }
+
+    /** إغلاق نافذة إضافة كلمة */
+    function closeAddWordModal() {
+        document.getElementById('addWordModal').classList.remove('visible');
+    }
+
+    /** تأكيد إضافة كلمة جديدة */
+    function confirmAddWord() {
+        const text = document.getElementById('newWordText').value.trim();
+        const start = parseFloat(document.getElementById('newWordStart').value) || 0;
+        const end = parseFloat(document.getElementById('newWordEnd').value) || 0;
+        const insertAt = parseInt(document.getElementById('insertAtIndex').value);
+        
+        if (!text) {
+            showToast('⚠️ يجب إدخال الكلمة', true);
+            return;
+        }
+        
+        if (end <= start) {
+            showToast('⚠️ وقت النهاية يجب أن يكون أكبر من البداية', true);
+            return;
+        }
+        
+        const newWord = { text, start, end };
+        
+        if (insertAt >= 0 && insertAt <= wordsWithTimestamps.length) {
+            wordsWithTimestamps.splice(insertAt, 0, newWord);
+        } else {
+            wordsWithTimestamps.push(newWord);
+        }
+        
+        timestampsModified = true;
+        closeAddWordModal();
+        renderTimestampWords();
+        showToast('✅ تمت إضافة الكلمة');
+    }
+
+    /** ترتيب الكلمات حسب التوقيت */
+    function sortTimestamps() {
+        wordsWithTimestamps.sort((a, b) => a.start - b.start);
+        timestampsModified = true;
+        renderTimestampWords();
+        showToast('✅ تم ترتيب الكلمات');
+    }
+
+    /** تحديث إحصائيات التواقيت */
+    function updateTimestampStats() {
+        document.getElementById('totalWordsCount').textContent = wordsWithTimestamps.length;
+        
+        if (wordsWithTimestamps.length > 0) {
+            const lastWord = wordsWithTimestamps[wordsWithTimestamps.length - 1];
+            document.getElementById('totalDuration').textContent = formatTime(lastWord.end);
+        } else {
+            document.getElementById('totalDuration').textContent = '0:00';
+        }
+        
+        // حساب عدد التعديلات
+        let modifiedCount = 0;
+        wordsWithTimestamps.forEach((word, i) => {
+            if (originalTimestamps[i]) {
+                if (word.text !== originalTimestamps[i].text ||
+                    word.start !== originalTimestamps[i].start ||
+                    word.end !== originalTimestamps[i].end) {
+                    modifiedCount++;
+                }
+            } else {
+                modifiedCount++;
+            }
+        });
+        
+        // إضافة الكلمات المحذوفة
+        if (originalTimestamps.length > wordsWithTimestamps.length) {
+            modifiedCount += (originalTimestamps.length - wordsWithTimestamps.length);
+        }
+        
+        document.getElementById('modifiedCount').textContent = modifiedCount;
+    }
+
+    /** مزامنة النص من التواقيت */
+    function syncTextFromTimestamps() {
+        if (wordsWithTimestamps.length > 0) {
+            const text = wordsWithTimestamps.map(w => w.text).join(' ');
+            textEditor.value = text;
+            formData.corrected_full_text = text;
+            updateTextStats();
+        }
+    }
+
+    /** تحويل النص الخاص لـ HTML */
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // أحداث محرر التواقيت
+    document.getElementById('timestampModeToggle').addEventListener('click', toggleTimestampMode);
+    document.getElementById('sortTimestampsBtn').addEventListener('click', sortTimestamps);
+    document.getElementById('addNewWordBtn').addEventListener('click', () => openAddWordModal(-1));
+    document.getElementById('closeAddWordModal').addEventListener('click', closeAddWordModal);
+    document.getElementById('cancelAddWord').addEventListener('click', closeAddWordModal);
+    document.getElementById('confirmAddWord').addEventListener('click', confirmAddWord);
+
+    // إغلاق النافذة بالضغط خارجها
+    document.getElementById('addWordModal').addEventListener('click', (e) => {
+        if (e.target.id === 'addWordModal') closeAddWordModal();
+    });
+
     document.getElementById('skipCorrectionBtn').addEventListener('click', () => {
         skipCorrection = true;
         hideLoading();
         validateCurrentStep();
     });
 
-    // ===== تحميل البيانات =====
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 📥 الجزء 6: تحميل البيانات الأولية
+    // ═══════════════════════════════════════════════════════════════════════════
+
     async function loadInitialData() {
         try {
             showLoading('جاري تحميل البيانات...', 'الرجاء الانتظار', '1/2');
@@ -2667,6 +3348,11 @@
             formData.audioUrl = loadedData.audioUrl || '';
             formData.transcript_txt = loadedData.text || '';
             formData.corrected_full_text = loadedData.text || '';
+            
+            // ⏱️ تحميل التواقيت
+            if (loadedData.words_timestamps || loadedData.timestamps) {
+                loadTimestampsFromData(loadedData.words_timestamps || loadedData.timestamps);
+            }
             
             audioCaption = loadedData.caption || loadedData.audioCaption || '';
             if (audioCaption) {
@@ -2698,6 +3384,7 @@
         }
     }
 
+    /** التصحيح التلقائي بالذكاء الاصطناعي */
     async function performAutoAICorrection() {
         if (!textEditor.value.trim()) {
             hideLoading();
@@ -2741,20 +3428,17 @@
         }
     }
 
-    function updateTextStats() {
-        const text = textEditor.value || '';
-        document.getElementById('charCount').textContent = text.length.toLocaleString('ar');
-        document.getElementById('wordCount').textContent = (text.trim() ? text.trim().split(/\s+/).length : 0).toLocaleString('ar');
-        formData.corrected_full_text = text;
-        validateCurrentStep();
-    }
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ➡️ يتبع في الجزء الرابع: القوالب + الألوان + SEO + التنقل + الإرسال
+    // ═══════════════════════════════════════════════════════════════════════════
 
-    textEditor.addEventListener('input', updateTextStats);
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // ⭐ القوالب - مع تصفية الجودة
-    // ═════════════════════════════════════════════════════════════════════════
 
+        // ═══════════════════════════════════════════════════════════════════════════
+    // 🎨 الجزء 7: القوالب والألوان
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /** تبديل جودة القوالب */
     document.getElementById('qualityToggle').addEventListener('change', (e) => {
         showLowQuality = e.target.checked;
         console.log('🔄 تبديل الجودة:', showLowQuality ? 'منخفضة' : 'عالية');
@@ -2792,16 +3476,15 @@
         }
     });
 
+    /** تصفية القوالب حسب الجودة */
     function filterTemplatesByQuality(templates) {
         return templates.filter(t => {
-            const isLow = t.isLowQuality === true || 
-                          t.isLowQuality === 'true' ||
-                          t.isLowQuality === "true";
-            
+            const isLow = t.isLowQuality === true || t.isLowQuality === 'true' || t.isLowQuality === "true";
             return showLowQuality ? isLow : !isLow;
         });
     }
 
+    /** تهيئة القوالب */
     function initializeTemplates() {
         const grid = document.getElementById('templatesGrid');
         grid.innerHTML = '';
@@ -2812,9 +3495,7 @@
         }
 
         const filteredTemplates = filterTemplatesByQuality(loadedTemplatesData);
-
-        console.log(`🔍 فلتر الجودة: ${showLowQuality ? 'منخفضة' : 'عالية'}`);
-        console.log(`📊 القوالب المفلترة: ${filteredTemplates.length} من ${loadedTemplatesData.length}`);
+        console.log(`🔍 فلتر الجودة: ${showLowQuality ? 'منخفضة' : 'عالية'} - ${filteredTemplates.length} قالب`);
 
         if (filteredTemplates.length === 0) {
             grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-secondary)">
@@ -2823,11 +3504,11 @@
             return;
         }
 
+        // تجميع القوالب الفريدة
         const uniqueTemplates = {};
         filteredTemplates.forEach(item => {
             if (!uniqueTemplates[item.template_id]) {
                 const isLow = item.isLowQuality === true || item.isLowQuality === 'true';
-                
                 uniqueTemplates[item.template_id] = { 
                     id: item.template_id, 
                     name: item.template_name, 
@@ -2835,28 +3516,20 @@
                     isLowQuality: isLow,
                     colors: [] 
                 };
-                
-                console.log(`🗃 Template ${item.template_id}: ${isLow ? 'منخفض' : 'عالي'} الجودة`);
             }
             uniqueTemplates[item.template_id].colors.push(item);
         });
 
+        // عرض القوالب
         Object.values(uniqueTemplates).forEach((template, index) => {
             const card = document.createElement('div');
             card.className = 'template-card';
-            
-            if (template.id === 5 || template.id === 10) {
-                card.classList.add('large');
-            }
-            
+            if (template.id === 5 || template.id === 10) card.classList.add('large');
             card.dataset.templateId = template.id;
             
-            let qualityBadgeHTML = '';
-            if (template.isLowQuality) {
-                qualityBadgeHTML = '<div class="quality-badge low"><span>📦</span><span>جودة منخفضة</span></div>';
-            } else {
-                qualityBadgeHTML = '<div class="quality-badge high"><span>✅</span><span>جودة عالية</span></div>';
-            }
+            const qualityBadgeHTML = template.isLowQuality 
+                ? '<div class="quality-badge low"><span>📦</span><span>جودة منخفضة</span></div>'
+                : '<div class="quality-badge high"><span>✅</span><span>جودة عالية</span></div>';
             
             card.innerHTML = `
                 <div class="template-preview" style="background-image:url('${convertDriveUrl(template.image)}')">
@@ -2870,10 +3543,9 @@
             card.onclick = () => selectTemplate(template);
             grid.appendChild(card);
         });
-        
-        console.log(`✅ تم عرض ${Object.keys(uniqueTemplates).length} قالب`);
     }
 
+    /** اختيار قالب */
     function selectTemplate(template) {
         document.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
         document.querySelector(`[data-template-id="${template.id}"]`).classList.add('selected');
@@ -2881,6 +3553,7 @@
         formData.template_id = template.id;
         formData.template_name = template.name;
 
+        // عرض ألوان القالب
         const grid = document.getElementById('colorsGrid');
         grid.innerHTML = '';
 
@@ -2898,12 +3571,13 @@
         validateCurrentStep();
     }
 
-    // ✨✨✨ تحديث دالة selectColor - مع تحميل البطاقة الإعلانية ✨✨✨
+    /** اختيار لون */
     function selectColor(color) {
         document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
         document.querySelector(`[data-color-id="${color.color_id}"]`).classList.add('selected');
         selectedColor = color;
 
+        // تحديث بيانات النموذج
         formData.color_id = color.color_id;
         formData.color_name = color.color_name;
         formData.landscape_image_url = color.landscape_link;
@@ -2915,7 +3589,7 @@
 
         recommendedSeriesColor = color.landscape_series_color;
         
-        // ✨ تحميل السلاسل ✨
+        // تحميل السلاسل
         document.getElementById('mainSeriesInput').value = color.series_text || '';
         document.getElementById('subSeriesInput').value = color.sub_series_text || '';
         document.getElementById('finalSeriesInput').value = color.final_series_text || '';
@@ -2924,25 +3598,26 @@
         formData.subSeries = color.sub_series_text || '';
         formData.finalSeries = color.final_series_text || '';
 
-        // ✨✨✨ تحميل بيانات البطاقة الإعلانية من التيمبلت ✨✨✨
+        // تحميل البطاقة الإعلانية
         document.getElementById('promoTitleInput').value = color.promo_card_title || '';
         document.getElementById('promoDescInput').value = color.promo_card_description || '';
-        
         formData.promo_card_title = color.promo_card_title || '';
         formData.promo_card_description = color.promo_card_description || '';
 
-        console.log('✅ تم تحميل بيانات البطاقة الإعلانية:', {
-            title: formData.promo_card_title,
-            description: formData.promo_card_description
-        });
-
         updateCharCounters();
 
+        // عرض المعاينة
         const landscapeImg = document.getElementById('landscapePreview');
         const portraitImg = document.getElementById('portraitPreview');
-
-        landscapeImg.onload = () => { document.getElementById('landscapeLoading').classList.add('hidden'); landscapeImg.classList.add('loaded'); };
-        portraitImg.onload = () => { document.getElementById('portraitLoading').classList.add('hidden'); portraitImg.classList.add('loaded'); };
+        
+        landscapeImg.onload = () => { 
+            document.getElementById('landscapeLoading').classList.add('hidden'); 
+            landscapeImg.classList.add('loaded'); 
+        };
+        portraitImg.onload = () => { 
+            document.getElementById('portraitLoading').classList.add('hidden'); 
+            portraitImg.classList.add('loaded'); 
+        };
 
         landscapeImg.src = convertDriveUrl(color.landscape_link);
         portraitImg.src = convertDriveUrl(color.portrait_link);
@@ -2951,6 +3626,7 @@
         validateCurrentStep();
     }
 
+    // أحداث Modal المعاينة
     document.getElementById('closePreview').addEventListener('click', () => {
         document.getElementById('templatePreviewModal').classList.remove('visible');
     });
@@ -2960,7 +3636,11 @@
         nextStep();
     });
 
-    // ===== ألوان السلسلة والعنوان =====
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🎨 الجزء 8: منتقي الألوان (Color Pickers)
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /** تهيئة منتقيات الألوان */
     function initializeColorPickers() {
         if (!selectedColor) return;
         
@@ -2976,6 +3656,7 @@
         document.getElementById('recommendedTitleColorBtn').classList.add('selected');
     }
 
+    // --- لون السلسلة ---
     function updateSeriesColorDisplay(color) {
         document.getElementById('previewSeriesText').style.color = color;
         document.getElementById('seriesHexInput').value = color;
@@ -3014,67 +3695,14 @@
     document.getElementById('seriesCustomToggle').addEventListener('click', () => {
         const panel = document.getElementById('seriesCustomPanel');
         const toggle = document.getElementById('seriesCustomToggle');
-        const isVisible = panel.classList.contains('visible');
-        
         panel.classList.toggle('visible');
         toggle.classList.toggle('active');
-        
-        if (!isVisible) {
+        if (panel.classList.contains('visible')) {
             document.getElementById('recommendedSeriesColorBtn').classList.remove('selected');
         }
     });
 
-    const seriesColorWheel = document.getElementById('seriesColorWheel');
-    const seriesColorWheelContainer = document.getElementById('seriesColorWheelContainer');
-    const seriesColorPickerHandle = document.getElementById('seriesColorPickerHandle');
-
-    function getSeriesColorAtPosition(x, y) {
-        const rect = seriesColorWheelContainer.getBoundingClientRect();
-        const centerX = rect.width / 2, centerY = rect.height / 2;
-        const deltaX = x - centerX, deltaY = y - centerY;
-        const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-        const maxDistance = centerX * 0.85;
-        if (distance > maxDistance) return null;
-        let angle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
-        if (angle < 0) angle += 360;
-        return hslToHex(angle, Math.min((distance / maxDistance) * 100, 100), 50);
-    }
-
-    function handleSeriesColorPick(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        const rect = seriesColorWheelContainer.getBoundingClientRect();
-        const touch = e.touches ? e.touches[0] : e;
-        const x = touch.clientX - rect.left, y = touch.clientY - rect.top;
-        const color = getSeriesColorAtPosition(x, y);
-        if (color) {
-            updateSeriesColorDisplay(color);
-            seriesColorPickerHandle.style.left = `${x}px`;
-            seriesColorPickerHandle.style.top = `${y}px`;
-            document.getElementById('recommendedSeriesColorBtn').classList.remove('selected');
-        }
-    }
-
-    seriesColorPickerHandle.addEventListener('mousedown', (e) => { seriesColorDragging = true; e.preventDefault(); });
-    seriesColorPickerHandle.addEventListener('touchstart', (e) => { seriesColorDragging = true; e.preventDefault(); });
-    document.addEventListener('mousemove', (e) => { if (seriesColorDragging) handleSeriesColorPick(e); });
-    document.addEventListener('touchmove', (e) => { if (seriesColorDragging) { e.preventDefault(); handleSeriesColorPick(e); } }, { passive: false });
-    document.addEventListener('mouseup', () => seriesColorDragging = false);
-    document.addEventListener('touchend', () => seriesColorDragging = false);
-    seriesColorWheel.addEventListener('click', handleSeriesColorPick);
-
-    document.getElementById('seriesHexInput').addEventListener('input', (e) => {
-        let value = e.target.value;
-        if (!value.startsWith('#')) value = '#' + value;
-        value = value.substring(0, 7);
-        if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
-            updateSeriesColorDisplay(value);
-            updateSeriesHandlePosition(value);
-            document.getElementById('recommendedSeriesColorBtn').classList.remove('selected');
-        }
-        e.target.value = value;
-    });
-
+    // --- لون العنوان ---
     function updateTitleColorDisplay(color) {
         document.getElementById('previewTitleText').style.color = color;
         document.getElementById('titleHexInput').value = color;
@@ -3111,22 +3739,23 @@
     document.getElementById('titleCustomToggle').addEventListener('click', () => {
         const panel = document.getElementById('titleCustomPanel');
         const toggle = document.getElementById('titleCustomToggle');
-        const isVisible = panel.classList.contains('visible');
-        
         panel.classList.toggle('visible');
         toggle.classList.toggle('active');
-        
-        if (!isVisible) {
+        if (panel.classList.contains('visible')) {
             document.getElementById('recommendedTitleColorBtn').classList.remove('selected');
         }
     });
 
+    // --- عجلات الألوان وأحداث السحب ---
+    const seriesColorWheel = document.getElementById('seriesColorWheel');
+    const seriesColorWheelContainer = document.getElementById('seriesColorWheelContainer');
+    const seriesColorPickerHandle = document.getElementById('seriesColorPickerHandle');
     const titleColorWheel = document.getElementById('titleColorWheel');
     const titleColorWheelContainer = document.getElementById('titleColorWheelContainer');
     const titleColorPickerHandle = document.getElementById('titleColorPickerHandle');
 
-    function getTitleColorAtPosition(x, y) {
-        const rect = titleColorWheelContainer.getBoundingClientRect();
+    function getColorAtPosition(container, x, y) {
+        const rect = container.getBoundingClientRect();
         const centerX = rect.width / 2, centerY = rect.height / 2;
         const deltaX = x - centerX, deltaY = y - centerY;
         const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -3137,13 +3766,26 @@
         return hslToHex(angle, Math.min((distance / maxDistance) * 100, 100), 50);
     }
 
+    function handleSeriesColorPick(e) {
+        e.preventDefault();
+        const rect = seriesColorWheelContainer.getBoundingClientRect();
+        const touch = e.touches ? e.touches[0] : e;
+        const x = touch.clientX - rect.left, y = touch.clientY - rect.top;
+        const color = getColorAtPosition(seriesColorWheelContainer, x, y);
+        if (color) {
+            updateSeriesColorDisplay(color);
+            seriesColorPickerHandle.style.left = `${x}px`;
+            seriesColorPickerHandle.style.top = `${y}px`;
+            document.getElementById('recommendedSeriesColorBtn').classList.remove('selected');
+        }
+    }
+
     function handleTitleColorPick(e) {
         e.preventDefault();
-        e.stopPropagation();
         const rect = titleColorWheelContainer.getBoundingClientRect();
         const touch = e.touches ? e.touches[0] : e;
         const x = touch.clientX - rect.left, y = touch.clientY - rect.top;
-        const color = getTitleColorAtPosition(x, y);
+        const color = getColorAtPosition(titleColorWheelContainer, x, y);
         if (color) {
             updateTitleColorDisplay(color);
             titleColorPickerHandle.style.left = `${x}px`;
@@ -3152,6 +3794,16 @@
         }
     }
 
+    // أحداث السحب - لون السلسلة
+    seriesColorPickerHandle.addEventListener('mousedown', (e) => { seriesColorDragging = true; e.preventDefault(); });
+    seriesColorPickerHandle.addEventListener('touchstart', (e) => { seriesColorDragging = true; e.preventDefault(); });
+    document.addEventListener('mousemove', (e) => { if (seriesColorDragging) handleSeriesColorPick(e); });
+    document.addEventListener('touchmove', (e) => { if (seriesColorDragging) { e.preventDefault(); handleSeriesColorPick(e); } }, { passive: false });
+    document.addEventListener('mouseup', () => seriesColorDragging = false);
+    document.addEventListener('touchend', () => seriesColorDragging = false);
+    seriesColorWheel.addEventListener('click', handleSeriesColorPick);
+
+    // أحداث السحب - لون العنوان
     titleColorPickerHandle.addEventListener('mousedown', (e) => { titleColorDragging = true; e.preventDefault(); });
     titleColorPickerHandle.addEventListener('touchstart', (e) => { titleColorDragging = true; e.preventDefault(); });
     document.addEventListener('mousemove', (e) => { if (titleColorDragging) handleTitleColorPick(e); });
@@ -3159,6 +3811,19 @@
     document.addEventListener('mouseup', () => titleColorDragging = false);
     document.addEventListener('touchend', () => titleColorDragging = false);
     titleColorWheel.addEventListener('click', handleTitleColorPick);
+
+    // إدخال HEX يدوي
+    document.getElementById('seriesHexInput').addEventListener('input', (e) => {
+        let value = e.target.value;
+        if (!value.startsWith('#')) value = '#' + value;
+        value = value.substring(0, 7);
+        if (/^#[0-9A-Fa-f]{6}$/.test(value)) {
+            updateSeriesColorDisplay(value);
+            updateSeriesHandlePosition(value);
+            document.getElementById('recommendedSeriesColorBtn').classList.remove('selected');
+        }
+        e.target.value = value;
+    });
 
     document.getElementById('titleHexInput').addEventListener('input', (e) => {
         let value = e.target.value;
@@ -3172,6 +3837,7 @@
         e.target.value = value;
     });
 
+    // --- دوال تحويل الألوان ---
     function hexToRgb(hex) {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ? { r: parseInt(result[1], 16), g: parseInt(result[2], 16), b: parseInt(result[3], 16) } : null;
@@ -3205,7 +3871,11 @@
         return `#${f(0)}${f(8)}${f(4)}`;
     }
 
-    // ✨✨✨ حقول البيانات + البطاقة الإعلانية - محدثة ✨✨✨
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 📝 الجزء 9: حقول البيانات والعدادات
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    /** تحديث عدادات الأحرف */
     function updateCharCounters() {
         ['title', 'mainSeries', 'subSeries', 'finalSeries'].forEach(field => {
             const input = document.getElementById(field + 'Input');
@@ -3215,17 +3885,16 @@
             formData[key] = input.value;
         });
 
-        // ✨ تحديث عدادات البطاقة الإعلانية ✨
+        // عدادات البطاقة الإعلانية
         const promoTitle = document.getElementById('promoTitleInput').value;
         const promoDesc = document.getElementById('promoDescInput').value;
-        
         document.getElementById('promoTitleCount').textContent = promoTitle.length;
         document.getElementById('promoDescCount').textContent = promoDesc.length;
-        
         formData.promo_card_title = promoTitle;
         formData.promo_card_description = promoDesc;
     }
 
+    // أحداث حقول الإدخال
     ['titleInput', 'mainSeriesInput', 'subSeriesInput', 'finalSeriesInput'].forEach(id => {
         document.getElementById(id).addEventListener('input', () => {
             updateCharCounters();
@@ -3233,16 +3902,10 @@
         });
     });
 
-    // ✨ Event Listeners للبطاقة الإعلانية ✨
-    document.getElementById('promoTitleInput').addEventListener('input', () => {
-        updateCharCounters();
-    });
+    document.getElementById('promoTitleInput').addEventListener('input', updateCharCounters);
+    document.getElementById('promoDescInput').addEventListener('input', updateCharCounters);
 
-    document.getElementById('promoDescInput').addEventListener('input', () => {
-        updateCharCounters();
-    });
-
-    // ✨✨✨ زر حفظ القالب - محدث بالكامل ✨✨✨
+    /** حفظ تعديلات القالب */
     document.getElementById('saveTemplateBtn').addEventListener('click', async () => {
         if (!selectedColor) { 
             showToast('⚠️ لم تختر قالباً بعد', true); 
@@ -3257,7 +3920,6 @@
         showLoading('جاري حفظ التعديلات...', '', '');
 
         try {
-            // ✨ البيانات المرسلة تتضمن البطاقة الإعلانية ✨
             const templateUpdateData = {
                 type: 'template_update',
                 template_id: formData.template_id,
@@ -3272,8 +3934,6 @@
                 updated_at: new Date().toISOString()
             };
 
-            console.log('💾 حفظ التيمبلت:', templateUpdateData);
-
             const response = await fetch(N8N_TEMPLATE_UPDATE_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -3285,31 +3945,26 @@
             hideLoading();
             showToast('✅ تم حفظ التعديلات بنجاح!');
             
-            // ✨ تحديث البيانات المحملة محلياً ✨
+            // تحديث البيانات المحلية
             if (selectedColor) {
                 selectedColor.series_text = formData.series;
                 selectedColor.sub_series_text = formData.subSeries;
                 selectedColor.final_series_text = formData.finalSeries;
                 selectedColor.promo_card_title = formData.promo_card_title;
                 selectedColor.promo_card_description = formData.promo_card_description;
-                
-                console.log('✅ تم تحديث البيانات المحلية مع البطاقة الإعلانية');
             }
             
         } catch (error) {
             hideLoading();
             showToast('❌ ' + error.message, true);
-            console.error('❌ خطأ الحفظ:', error);
         }
     });
 
-    <!-- ✨✨✨ هنا يوضع الجزء الثالث (SEO والمراجعة والإرسال) ✨✨✨ -->
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🔍 الجزء 10: SEO
+    // ═══════════════════════════════════════════════════════════════════════════
 
-            // ═════════════════════════════════════════════════════════════════════════
-    // ⭐ SEO - الجزء الثالث والأخير
-    // ═════════════════════════════════════════════════════════════════════════
-
-    // ===== SEO =====
+    /** إضافة كلمة مفتاحية */
     function addTag(tagText) {
         const trimmed = tagText.trim();
         if (!trimmed || formData.tags.includes(trimmed)) return;
@@ -3322,18 +3977,30 @@
     }
 
     document.getElementById('addTagBtn').addEventListener('click', () => addTag(document.getElementById('tagInput').value));
-    document.getElementById('tagInput').addEventListener('keypress', (e) => { if (e.key === 'Enter') { e.preventDefault(); addTag(e.target.value); } });
+    document.getElementById('tagInput').addEventListener('keypress', (e) => { 
+        if (e.key === 'Enter') { 
+            e.preventDefault(); 
+            addTag(e.target.value); 
+        } 
+    });
 
+    /** عرض معاينة SERP */
     function updateSerpPreview() {
         const title = formData.seo_title || 'عنوان الفيديو';
         const desc = formData.seo_description || 'وصف الفيديو سيظهر هنا...';
         document.getElementById('serpTitle').textContent = title;
         document.getElementById('serpDescription').textContent = desc.substring(0, 160) + (desc.length > 160 ? '...' : '');
-        if (formData.seo_title || formData.seo_description) document.getElementById('serpPreview').style.display = 'block';
+        if (formData.seo_title || formData.seo_description) {
+            document.getElementById('serpPreview').style.display = 'block';
+        }
     }
 
+    /** إنشاء SEO بالذكاء الاصطناعي */
     document.getElementById('seoGenerateBtn').addEventListener('click', async () => {
-        if (!formData.corrected_full_text.trim()) { showToast('⚠️ لا يوجد نص مصحح', true); return; }
+        if (!formData.corrected_full_text.trim()) { 
+            showToast('⚠️ لا يوجد نص مصحح', true); 
+            return; 
+        }
 
         showLoading('جاري إنشاء SEO...', 'يتم تحليل المحتوى', '');
         document.getElementById('seoGenerateBtn').disabled = true;
@@ -3342,7 +4009,11 @@
             const response = await fetch(`${WORKER_API_URL}/generate-seo`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: formData.corrected_full_text, title: formData.title, context: 'ruqyah_islamic_healing' })
+                body: JSON.stringify({ 
+                    text: formData.corrected_full_text, 
+                    title: formData.title, 
+                    context: 'ruqyah_islamic_healing' 
+                })
             });
 
             if (!response.ok) throw new Error('فشل إنشاء SEO');
@@ -3375,6 +4046,7 @@
         }
     });
 
+    /** عرض الكلمات المفتاحية */
     function renderTags() {
         const container = document.getElementById('tagsContainer');
         container.innerHTML = '';
@@ -3386,7 +4058,12 @@
             const el = document.createElement('div');
             el.className = 'tag-item';
             el.innerHTML = `<span>${tag}</span><button class="tag-remove">×</button>`;
-            el.querySelector('.tag-remove').onclick = () => { formData.tags.splice(i, 1); renderTags(); updateSEOStats(); validateCurrentStep(); };
+            el.querySelector('.tag-remove').onclick = () => { 
+                formData.tags.splice(i, 1); 
+                renderTags(); 
+                updateSEOStats(); 
+                validateCurrentStep(); 
+            };
             container.appendChild(el);
         });
     }
@@ -3419,10 +4096,11 @@
         validateCurrentStep();
     });
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // ⭐ التنقل بين الخطوات
-    // ═════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🧭 الجزء 11: التنقل بين الخطوات
+    // ═══════════════════════════════════════════════════════════════════════════
 
+    /** تحديث واجهة الخطوات */
     function updateProgress() {
         document.getElementById('stepNumber').textContent = currentStep;
 
@@ -3441,6 +4119,7 @@
             document.getElementById('btnNext').className = 'nav-btn btn-next';
         }
 
+        // تهيئة خاصة لكل خطوة
         if (currentStep === 3) initializeColorPickers();
         
         if (currentStep === 5 && formData.title && !formData.seo_title) {
@@ -3450,71 +4129,118 @@
             updateSerpPreview();
         }
 
-        if (currentStep !== 1) {
-            exitEditingMode();
-        }
+        if (currentStep !== 1) exitEditingMode();
 
         scrollToTop();
         validateCurrentStep();
     }
 
+    /** التحقق من صحة الخطوة الحالية */
     function validateCurrentStep() {
         let isValid = false;
         switch (currentStep) {
-            case 1: isValid = formData.corrected_full_text.trim().length > 0; break;
-            case 2: isValid = formData.template_id && formData.color_id; break;
-            case 3: isValid = !!formData.series_color && !!formData.title_color; break;
-            case 4: isValid = formData.title.trim() && formData.series.trim() && formData.subSeries.trim() && formData.finalSeries.trim(); break;
-            case 5: isValid = formData.seo_title.trim().length > 0 && formData.seo_description.trim().length > 0 && formData.tags.length > 0; break;
-            case 6: isValid = true; break;
+            case 1: 
+                isValid = formData.corrected_full_text.trim().length > 0; 
+                break;
+            case 2: 
+                isValid = formData.template_id && formData.color_id; 
+                break;
+            case 3: 
+                isValid = !!formData.series_color && !!formData.title_color; 
+                break;
+            case 4: 
+                isValid = formData.title.trim() && formData.series.trim() && 
+                          formData.subSeries.trim() && formData.finalSeries.trim(); 
+                break;
+            case 5: 
+                isValid = formData.seo_title.trim().length > 0 && 
+                          formData.seo_description.trim().length > 0 && 
+                          formData.tags.length > 0; 
+                break;
+            case 6: 
+                isValid = true; 
+                break;
         }
         document.getElementById('btnNext').disabled = !isValid;
     }
 
     function nextStep() {
-        if (currentStep === totalSteps) { submitForm(); return; }
-        if (currentStep < totalSteps) { currentStep++; updateProgress(); }
+        if (currentStep === totalSteps) { 
+            submitForm(); 
+            return; 
+        }
+        if (currentStep < totalSteps) { 
+            currentStep++; 
+            updateProgress(); 
+        }
     }
 
     function prevStep() {
-        if (currentStep > 1) { currentStep--; updateProgress(); }
+        if (currentStep > 1) { 
+            currentStep--; 
+            updateProgress(); 
+        }
     }
 
     document.getElementById('btnNext').addEventListener('click', nextStep);
     document.getElementById('btnBack').addEventListener('click', prevStep);
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // ⭐ المراجعة النهائية (مع البطاقة الإعلانية) ✨✨✨
-    // ═════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ✅ الجزء 12: المراجعة النهائية
+    // ═══════════════════════════════════════════════════════════════════════════
 
+    /** تحديث صفحة المراجعة */
     function updateReview() {
         const words = formData.corrected_full_text.trim() ? formData.corrected_full_text.trim().split(/\s+/).length : 0;
         document.getElementById('reviewWordCount').textContent = words;
         document.getElementById('reviewCharCount').textContent = formData.corrected_full_text.length;
+        
+        // ⏱️ عرض عدد التواقيت المعدلة
+        let modifiedTimestampCount = 0;
+        wordsWithTimestamps.forEach((word, i) => {
+            if (originalTimestamps[i]) {
+                if (word.text !== originalTimestamps[i].text ||
+                    word.start !== originalTimestamps[i].start ||
+                    word.end !== originalTimestamps[i].end) {
+                    modifiedTimestampCount++;
+                }
+            } else {
+                modifiedTimestampCount++;
+            }
+        });
+        if (originalTimestamps.length > wordsWithTimestamps.length) {
+            modifiedTimestampCount += (originalTimestamps.length - wordsWithTimestamps.length);
+        }
+        document.getElementById('reviewTimestampCount').textContent = 
+            timestampsModified ? `${modifiedTimestampCount} تعديل` : 'لم يتم التعديل';
+        
         document.getElementById('reviewTemplate').textContent = formData.template_name || '-';
         document.getElementById('reviewColor').textContent = formData.color_name || '-';
         
-        // لون السلسلة
-        const seriesColorBox = `<div class="review-color-box"><div class="review-color-swatch" style="background:${formData.series_color}"></div><span>${formData.series_color}</span></div>`;
-        document.getElementById('reviewSeriesColor').innerHTML = seriesColorBox;
-        
-        // لون العنوان
-        const titleColorBox = `<div class="review-color-box"><div class="review-color-swatch" style="background:${formData.title_color}"></div><span>${formData.title_color}</span></div>`;
-        document.getElementById('reviewTitleColor').innerHTML = titleColorBox;
+        // ألوان
+        document.getElementById('reviewSeriesColor').innerHTML = `
+            <div class="review-color-box">
+                <div class="review-color-swatch" style="background:${formData.series_color}"></div>
+                <span>${formData.series_color}</span>
+            </div>`;
+        document.getElementById('reviewTitleColor').innerHTML = `
+            <div class="review-color-box">
+                <div class="review-color-swatch" style="background:${formData.title_color}"></div>
+                <span>${formData.title_color}</span>
+            </div>`;
         
         document.getElementById('reviewMainSeries').textContent = formData.series || '-';
         document.getElementById('reviewSubSeries').textContent = formData.subSeries || '-';
         document.getElementById('reviewFinalSeries').textContent = formData.finalSeries || '-';
         document.getElementById('reviewTitle').textContent = formData.title || '-';
 
-        // ✨✨✨ عرض البطاقة الإعلانية في المراجعة ✨✨✨
+        // البطاقة الإعلانية
         const promoTitleItem = document.getElementById('reviewPromoTitleItem');
         const promoDescItem = document.getElementById('reviewPromoDescItem');
         
         if (formData.promo_card_title && formData.promo_card_title.trim()) {
             promoTitleItem.style.display = 'flex';
             document.getElementById('reviewPromoTitle').textContent = formData.promo_card_title;
-            console.log('✅ عرض عنوان البطاقة في المراجعة:', formData.promo_card_title);
         } else {
             promoTitleItem.style.display = 'none';
         }
@@ -3522,32 +4248,45 @@
         if (formData.promo_card_description && formData.promo_card_description.trim()) {
             promoDescItem.style.display = 'flex';
             document.getElementById('reviewPromoDesc').textContent = formData.promo_card_description;
-            console.log('✅ عرض وصف البطاقة في المراجعة:', formData.promo_card_description);
         } else {
             promoDescItem.style.display = 'none';
         }
 
+        // SEO
         document.getElementById('reviewSerpTitle').textContent = formData.seo_title || 'عنوان الفيديو';
-        document.getElementById('reviewSerpDescription').textContent = (formData.seo_description || '').substring(0, 160) + ((formData.seo_description || '').length > 160 ? '...' : '');
+        document.getElementById('reviewSerpDescription').textContent = 
+            (formData.seo_description || '').substring(0, 160) + 
+            ((formData.seo_description || '').length > 160 ? '...' : '');
         document.getElementById('reviewSeoTitleBox').textContent = formData.seo_title || '-';
         document.getElementById('reviewSeoDescBox').textContent = formData.seo_description || '-';
 
+        // الكلمات المفتاحية
         const tagsPreview = document.getElementById('reviewTagsPreview');
-        tagsPreview.innerHTML = formData.tags.length ? formData.tags.map(t => `<div class="review-tag">${t}</div>`).join('') : '<div style="color:var(--text-secondary);font-size:12px">لا توجد</div>';
+        tagsPreview.innerHTML = formData.tags.length 
+            ? formData.tags.map(t => `<div class="review-tag">${t}</div>`).join('') 
+            : '<div style="color:var(--text-secondary);font-size:12px">لا توجد</div>';
 
+        // الصور
         if (formData.landscape_image_url) {
             const img = document.getElementById('reviewLandscapeImage');
-            img.onload = () => { document.getElementById('reviewLandscapeLoading').classList.add('hidden'); img.classList.add('loaded'); };
+            img.onload = () => { 
+                document.getElementById('reviewLandscapeLoading').classList.add('hidden'); 
+                img.classList.add('loaded'); 
+            };
             img.src = convertDriveUrl(formData.landscape_image_url);
         }
 
         if (formData.portrait_image_url) {
             const img = document.getElementById('reviewPortraitImage');
-            img.onload = () => { document.getElementById('reviewPortraitLoading').classList.add('hidden'); img.classList.add('loaded'); };
+            img.onload = () => { 
+                document.getElementById('reviewPortraitLoading').classList.add('hidden'); 
+                img.classList.add('loaded'); 
+            };
             img.src = convertDriveUrl(formData.portrait_image_url);
         }
     }
 
+    // أزرار توسيع المراجعة
     document.getElementById('reviewTagsExpandBtn').addEventListener('click', () => {
         const el = document.getElementById('reviewTagsPreview');
         el.classList.toggle('expanded');
@@ -3562,27 +4301,30 @@
         document.getElementById('reviewDescExpandIcon').textContent = el.classList.contains('expanded') ? '▲' : '▼';
     });
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // ⭐ الإرسال النهائي (مع البطاقة الإعلانية) ✨✨✨
-    // ═════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 📤 الجزء 13: الإرسال النهائي
+    // ═══════════════════════════════════════════════════════════════════════════
 
     async function submitForm() {
         showLoading('جاري الإرسال...', 'الرجاء الانتظار', '');
         
         try {
-            // ✨✨✨ التأكد من إرسال البطاقة الإعلانية مع البيانات ✨✨✨
+            // ⏱️ تحضير التواقيت المعدلة
+            const timestampsToSend = timestampsModified ? wordsWithTimestamps : originalTimestamps;
+            
             const finalData = {
                 ...formData,
+                words_timestamps: timestampsToSend,
+                timestamps_modified: timestampsModified,
                 promo_card_title: formData.promo_card_title || '',
                 promo_card_description: formData.promo_card_description || '',
                 timestamp: new Date().toISOString()
             };
 
             console.log('📤 إرسال البيانات النهائية:', finalData);
-            console.log('🎁 البطاقة الإعلانية:', {
-                title: finalData.promo_card_title,
-                description: finalData.promo_card_description,
-                has_data: !!(finalData.promo_card_title || finalData.promo_card_description)
+            console.log('⏱️ التواقيت:', {
+                count: timestampsToSend.length,
+                modified: timestampsModified
             });
 
             const response = await fetch(N8N_WEBHOOK_URL, {
@@ -3593,11 +4335,13 @@
 
             if (!response.ok) throw new Error('فشل الإرسال');
 
+            // إرسال بيانات Telegram
             try { 
                 tg.sendData(JSON.stringify({ 
                     type: 'completed', 
                     id: formData.ID, 
                     status: 'completed',
+                    timestamps_modified: timestampsModified,
                     has_promo_card: !!(formData.promo_card_title || formData.promo_card_description)
                 })); 
             } catch (e) {
@@ -3620,17 +4364,20 @@
         }
     }
 
-    // ═════════════════════════════════════════════════════════════════════════
-    // ⭐ بدء التطبيق
-    // ═════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🚀 الجزء 14: بدء التطبيق
+    // ═══════════════════════════════════════════════════════════════════════════
 
-    console.log('🚀 App v3.1 Starting...');
-    console.log('✅ تم إضافة ميزة تصفية القوالب حسب الجودة');
-    console.log('✨ تم إضافة البطاقة الإعلانية الاختيارية');
-    console.log('💾 البطاقة الإعلانية تُحفظ مع كل تيمبلت');
+    console.log('═══════════════════════════════════════════════════════════');
+    console.log('🚀 App v3.2 Starting...');
+    console.log('✅ ميزة تصفية القوالب حسب الجودة');
+    console.log('✨ البطاقة الإعلانية الاختيارية');
+    console.log('⏱️ محرر التواقيت المتقدم (جديد)');
+    console.log('═══════════════════════════════════════════════════════════');
+    
     updateProgress();
     loadInitialData();
-</script>
 
+    </script>
 </body>
 </html>
