@@ -394,7 +394,7 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════════
-           ✏️ محرر النص المحسن مع زر التواقيت بجانب العنوان
+           ✏️ محرر النص
            ═══════════════════════════════════════════════════════════════════ */
         .editor-container {
             background: var(--bg-secondary);
@@ -441,7 +441,6 @@
         .control-btn:active { transform: scale(0.9); }
         .control-btn.copy-btn { font-size: 16px; }
         
-        /* رأس المحرر مع زر التواقيت */
         .editor-header {
             display: flex;
             align-items: center;
@@ -461,7 +460,6 @@
             direction: rtl;
         }
         
-        /* زر محرر التواقيت الجديد */
         .timestamp-toggle-btn {
             padding: 8px 14px;
             background: linear-gradient(135deg, var(--warning), #E67E22);
@@ -535,7 +533,7 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════════
-           ⏱️ محرر التواقيت المحسن والاحترافي
+           ⏱️ محرر التواقيت
            ═══════════════════════════════════════════════════════════════════ */
         .timestamp-editor-container {
             display: none;
@@ -597,7 +595,6 @@
         }
         .timestamp-action-btn:active { transform: scale(0.95); }
 
-        /* قائمة الكلمات مع التحسينات الجديدة */
         .timestamp-words-list {
             max-height: 500px;
             overflow-y: auto;
@@ -607,7 +604,6 @@
             border: 1px solid var(--border-color);
         }
         
-        /* زر إضافة كلمة محسن */
         .insert-word-btn {
             width: 100%;
             padding: 10px;
@@ -635,7 +631,6 @@
             color: white;
         }
         
-        /* عنصر الكلمة محسن مع قابلية السحب والإفلات */
         .timestamp-word-item {
             display: flex;
             align-items: center;
@@ -781,7 +776,6 @@
         }
         .word-action-btn:active { transform: scale(0.9); }
 
-        /* إحصائيات التواقيت */
         .timestamp-stats {
             display: flex;
             justify-content: space-around;
@@ -807,7 +801,7 @@
             color: var(--text-secondary);
         }
 
-        /* النافذة المنبثقة لإضافة كلمة جديدة */
+        /* نافذة إضافة كلمة */
         .add-word-modal {
             position: fixed;
             top: 0;
@@ -971,7 +965,21 @@
             transform: scale(0.98);
         }
 
-        /* ═══════════════════════════════════════════════════════════════════
+        /* مؤشر التحميل للكلمات */
+        .loading-more-words {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            display: none;
+        }
+        .loading-more-words.visible {
+            display: block;
+        }
+
+        /* هنا يوضع الجزء الثاني */
+
+                /* ═══════════════════════════════════════════════════════════════════
            🎨 القوالب والألوان
            ═══════════════════════════════════════════════════════════════════ */
         .quality-toggle-container {
@@ -1041,7 +1049,6 @@
         input:checked + .toggle-slider { background-color: var(--primary); }
         input:checked + .toggle-slider:before { transform: translateX(30px); }
 
-                /* تكملة CSS - القوالب والألوان */
         .templates-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -1185,9 +1192,7 @@
         .color-option .template-check { display: none; }
         .color-option.selected .template-check { display: flex; }
 
-        /* ═══════════════════════════════════════════════════════════════════
-           🖼️ Modal معاينة القالب
-           ═══════════════════════════════════════════════════════════════════ */
+        /* Modal معاينة القالب */
         .template-preview-modal {
             position: fixed;
             top: 0;
@@ -1297,9 +1302,7 @@
         }
         .preview-next-btn:active { transform: scale(0.98); }
 
-        /* ═══════════════════════════════════════════════════════════════════
-           🎨 منتقيات الألوان
-           ═══════════════════════════════════════════════════════════════════ */
+        /* منتقيات الألوان */
         .color-picker-card {
             background: var(--bg-secondary);
             border-radius: 16px;
@@ -1758,7 +1761,11 @@
                     </div>
                 </div>
                 <div class="timestamp-words-list" id="timestampWordsList">
-                    <!-- سيتم ملؤها ديناميكياً بالجافاسكربت -->
+                    <!-- سيتم ملؤها ديناميكياً بالجافاسكربت مع التحميل التدريجي -->
+                </div>
+                <div class="loading-more-words" id="loadingMoreWords">
+                    <div class="spinner" style="width: 30px; height: 30px; margin: 0 auto 10px;"></div>
+                    <div>جاري تحميل المزيد من الكلمات...</div>
                 </div>
                 <div class="timestamp-stats">
                     <div class="timestamp-stat-item">
@@ -1779,8 +1786,7 @@
 
         <!-- هنا يوضع الجزء الثالث -->
 
-
-        <!-- ═══════════════════════════════════════════════════════════════
+                <!-- ═══════════════════════════════════════════════════════════════
              🎨 الخطوة 2: القوالب
              ═══════════════════════════════════════════════════════════════ -->
         <div class="step-content" data-step="2">
@@ -2086,11 +2092,650 @@
         </div>
     </div>
 
-    <!-- ═══════════════════════════════════════════════════════════════════
-         🚀 JavaScript - المتغيرات والدوال الأساسية
-         ═══════════════════════════════════════════════════════════════════ -->
+    <style>
+        /* CSS إضافي للنماذج والمراجعة */
+        .form-group {
+            margin-bottom: 20px;
+            direction: rtl;
+        }
+        .form-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            direction: rtl;
+        }
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            direction: rtl;
+        }
+        .form-input {
+            width: 100%;
+            padding: 13px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+            direction: rtl;
+            text-align: right;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        .char-counter {
+            text-align: left;
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            direction: ltr;
+        }
+        .save-template-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            margin-top: 20px;
+            box-shadow: var(--shadow-md);
+        }
+        .save-template-btn:active { transform: scale(0.98); }
+        
+        .promo-card-section {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.08), rgba(230, 126, 34, 0.08));
+            border: 2px dashed var(--warning);
+            border-radius: 14px;
+            padding: 18px;
+            margin-top: 28px;
+            margin-bottom: 20px;
+            direction: rtl;
+            position: relative;
+            overflow: hidden;
+        }
+        .promo-card-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(243, 156, 18, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .promo-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        .promo-card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .promo-optional-badge {
+            padding: 4px 10px;
+            background: var(--warning);
+            color: white;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+        .promo-card-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1;
+        }
+        .promo-input-group {
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        .promo-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .promo-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+            direction: rtl;
+            text-align: right;
+        }
+        .promo-input:focus {
+            outline: none;
+            border-color: var(--warning);
+            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
+        }
+        .promo-input::placeholder {
+            color: var(--text-light);
+            font-size: 13px;
+        }
+        .promo-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .promo-example {
+            font-size: 11px;
+            color: var(--warning);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        /* SEO */
+        .seo-generate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
+        }
+        .seo-generate-btn:active { transform: scale(0.98); }
+        .seo-generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .seo-generate-btn.generated {
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+        }
+        .seo-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-md);
+            border: 2px solid var(--border-color);
+            direction: rtl;
+        }
+        .seo-section.highlight {
+            border-color: var(--primary);
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.2);
+        }
+        .seo-section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            direction: rtl;
+        }
+        .serp-preview {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            box-shadow: var(--shadow-sm);
+            direction: rtl;
+        }
+        .serp-preview-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            direction: rtl;
+        }
+        .serp-url {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            direction: ltr;
+            text-align: left;
+        }
+        .serp-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a0dab;
+            margin-bottom: 4px;
+            line-height: 1.3;
+            cursor: pointer;
+            direction: rtl;
+            text-align: right;
+        }
+        .serp-title:hover { text-decoration: underline; }
+        .serp-description {
+            font-size: 13px;
+            color: #545454;
+            line-height: 1.5;
+            direction: rtl;
+            text-align: right;
+        }
+        .form-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 13px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+            resize: vertical;
+            direction: rtl;
+            text-align: right;
+        }
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        .tags-input-section {
+            margin-bottom: 16px;
+            direction: rtl;
+        }
+        .tags-input-wrapper {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            direction: rtl;
+        }
+        .tags-input {
+            flex: 1;
+            padding: 13px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+            direction: rtl;
+            text-align: right;
+        }
+        .tags-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        .tags-add-btn {
+            padding: 13px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .tags-add-btn:active { transform: scale(0.95); }
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            min-height: 60px;
+            direction: rtl;
+        }
+        .tag-item {
+            background: white;
+            border: 2px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            direction: rtl;
+        }
+        .tag-item:hover { border-color: var(--danger); }
+        .tag-remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            padding: 0;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .seo-stats {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            direction: rtl;
+        }
+        .seo-stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            direction: rtl;
+        }
+        .seo-stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        .seo-stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* المراجعة */
+        .review-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-md);
+            direction: rtl;
+        }
+        .review-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            direction: rtl;
+        }
+        .review-item {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            direction: rtl;
+        }
+        .review-item:last-child { border-bottom: none; }
+        .review-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            min-width: 80px;
+        }
+        .review-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: right;
+            flex: 1;
+            word-break: break-word;
+            direction: rtl;
+        }
+        .review-expand-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 0;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            direction: rtl;
+        }
+        .review-tags-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            max-height: 60px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            direction: rtl;
+        }
+        .review-tags-preview.expanded { max-height: none; }
+        .review-tag {
+            background: var(--bg-primary);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            color: var(--text-primary);
+        }
+        .review-template-images {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 16px;
+            direction: rtl;
+        }
+        .review-image-wrapper { text-align: center; }
+        .review-image-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            direction: rtl;
+        }
+        .review-image {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            display: none;
+        }
+        .review-image.loaded { display: block; }
+        .review-image-loading {
+            width: 100%;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+            border-radius: 12px;
+        }
+        .review-image-loading.hidden { display: none; }
+        .review-seo-title-box, .review-seo-desc-box {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+            direction: rtl;
+            text-align: right;
+        }
+        .review-seo-desc-box {
+            max-height: 80px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .review-seo-desc-box.expanded { max-height: none; }
+        .review-color-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .review-color-swatch {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid var(--border-color);
+        }
+
+        /* التنقل */
+        .bottom-nav-wrapper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            z-index: 100;
+            direction: rtl;
+            padding: 12px 16px;
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            direction: rtl;
+        }
+        .step-indicator-badge {
+            position: relative;
+            width: 56px;
+            height: 56px;
+            flex-shrink: 0;
+            order: -1;
+        }
+        .step-pulse-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            opacity: 0.6;
+        }
+        @keyframes pulse-ring {
+            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.4; }
+            100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+        }
+        .step-circle-main {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.5);
+            z-index: 2;
+        }
+        .step-number {
+            font-size: 20px;
+            font-weight: 900;
+            color: white;
+            line-height: 1;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .step-total {
+            font-size: 9px;
+            color: rgba(255,255,255,0.9);
+            font-weight: 700;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+            direction: rtl;
+        }
+        .nav-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .nav-btn:active { transform: scale(0.98); }
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-back {
+            background: white;
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        .btn-next {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        @media (max-width: 480px) {
+            .step-content { padding: 10px 12px 100px; }
+            .color-wheel-container { width: 160px; height: 160px; }
+            .templates-grid { grid-template-columns: 1fr; }
+            .template-card.large { grid-column: span 1; }
+            .editor-textarea { font-size: 17px; min-height: 350px; }
+            .timestamp-word-item { flex-wrap: wrap; }
+            .word-times { width: 100%; justify-content: space-between; }
+        }
+    </style>
+
+    <!-- هنا يوضع الجزء الرابع -->
+
+    
     <script>
-    // ═══════════════════════════════════════════════════════════════════════════
+
+
+            // ═══════════════════════════════════════════════════════════════════════════
     // 🔧 المتغيرات والإعدادات الأساسية
     // ═══════════════════════════════════════════════════════════════════════════
     
@@ -2126,9 +2771,9 @@
     let titleColorDragging = false;
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // ⏱️ محرر التواقيت المحسّن والسريع - بدون تأخير
+    // ⏱️ متغيرات محرر التواقيت المحسنة مع التحميل التدريجي
     // ═══════════════════════════════════════════════════════════════════════════
-
+    
     let timestampModeActive = false;
     let wordsWithTimestamps = [];
     let originalTimestamps = [];
@@ -2138,8 +2783,124 @@
     let draggedElement = null;
     let draggedIndex = -1;
     let debounceTimer = null;
+    
+    // متغيرات التحميل التدريجي
+    let displayedWordsCount = 0;
+    const WORDS_PER_LOAD = 10;
+    let isLoadingMoreWords = false;
 
-    // دالة debounce لتقليل عدد التحديثات
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 📝 بيانات النموذج
+    // ═══════════════════════════════════════════════════════════════════════════
+    
+    const formData = {
+        ID: null,
+        binId: '',
+        audioUrl: '',
+        transcript_txt: '',
+        corrected_full_text: '',
+        words_timestamps: [],
+        landscape_image_url: null,
+        portrait_image_url: null,
+        title: '',
+        series: '',
+        subSeries: '',
+        finalSeries: '',
+        template_id: null,
+        template_name: null,
+        color_id: null,
+        color_name: null,
+        series_color: '#b9d780',
+        subseries_color: '#ebbd27',
+        finalseries_color: '#fce74e',
+        title_color: '#ebbd27',
+        caption_color: '#ffffff',
+        seo_title: '',
+        seo_description: '',
+        tags: [],
+        promo_card_title: '',
+        promo_card_description: '',
+        status: 'completed',
+        updated_at: new Date().toISOString()
+    };
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🔧 دوال المساعدة العامة
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function showLoading(text, subtext = '', step = '') {
+        document.getElementById('loadingText').textContent = text;
+        document.getElementById('loadingSubtext').textContent = subtext;
+        document.getElementById('loadingStep').textContent = step;
+        document.getElementById('loadingOverlay').classList.add('visible');
+    }
+
+    function hideLoading() {
+        document.getElementById('loadingOverlay').classList.remove('visible');
+        document.getElementById('skipCorrectionBtn').style.display = 'none';
+    }
+
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(() => {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }, 100);
+    }
+
+    function convertDriveUrl(url) {
+        if (!url) return '';
+        try {
+            const fileIdMatch = url.match(/[?&]id=([^&]+)/);
+            if (fileIdMatch && fileIdMatch[1]) {
+                return `https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w1000`;
+            }
+            return url;
+        } catch (error) {
+            return url;
+        }
+    }
+
+    function formatTime(seconds) {
+        if (!seconds || isNaN(seconds)) return '0:00';
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    function formatTimeDetailed(seconds) {
+        if (!seconds || isNaN(seconds)) return '0.000';
+        return parseFloat(seconds).toFixed(3);
+    }
+
+    function showToast(message, isError = false) {
+        const toast = document.createElement('div');
+        toast.textContent = message;
+        toast.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: ${isError ? '#E74C3C' : '#27AE60'};
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            z-index: 99999;
+            font-weight: 700;
+            text-align: center;
+            max-width: 80%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        `;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
     function debounce(func, wait) {
         return function executedFunction(...args) {
             clearTimeout(debounceTimer);
@@ -2147,16 +2908,215 @@
         };
     }
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🎵 مشغل الصوت
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const audioElement = document.getElementById('audioElement');
+    let audioLoaded = false;
+
+    async function loadAudioWithProxy(url) {
+        console.log('🎵 تحميل الصوت:', url);
+        try {
+            const proxyUrl = `${WORKER_API_URL}/proxy-audio?url=${encodeURIComponent(url)}`;
+            const response = await fetch(proxyUrl);
+            if (response.ok) {
+                const blob = await response.blob();
+                if (audioBlobUrl) URL.revokeObjectURL(audioBlobUrl);
+                audioBlobUrl = URL.createObjectURL(blob);
+                audioElement.src = audioBlobUrl;
+                audioElement.load();
+                console.log('✅ تم تحميل الصوت');
+                audioLoaded = true;
+                return true;
+            } else {
+                throw new Error('Proxy failed');
+            }
+        } catch (proxyError) {
+            console.log('⚠️ فشل Proxy، محاولة مباشرة...');
+            try {
+                audioElement.src = url;
+                audioElement.load();
+                audioLoaded = true;
+                return true;
+            } catch (directError) {
+                console.error('❌ فشل التحميل:', directError);
+                return false;
+            }
+        }
+    }
+
+    async function toggleAudioPlayback() {
+        if (!audioLoaded) {
+            showToast('⏳ الصوت غير جاهز', true);
+            return;
+        }
+        try {
+            if (audioElement.paused) {
+                await audioElement.play();
+                document.getElementById('playPauseBtn').textContent = '⏸️';
+                document.getElementById('playPauseBtnFixed').textContent = '⏸️';
+            } else {
+                audioElement.pause();
+                document.getElementById('playPauseBtn').textContent = '▶️';
+                document.getElementById('playPauseBtnFixed').textContent = '▶️';
+            }
+        } catch (error) {
+            console.error('❌ خطأ التشغيل:', error);
+            showToast('⚠️ خطأ في تشغيل الصوت', true);
+        }
+    }
+
+    function playWordAudio(startTime, endTime) {
+        if (!audioLoaded) {
+            showToast('⏳ الصوت غير جاهز', true);
+            return;
+        }
+        audioElement.currentTime = startTime;
+        audioElement.play();
+        const checkEnd = setInterval(() => {
+            if (audioElement.currentTime >= endTime) {
+                audioElement.pause();
+                clearInterval(checkEnd);
+            }
+        }, 50);
+        setTimeout(() => {
+            clearInterval(checkEnd);
+            audioElement.pause();
+        }, (endTime - startTime + 0.5) * 1000);
+    }
+
+    audioElement.addEventListener('loadedmetadata', () => {
+        document.getElementById('duration').textContent = formatTime(audioElement.duration);
+        document.getElementById('durationFixed').textContent = formatTime(audioElement.duration);
+        audioLoaded = true;
+    });
+
+    audioElement.addEventListener('canplaythrough', () => { audioLoaded = true; });
+    audioElement.addEventListener('error', () => { audioLoaded = false; });
+
+    audioElement.addEventListener('timeupdate', () => {
+        const progress = audioElement.duration ? (audioElement.currentTime / audioElement.duration) * 100 : 0;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+        document.getElementById('progressFillFixed').style.width = `${progress}%`;
+        document.getElementById('currentTime').textContent = formatTime(audioElement.currentTime);
+        document.getElementById('currentTimeFixed').textContent = formatTime(audioElement.currentTime);
+    });
+
+    audioElement.addEventListener('ended', () => {
+        document.getElementById('playPauseBtn').textContent = '▶️';
+        document.getElementById('playPauseBtnFixed').textContent = '▶️';
+    });
+
+    document.getElementById('playPauseBtn').addEventListener('click', toggleAudioPlayback);
+    document.getElementById('playPauseBtnFixed').addEventListener('click', toggleAudioPlayback);
+
+    document.getElementById('progressBar').addEventListener('click', (e) => {
+        if (!audioLoaded || !audioElement.duration) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const percentage = 1 - ((e.clientX - rect.left) / rect.width);
+        audioElement.currentTime = percentage * audioElement.duration;
+    });
+
+    document.getElementById('progressBarFixed').addEventListener('click', (e) => {
+        if (!audioLoaded || !audioElement.duration) return;
+        const rect = e.currentTarget.getBoundingClientRect();
+        const percentage = 1 - ((e.clientX - rect.left) / rect.width);
+        audioElement.currentTime = percentage * audioElement.duration;
+    });
+
+    document.querySelectorAll('.speed-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const speed = parseFloat(btn.dataset.speed);
+            audioElement.playbackRate = speed;
+            document.querySelectorAll('.speed-btn, .speed-btn-fixed').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelector(`.speed-btn-fixed[data-speed="${speed}"]`)?.classList.add('active');
+        });
+    });
+
+    document.querySelectorAll('.speed-btn-fixed').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const speed = parseFloat(btn.dataset.speed);
+            audioElement.playbackRate = speed;
+            document.querySelectorAll('.speed-btn, .speed-btn-fixed').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.querySelector(`.speed-btn[data-speed="${speed}"]`)?.classList.add('active');
+        });
+    });
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ✏️ محرر النص
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const textEditor = document.getElementById('textEditor');
+
+    function enterEditingMode() {
+        document.getElementById('audioPlayerSection').classList.add('hidden');
+        document.getElementById('audioPlayerFixed').classList.add('visible');
+        document.getElementById('editorContainer').classList.add('editing-mode');
+    }
+
+    function exitEditingMode() {
+        document.getElementById('audioPlayerSection').classList.remove('hidden');
+        document.getElementById('audioPlayerFixed').classList.remove('visible');
+        document.getElementById('editorContainer').classList.remove('editing-mode');
+    }
+
+    textEditor.addEventListener('focus', enterEditingMode);
+
+    document.getElementById('textSizeUp').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (currentTextSize < MAX_TEXT_SIZE) {
+            currentTextSize += 2;
+            textEditor.style.fontSize = currentTextSize + 'px';
+        }
+    });
+
+    document.getElementById('textSizeDown').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (currentTextSize > MIN_TEXT_SIZE) {
+            currentTextSize -= 2;
+            textEditor.style.fontSize = currentTextSize + 'px';
+        }
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', async (e) => {
+        e.preventDefault();
+        try {
+            await navigator.clipboard.writeText(textEditor.value);
+            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            showToast('✅ تم النسخ');
+        } catch (err) {
+            textEditor.select();
+            document.execCommand('copy');
+            showToast('✅ تم النسخ');
+        }
+    });
+
+    function updateTextStats() {
+        const text = textEditor.value || '';
+        document.getElementById('charCount').textContent = text.length.toLocaleString('ar');
+        document.getElementById('wordCount').textContent = (text.trim() ? text.trim().split(/\s+/).length : 0).toLocaleString('ar');
+        formData.corrected_full_text = text;
+        validateCurrentStep();
+    }
+
+    textEditor.addEventListener('input', updateTextStats);
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // ⏱️ محرر التواقيت المحسن مع التحميل التدريجي
+    // ═══════════════════════════════════════════════════════════════════════════
+
     function calculateAverageSpeechRate() {
         if (wordsWithTimestamps.length === 0) {
             averageSpeechRate = 0.3;
             return;
         }
-        
         let totalDuration = 0;
         let validWords = 0;
-        
-        for (let i = 0; i < Math.min(wordsWithTimestamps.length, 50); i++) {
+        const sampleSize = Math.min(wordsWithTimestamps.length, 50);
+        for (let i = 0; i < sampleSize; i++) {
             const word = wordsWithTimestamps[i];
             const duration = word.end - word.start;
             if (duration > 0.05 && duration < 2) {
@@ -2164,7 +3124,6 @@
                 validWords++;
             }
         }
-        
         averageSpeechRate = validWords > 0 ? totalDuration / validWords : 0.3;
     }
 
@@ -2172,13 +3131,10 @@
         const baseTime = 0.2;
         const charTime = 0.04;
         const wordLength = word.length;
-        
         let duration = baseTime + (wordLength * charTime);
-        
         if (averageSpeechRate > 0) {
             duration = duration * (averageSpeechRate / 0.3);
         }
-        
         return Math.min(Math.max(duration, 0.15), 2);
     }
 
@@ -2194,7 +3150,9 @@
             editorContainer.classList.add('hidden');
             timestampContainer.classList.add('visible');
             calculateAverageSpeechRate();
+            displayedWordsCount = 0;
             renderTimestampWords();
+            setupScrollListener();
         } else {
             toggle.classList.remove('active');
             toggle.innerHTML = '<span>⏱️</span><span>محرر التواقيت</span>';
@@ -2244,10 +3202,61 @@
         }
     }
 
-    // دالة محسنة لرسم العناصر بدون إعادة بناء كل شيء
+    // إعداد مستمع السكرول للتحميل التدريجي
+    function setupScrollListener() {
+        const container = document.getElementById('timestampWordsList');
+        container.removeEventListener('scroll', handleScroll);
+        container.addEventListener('scroll', handleScroll, { passive: true });
+    }
+
+    function handleScroll() {
+        const container = document.getElementById('timestampWordsList');
+        const scrollTop = container.scrollTop;
+        const scrollHeight = container.scrollHeight;
+        const clientHeight = container.clientHeight;
+        
+        // عندما يقترب من نهاية القائمة (100px قبل النهاية)
+        if (scrollTop + clientHeight >= scrollHeight - 100) {
+            loadMoreWords();
+        }
+    }
+
+    function loadMoreWords() {
+        if (isLoadingMoreWords) return;
+        if (displayedWordsCount >= wordsWithTimestamps.length) return;
+        
+        isLoadingMoreWords = true;
+        document.getElementById('loadingMoreWords').classList.add('visible');
+        
+        // تأخير بسيط لإظهار مؤشر التحميل
+        setTimeout(() => {
+            const container = document.getElementById('timestampWordsList');
+            const fragment = document.createDocumentFragment();
+            
+            const startIndex = displayedWordsCount;
+            const endIndex = Math.min(displayedWordsCount + WORDS_PER_LOAD, wordsWithTimestamps.length);
+            
+            for (let i = startIndex; i < endIndex; i++) {
+                fragment.appendChild(createWordElement(wordsWithTimestamps[i], i));
+                fragment.appendChild(createInsertButton(i + 1));
+            }
+            
+            // إضافة العناصر الجديدة قبل مؤشر التحميل
+            const loadingIndicator = document.getElementById('loadingMoreWords');
+            container.insertBefore(fragment, loadingIndicator);
+            
+            displayedWordsCount = endIndex;
+            isLoadingMoreWords = false;
+            document.getElementById('loadingMoreWords').classList.remove('visible');
+            
+            updateTimestampStats();
+        }, 100);
+    }
+
     function renderTimestampWords() {
         const container = document.getElementById('timestampWordsList');
         container.innerHTML = '';
+        displayedWordsCount = 0;
         
         if (wordsWithTimestamps.length === 0) {
             container.innerHTML = `
@@ -2264,14 +3273,27 @@
         // زر الإضافة في البداية
         fragment.appendChild(createInsertButton(0));
         
-        // استخدام حلقة عادية أسرع من forEach
-        for (let i = 0; i < wordsWithTimestamps.length; i++) {
+        // تحميل أول 10 كلمات فقط
+        const initialCount = Math.min(WORDS_PER_LOAD, wordsWithTimestamps.length);
+        
+        for (let i = 0; i < initialCount; i++) {
             fragment.appendChild(createWordElement(wordsWithTimestamps[i], i));
             fragment.appendChild(createInsertButton(i + 1));
         }
         
+        // إضافة مؤشر التحميل
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'loading-more-words';
+        loadingDiv.id = 'loadingMoreWords';
+        loadingDiv.innerHTML = `
+            <div class="spinner" style="width: 30px; height: 30px; margin: 0 auto 10px;"></div>
+            <div>جاري تحميل المزيد من الكلمات...</div>
+        `;
+        fragment.appendChild(loadingDiv);
+        
         container.appendChild(fragment);
-        attachTimestampEvents();
+        displayedWordsCount = initialCount;
+        
         updateTimestampStats();
     }
 
@@ -2317,13 +3339,34 @@
             </div>
         `;
         
-        // أحداث السحب والإفلات بطريقة محسنة
-        item.addEventListener('dragstart', handleDragStart, { passive: true });
+        // أحداث السحب والإفلات
+        item.addEventListener('dragstart', handleDragStart, { passive: false });
         item.addEventListener('dragover', handleDragOver);
         item.addEventListener('drop', handleDrop);
         item.addEventListener('dragend', handleDragEnd, { passive: true });
         item.addEventListener('dragenter', handleDragEnter, { passive: true });
         item.addEventListener('dragleave', handleDragLeave, { passive: true });
+        
+        // أحداث الإدخال
+        const textInput = item.querySelector('.word-text-input');
+        const startInput = item.querySelector('.time-input.start-time');
+        const endInput = item.querySelector('.time-input.end-time');
+        
+        textInput.addEventListener('change', handleInputChange);
+        startInput.addEventListener('change', handleInputChange);
+        endInput.addEventListener('change', handleInputChange);
+        
+        // أزرار التشغيل والحذف
+        item.querySelector('.play-btn').addEventListener('click', (e) => {
+            const idx = parseInt(e.currentTarget.dataset.index);
+            const w = wordsWithTimestamps[idx];
+            if (w) playWordAudio(w.start, w.end);
+        });
+        
+        item.querySelector('.delete-btn').addEventListener('click', (e) => {
+            const idx = parseInt(e.currentTarget.dataset.index);
+            deleteWord(idx);
+        });
         
         return item;
     }
@@ -2331,9 +3374,83 @@
     function createInsertButton(insertIndex) {
         const btn = document.createElement('button');
         btn.className = 'insert-word-btn';
+        btn.dataset.insertIndex = insertIndex;
         btn.innerHTML = '<span>➕</span><span>إضافة كلمة هنا</span>';
-        btn.onclick = () => showAddWordModal(insertIndex);
+        btn.addEventListener('click', () => showAddWordModal(insertIndex));
         return btn;
+    }
+
+    function handleInputChange(e) {
+        const index = parseInt(e.target.dataset.index);
+        const field = e.target.dataset.field;
+        const value = e.target.value;
+        
+        if (field === 'text') {
+            wordsWithTimestamps[index].text = value;
+        } else {
+            wordsWithTimestamps[index][field] = parseFloat(value) || 0;
+        }
+        
+        timestampsModified = true;
+        updateTimestampStats();
+    }
+
+    // أحداث السحب والإفلات
+    function handleDragStart(e) {
+        draggedElement = this;
+        draggedIndex = parseInt(this.dataset.index);
+        this.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', draggedIndex);
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.dataTransfer.dropEffect = 'move';
+        return false;
+    }
+
+    function handleDragEnter(e) {
+        if (this !== draggedElement && this.classList.contains('timestamp-word-item')) {
+            this.classList.add('drag-over');
+        }
+    }
+
+    function handleDragLeave(e) {
+        this.classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        
+        if (this !== draggedElement && this.classList.contains('timestamp-word-item')) {
+            const dropIndex = parseInt(this.dataset.index);
+            
+            const movedWord = wordsWithTimestamps[draggedIndex];
+            wordsWithTimestamps.splice(draggedIndex, 1);
+            
+            const newIndex = dropIndex > draggedIndex ? dropIndex - 1 : dropIndex;
+            wordsWithTimestamps.splice(newIndex, 0, movedWord);
+            
+            timestampsModified = true;
+            
+            // إعادة رسم العناصر
+            displayedWordsCount = 0;
+            renderTimestampWords();
+            setupScrollListener();
+            showToast('✅ تم نقل الكلمة');
+        }
+        
+        return false;
+    }
+
+    function handleDragEnd(e) {
+        document.querySelectorAll('.timestamp-word-item').forEach(item => {
+            item.classList.remove('dragging', 'drag-over');
+        });
+        draggedElement = null;
+        draggedIndex = -1;
     }
 
     function showAddWordModal(position) {
@@ -2373,11 +3490,8 @@
         
         input.value = '';
         modal.classList.add('visible');
-        
-        // تأخير التركيز لضمان ظهور المودال أولاً
         setTimeout(() => input.focus(), 100);
         
-        // تحديث مبسط
         input.oninput = debounce(() => {
             if (input.value.trim()) {
                 const duration = calculateWordDuration(input.value);
@@ -2408,7 +3522,6 @@
         
         wordsWithTimestamps.splice(insertPosition, 0, newWord);
         
-        // تعديل بسيط فقط للكلمة التالية إذا كان هناك تداخل
         if (insertPosition < wordsWithTimestamps.length - 1) {
             const nextWord = wordsWithTimestamps[insertPosition + 1];
             if (nextWord.start < suggestedEnd + 0.05) {
@@ -2419,7 +3532,9 @@
         }
         
         timestampsModified = true;
+        displayedWordsCount = 0;
         renderTimestampWords();
+        setupScrollListener();
         showToast('✅ تمت إضافة الكلمة');
         closeAddWordModal();
     }
@@ -2430,126 +3545,24 @@
         document.getElementById('newWordInput').value = '';
     }
 
-    // أحداث السحب والإفلات المحسنة
-    function handleDragStart(e) {
-        draggedElement = this;
-        draggedIndex = parseInt(this.dataset.index);
-        this.classList.add('dragging');
-        e.dataTransfer.effectAllowed = 'move';
-        e.dataTransfer.setData('text/html', this.innerHTML);
-    }
-
-    function handleDragOver(e) {
-        e.preventDefault();
-        e.dataTransfer.dropEffect = 'move';
-        return false;
-    }
-
-    function handleDragEnter(e) {
-        if (this !== draggedElement && this.classList.contains('timestamp-word-item')) {
-            this.classList.add('drag-over');
-        }
-    }
-
-    function handleDragLeave(e) {
-        this.classList.remove('drag-over');
-    }
-
-    function handleDrop(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        
-        if (this !== draggedElement && this.classList.contains('timestamp-word-item')) {
-            const dropIndex = parseInt(this.dataset.index);
-            
-            // نقل العنصر بدون إعادة حساب التواقيت
-            const movedWord = wordsWithTimestamps[draggedIndex];
-            wordsWithTimestamps.splice(draggedIndex, 1);
-            
-            const newIndex = dropIndex > draggedIndex ? dropIndex - 1 : dropIndex;
-            wordsWithTimestamps.splice(newIndex, 0, movedWord);
-            
-            timestampsModified = true;
-            
-            // إعادة رسم سريعة
-            requestAnimationFrame(() => {
-                renderTimestampWords();
-                showToast('✅ تم نقل الكلمة');
-            });
-        }
-        
-        return false;
-    }
-
-    function handleDragEnd(e) {
-        const items = document.querySelectorAll('.timestamp-word-item');
-        items.forEach(item => {
-            item.classList.remove('dragging', 'drag-over');
-        });
-        draggedElement = null;
-        draggedIndex = -1;
-    }
-
-    function attachTimestampEvents() {
-        // استخدام delegation للأحداث - أسرع بكثير
-        const container = document.getElementById('timestampWordsList');
-        
-        container.addEventListener('change', (e) => {
-            if (e.target.matches('.word-text-input, .time-input')) {
-                handleTimestampInputChange(e);
-            }
-        });
-        
-        container.addEventListener('click', (e) => {
-            if (e.target.matches('.word-action-btn.play-btn')) {
-                const index = parseInt(e.target.dataset.index);
-                const word = wordsWithTimestamps[index];
-                if (word) playWordAudio(word.start, word.end);
-            } else if (e.target.matches('.word-action-btn.delete-btn')) {
-                const index = parseInt(e.target.dataset.index);
-                deleteWord(index);
-            }
-        });
-    }
-
-    function handleTimestampInputChange(e) {
-        const index = parseInt(e.target.dataset.index);
-        const field = e.target.dataset.field;
-        let value = e.target.value;
-        
-        if (field === 'text') {
-            wordsWithTimestamps[index].text = value;
-        } else {
-            const numValue = parseFloat(value) || 0;
-            wordsWithTimestamps[index][field] = numValue;
-        }
-        
-        timestampsModified = true;
-        
-        // تحديث الإحصائيات بتأخير بسيط
-        debounce(updateTimestampStats, 200)();
-    }
-
     function deleteWord(index) {
         if (confirm(`هل تريد حذف الكلمة "${wordsWithTimestamps[index].text}"؟`)) {
             wordsWithTimestamps.splice(index, 1);
             timestampsModified = true;
-            
-            requestAnimationFrame(() => {
-                renderTimestampWords();
-                showToast('✅ تم حذف الكلمة');
-            });
+            displayedWordsCount = 0;
+            renderTimestampWords();
+            setupScrollListener();
+            showToast('✅ تم حذف الكلمة');
         }
     }
 
     function sortTimestamps() {
         wordsWithTimestamps.sort((a, b) => a.start - b.start);
         timestampsModified = true;
-        
-        requestAnimationFrame(() => {
-            renderTimestampWords();
-            showToast('✅ تم ترتيب الكلمات');
-        });
+        displayedWordsCount = 0;
+        renderTimestampWords();
+        setupScrollListener();
+        showToast('✅ تم ترتيب الكلمات');
     }
 
     function updateTimestampStats() {
@@ -2568,14 +3581,12 @@
         for (let i = 0; i < len; i++) {
             const word = wordsWithTimestamps[i];
             const original = originalTimestamps[i];
-            
             if (word.text !== original.text ||
                 Math.abs(word.start - original.start) > 0.001 ||
                 Math.abs(word.end - original.end) > 0.001) {
                 modifiedCount++;
             }
         }
-        
         modifiedCount += Math.abs(wordsWithTimestamps.length - originalTimestamps.length);
         
         document.getElementById('modifiedCount').textContent = modifiedCount;
@@ -2602,7 +3613,6 @@
         validateCurrentStep();
     });
 
-    // إضافة حدث Enter للنافذة المنبثقة
     document.getElementById('newWordInput').addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
@@ -2610,7 +3620,6 @@
         }
     });
 
-    // إضافة حدث Escape لإغلاق المودال
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             const modal = document.getElementById('addWordModal');
@@ -2645,11 +3654,9 @@
             formData.binId = binId;
             formData.audioUrl = loadedData.audioUrl || '';
             
-            // قراءة النص من حقل "text"
             formData.transcript_txt = loadedData.text || '';
             formData.corrected_full_text = loadedData.text || '';
             
-            // قراءة التواقيت من حقل "Timings"
             if (loadedData.Timings) {
                 loadTimestampsFromData(loadedData.Timings);
             } else if (loadedData.timings) {
@@ -3041,12 +4048,14 @@
 
     document.getElementById('seoTitleInput').addEventListener('input', () => {
         formData.seo_title = document.getElementById('seoTitleInput').value;
+        document.getElementById('seoTitleCount').textContent = formData.seo_title.length;
         updateSerpPreview();
         validateCurrentStep();
     });
 
     document.getElementById('seoDescriptionInput').addEventListener('input', () => {
         formData.seo_description = document.getElementById('seoDescriptionInput').value;
+        document.getElementById('seoDescCount').textContent = formData.seo_description.length;
         updateSerpPreview();
         validateCurrentStep();
     });
@@ -3115,14 +4124,15 @@
         document.getElementById('reviewCharCount').textContent = formData.corrected_full_text.length;
         
         let modifiedCount = 0;
-        wordsWithTimestamps.forEach((word, i) => {
-            if (originalTimestamps[i]) {
-                if (word.text !== originalTimestamps[i].text || 
-                    Math.abs(word.start - originalTimestamps[i].start) > 0.001 || 
-                    Math.abs(word.end - originalTimestamps[i].end) > 0.001) modifiedCount++;
-            } else modifiedCount++;
-        });
-        if (originalTimestamps.length > wordsWithTimestamps.length) modifiedCount += (originalTimestamps.length - wordsWithTimestamps.length);
+        const len = Math.min(wordsWithTimestamps.length, originalTimestamps.length);
+        for (let i = 0; i < len; i++) {
+            const word = wordsWithTimestamps[i];
+            const original = originalTimestamps[i];
+            if (word.text !== original.text || 
+                Math.abs(word.start - original.start) > 0.001 || 
+                Math.abs(word.end - original.end) > 0.001) modifiedCount++;
+        }
+        modifiedCount += Math.abs(wordsWithTimestamps.length - originalTimestamps.length);
         document.getElementById('reviewTimestampCount').textContent = timestampsModified ? `${modifiedCount} تعديل` : 'لم يتم التعديل';
         
         document.getElementById('reviewTemplate').textContent = formData.template_name || '-';
@@ -3231,651 +4241,17 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // باقي CSS المطلوب للنماذج والمراجعة
-    // ═══════════════════════════════════════════════════════════════════════════
-
-    const additionalStyles = document.createElement('style');
-    additionalStyles.textContent = `
-        .form-group {
-            margin-bottom: 20px;
-            direction: rtl;
-        }
-        .form-label {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            direction: rtl;
-        }
-        .form-hint {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-            direction: rtl;
-        }
-        .form-input {
-            width: 100%;
-            padding: 13px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 15px;
-            font-family: inherit;
-            transition: all 0.3s;
-            background: white;
-            direction: rtl;
-            text-align: right;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-        }
-        .char-counter {
-            text-align: left;
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-            direction: ltr;
-        }
-        .save-template-btn {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s;
-            margin-top: 20px;
-            box-shadow: var(--shadow-md);
-        }
-        .save-template-btn:active { transform: scale(0.98); }
-        .promo-card-section {
-            background: linear-gradient(135deg, rgba(243, 156, 18, 0.08), rgba(230, 126, 34, 0.08));
-            border: 2px dashed var(--warning);
-            border-radius: 14px;
-            padding: 18px;
-            margin-top: 28px;
-            margin-bottom: 20px;
-            direction: rtl;
-            position: relative;
-            overflow: hidden;
-        }
-        .promo-card-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(243, 156, 18, 0.05) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .promo-card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 14px;
-            position: relative;
-            z-index: 1;
-        }
-        .promo-card-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .promo-optional-badge {
-            padding: 4px 10px;
-            background: var(--warning);
-            color: white;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 700;
-        }
-        .promo-card-description {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            line-height: 1.5;
-            position: relative;
-            z-index: 1;
-        }
-        .promo-input-group {
-            margin-bottom: 14px;
-            position: relative;
-            z-index: 1;
-        }
-        .promo-label {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .promo-input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: inherit;
-            transition: all 0.3s;
-            background: white;
-            direction: rtl;
-            text-align: right;
-        }
-        .promo-input:focus {
-            outline: none;
-            border-color: var(--warning);
-            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
-        }
-        .promo-input::placeholder {
-            color: var(--text-light);
-            font-size: 13px;
-        }
-        .promo-textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        .promo-example {
-            font-size: 11px;
-            color: var(--warning);
-            margin-top: 4px;
-            font-weight: 600;
-        }
-        .seo-generate-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 17px;
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
-        }
-        .seo-generate-btn:active { transform: scale(0.98); }
-        .seo-generate-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        .seo-generate-btn.generated {
-            background: linear-gradient(135deg, var(--success), var(--success-light));
-        }
-        .seo-section {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 18px;
-            box-shadow: var(--shadow-md);
-            border: 2px solid var(--border-color);
-            direction: rtl;
-        }
-        .seo-section.highlight {
-            border-color: var(--primary);
-            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.2);
-        }
-        .seo-section-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            direction: rtl;
-        }
-        .serp-preview {
-            background: white;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 16px;
-            box-shadow: var(--shadow-sm);
-            direction: rtl;
-        }
-        .serp-preview-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            direction: rtl;
-        }
-        .serp-url {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-            direction: ltr;
-            text-align: left;
-        }
-        .serp-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1a0dab;
-            margin-bottom: 4px;
-            line-height: 1.3;
-            cursor: pointer;
-            direction: rtl;
-            text-align: right;
-        }
-        .serp-title:hover { text-decoration: underline; }
-        .serp-description {
-            font-size: 13px;
-            color: #545454;
-            line-height: 1.5;
-            direction: rtl;
-            text-align: right;
-        }
-        .form-textarea {
-            width: 100%;
-            min-height: 120px;
-            padding: 13px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 15px;
-            font-family: inherit;
-            transition: all 0.3s;
-            background: white;
-            resize: vertical;
-            direction: rtl;
-            text-align: right;
-        }
-        .form-textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-        }
-        .tags-input-section {
-            margin-bottom: 16px;
-            direction: rtl;
-        }
-        .tags-input-wrapper {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-            direction: rtl;
-        }
-        .tags-input {
-            flex: 1;
-            padding: 13px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 15px;
-            font-family: inherit;
-            transition: all 0.3s;
-            background: white;
-            direction: rtl;
-            text-align: right;
-        }
-        .tags-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-        }
-        .tags-add-btn {
-            padding: 13px 20px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-        .tags-add-btn:active { transform: scale(0.95); }
-        .tags-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding: 12px;
-            background: var(--bg-primary);
-            border-radius: 8px;
-            min-height: 60px;
-            direction: rtl;
-        }
-        .tag-item {
-            background: white;
-            border: 2px solid var(--border-color);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            direction: rtl;
-        }
-        .tag-item:hover { border-color: var(--danger); }
-        .tag-remove {
-            background: none;
-            border: none;
-            color: var(--danger);
-            cursor: pointer;
-            font-size: 16px;
-            line-height: 1;
-            padding: 0;
-            width: 16px;
-            height: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .seo-stats {
-            background: var(--bg-primary);
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 12px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            direction: rtl;
-        }
-        .seo-stat-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            direction: rtl;
-        }
-        .seo-stat-label {
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-        .seo-stat-value {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-        .review-section {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow-md);
-            direction: rtl;
-        }
-        .review-section-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            direction: rtl;
-        }
-        .review-item {
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-light);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
-            direction: rtl;
-        }
-        .review-item:last-child { border-bottom: none; }
-        .review-label {
-            font-size: 13px;
-            color: var(--text-secondary);
-            min-width: 80px;
-        }
-        .review-value {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            text-align: right;
-            flex: 1;
-            word-break: break-word;
-            direction: rtl;
-        }
-        .review-expand-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 4px 0;
-            margin-top: 4px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            direction: rtl;
-        }
-        .review-tags-preview {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            max-height: 60px;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            direction: rtl;
-        }
-        .review-tags-preview.expanded { max-height: none; }
-        .review-tag {
-            background: var(--bg-primary);
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            color: var(--text-primary);
-        }
-        .review-template-images {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-top: 16px;
-            direction: rtl;
-        }
-        .review-image-wrapper { text-align: center; }
-        .review-image-label {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            direction: rtl;
-        }
-        .review-image {
-            width: 100%;
-            border-radius: 12px;
-            box-shadow: var(--shadow-md);
-            display: none;
-        }
-        .review-image.loaded { display: block; }
-        .review-image-loading {
-            width: 100%;
-            aspect-ratio: 16/9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-primary);
-            border-radius: 12px;
-        }
-        .review-image-loading.hidden { display: none; }
-        .review-seo-title-box, .review-seo-desc-box {
-            background: var(--bg-primary);
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 8px;
-            font-size: 13px;
-            line-height: 1.6;
-            direction: rtl;
-            text-align: right;
-        }
-        .review-seo-desc-box {
-            max-height: 80px;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        .review-seo-desc-box.expanded { max-height: none; }
-        .review-color-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .review-color-swatch {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            border: 2px solid var(--border-color);
-        }
-        .bottom-nav-wrapper {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
-            z-index: 100;
-            direction: rtl;
-            padding: 12px 16px;
-        }
-        .nav-container {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            direction: rtl;
-        }
-        .step-indicator-badge {
-            position: relative;
-            width: 56px;
-            height: 56px;
-            flex-shrink: 0;
-            order: -1;
-        }
-        .step-pulse-ring {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 3px solid var(--primary);
-            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-            opacity: 0.6;
-        }
-        @keyframes pulse-ring {
-            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
-            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.4; }
-            100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
-        }
-        .step-circle-main {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.5);
-            z-index: 2;
-        }
-        .step-number {
-            font-size: 20px;
-            font-weight: 900;
-            color: white;
-            line-height: 1;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-        .step-total {
-            font-size: 9px;
-            color: rgba(255,255,255,0.9);
-            font-weight: 700;
-        }
-        .nav-buttons {
-            display: flex;
-            gap: 12px;
-            flex: 1;
-            direction: rtl;
-        }
-        .nav-btn {
-            flex: 1;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .nav-btn:active { transform: scale(0.98); }
-        .nav-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .btn-back {
-            background: white;
-            border: 2px solid var(--border-color);
-            color: var(--text-primary);
-        }
-        .btn-next {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            box-shadow: var(--shadow-md);
-        }
-        .btn-submit {
-            background: linear-gradient(135deg, var(--success), var(--success-light));
-            color: white;
-            box-shadow: var(--shadow-md);
-        }
-        @media (max-width: 480px) {
-            .step-content { padding: 10px 12px 100px; }
-            .color-wheel-container { width: 160px; height: 160px; }
-            .templates-grid { grid-template-columns: 1fr; }
-            .template-card.large { grid-column: span 1; }
-            .editor-textarea { font-size: 17px; min-height: 350px; }
-            .timestamp-word-item { flex-wrap: wrap; }
-            .word-times { width: 100%; justify-content: space-between; }
-        }
-    `;
-    document.head.appendChild(additionalStyles);
-
-    // ═══════════════════════════════════════════════════════════════════════════
     // 🚀 تشغيل التطبيق
     // ═══════════════════════════════════════════════════════════════════════════
 
     console.log('═══════════════════════════════════════════════════════════');
-    console.log('🚀 App v3.3 Starting...');
+    console.log('🚀 App v3.4 Starting...');
     console.log('✅ تصفية القوالب حسب الجودة');
     console.log('✨ البطاقة الإعلانية');
-    console.log('⏱️ محرر التواقيت المتقدم مع السحب والإفلات');
+    console.log('⏱️ محرر التواقيت المتقدم مع التحميل التدريجي');
     console.log('🎯 حساب ذكي للتواقيت بناءً على سرعة القراءة');
     console.log('📥 قراءة التواقيت من حقل Timings والنص من text');
+    console.log('🔄 تحميل 10 كلمات في كل مرة مع السكرول التلقائي');
     console.log('═══════════════════════════════════════════════════════════');
     
     updateProgress();
