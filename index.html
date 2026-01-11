@@ -394,7 +394,7 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════════
-           ✏️ محرر النص
+           ✏️ محرر النص المحسن مع زر التواقيت بجانب العنوان
            ═══════════════════════════════════════════════════════════════════ */
         .editor-container {
             background: var(--bg-secondary);
@@ -441,17 +441,56 @@
         .control-btn:active { transform: scale(0.9); }
         .control-btn.copy-btn { font-size: 16px; }
         
+        /* رأس المحرر مع زر التواقيت */
+        .editor-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+            padding-left: 130px;
+            direction: rtl;
+        }
+        
         .editor-label {
             font-size: 16px;
             font-weight: 700;
             color: var(--text-primary);
-            margin-bottom: 14px;
             display: flex;
             align-items: center;
             gap: 8px;
-            padding-left: 130px;
             direction: rtl;
         }
+        
+        /* زر محرر التواقيت الجديد */
+        .timestamp-toggle-btn {
+            padding: 8px 14px;
+            background: linear-gradient(135deg, var(--warning), #E67E22);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .timestamp-toggle-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .timestamp-toggle-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .timestamp-toggle-btn.active {
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+        }
+        
         .editor-textarea {
             width: 100%;
             min-height: 400px;
@@ -496,34 +535,7 @@
         }
 
         /* ═══════════════════════════════════════════════════════════════════
-           ⏱️ زر تبديل محرر التواقيت
-           ═══════════════════════════════════════════════════════════════════ */
-        .timestamp-mode-toggle {
-            position: absolute;
-            top: 12px;
-            right: 156px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 14px;
-            background: linear-gradient(135deg, var(--warning), #E67E22);
-            color: white;
-            border: none;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: var(--shadow-md);
-            transition: all 0.3s ease;
-            z-index: 15;
-        }
-        .timestamp-mode-toggle:active { transform: scale(0.95); }
-        .timestamp-mode-toggle.active {
-            background: linear-gradient(135deg, var(--success), var(--success-light));
-        }
-
-        /* ═══════════════════════════════════════════════════════════════════
-           ⏱️ محرر التواقيت
+           ⏱️ محرر التواقيت المحسن والاحترافي
            ═══════════════════════════════════════════════════════════════════ */
         .timestamp-editor-container {
             display: none;
@@ -532,7 +544,7 @@
             border-radius: 12px;
             padding: 16px;
             margin-bottom: 16px;
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-lg);
             direction: rtl;
             animation: fadeInUp 0.3s ease;
         }
@@ -579,11 +591,13 @@
             color: var(--text-primary);
             border: 2px solid var(--border-color);
         }
+        .timestamp-action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
         .timestamp-action-btn:active { transform: scale(0.95); }
 
-        /* ═══════════════════════════════════════════════════════════════════
-           📜 قائمة الكلمات مع أزرار الإضافة
-           ═══════════════════════════════════════════════════════════════════ */
+        /* قائمة الكلمات مع التحسينات الجديدة */
         .timestamp-words-list {
             max-height: 500px;
             overflow-y: auto;
@@ -593,16 +607,16 @@
             border: 1px solid var(--border-color);
         }
         
-        /* زر الإضافة الأخضر */
+        /* زر إضافة كلمة محسن */
         .insert-word-btn {
             width: 100%;
-            padding: 6px;
-            margin: 4px 0;
+            padding: 10px;
+            margin: 8px 0;
             background: linear-gradient(135deg, rgba(39, 174, 96, 0.1), rgba(46, 204, 113, 0.1));
             border: 2px dashed var(--success);
             border-radius: 8px;
             color: var(--success);
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
             cursor: pointer;
             display: flex;
@@ -613,6 +627,7 @@
         }
         .insert-word-btn:hover {
             background: linear-gradient(135deg, rgba(39, 174, 96, 0.2), rgba(46, 204, 113, 0.2));
+            transform: translateY(-1px);
         }
         .insert-word-btn:active {
             transform: scale(0.98);
@@ -620,27 +635,45 @@
             color: white;
         }
         
+        /* عنصر الكلمة محسن مع قابلية السحب والإفلات */
         .timestamp-word-item {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 10px 12px;
+            padding: 12px;
             background: white;
             border: 2px solid var(--border-color);
             border-radius: 10px;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
             transition: all 0.2s;
             direction: rtl;
+            cursor: move;
+            position: relative;
         }
+        
+        .timestamp-word-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.98);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            z-index: 1000;
+            cursor: grabbing;
+        }
+        
+        .timestamp-word-item.drag-over {
+            border-color: var(--primary);
+            background: var(--primary-lighter);
+        }
+        
         .timestamp-word-item:hover {
             border-color: var(--primary);
-            box-shadow: var(--shadow-sm);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
         }
         
         .word-index {
             width: 32px;
             height: 32px;
-            background: var(--primary-lighter);
+            background: linear-gradient(135deg, var(--primary-lighter), var(--primary-light));
             color: var(--primary);
             border-radius: 50%;
             display: flex;
@@ -655,7 +688,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 8px;
         }
         
         .word-text-input {
@@ -693,7 +726,7 @@
             font-weight: 600;
         }
         .time-input {
-            width: 70px;
+            width: 80px;
             padding: 6px 8px;
             border: 2px solid var(--border-color);
             border-radius: 6px;
@@ -735,6 +768,7 @@
         .word-action-btn.delete-btn:hover {
             background: var(--danger);
             color: white;
+            transform: scale(1.1);
         }
         .word-action-btn.play-btn {
             background: var(--primary-lighter);
@@ -743,12 +777,11 @@
         .word-action-btn.play-btn:hover {
             background: var(--primary);
             color: white;
+            transform: scale(1.1);
         }
         .word-action-btn:active { transform: scale(0.9); }
 
-        /* ═══════════════════════════════════════════════════════════════════
-           📊 إحصائيات التواقيت
-           ═══════════════════════════════════════════════════════════════════ */
+        /* إحصائيات التواقيت */
         .timestamp-stats {
             display: flex;
             justify-content: space-around;
@@ -774,11 +807,171 @@
             color: var(--text-secondary);
         }
 
-        /* ═══════════════════════════════════════════════════════════════════
-           ➡️ يتبع: باقي CSS للقوالب والألوان وغيرها
-           ═══════════════════════════════════════════════════════════════════ */
+        /* النافذة المنبثقة لإضافة كلمة جديدة */
+        .add-word-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .add-word-modal.visible {
+            display: flex;
+        }
+        
+        .add-word-content {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            width: 100%;
+            max-width: 400px;
+            animation: scaleIn 0.4s ease;
+            box-shadow: var(--shadow-lg);
+            border: 3px solid var(--success);
+        }
+        
+        @keyframes scaleIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        .add-word-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .add-word-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        
+        .add-word-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        
+        .add-word-input-group {
+            margin-bottom: 16px;
+        }
+        
+        .add-word-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .add-word-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            direction: rtl;
+            text-align: right;
+            transition: all 0.2s;
+        }
+        
+        .add-word-input:focus {
+            outline: none;
+            border-color: var(--success);
+            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+        }
+        
+        .add-word-timing-preview {
+            background: var(--bg-primary);
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .timing-preview-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .timing-preview-values {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+        }
+        
+        .timing-value {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .timing-value-number {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        
+        .timing-value-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        
+        .add-word-actions {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .add-word-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        
+        .add-word-btn.confirm {
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+            color: white;
+        }
+        
+        .add-word-btn.cancel {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        
+        .add-word-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .add-word-btn:active {
+            transform: scale(0.98);
+        }
 
-                /* ═══════════════════════════════════════════════════════════════════
+        /* ═══════════════════════════════════════════════════════════════════
            🎨 القوالب والألوان
            ═══════════════════════════════════════════════════════════════════ */
         .quality-toggle-container {
@@ -848,6 +1041,7 @@
         input:checked + .toggle-slider { background-color: var(--primary); }
         input:checked + .toggle-slider:before { transform: translateX(30px); }
 
+                /* تكملة CSS - القوالب والألوان */
         .templates-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -1382,655 +1576,7 @@
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
 
-        /* ═══════════════════════════════════════════════════════════════════
-           📝 النماذج والحقول
-           ═══════════════════════════════════════════════════════════════════ */
-        .form-group {
-            margin-bottom: 20px;
-            direction: rtl;
-        }
-        .form-label {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            direction: rtl;
-        }
-        .form-hint {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-            direction: rtl;
-        }
-        .form-input {
-            width: 100%;
-            padding: 13px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 15px;
-            font-family: inherit;
-            transition: all 0.3s;
-            background: white;
-            direction: rtl;
-            text-align: right;
-        }
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-        }
-        .char-counter {
-            text-align: left;
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-top: 4px;
-            direction: ltr;
-        }
-        .save-template-btn {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s;
-            margin-top: 20px;
-            box-shadow: var(--shadow-md);
-        }
-        .save-template-btn:active { transform: scale(0.98); }
-
-        /* ═══════════════════════════════════════════════════════════════════
-           🎁 البطاقة الإعلانية
-           ═══════════════════════════════════════════════════════════════════ */
-        .promo-card-section {
-            background: linear-gradient(135deg, rgba(243, 156, 18, 0.08), rgba(230, 126, 34, 0.08));
-            border: 2px dashed var(--warning);
-            border-radius: 14px;
-            padding: 18px;
-            margin-top: 28px;
-            margin-bottom: 20px;
-            direction: rtl;
-            position: relative;
-            overflow: hidden;
-        }
-        .promo-card-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(243, 156, 18, 0.05) 0%, transparent 70%);
-            pointer-events: none;
-        }
-        .promo-card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 14px;
-            position: relative;
-            z-index: 1;
-        }
-        .promo-card-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .promo-optional-badge {
-            padding: 4px 10px;
-            background: var(--warning);
-            color: white;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 700;
-        }
-        .promo-card-description {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-            line-height: 1.5;
-            position: relative;
-            z-index: 1;
-        }
-        .promo-input-group {
-            margin-bottom: 14px;
-            position: relative;
-            z-index: 1;
-        }
-        .promo-label {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 6px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .promo-input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 14px;
-            font-family: inherit;
-            transition: all 0.3s;
-            background: white;
-            direction: rtl;
-            text-align: right;
-        }
-        .promo-input:focus {
-            outline: none;
-            border-color: var(--warning);
-            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
-        }
-        .promo-input::placeholder {
-            color: var(--text-light);
-            font-size: 13px;
-        }
-        .promo-textarea {
-            min-height: 80px;
-            resize: vertical;
-        }
-        .promo-example {
-            font-size: 11px;
-            color: var(--warning);
-            margin-top: 4px;
-            font-weight: 600;
-        }
-
-        /* ═══════════════════════════════════════════════════════════════════
-           🔍 SEO
-           ═══════════════════════════════════════════════════════════════════ */
-        .seo-generate-btn {
-            width: 100%;
-            padding: 18px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 17px;
-            font-weight: 800;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            transition: all 0.3s;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
-        }
-        .seo-generate-btn:active { transform: scale(0.98); }
-        .seo-generate-btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        .seo-generate-btn.generated {
-            background: linear-gradient(135deg, var(--success), var(--success-light));
-        }
-        .seo-section {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 18px;
-            margin-bottom: 18px;
-            box-shadow: var(--shadow-md);
-            border: 2px solid var(--border-color);
-            direction: rtl;
-        }
-        .seo-section.highlight {
-            border-color: var(--primary);
-            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.2);
-        }
-        .seo-section-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            direction: rtl;
-        }
-        .serp-preview {
-            background: white;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
-            padding: 16px;
-            margin-top: 16px;
-            box-shadow: var(--shadow-sm);
-            direction: rtl;
-        }
-        .serp-preview-title {
-            font-size: 13px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            direction: rtl;
-        }
-        .serp-url {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-bottom: 4px;
-            direction: ltr;
-            text-align: left;
-        }
-        .serp-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #1a0dab;
-            margin-bottom: 4px;
-            line-height: 1.3;
-            cursor: pointer;
-            direction: rtl;
-            text-align: right;
-        }
-        .serp-title:hover { text-decoration: underline; }
-        .serp-description {
-            font-size: 13px;
-            color: #545454;
-            line-height: 1.5;
-            direction: rtl;
-            text-align: right;
-        }
-        .form-textarea {
-            width: 100%;
-            min-height: 120px;
-            padding: 13px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 15px;
-            font-family: inherit;
-            transition: all 0.3s;
-            background: white;
-            resize: vertical;
-            direction: rtl;
-            text-align: right;
-        }
-        .form-textarea:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-        }
-        .tags-input-section {
-            margin-bottom: 16px;
-            direction: rtl;
-        }
-        .tags-input-wrapper {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 12px;
-            direction: rtl;
-        }
-        .tags-input {
-            flex: 1;
-            padding: 13px;
-            border: 2px solid var(--border-color);
-            border-radius: 10px;
-            font-size: 15px;
-            font-family: inherit;
-            transition: all 0.3s;
-            background: white;
-            direction: rtl;
-            text-align: right;
-        }
-        .tags-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-        }
-        .tags-add-btn {
-            padding: 13px 20px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-        .tags-add-btn:active { transform: scale(0.95); }
-        .tags-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            padding: 12px;
-            background: var(--bg-primary);
-            border-radius: 8px;
-            min-height: 60px;
-            direction: rtl;
-        }
-        .tag-item {
-            background: white;
-            border: 2px solid var(--border-color);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.2s;
-            direction: rtl;
-        }
-        .tag-item:hover { border-color: var(--danger); }
-        .tag-remove {
-            background: none;
-            border: none;
-            color: var(--danger);
-            cursor: pointer;
-            font-size: 16px;
-            line-height: 1;
-            padding: 0;
-            width: 16px;
-            height: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .seo-stats {
-            background: var(--bg-primary);
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 12px;
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            direction: rtl;
-        }
-        .seo-stat-item {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            direction: rtl;
-        }
-        .seo-stat-label {
-            font-size: 11px;
-            color: var(--text-secondary);
-        }
-        .seo-stat-value {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        /* ═══════════════════════════════════════════════════════════════════
-           ✅ المراجعة
-           ═══════════════════════════════════════════════════════════════════ */
-        .review-section {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow-md);
-            direction: rtl;
-        }
-        .review-section-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            direction: rtl;
-        }
-        .review-item {
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border-light);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
-            direction: rtl;
-        }
-        .review-item:last-child { border-bottom: none; }
-        .review-label {
-            font-size: 13px;
-            color: var(--text-secondary);
-            min-width: 80px;
-        }
-        .review-value {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            text-align: right;
-            flex: 1;
-            word-break: break-word;
-            direction: rtl;
-        }
-        .review-expand-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 4px 0;
-            margin-top: 4px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            direction: rtl;
-        }
-        .review-tags-preview {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            max-height: 60px;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            direction: rtl;
-        }
-        .review-tags-preview.expanded { max-height: none; }
-        .review-tag {
-            background: var(--bg-primary);
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 11px;
-            color: var(--text-primary);
-        }
-        .review-template-images {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-top: 16px;
-            direction: rtl;
-        }
-        .review-image-wrapper { text-align: center; }
-        .review-image-label {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-secondary);
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            direction: rtl;
-        }
-        .review-image {
-            width: 100%;
-            border-radius: 12px;
-            box-shadow: var(--shadow-md);
-            display: none;
-        }
-        .review-image.loaded { display: block; }
-        .review-image-loading {
-            width: 100%;
-            aspect-ratio: 16/9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-primary);
-            border-radius: 12px;
-        }
-        .review-image-loading.hidden { display: none; }
-        .review-seo-title-box, .review-seo-desc-box {
-            background: var(--bg-primary);
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 8px;
-            font-size: 13px;
-            line-height: 1.6;
-            direction: rtl;
-            text-align: right;
-        }
-        .review-seo-desc-box {
-            max-height: 80px;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        .review-seo-desc-box.expanded { max-height: none; }
-        .review-color-box {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .review-color-swatch {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            border: 2px solid var(--border-color);
-        }
-
-        /* ═══════════════════════════════════════════════════════════════════
-           🧭 شريط التنقل
-           ═══════════════════════════════════════════════════════════════════ */
-        .bottom-nav-wrapper {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
-            z-index: 100;
-            direction: rtl;
-            padding: 12px 16px;
-        }
-        .nav-container {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            direction: rtl;
-        }
-        .step-indicator-badge {
-            position: relative;
-            width: 56px;
-            height: 56px;
-            flex-shrink: 0;
-            order: -1;
-        }
-        .step-pulse-ring {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            border: 3px solid var(--primary);
-            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-            opacity: 0.6;
-        }
-        @keyframes pulse-ring {
-            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
-            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.4; }
-            100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
-        }
-        .step-circle-main {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.5);
-            z-index: 2;
-        }
-        .step-number {
-            font-size: 20px;
-            font-weight: 900;
-            color: white;
-            line-height: 1;
-            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-        }
-        .step-total {
-            font-size: 9px;
-            color: rgba(255,255,255,0.9);
-            font-weight: 700;
-        }
-        .nav-buttons {
-            display: flex;
-            gap: 12px;
-            flex: 1;
-            direction: rtl;
-        }
-        .nav-btn {
-            flex: 1;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-        .nav-btn:active { transform: scale(0.98); }
-        .nav-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .btn-back {
-            background: white;
-            border: 2px solid var(--border-color);
-            color: var(--text-primary);
-        }
-        .btn-next {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            box-shadow: var(--shadow-md);
-        }
-        .btn-submit {
-            background: linear-gradient(135deg, var(--success), var(--success-light));
-            color: white;
-            box-shadow: var(--shadow-md);
-        }
-
-        /* ═══════════════════════════════════════════════════════════════════
-           📱 Responsive
-           ═══════════════════════════════════════════════════════════════════ */
-        @media (max-width: 480px) {
-            .step-content { padding: 10px 12px 100px; }
-            .color-wheel-container { width: 160px; height: 160px; }
-            .templates-grid { grid-template-columns: 1fr; }
-            .template-card.large { grid-column: span 1; }
-            .editor-textarea { font-size: 17px; min-height: 350px; }
-            .timestamp-word-item { flex-wrap: wrap; }
-            .word-times { width: 100%; justify-content: space-between; }
-        }
+        /* هنا يوضع الجزء الثالث */
     </style>
 </head>
 <body>
@@ -2098,11 +1644,61 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════════════
+         🆕 نافذة إضافة كلمة جديدة محسنة
+         ═══════════════════════════════════════════════════════════════════ -->
+    <div class="add-word-modal" id="addWordModal">
+        <div class="add-word-content">
+            <div class="add-word-header">
+                <div class="add-word-title">
+                    <span>➕</span>
+                    <span>إضافة كلمة جديدة</span>
+                </div>
+                <div class="add-word-subtitle">أدخل الكلمة وسيتم حساب التوقيت تلقائياً</div>
+            </div>
+            
+            <div class="add-word-input-group">
+                <label class="add-word-label">الكلمة أو العبارة</label>
+                <input type="text" class="add-word-input" id="newWordInput" 
+                       placeholder="اكتب الكلمة هنا..." autocomplete="off">
+            </div>
+            
+            <div class="add-word-timing-preview">
+                <div class="timing-preview-label">التوقيت المقترح</div>
+                <div class="timing-preview-values">
+                    <div class="timing-value">
+                        <div class="timing-value-number" id="suggestedStart">0.000</div>
+                        <div class="timing-value-label">البداية</div>
+                    </div>
+                    <div class="timing-value">
+                        <div class="timing-value-number" id="suggestedEnd">0.500</div>
+                        <div class="timing-value-label">النهاية</div>
+                    </div>
+                    <div class="timing-value">
+                        <div class="timing-value-number" id="suggestedDuration">0.500</div>
+                        <div class="timing-value-label">المدة</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="add-word-actions">
+                <button class="add-word-btn confirm" id="confirmAddWord">
+                    <span>✅</span>
+                    <span>إضافة</span>
+                </button>
+                <button class="add-word-btn cancel" id="cancelAddWord">
+                    <span>❌</span>
+                    <span>إلغاء</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
          📦 Container الرئيسي
          ═══════════════════════════════════════════════════════════════════ -->
     <div class="container">
         
-        <!-- الخطوة 1: التصحيح + محرر التواقيت -->
+        <!-- الخطوة 1: التصحيح + محرر التواقيت المحسن -->
         <div class="step-content active" data-step="1">
             <!-- مشغل الصوت العادي -->
             <div class="audio-player-section" id="audioPlayerSection">
@@ -2131,18 +1727,20 @@
                 </div>
             </div>
 
-            <!-- محرر النص العادي -->
+            <!-- محرر النص العادي المحسن -->
             <div class="editor-container" id="editorContainer">
-                <button class="timestamp-mode-toggle" id="timestampModeToggle">
-                    <span>⏱️</span>
-                    <span>تحرير التواقيت</span>
-                </button>
                 <div class="text-controls">
                     <button class="control-btn" id="textSizeUp" title="تكبير النص">+</button>
                     <button class="control-btn" id="textSizeDown" title="تصغير النص">−</button>
                     <button class="control-btn copy-btn" id="copyBtn" title="نسخ النص">📄</button>
                 </div>
-                <div class="editor-label"><span>📝</span><span>النص المصحح</span></div>
+                <div class="editor-header">
+                    <div class="editor-label"><span>📝</span><span>النص المصحح</span></div>
+                    <button class="timestamp-toggle-btn" id="timestampModeToggle">
+                        <span>⏱️</span>
+                        <span>محرر التواقيت</span>
+                    </button>
+                </div>
                 <textarea class="editor-textarea" id="textEditor" placeholder="جاري تحميل النص..."></textarea>
                 <div class="editor-stats">
                     <div class="stat-item"><span>📊</span><span class="stat-value" id="charCount">0</span><span>حرف</span></div>
@@ -2150,17 +1748,17 @@
                 </div>
             </div>
 
-            <!-- محرر التواقيت -->
+            <!-- محرر التواقيت المحسن -->
             <div class="timestamp-editor-container" id="timestampEditorContainer">
                 <div class="timestamp-editor-header">
-                    <div class="timestamp-editor-title"><span>⏱️</span><span>محرر التواقيت</span></div>
+                    <div class="timestamp-editor-title"><span>⏱️</span><span>محرر التواقيت المتقدم</span></div>
                     <div class="timestamp-editor-actions">
                         <button class="timestamp-action-btn back-to-text-btn" id="backToTextBtn"><span>📝</span><span>العودة للنص</span></button>
                         <button class="timestamp-action-btn sort-btn" id="sortTimestampsBtn"><span>🔄</span><span>ترتيب</span></button>
                     </div>
                 </div>
                 <div class="timestamp-words-list" id="timestampWordsList">
-                    <!-- سيتم ملؤها ديناميكياً -->
+                    <!-- سيتم ملؤها ديناميكياً بالجافاسكربت -->
                 </div>
                 <div class="timestamp-stats">
                     <div class="timestamp-stat-item">
@@ -2179,9 +1777,10 @@
             </div>
         </div>
 
-        <!-- ➡️ يتبع في الجزء الثالث: باقي الخطوات (القوالب، الألوان، البيانات، SEO، المراجعة) -->
+        <!-- هنا يوضع الجزء الثالث -->
 
-                <!-- ═══════════════════════════════════════════════════════════════
+
+        <!-- ═══════════════════════════════════════════════════════════════
              🎨 الخطوة 2: القوالب
              ═══════════════════════════════════════════════════════════════ -->
         <div class="step-content" data-step="2">
@@ -2488,7 +2087,7 @@
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════════════
-         🚀 JavaScript - الجزء الأول: المتغيرات والدوال الأساسية
+         🚀 JavaScript - المتغيرات والدوال الأساسية
          ═══════════════════════════════════════════════════════════════════ -->
     <script>
     // ═══════════════════════════════════════════════════════════════════════════
@@ -2527,13 +2126,17 @@
     let titleColorDragging = false;
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // ⏱️ متغيرات محرر التواقيت
+    // ⏱️ متغيرات محرر التواقيت المحسنة
     // ═══════════════════════════════════════════════════════════════════════════
     
     let timestampModeActive = false;
     let wordsWithTimestamps = [];
     let originalTimestamps = [];
     let timestampsModified = false;
+    let averageSpeechRate = 0.3; // متوسط مدة الكلمة الواحدة بالثواني
+    let insertPosition = -1; // موقع إضافة الكلمة الجديدة
+    let draggedElement = null;
+    let draggedIndex = -1;
 
     // ═══════════════════════════════════════════════════════════════════════════
     // 📝 بيانات النموذج
@@ -2647,6 +2250,8 @@
         return div.innerHTML;
     }
 
+    // هنا يوضع الجزء الرابع
+    
     // ═══════════════════════════════════════════════════════════════════════════
     // 🎵 مشغل الصوت
     // ═══════════════════════════════════════════════════════════════════════════
@@ -2791,10 +2396,6 @@
     });
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // ➡️ يتبع في الجزء الرابع: محرر النص + محرر التواقيت + باقي الوظائف
-    // ═══════════════════════════════════════════════════════════════════════════
-
-            // ═══════════════════════════════════════════════════════════════════════════
     // ✏️ محرر النص
     // ═══════════════════════════════════════════════════════════════════════════
 
@@ -2854,8 +2455,44 @@
     textEditor.addEventListener('input', updateTextStats);
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // ⏱️ محرر التواقيت (مع الميزات المحدثة)
+    // ⏱️ محرر التواقيت المحسن والذكي
     // ═══════════════════════════════════════════════════════════════════════════
+
+    function calculateAverageSpeechRate() {
+        if (wordsWithTimestamps.length === 0) {
+            averageSpeechRate = 0.3;
+            return;
+        }
+        
+        let totalDuration = 0;
+        let validWords = 0;
+        
+        wordsWithTimestamps.forEach(word => {
+            const duration = word.end - word.start;
+            if (duration > 0 && duration < 2) { // استبعاد القيم الشاذة
+                totalDuration += duration;
+                validWords++;
+            }
+        });
+        
+        averageSpeechRate = validWords > 0 ? totalDuration / validWords : 0.3;
+    }
+
+    function calculateWordDuration(word) {
+        // حساب مدة الكلمة بناء على عدد الأحرف
+        const baseTime = 0.2; // الحد الأدنى للكلمة
+        const charTime = 0.05; // وقت إضافي لكل حرف
+        const wordLength = word.length;
+        
+        let duration = baseTime + (wordLength * charTime);
+        
+        // تعديل بناءً على متوسط سرعة القارئ
+        if (averageSpeechRate > 0) {
+            duration = duration * (averageSpeechRate / 0.3);
+        }
+        
+        return Math.min(Math.max(duration, 0.15), 2); // بين 0.15 و 2 ثانية
+    }
 
     function toggleTimestampMode() {
         timestampModeActive = !timestampModeActive;
@@ -2868,10 +2505,11 @@
             toggle.innerHTML = '<span>⏱️</span><span>في وضع التواقيت</span>';
             editorContainer.classList.add('hidden');
             timestampContainer.classList.add('visible');
+            calculateAverageSpeechRate();
             renderTimestampWords();
         } else {
             toggle.classList.remove('active');
-            toggle.innerHTML = '<span>⏱️</span><span>تحرير التواقيت</span>';
+            toggle.innerHTML = '<span>⏱️</span><span>محرر التواقيت</span>';
             editorContainer.classList.remove('hidden');
             timestampContainer.classList.remove('visible');
             syncTextFromTimestamps();
@@ -2885,7 +2523,7 @@
         const timestampContainer = document.getElementById('timestampEditorContainer');
         
         toggle.classList.remove('active');
-        toggle.innerHTML = '<span>⏱️</span><span>تحرير التواقيت</span>';
+        toggle.innerHTML = '<span>⏱️</span><span>محرر التواقيت</span>';
         editorContainer.classList.remove('hidden');
         timestampContainer.classList.remove('visible');
         syncTextFromTimestamps();
@@ -2910,6 +2548,7 @@
             }));
             
             originalTimestamps = JSON.parse(JSON.stringify(wordsWithTimestamps));
+            calculateAverageSpeechRate();
             console.log('✅ تم تحميل', wordsWithTimestamps.length, 'كلمة مع التواقيت');
         } catch (error) {
             console.error('❌ خطأ في تحميل التواقيت:', error);
@@ -2936,46 +2575,7 @@
         container.appendChild(firstInsertBtn);
         
         wordsWithTimestamps.forEach((word, index) => {
-            const item = document.createElement('div');
-            item.className = 'timestamp-word-item';
-            item.dataset.index = index;
-            
-            item.innerHTML = `
-                <div class="word-index">${index + 1}</div>
-                <div class="word-content">
-                    <input type="text" 
-                           class="word-text-input" 
-                           value="${escapeHtml(word.text)}" 
-                           data-field="text" 
-                           data-index="${index}"
-                           placeholder="الكلمة...">
-                    <div class="word-times">
-                        <div class="time-input-group">
-                            <span class="time-input-label">البداية:</span>
-                            <input type="number" 
-                                   step="0.001" 
-                                   class="time-input start-time" 
-                                   value="${formatTimeDetailed(word.start)}" 
-                                   data-field="start" 
-                                   data-index="${index}">
-                        </div>
-                        <div class="time-input-group">
-                            <span class="time-input-label">النهاية:</span>
-                            <input type="number" 
-                                   step="0.001" 
-                                   class="time-input end-time" 
-                                   value="${formatTimeDetailed(word.end)}" 
-                                   data-field="end" 
-                                   data-index="${index}">
-                        </div>
-                    </div>
-                </div>
-                <div class="word-actions">
-                    <button class="word-action-btn play-btn" data-index="${index}" title="تشغيل">▶️</button>
-                    <button class="word-action-btn delete-btn" data-index="${index}" title="حذف">🗑️</button>
-                </div>
-            `;
-            
+            const item = createWordElement(word, index);
             container.appendChild(item);
             
             // زر الإضافة بعد كل كلمة
@@ -2983,37 +2583,95 @@
             container.appendChild(insertBtn);
         });
         
-        attachTimestampInputEvents();
+        attachTimestampEvents();
         updateTimestampStats();
+    }
+
+    function createWordElement(word, index) {
+        const item = document.createElement('div');
+        item.className = 'timestamp-word-item';
+        item.dataset.index = index;
+        item.draggable = true;
+        
+        item.innerHTML = `
+            <div class="word-index">${index + 1}</div>
+            <div class="word-content">
+                <input type="text" 
+                       class="word-text-input" 
+                       value="${escapeHtml(word.text)}" 
+                       data-field="text" 
+                       data-index="${index}"
+                       placeholder="الكلمة...">
+                <div class="word-times">
+                    <div class="time-input-group">
+                        <span class="time-input-label">البداية:</span>
+                        <input type="number" 
+                               step="0.001" 
+                               class="time-input start-time" 
+                               value="${formatTimeDetailed(word.start)}" 
+                               data-field="start" 
+                               data-index="${index}">
+                    </div>
+                    <div class="time-input-group">
+                        <span class="time-input-label">النهاية:</span>
+                        <input type="number" 
+                               step="0.001" 
+                               class="time-input end-time" 
+                               value="${formatTimeDetailed(word.end)}" 
+                               data-field="end" 
+                               data-index="${index}">
+                    </div>
+                </div>
+            </div>
+            <div class="word-actions">
+                <button class="word-action-btn play-btn" data-index="${index}" title="تشغيل">▶️</button>
+                <button class="word-action-btn delete-btn" data-index="${index}" title="حذف">🗑️</button>
+            </div>
+        `;
+        
+        // إضافة أحداث السحب والإفلات
+        item.addEventListener('dragstart', handleDragStart);
+        item.addEventListener('dragover', handleDragOver);
+        item.addEventListener('drop', handleDrop);
+        item.addEventListener('dragend', handleDragEnd);
+        item.addEventListener('dragenter', handleDragEnter);
+        item.addEventListener('dragleave', handleDragLeave);
+        
+        return item;
     }
 
     function createInsertButton(insertIndex) {
         const btn = document.createElement('button');
         btn.className = 'insert-word-btn';
         btn.innerHTML = '<span>➕</span><span>إضافة كلمة هنا</span>';
-        btn.onclick = () => smartInsertWord(insertIndex);
+        btn.onclick = () => showAddWordModal(insertIndex);
         return btn;
     }
 
-    function smartInsertWord(insertIndex) {
+    function showAddWordModal(position) {
+        insertPosition = position;
+        const modal = document.getElementById('addWordModal');
+        const input = document.getElementById('newWordInput');
+        
+        // حساب التوقيت المقترح
         let suggestedStart = 0;
         let suggestedEnd = 0.5;
         
-        if (insertIndex === 0) {
+        if (position === 0) {
             // الإضافة في البداية
             if (wordsWithTimestamps.length > 0) {
                 suggestedEnd = wordsWithTimestamps[0].start;
                 suggestedStart = Math.max(0, suggestedEnd - 0.5);
             }
-        } else if (insertIndex >= wordsWithTimestamps.length) {
+        } else if (position >= wordsWithTimestamps.length) {
             // الإضافة في النهاية
             const lastWord = wordsWithTimestamps[wordsWithTimestamps.length - 1];
-            suggestedStart = lastWord.end;
+            suggestedStart = lastWord.end + 0.1;
             suggestedEnd = suggestedStart + 0.5;
         } else {
             // الإضافة بين كلمتين
-            const prevWord = wordsWithTimestamps[insertIndex - 1];
-            const nextWord = wordsWithTimestamps[insertIndex];
+            const prevWord = wordsWithTimestamps[position - 1];
+            const nextWord = wordsWithTimestamps[position];
             const gap = nextWord.start - prevWord.end;
             
             if (gap >= 0.3) {
@@ -3022,38 +2680,149 @@
                 suggestedEnd = nextWord.start - (gap * 0.2);
             } else {
                 // فجوة صغيرة - نحتاج لتوسيع المساحة
-                suggestedStart = prevWord.end;
+                suggestedStart = prevWord.end + 0.05;
                 suggestedEnd = suggestedStart + 0.3;
-                
-                // تحريك الكلمات التالية
-                for (let i = insertIndex; i < wordsWithTimestamps.length; i++) {
-                    wordsWithTimestamps[i].start += 0.3;
-                    wordsWithTimestamps[i].end += 0.3;
-                }
             }
         }
         
-        const wordText = prompt('أدخل الكلمة الجديدة:');
-        if (!wordText || !wordText.trim()) return;
+        // عرض التوقيت المقترح
+        document.getElementById('suggestedStart').textContent = suggestedStart.toFixed(3);
+        document.getElementById('suggestedEnd').textContent = suggestedEnd.toFixed(3);
+        document.getElementById('suggestedDuration').textContent = (suggestedEnd - suggestedStart).toFixed(3);
         
-        const newWord = {
-            text: wordText.trim(),
-            start: parseFloat(suggestedStart.toFixed(3)),
-            end: parseFloat(suggestedEnd.toFixed(3))
+        input.value = '';
+        input.focus();
+        modal.classList.add('visible');
+        
+        // تحديث التوقيت عند كتابة الكلمة
+        input.oninput = () => {
+            const duration = calculateWordDuration(input.value);
+            const newEnd = suggestedStart + duration;
+            document.getElementById('suggestedEnd').textContent = newEnd.toFixed(3);
+            document.getElementById('suggestedDuration').textContent = duration.toFixed(3);
         };
-        
-        wordsWithTimestamps.splice(insertIndex, 0, newWord);
-        timestampsModified = true;
-        renderTimestampWords();
-        showToast('✅ تمت إضافة الكلمة');
     }
 
-    function attachTimestampInputEvents() {
+    function confirmAddWord() {
+        const input = document.getElementById('newWordInput');
+        const wordText = input.value.trim();
+        
+        if (!wordText) {
+            showToast('⚠️ الرجاء إدخال كلمة', true);
+            return;
+        }
+        
+        const suggestedStart = parseFloat(document.getElementById('suggestedStart').textContent);
+        const suggestedEnd = parseFloat(document.getElementById('suggestedEnd').textContent);
+        
+        const newWord = {
+            text: wordText,
+            start: suggestedStart,
+            end: suggestedEnd
+        };
+        
+        // إضافة الكلمة في الموقع المحدد
+        wordsWithTimestamps.splice(insertPosition, 0, newWord);
+        
+        // إذا كانت هناك تداخلات، نحرك الكلمات التالية
+        if (insertPosition < wordsWithTimestamps.length - 1) {
+            adjustFollowingTimestamps(insertPosition);
+        }
+        
+        timestampsModified = true;
+        renderTimestampWords();
+        showToast('✅ تمت إضافة الكلمة بنجاح');
+        closeAddWordModal();
+    }
+
+    function adjustFollowingTimestamps(fromIndex) {
+        // تعديل التواقيت التالية لتجنب التداخل
+        for (let i = fromIndex + 1; i < wordsWithTimestamps.length; i++) {
+            const prevWord = wordsWithTimestamps[i - 1];
+            const currentWord = wordsWithTimestamps[i];
+            
+            if (currentWord.start < prevWord.end + 0.05) {
+                const shift = (prevWord.end + 0.05) - currentWord.start;
+                currentWord.start += shift;
+                currentWord.end += shift;
+            }
+        }
+    }
+
+    function closeAddWordModal() {
+        const modal = document.getElementById('addWordModal');
+        modal.classList.remove('visible');
+        document.getElementById('newWordInput').value = '';
+    }
+
+    // أحداث السحب والإفلات
+    function handleDragStart(e) {
+        draggedElement = this;
+        draggedIndex = parseInt(this.dataset.index);
+        this.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragOver(e) {
+        if (e.preventDefault) {
+            e.preventDefault();
+        }
+        e.dataTransfer.dropEffect = 'move';
+        return false;
+    }
+
+    function handleDragEnter(e) {
+        if (this !== draggedElement && this.classList.contains('timestamp-word-item')) {
+            this.classList.add('drag-over');
+        }
+    }
+
+    function handleDragLeave(e) {
+        this.classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
+        if (e.stopPropagation) {
+            e.stopPropagation();
+        }
+        
+        if (this !== draggedElement && this.classList.contains('timestamp-word-item')) {
+            const dropIndex = parseInt(this.dataset.index);
+            
+            // نقل العنصر
+            const movedWord = wordsWithTimestamps[draggedIndex];
+            wordsWithTimestamps.splice(draggedIndex, 1);
+            
+            if (dropIndex > draggedIndex) {
+                wordsWithTimestamps.splice(dropIndex - 1, 0, movedWord);
+            } else {
+                wordsWithTimestamps.splice(dropIndex, 0, movedWord);
+            }
+            
+            timestampsModified = true;
+            renderTimestampWords();
+            showToast('✅ تم نقل الكلمة');
+        }
+        
+        return false;
+    }
+
+    function handleDragEnd(e) {
+        document.querySelectorAll('.timestamp-word-item').forEach(item => {
+            item.classList.remove('dragging', 'drag-over');
+        });
+        draggedElement = null;
+        draggedIndex = -1;
+    }
+
+    function attachTimestampEvents() {
+        // أحداث الإدخال
         document.querySelectorAll('.word-text-input, .time-input').forEach(input => {
             input.addEventListener('change', handleTimestampInputChange);
             input.addEventListener('blur', handleTimestampInputChange);
         });
         
+        // أزرار التشغيل
         document.querySelectorAll('.word-action-btn.play-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const index = parseInt(e.currentTarget.dataset.index);
@@ -3062,6 +2831,7 @@
             });
         });
         
+        // أزرار الحذف
         document.querySelectorAll('.word-action-btn.delete-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const index = parseInt(e.currentTarget.dataset.index);
@@ -3078,7 +2848,20 @@
         if (field === 'text') {
             wordsWithTimestamps[index].text = value;
         } else {
-            wordsWithTimestamps[index][field] = parseFloat(value) || 0;
+            const numValue = parseFloat(value) || 0;
+            wordsWithTimestamps[index][field] = numValue;
+            
+            // التحقق من التداخل وإصلاحه
+            if (field === 'end' && index < wordsWithTimestamps.length - 1) {
+                if (numValue > wordsWithTimestamps[index + 1].start) {
+                    wordsWithTimestamps[index + 1].start = numValue + 0.05;
+                    adjustFollowingTimestamps(index + 1);
+                }
+            } else if (field === 'start' && index > 0) {
+                if (numValue < wordsWithTimestamps[index - 1].end) {
+                    wordsWithTimestamps[index - 1].end = numValue - 0.05;
+                }
+            }
         }
         
         timestampsModified = true;
@@ -3096,6 +2879,17 @@
 
     function sortTimestamps() {
         wordsWithTimestamps.sort((a, b) => a.start - b.start);
+        
+        // إصلاح التداخلات بعد الترتيب
+        for (let i = 1; i < wordsWithTimestamps.length; i++) {
+            if (wordsWithTimestamps[i].start < wordsWithTimestamps[i - 1].end) {
+                wordsWithTimestamps[i].start = wordsWithTimestamps[i - 1].end + 0.05;
+                if (wordsWithTimestamps[i].end <= wordsWithTimestamps[i].start) {
+                    wordsWithTimestamps[i].end = wordsWithTimestamps[i].start + 0.3;
+                }
+            }
+        }
+        
         timestampsModified = true;
         renderTimestampWords();
         showToast('✅ تم ترتيب الكلمات');
@@ -3115,8 +2909,8 @@
         wordsWithTimestamps.forEach((word, i) => {
             if (originalTimestamps[i]) {
                 if (word.text !== originalTimestamps[i].text ||
-                    word.start !== originalTimestamps[i].start ||
-                    word.end !== originalTimestamps[i].end) {
+                    Math.abs(word.start - originalTimestamps[i].start) > 0.001 ||
+                    Math.abs(word.end - originalTimestamps[i].end) > 0.001) {
                     modifiedCount++;
                 }
             } else {
@@ -3140,17 +2934,29 @@
         }
     }
 
+    // ربط الأحداث
     document.getElementById('timestampModeToggle').addEventListener('click', toggleTimestampMode);
     document.getElementById('backToTextBtn').addEventListener('click', backToTextMode);
     document.getElementById('sortTimestampsBtn').addEventListener('click', sortTimestamps);
+    document.getElementById('confirmAddWord').addEventListener('click', confirmAddWord);
+    document.getElementById('cancelAddWord').addEventListener('click', closeAddWordModal);
     document.getElementById('skipCorrectionBtn').addEventListener('click', () => {
         skipCorrection = true;
         hideLoading();
         validateCurrentStep();
     });
 
-    // ═══════════════════════════════════════════════════════════════════════════
-    // 📥 تحميل البيانات
+    // إضافة حدث Enter للنافذة المنبثقة
+    document.getElementById('newWordInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            confirmAddWord();
+        }
+    });
+
+    // هنا يوضع الجزء الخامس
+
+            // ═══════════════════════════════════════════════════════════════════════════
+    // 📥 تحميل البيانات الأولية
     // ═══════════════════════════════════════════════════════════════════════════
 
     async function loadInitialData() {
@@ -3257,7 +3063,7 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 🎨 القوالب والألوان (كود مختصر - نفس السابق)
+    // 🎨 القوالب والألوان
     // ═══════════════════════════════════════════════════════════════════════════
 
     document.getElementById('qualityToggle').addEventListener('change', (e) => {
@@ -3395,7 +3201,6 @@
         nextStep();
     });
 
-    // دوال منتقي الألوان (مختصرة)
     function initializeColorPickers() {
         if (!selectedColor) return;
         recommendedSeriesColor = selectedColor.landscape_series_color;
@@ -3420,7 +3225,6 @@
         formData.title_color = color;
     }
 
-    // ربط الأحداث (مختصر)
     document.getElementById('recommendedSeriesColorBtn').addEventListener('click', () => {
         if (!selectedColor) return;
         updateSeriesColorDisplay(recommendedSeriesColor);
@@ -3434,7 +3238,6 @@
         document.getElementById('titleCustomPanel').classList.remove('visible');
     });
 
-    // حقول البيانات
     function updateCharCounters() {
         ['title', 'mainSeries', 'subSeries', 'finalSeries'].forEach(field => {
             const input = document.getElementById(field + 'Input');
@@ -3494,7 +3297,7 @@
     });
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 🔍 SEO (مختصر)
+    // 🔍 SEO
     // ═══════════════════════════════════════════════════════════════════════════
 
     function addTag(tagText) {
@@ -3647,7 +3450,9 @@
         let modifiedCount = 0;
         wordsWithTimestamps.forEach((word, i) => {
             if (originalTimestamps[i]) {
-                if (word.text !== originalTimestamps[i].text || word.start !== originalTimestamps[i].start || word.end !== originalTimestamps[i].end) modifiedCount++;
+                if (word.text !== originalTimestamps[i].text || 
+                    Math.abs(word.start - originalTimestamps[i].start) > 0.001 || 
+                    Math.abs(word.end - originalTimestamps[i].end) > 0.001) modifiedCount++;
             } else modifiedCount++;
         });
         if (originalTimestamps.length > wordsWithTimestamps.length) modifiedCount += (originalTimestamps.length - wordsWithTimestamps.length);
@@ -3759,14 +3564,650 @@
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
-    // 🚀 بدء التطبيق
+    // باقي CSS المطلوب للنماذج والمراجعة
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    const additionalStyles = document.createElement('style');
+    additionalStyles.textContent = `
+        .form-group {
+            margin-bottom: 20px;
+            direction: rtl;
+        }
+        .form-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            direction: rtl;
+        }
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            direction: rtl;
+        }
+        .form-input {
+            width: 100%;
+            padding: 13px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+            direction: rtl;
+            text-align: right;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        .char-counter {
+            text-align: left;
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            direction: ltr;
+        }
+        .save-template-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            margin-top: 20px;
+            box-shadow: var(--shadow-md);
+        }
+        .save-template-btn:active { transform: scale(0.98); }
+        .promo-card-section {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.08), rgba(230, 126, 34, 0.08));
+            border: 2px dashed var(--warning);
+            border-radius: 14px;
+            padding: 18px;
+            margin-top: 28px;
+            margin-bottom: 20px;
+            direction: rtl;
+            position: relative;
+            overflow: hidden;
+        }
+        .promo-card-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(243, 156, 18, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .promo-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        .promo-card-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .promo-optional-badge {
+            padding: 4px 10px;
+            background: var(--warning);
+            color: white;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+        .promo-card-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1;
+        }
+        .promo-input-group {
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
+        }
+        .promo-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .promo-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+            direction: rtl;
+            text-align: right;
+        }
+        .promo-input:focus {
+            outline: none;
+            border-color: var(--warning);
+            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
+        }
+        .promo-input::placeholder {
+            color: var(--text-light);
+            font-size: 13px;
+        }
+        .promo-textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+        .promo-example {
+            font-size: 11px;
+            color: var(--warning);
+            margin-top: 4px;
+            font-weight: 600;
+        }
+        .seo-generate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
+        }
+        .seo-generate-btn:active { transform: scale(0.98); }
+        .seo-generate-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .seo-generate-btn.generated {
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+        }
+        .seo-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-md);
+            border: 2px solid var(--border-color);
+            direction: rtl;
+        }
+        .seo-section.highlight {
+            border-color: var(--primary);
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.2);
+        }
+        .seo-section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            direction: rtl;
+        }
+        .serp-preview {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+            box-shadow: var(--shadow-sm);
+            direction: rtl;
+        }
+        .serp-preview-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            direction: rtl;
+        }
+        .serp-url {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            direction: ltr;
+            text-align: left;
+        }
+        .serp-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a0dab;
+            margin-bottom: 4px;
+            line-height: 1.3;
+            cursor: pointer;
+            direction: rtl;
+            text-align: right;
+        }
+        .serp-title:hover { text-decoration: underline; }
+        .serp-description {
+            font-size: 13px;
+            color: #545454;
+            line-height: 1.5;
+            direction: rtl;
+            text-align: right;
+        }
+        .form-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 13px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+            resize: vertical;
+            direction: rtl;
+            text-align: right;
+        }
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        .tags-input-section {
+            margin-bottom: 16px;
+            direction: rtl;
+        }
+        .tags-input-wrapper {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            direction: rtl;
+        }
+        .tags-input {
+            flex: 1;
+            padding: 13px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+            direction: rtl;
+            text-align: right;
+        }
+        .tags-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        .tags-add-btn {
+            padding: 13px 20px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+        .tags-add-btn:active { transform: scale(0.95); }
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            min-height: 60px;
+            direction: rtl;
+        }
+        .tag-item {
+            background: white;
+            border: 2px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+            direction: rtl;
+        }
+        .tag-item:hover { border-color: var(--danger); }
+        .tag-remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 16px;
+            line-height: 1;
+            padding: 0;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .seo-stats {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            direction: rtl;
+        }
+        .seo-stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            direction: rtl;
+        }
+        .seo-stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        .seo-stat-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .review-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-md);
+            direction: rtl;
+        }
+        .review-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            direction: rtl;
+        }
+        .review-item {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            direction: rtl;
+        }
+        .review-item:last-child { border-bottom: none; }
+        .review-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            min-width: 80px;
+        }
+        .review-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: right;
+            flex: 1;
+            word-break: break-word;
+            direction: rtl;
+        }
+        .review-expand-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 0;
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            direction: rtl;
+        }
+        .review-tags-preview {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            max-height: 60px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+            direction: rtl;
+        }
+        .review-tags-preview.expanded { max-height: none; }
+        .review-tag {
+            background: var(--bg-primary);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            color: var(--text-primary);
+        }
+        .review-template-images {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 16px;
+            direction: rtl;
+        }
+        .review-image-wrapper { text-align: center; }
+        .review-image-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            direction: rtl;
+        }
+        .review-image {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: var(--shadow-md);
+            display: none;
+        }
+        .review-image.loaded { display: block; }
+        .review-image-loading {
+            width: 100%;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-primary);
+            border-radius: 12px;
+        }
+        .review-image-loading.hidden { display: none; }
+        .review-seo-title-box, .review-seo-desc-box {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 8px;
+            font-size: 13px;
+            line-height: 1.6;
+            direction: rtl;
+            text-align: right;
+        }
+        .review-seo-desc-box {
+            max-height: 80px;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        .review-seo-desc-box.expanded { max-height: none; }
+        .review-color-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .review-color-swatch {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid var(--border-color);
+        }
+        .bottom-nav-wrapper {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            z-index: 100;
+            direction: rtl;
+            padding: 12px 16px;
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            direction: rtl;
+        }
+        .step-indicator-badge {
+            position: relative;
+            width: 56px;
+            height: 56px;
+            flex-shrink: 0;
+            order: -1;
+        }
+        .step-pulse-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            opacity: 0.6;
+        }
+        @keyframes pulse-ring {
+            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.4; }
+            100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+        }
+        .step-circle-main {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.5);
+            z-index: 2;
+        }
+        .step-number {
+            font-size: 20px;
+            font-weight: 900;
+            color: white;
+            line-height: 1;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+        .step-total {
+            font-size: 9px;
+            color: rgba(255,255,255,0.9);
+            font-weight: 700;
+        }
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+            direction: rtl;
+        }
+        .nav-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .nav-btn:active { transform: scale(0.98); }
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-back {
+            background: white;
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        .btn-next {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        @media (max-width: 480px) {
+            .step-content { padding: 10px 12px 100px; }
+            .color-wheel-container { width: 160px; height: 160px; }
+            .templates-grid { grid-template-columns: 1fr; }
+            .template-card.large { grid-column: span 1; }
+            .editor-textarea { font-size: 17px; min-height: 350px; }
+            .timestamp-word-item { flex-wrap: wrap; }
+            .word-times { width: 100%; justify-content: space-between; }
+        }
+    `;
+    document.head.appendChild(additionalStyles);
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // 🚀 تشغيل التطبيق
     // ═══════════════════════════════════════════════════════════════════════════
 
     console.log('═══════════════════════════════════════════════════════════');
     console.log('🚀 App v3.3 Starting...');
     console.log('✅ تصفية القوالب حسب الجودة');
     console.log('✨ البطاقة الإعلانية');
-    console.log('⏱️ محرر التواقيت المتقدم مع أزرار الإضافة الذكية');
+    console.log('⏱️ محرر التواقيت المتقدم مع السحب والإفلات');
+    console.log('🎯 حساب ذكي للتواقيت بناءً على سرعة القراءة');
     console.log('📥 قراءة التواقيت من حقل Timings والنص من text');
     console.log('═══════════════════════════════════════════════════════════');
     
