@@ -260,41 +260,43 @@
         }
 
         /* ✅ حل المشكلة 1: شريط التقدم المحسن مع دائرة متحركة */
-        .progress-bar-fixed {
-            width: 100%;
-            height: 8px;
-            background: var(--bg-tertiary);
-            border-radius: 10px;
-            cursor: pointer;
-            position: relative;
-            direction: ltr;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+        /* ✅ تعديل الشريط الثابت */
+.progress-bar-fixed {
+    width: 100%;
+    height: 8px;
+    background: var(--bg-tertiary);
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    direction: rtl; /* ⬅️ أصبح يمين */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
 
-        .progress-fill-fixed {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--primary-light));
-            width: 0%;
-            border-radius: 10px;
-            position: relative;
-            transition: none;
-        }
+.progress-fill-fixed {
+    height: 100%;
+    background: linear-gradient(270deg, var(--primary), var(--primary-light)); /* ⬅️ عكسنا التدرج */
+    width: 0%;
+    border-radius: 10px;
+    position: relative;
+    transition: none;
+    transform-origin: right; /* ⬅️ ينمو من اليمين */
+}
 
-        .progress-scrubber-fixed {
-            position: absolute;
-            top: 50%;
-            left: 0%;
-            transform: translate(-50%, -50%);
-            width: 18px;
-            height: 18px;
-            background: white;
-            border: 3px solid var(--primary);
-            border-radius: 50%;
-            cursor: grab;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-            transition: transform 0.1s, box-shadow 0.1s;
-            z-index: 10;
-        }
+.progress-scrubber-fixed {
+    position: absolute;
+    top: 50%;
+    right: 0%; /* ⬅️ يبدأ من اليمين */
+    left: auto;
+    transform: translate(50%, -50%); /* ⬅️ ضبطنا المحاذاة */
+    width: 18px;
+    height: 18px;
+    background: white;
+    border: 3px solid var(--primary);
+    border-radius: 50%;
+    cursor: grab;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
 
         .progress-scrubber-fixed:hover {
             transform: translate(-50%, -50%) scale(1.2);
@@ -534,41 +536,43 @@
             gap: 4px;
         }
 
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: var(--bg-tertiary);
-            border-radius: 10px;
-            cursor: pointer;
-            position: relative;
-            direction: ltr;
-            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+       /* ✅ تعديل الشريط العادي */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background: var(--bg-tertiary);
+    border-radius: 10px;
+    cursor: pointer;
+    position: relative;
+    direction: rtl; /* ⬅️ أصبح يمين */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
 
-        .progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--primary-light));
-            width: 0%;
-            border-radius: 10px;
-            position: relative;
-            transition: none;
-        }
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(270deg, var(--primary), var(--primary-light)); /* ⬅️ عكسنا التدرج */
+    width: 0%;
+    border-radius: 10px;
+    position: relative;
+    transition: none;
+    transform-origin: right; /* ⬅️ ينمو من اليمين */
+}
 
-        .progress-scrubber-normal {
-            position: absolute;
-            top: 50%;
-            left: 0%;
-            transform: translate(-50%, -50%);
-            width: 16px;
-            height: 16px;
-            background: white;
-            border: 3px solid var(--primary);
-            border-radius: 50%;
-            cursor: grab;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-            transition: transform 0.1s, box-shadow 0.1s;
-            z-index: 10;
-        }
+.progress-scrubber-normal {
+    position: absolute;
+    top: 50%;
+    right: 0%; /* ⬅️ يبدأ من اليمين */
+    left: auto;
+    transform: translate(50%, -50%);
+    width: 16px;
+    height: 16px;
+    background: white;
+    border: 3px solid var(--primary);
+    border-radius: 50%;
+    cursor: grab;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
 
         .progress-scrubber-normal:hover {
             transform: translate(-50%, -50%) scale(1.2);
@@ -3774,18 +3778,18 @@
         audioElement.addEventListener('canplaythrough', () => { audioLoaded = true; });
         audioElement.addEventListener('error', () => { audioLoaded = false; });
 
-        // ✅ حل المشكلة 1: تحديث شريط التقدم والدائرة معاً
+        // ✅ التعديل الأخير: تحديث حركة الدائرة لتكون من اليمين
         audioElement.addEventListener('timeupdate', () => {
             if (!audioElement.duration) return;
             const progress = (audioElement.currentTime / audioElement.duration) * 100;
 
             if (!isScrubbing) {
                 document.getElementById('progressFill').style.width = `${progress}%`;
-                document.getElementById('progressScrubberNormal').style.left = `${progress}%`;
+                document.getElementById('progressScrubberNormal').style.right = `${progress}%`; // ✅ right بدلاً من left
             }
             if (!isScrubbingFixed) {
                 document.getElementById('progressFillFixed').style.width = `${progress}%`;
-                document.getElementById('progressScrubberFixed').style.left = `${progress}%`;
+                document.getElementById('progressScrubberFixed').style.right = `${progress}%`; // ✅ right بدلاً من left
             }
 
             document.getElementById('currentTime').textContent = formatTime(audioElement.currentTime);
@@ -3810,7 +3814,7 @@
         document.getElementById('playPauseBtnFixed').addEventListener('click', toggleAudioPlayback);
 
         // ═══════════════════════════════════════════════════════════════════════════
-        // 🎯 دوال السحب للتحكم في شريط التقدم (حل المشكلة 1)
+        // 🎯 دوال السحب للتحكم في شريط التقدم (RTL - من اليمين لليسار)
         // ═══════════════════════════════════════════════════════════════════════════
 
         const progressBarNormal = document.getElementById('progressBar');
@@ -3832,11 +3836,13 @@
             e.preventDefault();
             const rect = progressBarNormal.getBoundingClientRect();
             const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-            let percentage = (clientX - rect.left) / rect.width;
+            
+            // ✅ التعديل هنا: الحساب من الحافة اليمنى
+            let percentage = (rect.right - clientX) / rect.width;
             percentage = Math.max(0, Math.min(1, percentage));
 
             document.getElementById('progressFill').style.width = `${percentage * 100}%`;
-            document.getElementById('progressScrubberNormal').style.left = `${percentage * 100}%`;
+            document.getElementById('progressScrubberNormal').style.right = `${percentage * 100}%`; // ✅ نستخدم right
             audioElement.currentTime = percentage * audioElement.duration;
         }
 
@@ -3855,7 +3861,8 @@
         progressBarNormal.addEventListener('click', (e) => {
             if (!audioLoaded || !audioElement.duration) return;
             const rect = e.currentTarget.getBoundingClientRect();
-            const percentage = (e.clientX - rect.left) / rect.width;
+            // ✅ التعديل هنا أيضاً للنقر
+            const percentage = (rect.right - e.clientX) / rect.width;
             audioElement.currentTime = percentage * audioElement.duration;
         });
 
@@ -3879,11 +3886,13 @@
             e.preventDefault();
             const rect = progressBarFixed.getBoundingClientRect();
             const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-            let percentage = (clientX - rect.left) / rect.width;
+            
+            // ✅ التعديل هنا: الحساب من الحافة اليمنى
+            let percentage = (rect.right - clientX) / rect.width;
             percentage = Math.max(0, Math.min(1, percentage));
 
             document.getElementById('progressFillFixed').style.width = `${percentage * 100}%`;
-            document.getElementById('progressScrubberFixed').style.left = `${percentage * 100}%`;
+            document.getElementById('progressScrubberFixed').style.right = `${percentage * 100}%`; // ✅ نستخدم right
             audioElement.currentTime = percentage * audioElement.duration;
         }
 
@@ -3902,7 +3911,8 @@
         progressBarFixed.addEventListener('click', (e) => {
             if (!audioLoaded || !audioElement.duration) return;
             const rect = e.currentTarget.getBoundingClientRect();
-            const percentage = (e.clientX - rect.left) / rect.width;
+            // ✅ التعديل هنا أيضاً للنقر
+            const percentage = (rect.right - e.clientX) / rect.width;
             audioElement.currentTime = percentage * audioElement.duration;
         });
 
