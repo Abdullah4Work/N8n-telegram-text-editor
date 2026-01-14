@@ -4622,14 +4622,33 @@
             }
         }
 
-        function sortTimestamps() {
-            wordsWithTimestamps.sort((a, b) => a.start - b.start);
-            timestampsModified = true;
-            displayedWordsCount = 0;
-            renderTimestampWords();
-            setupScrollListener();
-            showToast('✅ تم ترتيب الكلمات');
-        }
+// ⏱️ استرجاع التواقيت الأصلية بالكامل
+function sortTimestamps() {
+    // لو ما فيه نسخة أصلية محفوظة
+    if (!originalTimestamps || originalTimestamps.length === 0) {
+        showToast('⚠️ لا توجد تواقيت أصلية محفوظة', true);
+        return;
+    }
+
+    // استرجاع نسخة عميقة من التواقيت الأصلية
+    wordsWithTimestamps = JSON.parse(JSON.stringify(originalTimestamps));
+
+    // اعتبر أنه لم يعد هناك تعديلات بعد الاسترجاع
+    timestampsModified = false;
+
+    // إعادة تحميل واجهة التواقيت
+    displayedWordsCount = 0;
+    renderTimestampWords();
+    setupScrollListener();
+
+    // مزامنة النص في محرر النص مع الكلمات الأصلية
+    syncTextFromTimestamps();
+
+    // تحديث الإحصائيات
+    updateTimestampStats();
+
+    showToast('✅ تم استرجاع التواقيت والكلمات الأصلية');
+}
 
         function updateTimestampStats() {
             document.getElementById('totalWordsCount').textContent = wordsWithTimestamps.length;
