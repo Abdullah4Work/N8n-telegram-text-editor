@@ -4269,83 +4269,44 @@
             }
 
             const timestampWords = wordsWithTimestamps.map(w => w.text);
-
-            // حساب متوسط سرعة النطق قبل أي تعديل
-            calculateAverageSpeechRate();
-
-            // إذا كان عدد الكلمات الحالية أكبر - أضف الكلمات الجديدة
-            if (currentWords.length > timestampWords.length) {
-                // البحث عن مكان إضافة الكلمات الجديدة
-                let insertIndex = findInsertPosition(currentWords, timestampWords);
-                const newWordsCount = currentWords.length - timestampWords.length;
-
-                for (let i = 0; i < newWordsCount; i++) {
-                    const wordText = currentWords[insertIndex + i];
-                    const duration = calculateWordDuration(wordText);
-
-                    let startTime, endTime;
-
-                    if (insertIndex === 0) {
-                        // إضافة في البداية
-                        const nextWord = wordsWithTimestamps[0];
-                        if (nextWord) {
-                            endTime = Math.max(0, nextWord.start - 0.05);
-                            startTime = Math.max(0, endTime - duration);
-                        } else {
-                            startTime = 0;
-                            endTime = duration;
-                        }
-                    } else if (insertIndex >= wordsWithTimestamps.length) {
-                        // إضافة في النهاية
-                        const prevWord = wordsWithTimestamps[wordsWithTimestamps.length - 1];
-                        startTime = prevWord ? prevWord.end + 0.08 : 0;
-                        endTime = startTime + duration;
-                    } else {
-                        // إضافة في المنتصف
-                        const prevWord = wordsWithTimestamps[insertIndex - 1];
-                        const nextWord = wordsWithTimestamps[insertIndex];
-                        const gap = nextWord.start - prevWord.end;
-
-                        if (gap >= duration + 0.1) {
-                            startTime = prevWord.end + (gap * 0.2);
-                            endTime = startTime + duration;
-                        } else {
-                            // إزاحة الكلمات التالية
-                            startTime = prevWord.end + 0.05;
-                            endTime = startTime + duration;
-                            const shift = endTime - nextWord.start + 0.05;
-                            if (shift > 0) {
-                                for (let j = insertIndex; j < wordsWithTimestamps.length; j++) {
-                                    wordsWithTimestamps[j].start += shift;
-                                    wordsWithTimestamps[j].end += shift;
-                                }
-                            }
-                        }
-                    }
-
-                    wordsWithTimestamps.splice(insertIndex + i, 0, {
-                        text: wordText,
-                        start: startTime,
-                        end: endTime
-                    });
-                }
-                timestampsModified = true;
-            }
-            // إذا كان عدد الكلمات الحالية أقل - احذف الكلمات المحذوفة
-            else if (currentWords.length < timestampWords.length) {
-                const deleteIndex = findDeletePosition(currentWords, timestampWords);
-                const deleteCount = timestampWords.length - currentWords.length;
-                wordsWithTimestamps.splice(deleteIndex, deleteCount);
-                timestampsModified = true;
-            }
-            // تحديث نص الكلمات المعدلة
-            else {
+            
+            // ✅ إذا كان النص مختلف تماماً، أعد بناء التواقيت بالكامل
+            if (currentWords.join(' ') !== timestampWords.join(' ')) {
+                // حساب متوسط سرعة النطق من التواقيت الموجودة
+                calculateAverageSpeechRate();
+                
+                // إعادة بناء التواقيت من النص الجديد
+                const newTimestamps = [];
+                let currentTime = 0;
+                
                 for (let i = 0; i < currentWords.length; i++) {
-                    if (wordsWithTimestamps[i] && wordsWithTimestamps[i].text !== currentWords[i]) {
-                        wordsWithTimestamps[i].text = currentWords[i];
-                        timestampsModified = true;
+                    const word = currentWords[i];
+                    
+                    // ✅ تحقق إذا كانت الكلمة موجودة في نفس الموضع في التواقيت القديمة
+                    if (i < wordsWithTimestamps.length && wordsWithTimestamps[i].text === word) {
+                        // استخدم التواقيت الأصلية للكلمة في نفس الموضع
+                        newTimestamps.push({
+                            text: word,
+                            start: wordsWithTimestamps[i].start,
+                            end: wordsWithTimestamps[i].end
+                        });
+                        currentTime = wordsWithTimestamps[i].end + 0.08;
+                    } else {
+                        // ✅ إذا كانت كلمة جديدة أو مختلفة، أنشئ تواقيت جديدة
+                        const duration = calculateWordDuration(word);
+                        const start = currentTime;
+                        const end = currentTime + duration;
+                        newTimestamps.push({
+                            text: word,
+                            start: start,
+                            end: end
+                        });
+                        currentTime = end + 0.08;
                     }
                 }
+                
+                wordsWithTimestamps = newTimestamps;
+                timestampsModified = true;
             }
         }
 
