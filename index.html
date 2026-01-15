@@ -3118,7 +3118,7 @@
         <div class="loading-text" id="loadingText">جاري تحميل البيانات...</div>
         <div class="loading-subtext" id="loadingSubtext">الرجاء الانتظار</div>
         <div class="loading-step" id="loadingStep">1/2</div>
-        <button class="skip-correction-btn" id="skipCorrectionBtn" style="display:none;">⏭️ تخطي التصحيح</button>
+        <button class="skip-correction-btn" id="skipCorrectionBtn" style="display:none;">⏮️ تخطي التصحيح</button>
     </div>
 
     <!-- 🎵 مشغل الصوت الثابت -->
@@ -3142,8 +3142,8 @@
             <div class="seek-controls-group">
                 <button class="seek-btn-new" id="seekToEndFixed" title="النهاية">⏮️</button>
                 <button class="seek-btn-new" id="seekForward60Fixed" title="+1 دقيقة">⏪</button>
-                <button class="seek-btn-new" id="seekBackward60Fixed" title="-1 دقيقة">⏩</button>
-                <button class="seek-btn-new" id="seekToStartFixed" title="البداية">⏭️</button>
+                <button class="seek-btn-new" id="seekBackward60Fixed" title="-1 دقيقة">⏪</button>
+                <button class="seek-btn-new" id="seekToStartFixed" title="البداية">⏮️</button>
             </div>
             <div class="speed-controls-new">
                 <button class="speed-btn-new" id="speedDownFixed" title="تقليل السرعة">➖</button>
@@ -3257,8 +3257,8 @@
                     </div>
                     <div class="audio-controls-row">
                         <div class="seek-controls-group">
-                            <button class="seek-btn-new" id="seekToEnd" title="النهاية">⏭️</button>
-                            <button class="seek-btn-new" id="seekForward60" title="+1 دقيقة">⏩</button>
+                            <button class="seek-btn-new" id="seekToEnd" title="النهاية">⏮️</button>
+                            <button class="seek-btn-new" id="seekForward60" title="+1 دقيقة">⏪</button>
                             <button class="seek-btn-new" id="seekBackward60" title="-1 دقيقة">⏪</button>
                             <button class="seek-btn-new" id="seekToStart" title="البداية">⏮️</button>
                         </div>
@@ -4134,7 +4134,7 @@
             if (currentSpeedIndex < speedLevels.length - 1) {
                 currentSpeedIndex++;
                 updateSpeedDisplay();
-                showToast(`⏩ السرعة: ${speedLevels[currentSpeedIndex]}x`);
+                showToast(`⏪ السرعة: ${speedLevels[currentSpeedIndex]}x`);
             } else {
                 showToast('⚠️ أقصى سرعة', true);
             }
