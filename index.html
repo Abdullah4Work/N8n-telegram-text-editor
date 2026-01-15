@@ -261,42 +261,47 @@
 
         /* ✅ حل المشكلة 1: شريط التقدم المحسن مع دائرة متحركة */
         /* ✅ تعديل الشريط الثابت */
-.progress-bar-fixed {
-    width: 100%;
-    height: 8px;
-    background: var(--bg-tertiary);
-    border-radius: 10px;
-    cursor: pointer;
-    position: relative;
-    direction: rtl; /* ⬅️ أصبح يمين */
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-}
+        .progress-bar-fixed {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            direction: rtl;
+            /* ⬅️ أصبح يمين */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
 
-.progress-fill-fixed {
-    height: 100%;
-    background: linear-gradient(270deg, var(--primary), var(--primary-light)); /* ⬅️ عكسنا التدرج */
-    width: 0%;
-    border-radius: 10px;
-    position: relative;
-    transition: none;
-    transform-origin: right; /* ⬅️ ينمو من اليمين */
-}
+        .progress-fill-fixed {
+            height: 100%;
+            background: linear-gradient(270deg, var(--primary), var(--primary-light));
+            /* ⬅️ عكسنا التدرج */
+            width: 0%;
+            border-radius: 10px;
+            position: relative;
+            transition: none;
+            transform-origin: right;
+            /* ⬅️ ينمو من اليمين */
+        }
 
-.progress-scrubber-fixed {
-    position: absolute;
-    top: 50%;
-    right: 0%; /* ⬅️ يبدأ من اليمين */
-    left: auto;
-    transform: translate(50%, -50%); /* ⬅️ ضبطنا المحاذاة */
-    width: 18px;
-    height: 18px;
-    background: white;
-    border: 3px solid var(--primary);
-    border-radius: 50%;
-    cursor: grab;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-}
+        .progress-scrubber-fixed {
+            position: absolute;
+            top: 50%;
+            right: 0%;
+            /* ⬅️ يبدأ من اليمين */
+            left: auto;
+            transform: translate(50%, -50%);
+            /* ⬅️ ضبطنا المحاذاة */
+            width: 18px;
+            height: 18px;
+            background: white;
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            cursor: grab;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
 
         .progress-scrubber-fixed:hover {
             transform: translate(-50%, -50%) scale(1.2);
@@ -350,6 +355,96 @@
             color: white;
             border-color: var(--primary);
             box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+        }
+
+        /* ✅ التصميم الجديد لأزرار التحكم */
+        .audio-controls-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .seek-controls-group {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .seek-btn-new {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border: 2px solid var(--border-color);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .seek-btn-new:hover {
+            background: var(--primary-lighter);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .seek-btn-new:active {
+            transform: scale(0.95);
+        }
+
+        .speed-controls-new {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--primary-lighter), rgba(74, 144, 226, 0.1));
+            padding: 6px 12px;
+            border-radius: 12px;
+            border: 2px solid var(--primary);
+        }
+
+        .speed-btn-new {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .speed-btn-new:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .speed-btn-new:active {
+            transform: scale(0.95);
+        }
+
+        .speed-display {
+            min-width: 50px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            background: white;
+            padding: 6px 10px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-sm);
         }
 
         /* ═══════════════════════════════════════════════════════════════════
@@ -536,46 +631,49 @@
             gap: 4px;
         }
 
-       /* ✅ تعديل الشريط العادي */
-.progress-bar {
-    width: 100%;
-    height: 8px;
-    background: var(--bg-tertiary);
-    border-radius: 10px;
-    cursor: pointer;
-    position: relative;
-    direction: rtl; /* ⬅️ أصبح يمين */
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.progress-fill {
-    height: 100%;
-    background: linear-gradient(270deg, var(--primary), var(--primary-light)); /* ⬅️ عكسنا التدرج */
-    width: 0%;
-    border-radius: 10px;
-    position: relative;
-    transition: none;
-    transform-origin: right; /* ⬅️ ينمو من اليمين */
-}
-
-.progress-scrubber-normal {
-    position: absolute;
-    top: 50%;
-    right: 0%; /* ⬅️ يبدأ من اليمين */
-    left: auto;
-    transform: translate(50%, -50%);
-    width: 16px;
-    height: 16px;
-    background: white;
-    border: 3px solid var(--primary);
-    border-radius: 50%;
-    cursor: grab;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-    z-index: 10;
-}
-
-        .progress-scrubber-normal:hover {
+        /* ✅ تعديل الشريط العادي */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-tertiary);
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;
+            direction: rtl;
+            /* ⬅️ أصبح يمين */
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
         }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(270deg, var(--primary), var(--primary-light));
+            /* ⬅️ عكسنا التدرج */
+            width: 0%;
+            border-radius: 10px;
+            position: relative;
+            transition: none;
+            transform-origin: right;
+            /* ⬅️ ينمو من اليمين */
+        }
+
+        .progress-scrubber-normal {
+            position: absolute;
+            top: 50%;
+            right: 0%;
+            /* ⬅️ يبدأ من اليمين */
+            left: auto;
+            transform: translate(50%, -50%);
+            width: 16px;
+            height: 16px;
+            background: white;
+            border: 3px solid var(--primary);
+            border-radius: 50%;
+            cursor: grab;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .progress-scrubber-normal:hover {}
 
         .progress-scrubber-normal.dragging {
             cursor: grabbing;
@@ -624,7 +722,7 @@
 
         /* هنا يوضع الجزء 2/7 */
 
-                /* ═══════════════════════════════════════════════════════════════════
+        /* ═══════════════════════════════════════════════════════════════════
            ✏️ محرر النص المحسن
            ═══════════════════════════════════════════════════════════════════ */
         .editor-container {
@@ -971,9 +1069,12 @@
         }
 
         @keyframes pulse-glow {
-            0%, 100% {
+
+            0%,
+            100% {
                 box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.2);
             }
+
             50% {
                 box-shadow: 0 0 0 5px rgba(33, 150, 243, 0.35);
             }
@@ -1002,99 +1103,108 @@
         .word-content {
             flex: 1;
             display: flex;
-            flex-direction: column;
-            gap: 5px;
+            align-items: center;
+            gap: 10px;
             min-width: 0;
         }
 
         .word-text-input {
-            width: 100%;
-            padding: 5px 8px;
-            border: 1.5px solid var(--border-color);
-            border-radius: 6px;
-            font-size: 13px;
+            flex: 1;
+            min-width: 80px;
+            padding: 8px 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 15px;
             font-weight: 600;
             font-family: inherit;
             direction: rtl;
             text-align: right;
             transition: all 0.2s;
-            background: var(--bg-primary);
+            background: white;
         }
 
         .word-text-input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
-            background: white;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.15);
         }
 
         .word-times {
             display: flex;
-            gap: 8px;
+            gap: 4px;
             align-items: center;
+            background: var(--bg-primary);
+            padding: 4px 8px;
+            border-radius: 8px;
+            border: 1px solid var(--border-light);
         }
 
         .time-input-group {
             display: flex;
             align-items: center;
-            gap: 3px;
-            flex: 1;
+            gap: 2px;
         }
 
         .time-input-label {
-            font-size: 9px;
+            font-size: 10px;
             color: var(--text-secondary);
-            font-weight: 600;
-            white-space: nowrap;
+            font-weight: 700;
         }
 
         .time-input {
-            width: 65px;
-            padding: 3px 5px;
-            border: 1.5px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 11px;
+            width: 55px;
+            padding: 4px 6px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 12px;
             font-family: 'Courier New', monospace;
             text-align: center;
             direction: ltr;
             transition: all 0.2s;
+            background: white;
         }
 
         .time-input:focus {
             outline: none;
-            border-color: var(--timestamp-border);
-            box-shadow: 0 0 0 2px rgba(255, 152, 0, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
         }
 
         .time-input.start-time {
-            background: #E8F5E9;
+            border-color: var(--success);
+            background: linear-gradient(135deg, #f0fff4, #e8f5e9);
         }
 
         .time-input.end-time {
-            background: #FFEBEE;
+            border-color: var(--danger);
+            background: linear-gradient(135deg, #fff5f5, #ffebee);
+        }
+
+        .time-separator {
+            color: var(--text-light);
+            font-size: 12px;
         }
 
         .word-actions {
             display: flex;
-            flex-direction: column;
-            gap: 3px;
+            gap: 4px;
         }
 
         .word-action-btn {
-            width: 26px;
-            height: 26px;
-            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 14px;
             transition: all 0.2s;
         }
 
         .word-action-btn.delete-btn {
-            background: #FFEBEE;
+            background: linear-gradient(135deg, #ffebee, #ffcdd2);
             color: var(--danger);
         }
 
@@ -1105,7 +1215,7 @@
         }
 
         .word-action-btn.play-btn {
-            background: var(--primary-lighter);
+            background: linear-gradient(135deg, var(--primary-lighter), #bbdefb);
             color: var(--primary);
         }
 
@@ -1164,8 +1274,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .add-word-modal.visible {
@@ -1188,6 +1303,7 @@
                 transform: scale(0.8);
                 opacity: 0;
             }
+
             to {
                 transform: scale(1);
                 opacity: 1;
@@ -1336,7 +1452,7 @@
 
         /* هنا يوضع الجزء 3/7 */
 
-                /* ═══════════════════════════════════════════════════════════════════
+        /* ═══════════════════════════════════════════════════════════════════
            🎨 القوالب والألوان
            ═══════════════════════════════════════════════════════════════════ */
         .quality-toggle-container {
@@ -1632,6 +1748,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -1983,14 +2100,14 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: conic-gradient(from 0deg, 
-                hsl(0, 100%, 50%), hsl(30, 100%, 50%), hsl(60, 100%, 50%),
-                hsl(90, 100%, 50%), hsl(120, 100%, 50%), hsl(150, 100%, 50%),
-                hsl(180, 100%, 50%), hsl(210, 100%, 50%), hsl(240, 100%, 50%),
-                hsl(270, 100%, 50%), hsl(300, 100%, 50%), hsl(330, 100%, 50%),
-                hsl(360, 100%, 50%));
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15), 
-                        inset 0 0 40px rgba(255, 255, 255, 0.2);
+            background: conic-gradient(from 0deg,
+                    hsl(0, 100%, 50%), hsl(30, 100%, 50%), hsl(60, 100%, 50%),
+                    hsl(90, 100%, 50%), hsl(120, 100%, 50%), hsl(150, 100%, 50%),
+                    hsl(180, 100%, 50%), hsl(210, 100%, 50%), hsl(240, 100%, 50%),
+                    hsl(270, 100%, 50%), hsl(300, 100%, 50%), hsl(330, 100%, 50%),
+                    hsl(360, 100%, 50%));
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15),
+                inset 0 0 40px rgba(255, 255, 255, 0.2);
             position: relative;
             touch-action: none;
         }
@@ -2004,10 +2121,10 @@
             width: 85%;
             height: 85%;
             border-radius: 50%;
-            background: radial-gradient(circle, 
-                rgba(255, 255, 255, 0.9) 0%, 
-                rgba(255, 255, 255, 0.3) 30%, 
-                rgba(255, 255, 255, 0) 50%);
+            background: radial-gradient(circle,
+                    rgba(255, 255, 255, 0.9) 0%,
+                    rgba(255, 255, 255, 0.3) 30%,
+                    rgba(255, 255, 255, 0) 50%);
             pointer-events: none;
         }
 
@@ -2018,8 +2135,8 @@
             border-radius: 50%;
             background: white;
             border: 3px solid #333;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4), 
-                        0 0 0 2px white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4),
+                0 0 0 2px white;
             cursor: grab;
             transform: translate(-50%, -50%);
             transition: transform 0.1s ease;
@@ -2256,7 +2373,7 @@
 
         /* هنا يوضع الجزء 4/7 */
 
-                /* ═══════════════════════════════════════════════════════════════════
+        /* ═══════════════════════════════════════════════════════════════════
            🔍 SEO Styles
            ═══════════════════════════════════════════════════════════════════ */
         .seo-generate-btn {
@@ -2732,10 +2849,12 @@
                 transform: translate(-50%, -50%) scale(0.9);
                 opacity: 0.8;
             }
+
             50% {
                 transform: translate(-50%, -50%) scale(1.1);
                 opacity: 0.4;
             }
+
             100% {
                 transform: translate(-50%, -50%) scale(0.9);
                 opacity: 0.8;
@@ -2895,25 +3014,6 @@
 
     <!-- 🎵 مشغل الصوت الثابت -->
     <div class="audio-player-fixed" id="audioPlayerFixed">
-        <div class="audio-seek-controls">
-            <button class="seek-btn" id="seekToStartFixed" title="الذهاب للبداية">
-                <span class="seek-btn-icon">⏮️</span>
-                <span>البداية</span>
-            </button>
-            <button class="seek-btn" id="seekBackward60Fixed" title="تأخير دقيقة">
-                <span class="seek-btn-icon">⏪</span>
-                <span>-1د</span>
-            </button>
-            <button class="seek-btn" id="seekForward60Fixed" title="تقديم دقيقة">
-                <span class="seek-btn-icon">⏩</span>
-                <span>+1د</span>
-            </button>
-            <button class="seek-btn" id="seekToEndFixed" title="الذهاب للنهاية">
-                <span class="seek-btn-icon">⏭️</span>
-                <span>النهاية</span>
-            </button>
-        </div>
-
         <div class="audio-fixed-content">
             <div class="audio-fixed-controls">
                 <button class="play-pause-btn-fixed" id="playPauseBtnFixed">▶️</button>
@@ -2928,12 +3028,18 @@
                     </div>
                 </div>
             </div>
-            <div class="speed-controls-fixed">
-                <button class="speed-btn-fixed" data-speed="0.5">0.5x</button>
-                <button class="speed-btn-fixed" data-speed="0.75">0.75x</button>
-                <button class="speed-btn-fixed active" data-speed="1">1x</button>
-                <button class="speed-btn-fixed" data-speed="1.5">1.5x</button>
-                <button class="speed-btn-fixed" data-speed="2">2x</button>
+        </div>
+        <div class="audio-controls-row">
+            <div class="seek-controls-group">
+                <button class="seek-btn-new" id="seekToStartFixed" title="البداية">⏮️</button>
+                <button class="seek-btn-new" id="seekBackward60Fixed" title="-1 دقيقة">⏪</button>
+                <button class="seek-btn-new" id="seekForward60Fixed" title="+1 دقيقة">⏩</button>
+                <button class="seek-btn-new" id="seekToEndFixed" title="النهاية">⏭️</button>
+            </div>
+            <div class="speed-controls-new">
+                <button class="speed-btn-new" id="speedDownFixed" title="تقليل السرعة">➖</button>
+                <div class="speed-display" id="speedDisplayFixed">1x</div>
+                <button class="speed-btn-new" id="speedUpFixed" title="زيادة السرعة">➕</button>
             </div>
         </div>
     </div>
@@ -3015,7 +3121,7 @@
 
     <!-- هنا يوضع الجزء 5/7 -->
 
-        <!-- 📦 Container الرئيسي -->
+    <!-- 📦 Container الرئيسي -->
     <div class="container">
 
         <!-- الخطوة 1: التصحيح + محرر التواقيت -->
@@ -3026,25 +3132,6 @@
                 <div class="audio-player">
                     <audio id="audioElement" style="display: none;" preload="auto" playsinline
                         webkit-playsinline></audio>
-
-                    <div class="audio-seek-controls-normal">
-                        <button class="seek-btn-normal" id="seekToStart">
-                            <span>⏮️</span>
-                            <span>البداية</span>
-                        </button>
-                        <button class="seek-btn-normal" id="seekBackward60">
-                            <span>⏪</span>
-                            <span>-1د</span>
-                        </button>
-                        <button class="seek-btn-normal" id="seekForward60">
-                            <span>⏩</span>
-                            <span>+1د</span>
-                        </button>
-                        <button class="seek-btn-normal" id="seekToEnd">
-                            <span>⏭️</span>
-                            <span>النهاية</span>
-                        </button>
-                    </div>
 
                     <div class="audio-controls">
                         <button class="play-pause-btn" id="playPauseBtn">▶️</button>
@@ -3059,12 +3146,18 @@
                             </div>
                         </div>
                     </div>
-                    <div class="speed-controls">
-                        <button class="speed-btn" data-speed="0.5">0.5x</button>
-                        <button class="speed-btn" data-speed="0.75">0.75x</button>
-                        <button class="speed-btn active" data-speed="1">1x</button>
-                        <button class="speed-btn" data-speed="1.5">1.5x</button>
-                        <button class="speed-btn" data-speed="2">2x</button>
+                    <div class="audio-controls-row">
+                        <div class="seek-controls-group">
+                            <button class="seek-btn-new" id="seekToStart" title="البداية">⏮️</button>
+                            <button class="seek-btn-new" id="seekBackward60" title="-1 دقيقة">⏪</button>
+                            <button class="seek-btn-new" id="seekForward60" title="+1 دقيقة">⏩</button>
+                            <button class="seek-btn-new" id="seekToEnd" title="النهاية">⏭️</button>
+                        </div>
+                        <div class="speed-controls-new">
+                            <button class="speed-btn-new" id="speedDown" title="تقليل السرعة">➖</button>
+                            <div class="speed-display" id="speedDisplay">1x</div>
+                            <button class="speed-btn-new" id="speedUp" title="زيادة السرعة">➕</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3472,7 +3565,7 @@
 
     <!-- هنا يوضع الجزء 6/7 -->
 
-        <script>
+    <script>
         // ═══════════════════════════════════════════════════════════════════════════
         // 🔧 المتغيرات والإعدادات الأساسية
         // ═══════════════════════════════════════════════════════════════════════════
@@ -3834,7 +3927,7 @@
             e.preventDefault();
             const rect = progressBarNormal.getBoundingClientRect();
             const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-            
+
             // ✅ التعديل هنا: الحساب من الحافة اليمنى
             let percentage = (rect.right - clientX) / rect.width;
             percentage = Math.max(0, Math.min(1, percentage));
@@ -3884,7 +3977,7 @@
             e.preventDefault();
             const rect = progressBarFixed.getBoundingClientRect();
             const clientX = e.type.includes('touch') ? e.touches[0].clientX : e.clientX;
-            
+
             // ✅ التعديل هنا: الحساب من الحافة اليمنى
             let percentage = (rect.right - clientX) / rect.width;
             percentage = Math.max(0, Math.min(1, percentage));
@@ -3914,32 +4007,50 @@
             audioElement.currentTime = percentage * audioElement.duration;
         });
 
-        // التحكم في السرعة
-        document.querySelectorAll('.speed-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const speed = parseFloat(btn.dataset.speed);
-                audioElement.playbackRate = speed;
-                document.querySelectorAll('.speed-btn, .speed-btn-fixed').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                document.querySelector(`.speed-btn-fixed[data-speed="${speed}"]`)?.classList.add('active');
-            });
-        });
+        // ✅ نظام التحكم في السرعة الجديد (+ و -)
+        const speedLevels = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+        let currentSpeedIndex = 2; // يبدأ من 1x
 
-        document.querySelectorAll('.speed-btn-fixed').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const speed = parseFloat(btn.dataset.speed);
-                audioElement.playbackRate = speed;
-                document.querySelectorAll('.speed-btn, .speed-btn-fixed').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                document.querySelector(`.speed-btn[data-speed="${speed}"]`)?.classList.add('active');
-            });
-        });
+        function updateSpeedDisplay() {
+            const speed = speedLevels[currentSpeedIndex];
+            audioElement.playbackRate = speed;
+            const displayText = speed + 'x';
+            document.getElementById('speedDisplay').textContent = displayText;
+            document.getElementById('speedDisplayFixed').textContent = displayText;
+        }
+
+        function speedUp() {
+            if (currentSpeedIndex < speedLevels.length - 1) {
+                currentSpeedIndex++;
+                updateSpeedDisplay();
+                showToast(`⏩ السرعة: ${speedLevels[currentSpeedIndex]}x`);
+            } else {
+                showToast('⚠️ أقصى سرعة', true);
+            }
+        }
+
+        function speedDown() {
+            if (currentSpeedIndex > 0) {
+                currentSpeedIndex--;
+                updateSpeedDisplay();
+                showToast(`⏪ السرعة: ${speedLevels[currentSpeedIndex]}x`);
+            } else {
+                showToast('⚠️ أقل سرعة', true);
+            }
+        }
+
+        // ربط أزرار السرعة
+        document.getElementById('speedUp').addEventListener('click', speedUp);
+        document.getElementById('speedDown').addEventListener('click', speedDown);
+        document.getElementById('speedUpFixed').addEventListener('click', speedUp);
+        document.getElementById('speedDownFixed').addEventListener('click', speedDown);
 
         // ═══════════════════════════════════════════════════════════════════════════
         // ✏️ محرر النص المحسن (حل المشكلة 3)
         // ═══════════════════════════════════════════════════════════════════════════
 
         const textEditor = document.getElementById('textEditor');
+        let isTextEditorFocused = false;
 
         function enterEditingMode() {
             const stepContent = document.querySelector('.step-content[data-step="1"]');
@@ -3947,17 +4058,28 @@
             document.getElementById('audioPlayerFixed').classList.add('visible');
             stepContent.classList.add('with-fixed-player');
             document.getElementById('editorContainer').classList.add('editing-mode');
+            isTextEditorFocused = true;
         }
 
         function exitEditingMode() {
+            if (timestampModeActive) return; // لا تخفي الهيدر في وضع التواقيت
             const stepContent = document.querySelector('.step-content[data-step="1"]');
             document.getElementById('audioPlayerSection').classList.remove('hidden');
             document.getElementById('audioPlayerFixed').classList.remove('visible');
             stepContent.classList.remove('with-fixed-player');
             document.getElementById('editorContainer').classList.remove('editing-mode');
+            isTextEditorFocused = false;
         }
 
         textEditor.addEventListener('focus', enterEditingMode);
+        textEditor.addEventListener('blur', (e) => {
+            // تأخير صغير للسماح بالتحقق من أين تم النقر
+            setTimeout(() => {
+                if (!textEditor.contains(document.activeElement) && !timestampModeActive) {
+                    exitEditingMode();
+                }
+            }, 150);
+        });
 
         document.getElementById('textSizeUp').addEventListener('click', (e) => {
             e.preventDefault();
@@ -4007,24 +4129,103 @@
             const currentWords = textEditor.value.trim().split(/\s+/).filter(w => w);
             const timestampWords = wordsWithTimestamps.map(w => w.text);
 
+            // حساب متوسط سرعة النطق قبل أي تعديل
+            calculateAverageSpeechRate();
+
+            // إذا كان عدد الكلمات الحالية أكبر - أضف الكلمات الجديدة
             if (currentWords.length > timestampWords.length) {
+                // البحث عن مكان إضافة الكلمات الجديدة
+                let insertIndex = findInsertPosition(currentWords, timestampWords);
                 const newWordsCount = currentWords.length - timestampWords.length;
-                const lastWord = wordsWithTimestamps[wordsWithTimestamps.length - 1];
 
                 for (let i = 0; i < newWordsCount; i++) {
-                    const wordIndex = timestampWords.length + i;
-                    const wordText = currentWords[wordIndex];
+                    const wordText = currentWords[insertIndex + i];
                     const duration = calculateWordDuration(wordText);
-                    const startTime = lastWord ? lastWord.end + 0.1 + (i * (duration + 0.1)) : 0;
 
-                    wordsWithTimestamps.push({
+                    let startTime, endTime;
+
+                    if (insertIndex === 0) {
+                        // إضافة في البداية
+                        const nextWord = wordsWithTimestamps[0];
+                        if (nextWord) {
+                            endTime = Math.max(0, nextWord.start - 0.05);
+                            startTime = Math.max(0, endTime - duration);
+                        } else {
+                            startTime = 0;
+                            endTime = duration;
+                        }
+                    } else if (insertIndex >= wordsWithTimestamps.length) {
+                        // إضافة في النهاية
+                        const prevWord = wordsWithTimestamps[wordsWithTimestamps.length - 1];
+                        startTime = prevWord ? prevWord.end + 0.08 : 0;
+                        endTime = startTime + duration;
+                    } else {
+                        // إضافة في المنتصف
+                        const prevWord = wordsWithTimestamps[insertIndex - 1];
+                        const nextWord = wordsWithTimestamps[insertIndex];
+                        const gap = nextWord.start - prevWord.end;
+
+                        if (gap >= duration + 0.1) {
+                            startTime = prevWord.end + (gap * 0.2);
+                            endTime = startTime + duration;
+                        } else {
+                            // إزاحة الكلمات التالية
+                            startTime = prevWord.end + 0.05;
+                            endTime = startTime + duration;
+                            const shift = endTime - nextWord.start + 0.05;
+                            if (shift > 0) {
+                                for (let j = insertIndex; j < wordsWithTimestamps.length; j++) {
+                                    wordsWithTimestamps[j].start += shift;
+                                    wordsWithTimestamps[j].end += shift;
+                                }
+                            }
+                        }
+                    }
+
+                    wordsWithTimestamps.splice(insertIndex + i, 0, {
                         text: wordText,
                         start: startTime,
-                        end: startTime + duration
+                        end: endTime
                     });
                 }
                 timestampsModified = true;
             }
+            // إذا كان عدد الكلمات الحالية أقل - احذف الكلمات المحذوفة
+            else if (currentWords.length < timestampWords.length) {
+                const deleteIndex = findDeletePosition(currentWords, timestampWords);
+                const deleteCount = timestampWords.length - currentWords.length;
+                wordsWithTimestamps.splice(deleteIndex, deleteCount);
+                timestampsModified = true;
+            }
+            // تحديث نص الكلمات المعدلة
+            else {
+                for (let i = 0; i < currentWords.length; i++) {
+                    if (wordsWithTimestamps[i] && wordsWithTimestamps[i].text !== currentWords[i]) {
+                        wordsWithTimestamps[i].text = currentWords[i];
+                        timestampsModified = true;
+                    }
+                }
+            }
+        }
+
+        // البحث عن مكان إضافة الكلمة الجديدة
+        function findInsertPosition(newWords, oldWords) {
+            for (let i = 0; i < oldWords.length; i++) {
+                if (newWords[i] !== oldWords[i]) {
+                    return i;
+                }
+            }
+            return oldWords.length;
+        }
+
+        // البحث عن مكان الحذف
+        function findDeletePosition(newWords, oldWords) {
+            for (let i = 0; i < newWords.length; i++) {
+                if (newWords[i] !== oldWords[i]) {
+                    return i;
+                }
+            }
+            return newWords.length;
         }
 
         // ═══════════════════════════════════════════════════════════════════════════
@@ -4036,29 +4237,47 @@
                 averageSpeechRate = 0.3;
                 return;
             }
+
             let totalDuration = 0;
+            let totalChars = 0;
             let validWords = 0;
-            const sampleSize = Math.min(wordsWithTimestamps.length, 50);
+            const sampleSize = Math.min(wordsWithTimestamps.length, 100);
+
             for (let i = 0; i < sampleSize; i++) {
                 const word = wordsWithTimestamps[i];
                 const duration = word.end - word.start;
-                if (duration > 0.05 && duration < 2) {
+                if (duration > 0.05 && duration < 3) {
                     totalDuration += duration;
+                    totalChars += word.text.length;
                     validWords++;
                 }
             }
-            averageSpeechRate = validWords > 0 ? totalDuration / validWords : 0.3;
+
+            // حساب متوسط الوقت لكل حرف (أكثر دقة من متوسط الكلمة)
+            if (validWords > 0 && totalChars > 0) {
+                averageSpeechRate = totalDuration / validWords;
+                // حفظ معدل الحروف أيضاً
+                window.charRate = totalDuration / totalChars;
+            } else {
+                averageSpeechRate = 0.3;
+                window.charRate = 0.05;
+            }
         }
 
         function calculateWordDuration(word) {
-            const baseTime = 0.2;
-            const charTime = 0.04;
             const wordLength = word.length;
-            let duration = baseTime + (wordLength * charTime);
-            if (averageSpeechRate > 0) {
-                duration = duration * (averageSpeechRate / 0.3);
-            }
-            return Math.min(Math.max(duration, 0.15), 2);
+
+            // استخدام معدل الحروف المحسوب من سرعة القارئ
+            const charRate = window.charRate || 0.05;
+
+            // حساب المدة بناءً على طول الكلمة ومعدل الحروف
+            let duration = wordLength * charRate;
+
+            // إضافة وقت أساسي لكل كلمة (الفراغ بين الكلمات)
+            duration += 0.08;
+
+            // ضبط المدة ضمن حدود معقولة
+            return Math.min(Math.max(duration, 0.12), 2.5);
         }
 
         function toggleTimestampMode() {
@@ -4212,7 +4431,7 @@
 
         function handleScroll() {
             if (isLoadingMoreWords) return;
-            
+
             const container = document.getElementById('timestampWordsList');
             const scrollTop = container.scrollTop;
             const scrollHeight = container.scrollHeight;
@@ -4309,24 +4528,21 @@
                            data-index="${index}"
                            placeholder="الكلمة...">
                     <div class="word-times">
-                        <div class="time-input-group">
-                            <span class="time-input-label">من:</span>
-                            <input type="number" 
-                                   step="0.001" 
-                                   class="time-input start-time" 
-                                   value="${formatTimeDetailed(word.start)}" 
-                                   data-field="start" 
-                                   data-index="${index}">
-                        </div>
-                        <div class="time-input-group">
-                            <span class="time-input-label">إلى:</span>
-                            <input type="number" 
-                                   step="0.001" 
-                                   class="time-input end-time" 
-                                   value="${formatTimeDetailed(word.end)}" 
-                                   data-field="end" 
-                                   data-index="${index}">
-                        </div>
+                        <input type="number" 
+                               step="0.001" 
+                               class="time-input start-time" 
+                               value="${formatTimeDetailed(word.start)}" 
+                               data-field="start" 
+                               data-index="${index}"
+                               title="وقت البداية">
+                        <span class="time-separator">→</span>
+                        <input type="number" 
+                               step="0.001" 
+                               class="time-input end-time" 
+                               value="${formatTimeDetailed(word.end)}" 
+                               data-field="end" 
+                               data-index="${index}"
+                               title="وقت النهاية">
                     </div>
                 </div>
                 <div class="word-actions">
@@ -4413,7 +4629,7 @@
         function handleDragOver(e) {
             e.preventDefault();
             e.dataTransfer.dropEffect = 'move';
-            
+
             const container = document.getElementById('timestampWordsList');
             const containerRect = container.getBoundingClientRect();
             const mouseY = e.clientY;
@@ -4622,33 +4838,33 @@
             }
         }
 
-// ⏱️ استرجاع التواقيت الأصلية بالكامل
-function sortTimestamps() {
-    // لو ما فيه نسخة أصلية محفوظة
-    if (!originalTimestamps || originalTimestamps.length === 0) {
-        showToast('⚠️ لا توجد تواقيت أصلية محفوظة', true);
-        return;
-    }
+        // ⏱️ استرجاع التواقيت الأصلية بالكامل
+        function sortTimestamps() {
+            // لو ما فيه نسخة أصلية محفوظة
+            if (!originalTimestamps || originalTimestamps.length === 0) {
+                showToast('⚠️ لا توجد تواقيت أصلية محفوظة', true);
+                return;
+            }
 
-    // استرجاع نسخة عميقة من التواقيت الأصلية
-    wordsWithTimestamps = JSON.parse(JSON.stringify(originalTimestamps));
+            // استرجاع نسخة عميقة من التواقيت الأصلية
+            wordsWithTimestamps = JSON.parse(JSON.stringify(originalTimestamps));
 
-    // اعتبر أنه لم يعد هناك تعديلات بعد الاسترجاع
-    timestampsModified = false;
+            // اعتبر أنه لم يعد هناك تعديلات بعد الاسترجاع
+            timestampsModified = false;
 
-    // إعادة تحميل واجهة التواقيت
-    displayedWordsCount = 0;
-    renderTimestampWords();
-    setupScrollListener();
+            // إعادة تحميل واجهة التواقيت
+            displayedWordsCount = 0;
+            renderTimestampWords();
+            setupScrollListener();
 
-    // مزامنة النص في محرر النص مع الكلمات الأصلية
-    syncTextFromTimestamps();
+            // مزامنة النص في محرر النص مع الكلمات الأصلية
+            syncTextFromTimestamps();
 
-    // تحديث الإحصائيات
-    updateTimestampStats();
+            // تحديث الإحصائيات
+            updateTimestampStats();
 
-    showToast('✅ تم استرجاع التواقيت والكلمات الأصلية');
-}
+            showToast('✅ تم استرجاع التواقيت والكلمات الأصلية');
+        }
 
         function updateTimestampStats() {
             document.getElementById('totalWordsCount').textContent = wordsWithTimestamps.length;
@@ -4721,7 +4937,7 @@ function sortTimestamps() {
 
         // هنا يوضع الجزء 7/7
 
-                    // ═══════════════════════════════════════════════════════════════════════════
+        // ═══════════════════════════════════════════════════════════════════════════
         // 📥 تحميل البيانات الأولية
         // ═══════════════════════════════════════════════════════════════════════════
 
@@ -4850,8 +5066,8 @@ function sortTimestamps() {
             }
             initializeTemplates();
             if (selectedTemplate) {
-                const isLow = loadedTemplatesData.some(t => 
-                    t.template_id === selectedTemplate.id && 
+                const isLow = loadedTemplatesData.some(t =>
+                    t.template_id === selectedTemplate.id &&
                     (t.isLowQuality === true || t.isLowQuality === 'true')
                 );
                 if ((showLowQuality && !isLow) || (!showLowQuality && isLow)) {
@@ -4873,7 +5089,7 @@ function sortTimestamps() {
         function initializeTemplates() {
             const grid = document.getElementById('templatesGrid');
             grid.innerHTML = '';
-            
+
             if (!loadedTemplatesData || loadedTemplatesData.length === 0) {
                 grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-secondary)">لا توجد قوالب</div>';
                 return;
@@ -4904,11 +5120,11 @@ function sortTimestamps() {
                 card.className = 'template-card';
                 if (template.id === 5 || template.id === 10) card.classList.add('large');
                 card.dataset.templateId = template.id;
-                
+
                 const qualityBadge = template.isLowQuality
                     ? '<div class="quality-badge low"><span>📦</span><span>جودة منخفضة</span></div>'
                     : '<div class="quality-badge high"><span>✅</span><span>جودة عالية</span></div>';
-                
+
                 card.innerHTML = `
                     <div class="template-preview" style="background-image:url('${convertDriveUrl(template.image)}')">
                         ${qualityBadge}
@@ -4928,10 +5144,10 @@ function sortTimestamps() {
             selectedTemplate = template;
             formData.template_id = template.id;
             formData.template_name = template.name;
-            
+
             const grid = document.getElementById('colorsGrid');
             grid.innerHTML = '';
-            
+
             template.colors.forEach(color => {
                 const opt = document.createElement('div');
                 opt.className = 'color-option';
@@ -4941,7 +5157,7 @@ function sortTimestamps() {
                 opt.onclick = () => selectColor(color);
                 grid.appendChild(opt);
             });
-            
+
             document.getElementById('colorsSection').style.display = 'block';
             validateCurrentStep();
         }
@@ -4950,7 +5166,7 @@ function sortTimestamps() {
             document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
             document.querySelector(`[data-color-id="${color.color_id}"]`).classList.add('selected');
             selectedColor = color;
-            
+
             formData.color_id = color.color_id;
             formData.color_name = color.color_name;
             formData.landscape_image_url = color.landscape_link;
@@ -4979,7 +5195,7 @@ function sortTimestamps() {
             // معاينة القالب
             const landscapeImg = document.getElementById('landscapePreview');
             const portraitImg = document.getElementById('portraitPreview');
-            
+
             document.getElementById('landscapeLoading').classList.remove('hidden');
             document.getElementById('portraitLoading').classList.remove('hidden');
             landscapeImg.classList.remove('loaded');
@@ -4993,10 +5209,10 @@ function sortTimestamps() {
                 document.getElementById('portraitLoading').classList.add('hidden');
                 portraitImg.classList.add('loaded');
             };
-            
+
             landscapeImg.src = convertDriveUrl(color.landscape_link);
             portraitImg.src = convertDriveUrl(color.portrait_link);
-            
+
             document.getElementById('templatePreviewModal').classList.add('visible');
             validateCurrentStep();
         }
@@ -5016,11 +5232,11 @@ function sortTimestamps() {
 
         function initializeColorPickers() {
             if (!selectedColor) return;
-            
+
             recommendedSeriesColor = selectedColor.landscape_series_color || '#b9d780';
             formData.series_color = recommendedSeriesColor;
             updateSeriesColorDisplay(recommendedSeriesColor);
-            
+
             formData.title_color = recommendedTitleColor;
             updateTitleColorDisplay(recommendedTitleColor);
 
@@ -5104,9 +5320,9 @@ function sortTimestamps() {
                 const counter = document.getElementById(field + 'Count');
                 if (input && counter) {
                     counter.textContent = input.value.length;
-                    const key = field === 'mainSeries' ? 'series' : 
-                               field === 'subSeries' ? 'subSeries' : 
-                               field === 'finalSeries' ? 'finalSeries' : 'title';
+                    const key = field === 'mainSeries' ? 'series' :
+                        field === 'subSeries' ? 'subSeries' :
+                            field === 'finalSeries' ? 'finalSeries' : 'title';
                     formData[key] = input.value;
                 }
             });
@@ -5139,7 +5355,7 @@ function sortTimestamps() {
                 return;
             }
             if (!confirm('هل تريد حفظ هذه التعديلات؟')) return;
-            
+
             showLoading('جاري الحفظ...', '', '');
             try {
                 const response = await fetch(N8N_TEMPLATE_UPDATE_URL, {
@@ -5204,12 +5420,12 @@ function sortTimestamps() {
         function updateSeoStats() {
             const title = formData.seo_title || '';
             const desc = formData.seo_description || '';
-            
+
             document.getElementById('statWordCount').textContent = title.trim() ? title.trim().split(/\s+/).length : 0;
             document.getElementById('statCharCount').textContent = title.length;
             document.getElementById('statTagsCount').textContent = formData.tags.length;
             document.getElementById('statDescLength').textContent = desc.length;
-            
+
             if (title || desc || formData.tags.length) {
                 document.getElementById('seoStats').style.display = 'grid';
             }
@@ -5241,10 +5457,10 @@ function sortTimestamps() {
                 showToast('⚠️ لا يوجد نص للتحليل', true);
                 return;
             }
-            
+
             showLoading('جاري إنشاء SEO بالذكاء الاصطناعي...', 'قد يستغرق بضع ثوانٍ', '');
             document.getElementById('seoGenerateBtn').disabled = true;
-            
+
             try {
                 const response = await fetch(`${WORKER_API_URL}/generate-seo`, {
                     method: 'POST',
@@ -5254,29 +5470,29 @@ function sortTimestamps() {
                         title: formData.title
                     })
                 });
-                
+
                 if (!response.ok) throw new Error('فشل إنشاء SEO');
-                
+
                 const result = await response.json();
                 if (result.success) {
                     formData.seo_title = result.title || formData.title || '';
                     formData.seo_description = result.description || '';
                     formData.tags = result.tags || [];
-                    
+
                     document.getElementById('seoTitleInput').value = formData.seo_title;
                     document.getElementById('seoDescriptionInput').value = formData.seo_description;
                     document.getElementById('seoTitleCount').textContent = formData.seo_title.length;
                     document.getElementById('seoDescCount').textContent = formData.seo_description.length;
-                    
+
                     renderTags();
                     updateSeoStats();
                     updateSerpPreview();
-                    
+
                     document.getElementById('seoGenerateBtn').classList.add('generated');
                     document.getElementById('seoGenerateBtn').innerHTML = '<span>✅</span><span>تم إنشاء SEO بنجاح</span>';
                     showToast('✅ تم إنشاء SEO بنجاح');
                 }
-                
+
                 hideLoading();
                 document.getElementById('seoGenerateBtn').disabled = false;
                 validateCurrentStep();
@@ -5309,11 +5525,11 @@ function sortTimestamps() {
 
         function updateProgress() {
             document.getElementById('stepNumber').textContent = currentStep;
-            
+
             document.querySelectorAll('.step-content').forEach((content, i) => {
                 content.classList.toggle('active', i + 1 === currentStep);
             });
-            
+
             document.getElementById('btnBack').style.display = currentStep > 1 ? 'flex' : 'none';
 
             if (currentStep === totalSteps) {
@@ -5326,7 +5542,7 @@ function sortTimestamps() {
             }
 
             if (currentStep === 3) initializeColorPickers();
-            
+
             if (currentStep === 5 && formData.title && !formData.seo_title) {
                 formData.seo_title = formData.title;
                 document.getElementById('seoTitleInput').value = formData.title;
@@ -5345,7 +5561,7 @@ function sortTimestamps() {
                 exitEditingMode();
                 document.getElementById('audioPlayerFixed').classList.remove('visible');
                 removeActiveWordHighlight();
-                
+
                 document.querySelectorAll('.step-content').forEach(content => {
                     content.classList.remove('with-fixed-player', 'timestamp-active');
                 });
@@ -5368,13 +5584,13 @@ function sortTimestamps() {
                     isValid = !!formData.series_color && !!formData.title_color;
                     break;
                 case 4:
-                    isValid = formData.title.trim() && formData.series.trim() && 
-                              formData.subSeries.trim() && formData.finalSeries.trim();
+                    isValid = formData.title.trim() && formData.series.trim() &&
+                        formData.subSeries.trim() && formData.finalSeries.trim();
                     break;
                 case 5:
-                    isValid = formData.seo_title.trim().length > 0 && 
-                              formData.seo_description.trim().length > 0 && 
-                              formData.tags.length > 0;
+                    isValid = formData.seo_title.trim().length > 0 &&
+                        formData.seo_description.trim().length > 0 &&
+                        formData.tags.length > 0;
                     break;
                 case 6:
                     isValid = true;
@@ -5409,8 +5625,8 @@ function sortTimestamps() {
         // ═══════════════════════════════════════════════════════════════════════════
 
         function updateReview() {
-            const words = formData.corrected_full_text.trim() ? 
-                          formData.corrected_full_text.trim().split(/\s+/).length : 0;
+            const words = formData.corrected_full_text.trim() ?
+                formData.corrected_full_text.trim().split(/\s+/).length : 0;
             document.getElementById('reviewWordCount').textContent = words.toLocaleString('ar');
             document.getElementById('reviewCharCount').textContent = formData.corrected_full_text.length.toLocaleString('ar');
 
@@ -5427,12 +5643,12 @@ function sortTimestamps() {
                 }
             }
             modifiedCount += Math.abs(wordsWithTimestamps.length - originalTimestamps.length);
-            document.getElementById('reviewTimestampCount').textContent = 
+            document.getElementById('reviewTimestampCount').textContent =
                 timestampsModified ? `${modifiedCount} تعديل` : 'لم يتم التعديل';
 
             document.getElementById('reviewTemplate').textContent = formData.template_name || '-';
             document.getElementById('reviewColor').textContent = formData.color_name || '-';
-            
+
             document.getElementById('reviewSeriesColor').innerHTML = `
                 <div class="review-color-box">
                     <div class="review-color-swatch" style="background:${formData.series_color}"></div>
@@ -5456,7 +5672,7 @@ function sortTimestamps() {
             } else {
                 document.getElementById('reviewPromoTitleItem').style.display = 'none';
             }
-            
+
             if (formData.promo_card_description && formData.promo_card_description.trim()) {
                 document.getElementById('reviewPromoDescItem').style.display = 'flex';
                 document.getElementById('reviewPromoDesc').textContent = formData.promo_card_description;
@@ -5466,16 +5682,16 @@ function sortTimestamps() {
 
             // SEO
             document.getElementById('reviewSerpTitle').textContent = formData.seo_title || 'عنوان الفيديو';
-            document.getElementById('reviewSerpDescription').textContent = 
-                (formData.seo_description || '').substring(0, 160) + 
+            document.getElementById('reviewSerpDescription').textContent =
+                (formData.seo_description || '').substring(0, 160) +
                 (formData.seo_description && formData.seo_description.length > 160 ? '...' : '');
             document.getElementById('reviewSeoTitleBox').textContent = formData.seo_title || '-';
             document.getElementById('reviewSeoDescBox').textContent = formData.seo_description || '-';
 
             // الكلمات المفتاحية
             const tagsPreview = document.getElementById('reviewTagsPreview');
-            tagsPreview.innerHTML = formData.tags.length ? 
-                formData.tags.map(t => `<div class="review-tag">${t}</div>`).join('') : 
+            tagsPreview.innerHTML = formData.tags.length ?
+                formData.tags.map(t => `<div class="review-tag">${t}</div>`).join('') :
                 '<div style="color:var(--text-secondary);font-size:12px">لا توجد كلمات مفتاحية</div>';
 
             // صور القالب
@@ -5489,7 +5705,7 @@ function sortTimestamps() {
                 };
                 img.src = convertDriveUrl(formData.landscape_image_url);
             }
-            
+
             if (formData.portrait_image_url) {
                 const img = document.getElementById('reviewPortraitImage');
                 document.getElementById('reviewPortraitLoading').classList.remove('hidden');
@@ -5505,18 +5721,18 @@ function sortTimestamps() {
         document.getElementById('reviewTagsExpandBtn').addEventListener('click', () => {
             const el = document.getElementById('reviewTagsPreview');
             el.classList.toggle('expanded');
-            document.getElementById('reviewTagsExpandText').textContent = 
+            document.getElementById('reviewTagsExpandText').textContent =
                 el.classList.contains('expanded') ? 'إخفاء' : 'عرض الكل';
-            document.getElementById('reviewTagsExpandIcon').textContent = 
+            document.getElementById('reviewTagsExpandIcon').textContent =
                 el.classList.contains('expanded') ? '▲' : '▼';
         });
 
         document.getElementById('reviewDescExpandBtn').addEventListener('click', () => {
             const el = document.getElementById('reviewSeoDescBox');
             el.classList.toggle('expanded');
-            document.getElementById('reviewDescExpandText').textContent = 
+            document.getElementById('reviewDescExpandText').textContent =
                 el.classList.contains('expanded') ? 'إخفاء' : 'عرض الكل';
-            document.getElementById('reviewDescExpandIcon').textContent = 
+            document.getElementById('reviewDescExpandIcon').textContent =
                 el.classList.contains('expanded') ? '▲' : '▼';
         });
 
@@ -5560,7 +5776,7 @@ function sortTimestamps() {
                 }
 
                 hideLoading();
-                
+
                 // تنظيف الذاكرة
                 if (audioBlobUrl) URL.revokeObjectURL(audioBlobUrl);
 
