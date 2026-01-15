@@ -1048,7 +1048,7 @@
             cursor: move;
             position: relative;
             user-select: none;
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
             width: 100%;
             box-sizing: border-box;
         }
@@ -1097,15 +1097,15 @@
         }
 
         .word-index {
-            width: 24px;
-            height: 24px;
+            width: 22px;
+            height: 22px;
             background: linear-gradient(135deg, var(--primary-lighter), var(--primary-light));
             color: var(--primary);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 700;
             flex-shrink: 0;
         }
@@ -1114,21 +1114,22 @@
             flex: 1;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 6px;
             min-width: 0;
             direction: rtl;
-            flex-wrap: nowrap;
+            flex-wrap: wrap;
             overflow: hidden;
+            min-width: calc(100% - 80px);
         }
 
         .word-text-input {
             flex: 1;
-            min-width: 80px;
+            min-width: 100px;
             max-width: 100%;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border: 2px solid var(--border-color);
             border-radius: 8px;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             font-family: inherit;
             direction: rtl;
@@ -1148,15 +1149,16 @@
 
         .word-times {
             display: flex;
-            gap: 4px;
+            gap: 3px;
             align-items: center;
             background: var(--bg-primary);
-            padding: 4px 8px;
-            border-radius: 8px;
+            padding: 3px 6px;
+            border-radius: 6px;
             border: 1px solid var(--border-light);
             direction: ltr;
             flex-shrink: 0;
             white-space: nowrap;
+            min-width: fit-content;
         }
 
         .time-input-group {
@@ -1174,16 +1176,18 @@
         }
 
         .time-input {
-            width: 55px;
-            padding: 4px 6px;
+            width: 50px;
+            padding: 3px 4px;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            font-size: 12px;
+            font-size: 11px;
             font-family: 'Courier New', monospace;
             text-align: center;
             direction: ltr;
             transition: all 0.2s;
             background: white;
+            min-width: 45px;
+            max-width: 60px;
         }
 
         .time-input:focus {
@@ -1204,28 +1208,31 @@
 
         .time-separator {
             color: var(--text-light);
-            font-size: 12px;
+            font-size: 10px;
+            margin: 0 2px;
         }
 
         .word-actions {
             display: flex;
-            gap: 4px;
+            gap: 3px;
             direction: rtl;
             flex-shrink: 0;
             flex-wrap: nowrap;
+            align-items: center;
         }
 
         .word-action-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 12px;
             transition: all 0.2s;
+            flex-shrink: 0;
         }
 
         .word-action-btn.delete-btn {
@@ -3032,6 +3039,73 @@
                 height: 32px;
                 padding: 0 8px;
                 font-size: 10px;
+            }
+
+            /* تحسين محرر التواقيت للهواتف */
+            .timestamp-word-item {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: flex-start;
+                gap: 6px;
+                padding: 8px;
+            }
+
+            .word-index {
+                width: 20px;
+                height: 20px;
+                font-size: 8px;
+                order: 1;
+            }
+
+            .word-content {
+                flex: 1 1 calc(100% - 60px);
+                flex-direction: row;
+                gap: 6px;
+                min-width: 0;
+                order: 2;
+            }
+
+            .word-text-input {
+                flex: 1 1 60%;
+                min-width: 0;
+                padding: 6px 8px;
+                font-size: 14px;
+            }
+
+            .word-times {
+                flex: 0 0 auto;
+                padding: 4px 6px;
+                gap: 2px;
+                order: 3;
+            }
+
+            .time-input {
+                width: 48px;
+                padding: 4px 2px;
+                font-size: 11px;
+            }
+
+            .word-actions {
+                flex: 0 0 100%;
+                justify-content: flex-end;
+                gap: 6px;
+                margin-top: 4px;
+                order: 4;
+            }
+
+            .word-action-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 13px;
+            }
+
+            .timestamp-words-list {
+                padding: 6px;
+            }
+
+            .insert-word-btn {
+                padding: 8px;
+                font-size: 12px;
             }
         }
     </style>
