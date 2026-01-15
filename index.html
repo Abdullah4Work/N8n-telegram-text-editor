@@ -4237,7 +4237,37 @@
         });
 
         function syncTimestampsFromTextChanges() {
-            const currentWords = textEditor.value.trim().split(/\s+/).filter(w => w);
+            const currentText = textEditor.value.trim();
+            if (!currentText) {
+                // إذا كان النص فارغاً، امسح التواقيت
+                wordsWithTimestamps = [];
+                return;
+            }
+
+            const currentWords = currentText.split(/\s+/).filter(w => w);
+            
+            // إذا لم تكن هناك تواقيت، أنشئ تواقيت جديدة
+            if (wordsWithTimestamps.length === 0) {
+                // تهيئة معدل الحروف إذا لم يكن موجوداً
+                if (!window.charRate) {
+                    window.charRate = 0.05;
+                }
+                
+                let currentTime = 0;
+                wordsWithTimestamps = currentWords.map(word => {
+                    const duration = calculateWordDuration(word);
+                    const start = currentTime;
+                    const end = currentTime + duration;
+                    currentTime = end + 0.08;
+                    return { text: word, start: start, end: end };
+                });
+                if (originalTimestamps.length === 0) {
+                    originalTimestamps = JSON.parse(JSON.stringify(wordsWithTimestamps));
+                }
+                timestampsModified = false;
+                return;
+            }
+
             const timestampWords = wordsWithTimestamps.map(w => w.text);
 
             // حساب متوسط سرعة النطق قبل أي تعديل
@@ -4407,6 +4437,40 @@
 
                 document.getElementById('audioPlayerFixed').classList.add('visible');
                 document.getElementById('audioPlayerSection').classList.add('hidden');
+
+                // ✅ مزامنة النص مع التواقيت قبل العرض
+                const currentText = textEditor.value.trim();
+                if (currentText) {
+                    // تهيئة معدل الحروف إذا لم يكن موجوداً
+                    if (!window.charRate) {
+                        window.charRate = 0.05;
+                    }
+                    
+                    // إذا كان هناك نص في المحرر
+                    if (wordsWithTimestamps.length === 0) {
+                        // إذا لم تكن هناك تواقيت، أنشئ تواقيت جديدة من النص
+                        const words = currentText.split(/\s+/).filter(w => w);
+                        let currentTime = 0;
+                        wordsWithTimestamps = words.map(word => {
+                            const duration = calculateWordDuration(word);
+                            const start = currentTime;
+                            const end = currentTime + duration;
+                            currentTime = end + 0.08; // إضافة فراغ بين الكلمات
+                            return { text: word, start: start, end: end };
+                        });
+                        originalTimestamps = JSON.parse(JSON.stringify(wordsWithTimestamps));
+                        timestampsModified = false;
+                    } else {
+                        // إذا كانت هناك تواقيت موجودة، قارن النص وحدث التواقيت
+                        const currentWords = currentText.split(/\s+/).filter(w => w);
+                        const timestampWords = wordsWithTimestamps.map(w => w.text);
+                        
+                        // إذا كان النص مختلف، قم بالمزامنة
+                        if (currentWords.join(' ') !== timestampWords.join(' ')) {
+                            syncTimestampsFromTextChanges();
+                        }
+                    }
+                }
 
                 calculateAverageSpeechRate();
                 displayedWordsCount = 0;
