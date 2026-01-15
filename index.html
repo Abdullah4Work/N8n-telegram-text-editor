@@ -1489,6 +1489,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            direction: rtl;
         }
 
         .quality-toggle-label {
@@ -1504,6 +1505,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            direction: rtl;
         }
 
         .quality-option {
@@ -1512,6 +1514,7 @@
             gap: 6px;
             font-size: 13px;
             color: var(--text-secondary);
+            direction: rtl;
         }
 
         .toggle-switch {
@@ -1876,6 +1879,7 @@
             justify-content: center;
             gap: 8px;
             transition: all 0.2s;
+            direction: rtl;
         }
 
         .preview-next-btn:active {
@@ -1891,6 +1895,7 @@
             box-shadow: var(--shadow-md);
             border: 2px solid var(--border-color);
             transition: all 0.3s;
+            direction: rtl;
         }
 
         .color-picker-card-header {
@@ -1900,6 +1905,7 @@
             margin-bottom: 16px;
             padding-bottom: 12px;
             border-bottom: 2px solid var(--border-light);
+            direction: rtl;
         }
 
         .color-picker-card-title {
@@ -1909,6 +1915,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            direction: rtl;
         }
 
         .color-picker-card-badge {
@@ -1938,6 +1945,7 @@
             position: relative;
             overflow: hidden;
             border: 3px solid #2d3748;
+            direction: rtl;
         }
 
         .dual-preview-container::before {
@@ -2418,6 +2426,7 @@
             transition: all 0.3s;
             margin-bottom: 20px;
             box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
+            direction: rtl;
         }
 
         .seo-generate-btn:active {
@@ -2817,6 +2826,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            direction: rtl;
         }
 
         .review-color-swatch {
@@ -3056,10 +3066,10 @@
         </div>
         <div class="audio-controls-row">
             <div class="seek-controls-group">
-                <button class="seek-btn-new" id="seekToStartFixed" title="البداية">⏮️</button>
-                <button class="seek-btn-new" id="seekBackward60Fixed" title="-1 دقيقة">⏪</button>
-                <button class="seek-btn-new" id="seekForward60Fixed" title="+1 دقيقة">⏩</button>
                 <button class="seek-btn-new" id="seekToEndFixed" title="النهاية">⏭️</button>
+                <button class="seek-btn-new" id="seekForward60Fixed" title="+1 دقيقة">⏩</button>
+                <button class="seek-btn-new" id="seekBackward60Fixed" title="-1 دقيقة">⏪</button>
+                <button class="seek-btn-new" id="seekToStartFixed" title="البداية">⏮️</button>
             </div>
             <div class="speed-controls-new">
                 <button class="speed-btn-new" id="speedDownFixed" title="تقليل السرعة">➖</button>
@@ -3173,10 +3183,10 @@
                     </div>
                     <div class="audio-controls-row">
                         <div class="seek-controls-group">
-                            <button class="seek-btn-new" id="seekToStart" title="البداية">⏮️</button>
-                            <button class="seek-btn-new" id="seekBackward60" title="-1 دقيقة">⏪</button>
-                            <button class="seek-btn-new" id="seekForward60" title="+1 دقيقة">⏩</button>
                             <button class="seek-btn-new" id="seekToEnd" title="النهاية">⏭️</button>
+                            <button class="seek-btn-new" id="seekForward60" title="+1 دقيقة">⏩</button>
+                            <button class="seek-btn-new" id="seekBackward60" title="-1 دقيقة">⏪</button>
+                            <button class="seek-btn-new" id="seekToStart" title="البداية">⏮️</button>
                         </div>
                         <div class="speed-controls-new">
                             <button class="speed-btn-new" id="speedDown" title="تقليل السرعة">➖</button>
@@ -3865,12 +3875,14 @@
 
         function seekForward60() {
             if (audioLoaded && audioElement.duration) {
+                // في RTL: تقديم = إضافة الوقت (نذهب للأمام في الوقت)
                 audioElement.currentTime = Math.min(audioElement.currentTime + 60, audioElement.duration);
             }
         }
 
         function seekBackward60() {
             if (audioLoaded) {
+                // في RTL: تأخير = طرح الوقت (نذهب للخلف في الوقت)
                 audioElement.currentTime = Math.max(audioElement.currentTime - 60, 0);
             }
         }
