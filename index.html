@@ -379,12 +379,12 @@
         }
 
         .seek-btn-new {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
             border: 2px solid var(--border-color);
-            font-size: 18px;
+            font-size: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -395,8 +395,8 @@
         .seek-btn-new:hover {
             background: var(--primary-lighter);
             border-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
         }
 
         .seek-btn-new:active {
@@ -406,25 +406,21 @@
         .speed-controls-new {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             background: linear-gradient(135deg, var(--primary-lighter), rgba(74, 144, 226, 0.1));
-            padding: 6px 12px;
-            border-radius: 12px;
-            border: 2px solid var(--primary);
-            direction: rtl;
-            flex-shrink: 0;
-            flex-wrap: nowrap;
+            padding: 4px;
+            border-radius: 8px;
         }
 
         .speed-btn-new {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: white;
-            border: 2px solid var(--primary);
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+            border: 1px solid var(--border-color);
             color: var(--primary);
-            font-size: 16px;
-            font-weight: 700;
+            font-size: 12px;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -433,9 +429,10 @@
         }
 
         .speed-btn-new:hover {
-            background: var(--primary);
-            color: white;
-            transform: scale(1.1);
+            background: var(--primary-lighter);
+            border-color: var(--primary);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
         }
 
         .speed-btn-new:active {
@@ -443,15 +440,52 @@
         }
 
         .speed-display {
-            min-width: 50px;
+            font-size: 12px;
+            padding: 2px 6px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 4px;
+            min-width: 30px;
             text-align: center;
-            font-size: 16px;
-            font-weight: 700;
+            font-weight: 600;
             color: var(--primary);
-            background: white;
-            padding: 6px 10px;
-            border-radius: 8px;
-            box-shadow: var(--shadow-sm);
+        }
+
+        @media (max-width: 768px) {
+            .seek-btn-new {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+            
+            .speed-btn-new {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+            }
+            
+            .speed-display {
+                font-size: 10px;
+                min-width: 25px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .seek-btn-new {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+            }
+            
+            .speed-btn-new {
+                width: 20px;
+                height: 20px;
+                font-size: 8px;
+            }
+            
+            .speed-display {
+                font-size: 9px;
+                min-width: 20px;
+            }
         }
 
         /* ═══════════════════════════════════════════════════════════════════
@@ -860,7 +894,7 @@
             resize: vertical;
             font-family: inherit;
             transition: all 0.3s;
-            background: #FAFBFC;
+            background: white;
             direction: rtl;
             text-align: right;
             cursor: text;
@@ -956,14 +990,14 @@
         .playback-editor-wrapper .editor-textarea {
             position: relative;
             z-index: 2;
-            background: rgba(250, 251, 252, 0.98);
+            background: white;
         }
 
         .playback-editor-wrapper.playback-active .editor-textarea {
             color: var(--text-primary) !important;
             caret-color: var(--primary) !important;
             text-shadow: none !important;
-            background: rgba(250, 251, 252, 0.95);
+            background: white !important;
         }
 
         .playback-overlay {
@@ -982,28 +1016,26 @@
             display: block;
         }
 
-        .playback-overlay .playback-active-item {
-            background: rgba(255, 215, 0, 0.4);
-            color: transparent;
-            border-radius: 4px;
-            mix-blend-mode: multiply;
-            box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
-        }
+.playback-overlay .playback-active-item {
+    background: #ffd700;
+    color: #000;
+    border-radius: 4px;
+}
 
-        .editor-textarea::selection {
-            background: #ffd700;
-            color: #000;
-        }
+.editor-textarea::selection {
+    background: #ffd700;
+    color: #000;
+}
 
-        .editor-textarea::-moz-selection {
-            background: #ffd700;
-            color: #000;
-        }
+.editor-textarea::-moz-selection {
+    background: #ffd700;
+    color: #000;
+}
 
-        .timestamp-action-btn.copy-btn {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-        }
+.timestamp-action-btn.copy-btn {
+    background: linear-gradient(135deg, var(--primary), var(--primary-light));
+    color: white;
+}
 
         .timestamp-editor-header {
             display: flex;
