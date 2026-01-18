@@ -927,6 +927,7 @@
             unicode-bidi: plaintext;
             white-space: pre;
             overflow-wrap: normal;
+            word-break: normal;
             overflow-x: auto;
         }
 
@@ -4193,6 +4194,17 @@
         let timestampEditorInteractionTimeout = null;
         let textEditorInteractionTimeout = null;
 
+        let activeWordPointer = 0;
+        let lastActiveWordTime = -1;
+
+        let timestampLineOffsets = [];
+        let timestampLineLengths = [];
+        let timestampLineCacheValue = '';
+        let pendingTimestampHighlightIndex = null;
+        let pendingTextHighlightIndex = null;
+        let highlightRafId = null;
+        let timestampPlaybackFocusDone = false;
+
         let cachedWordRangesText = '';
         let cachedWordRanges = [];
 
@@ -4207,6 +4219,89 @@
             while ((match = re.exec(text)) !== null) {
                 cachedWordRanges.push([match.index, match.index + match[0].length]);
             }
+        }
+
+        function getEditorLineHeightPx(editor) {
+            const cs = window.getComputedStyle(editor);
+            const lh = parseFloat(cs.lineHeight);
+            if (!Number.isNaN(lh) && lh > 0) return lh;
+            const fs = parseFloat(cs.fontSize);
+            if (!Number.isNaN(fs) && fs > 0) return fs * 1.35;
+            return 20;
+        }
+
+        function rebuildTimestampLineCache() {
+            const editor = document.getElementById('timestampJsonEditor');
+            if (!editor) return;
+            const v = editor.value || '';
+            if (v === timestampLineCacheValue) return;
+            timestampLineCacheValue = v;
+
+            timestampLineOffsets = [];
+            timestampLineLengths = [];
+
+            const lines = v.split('\n');
+            let pos = 0;
+            for (let i = 0; i < lines.length; i++) {
+                const len = lines[i].length;
+                timestampLineOffsets.push(pos);
+                timestampLineLengths.push(len);
+                pos += len + 1;
+            }
+        }
+
+        function scheduleHighlights() {
+            if (highlightRafId) return;
+            highlightRafId = requestAnimationFrame(() => {
+                highlightRafId = null;
+
+                if (pendingTimestampHighlightIndex !== null) {
+                    const idx = pendingTimestampHighlightIndex;
+                    pendingTimestampHighlightIndex = null;
+                    applyTimestampHighlight(idx);
+                }
+
+                if (pendingTextHighlightIndex !== null) {
+                    const idx = pendingTextHighlightIndex;
+                    pendingTextHighlightIndex = null;
+                    applyTextHighlight(idx);
+                }
+            });
+        }
+
+        function applyTimestampHighlight(index) {
+            const editor = document.getElementById('timestampJsonEditor');
+            if (!editor || !timestampModeActive) return;
+            if (isUserInteractingWithTimestampEditor) return;
+
+            if (!timestampPlaybackFocusDone && document.activeElement !== editor) {
+                editor.focus();
+                timestampPlaybackFocusDone = true;
+            }
+
+            rebuildTimestampLineCache();
+            if (index < 0 || index >= timestampLineOffsets.length) return;
+
+            const start = timestampLineOffsets[index];
+            const end = start + (timestampLineLengths[index] || 0);
+            editor.setSelectionRange(start, end);
+
+            const lineHeight = getEditorLineHeightPx(editor);
+            const targetTop = (index * lineHeight) - (editor.clientHeight / 2) + (lineHeight / 2);
+            const maxTop = Math.max(0, editor.scrollHeight - editor.clientHeight);
+            editor.scrollTop = Math.max(0, Math.min(maxTop, targetTop));
+        }
+
+        function applyTextHighlight(index) {
+            if (!textEditor) return;
+            if (isTextEditorFocused) return;
+            if (isUserInteractingWithTextEditor) return;
+
+            rebuildWordRanges();
+            if (index < 0 || index >= cachedWordRanges.length) return;
+
+            const [start, end] = cachedWordRanges[index];
+            textEditor.setSelectionRange(start, end);
         }
 
         function markTimestampEditorInteraction() {
@@ -4666,6 +4761,9 @@
                 textEditor.setSelectionRange(0, 0);
             }
             currentActiveWordIndex = -1;
+            activeWordPointer = 0;
+            lastActiveWordTime = -1;
+            timestampPlaybackFocusDone = false;
         }
 
         function scrollToActiveWord(index) {
@@ -5168,78 +5266,54 @@
         }
 
         function highlightActiveTimestampLine(index) {
-            const editor = document.getElementById('timestampJsonEditor');
-            if (!editor || !timestampModeActive) return;
-            if (isUserInteractingWithTimestampEditor) return;
-            
-            const lines = editor.value.split('\n');
-            if (index >= 0 && index < lines.length) {
-                // حساب موضع السطر بدقة
-                let lineStart = 0;
-                for (let i = 0; i < index; i++) {
-                    lineStart += lines[i].length + 1; // +1 للـ newline
-                }
-                const lineEnd = lineStart + lines[index].length;
-                
-                // تمييز السطر مع خلفية ملونة
-                if (document.activeElement !== editor) {
-                    editor.focus();
-                }
-                editor.setSelectionRange(lineStart, lineEnd);
-                
-                // سكرول تلقائي سريع ودقيق
-                const lineHeight = 20;
-                const editorHeight = editor.clientHeight;
-                const currentScrollTop = editor.scrollTop;
-                const lineTop = index * lineHeight;
-                const lineBottom = lineTop + lineHeight;
-                const visibleTop = currentScrollTop;
-                const visibleBottom = currentScrollTop + editorHeight;
-                
-                // إذا كان السطر خارج المنطقة المرئية، قم بالسكرول فوراً
-                if (lineTop < visibleTop) {
-                    editor.scrollTop = Math.max(0, lineTop - 80);
-                } else if (lineBottom > visibleBottom) {
-                    editor.scrollTop = lineTop - editorHeight + 120;
-                }
-            }
+            if (!timestampModeActive) return;
+            if (pendingTimestampHighlightIndex === index) return;
+            pendingTimestampHighlightIndex = index;
+            scheduleHighlights();
         }
 
         function highlightActiveWordInTextEditor(index) {
-            if (!textEditor) return;
-            if (isTextEditorFocused) return;
-            if (isUserInteractingWithTextEditor) return;
-
-            rebuildWordRanges();
-            if (index >= 0 && index < cachedWordRanges.length) {
-                const [start, end] = cachedWordRanges[index];
-                textEditor.setSelectionRange(start, end);
-            }
+            if (pendingTextHighlightIndex === index) return;
+            pendingTextHighlightIndex = index;
+            scheduleHighlights();
         }
 
         function updateActiveWord(currentTime) {
             if (wordsWithTimestamps.length === 0) return;
 
-            let foundIndex = -1;
+            const jumpedBack = lastActiveWordTime >= 0 && currentTime < (lastActiveWordTime - 0.25);
+            lastActiveWordTime = currentTime;
 
-            for (let i = 0; i < wordsWithTimestamps.length; i++) {
-                const word = wordsWithTimestamps[i];
-                if (currentTime >= word.start && currentTime <= word.end) {
-                    foundIndex = i;
-                    break;
-                }
-            }
-
-            if (foundIndex === -1) {
-                for (let i = 0; i < wordsWithTimestamps.length; i++) {
-                    const word = wordsWithTimestamps[i];
-                    if (currentTime < word.start) {
-                        foundIndex = Math.max(0, i - 1);
+            if (jumpedBack) {
+                activeWordPointer = 0;
+                let lo = 0;
+                let hi = wordsWithTimestamps.length - 1;
+                while (lo <= hi) {
+                    const mid = (lo + hi) >> 1;
+                    const w = wordsWithTimestamps[mid];
+                    if (currentTime < w.start) {
+                        hi = mid - 1;
+                    } else if (currentTime > w.end) {
+                        lo = mid + 1;
+                    } else {
+                        activeWordPointer = mid;
                         break;
                     }
                 }
+                if (lo > hi) activeWordPointer = Math.max(0, Math.min(wordsWithTimestamps.length - 1, lo - 1));
             }
 
+            if (activeWordPointer >= wordsWithTimestamps.length) activeWordPointer = wordsWithTimestamps.length - 1;
+            if (activeWordPointer < 0) activeWordPointer = 0;
+
+            while (activeWordPointer > 0 && currentTime < wordsWithTimestamps[activeWordPointer].start) {
+                activeWordPointer--;
+            }
+            while (activeWordPointer < wordsWithTimestamps.length - 1 && currentTime > wordsWithTimestamps[activeWordPointer].end) {
+                activeWordPointer++;
+            }
+
+            const foundIndex = activeWordPointer;
             if (foundIndex !== currentActiveWordIndex && foundIndex >= 0) {
                 currentActiveWordIndex = foundIndex;
                 highlightActiveTimestampLine(foundIndex);
@@ -5269,6 +5343,7 @@
         // مستمع لتغييرات محرر JSON
         document.getElementById('timestampJsonEditor').addEventListener('input', debounce(() => {
             syncTimestampsFromJsonEditor();
+            rebuildTimestampLineCache();
         }, 300));
 
         const timestampJsonEditorEl = document.getElementById('timestampJsonEditor');
