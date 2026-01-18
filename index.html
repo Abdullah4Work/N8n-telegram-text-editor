@@ -1000,12 +1000,28 @@
             background: white !important;
         }
 
-        .playback-editor-wrapper.playback-active .editor-textarea .playback-active-word {
-            background: #ffd700;
-            color: #000;
-            border-radius: 4px;
-            box-shadow: 0 0 4px rgba(255, 215, 0, 0.5);
+        .playback-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 3;
+            pointer-events: none;
+            overflow: auto;
+            white-space: pre-wrap;
+            color: transparent;
+            box-sizing: border-box;
+            display: none;
         }
+
+        .playback-editor-wrapper.playback-active .playback-overlay {
+            display: block;
+        }
+
+.playback-overlay .playback-active-item {
+    background: #ffd700;
+    color: #000;
+    border-radius: 4px;
+    box-shadow: 0 0 4px rgba(255, 215, 0, 0.5);
+}
 
 .editor-textarea::selection {
     background: #ffd700;
