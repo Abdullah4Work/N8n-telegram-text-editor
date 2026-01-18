@@ -4383,8 +4383,9 @@
         }
 
         function updatePlaybackModeState() {
-            const canTextOverlay = isAudioPlaying && !isTextEditorFocused && !isUserInteractingWithTextEditor;
-            const canTsOverlay = isAudioPlaying && timestampModeActive && !isUserInteractingWithTimestampEditor;
+            // Keep overlays active during playback AND when paused with active highlight
+            const canTextOverlay = (isAudioPlaying || currentActiveWordIndex >= 0) && !isTextEditorFocused && !isUserInteractingWithTextEditor;
+            const canTsOverlay = (isAudioPlaying || currentActiveWordIndex >= 0) && timestampModeActive && !isUserInteractingWithTimestampEditor;
 
             setWrapperPlaybackActive('textEditorWrapper', canTextOverlay);
             setWrapperPlaybackActive('timestampEditorWrapper', canTsOverlay);
@@ -4411,8 +4412,8 @@
                 cancelAnimationFrame(playbackRafId);
                 playbackRafId = null;
             }
-            setWrapperPlaybackActive('textEditorWrapper', false);
-            setWrapperPlaybackActive('timestampEditorWrapper', false);
+            // Don't immediately clear overlays - keep them if there's an active highlight
+            updatePlaybackModeState();
         }
 
         let cachedWordRangesText = '';
@@ -5487,19 +5488,31 @@
             if (!timestampModeActive) return;
             setPlaybackActiveIndex(index);
 
-            if (playbackRafId) return;
-            if (pendingTimestampHighlightIndex === index) return;
-            pendingTimestampHighlightIndex = index;
-            scheduleHighlights();
+            // Always update overlay during playback, even if paused
+            if (isAudioPlaying || currentActiveWordIndex >= 0) {
+                return; // Let overlay handle it during playback
+            }
+            
+            // Only use legacy selection when not in playback mode
+            if (!playbackRafId && pendingTimestampHighlightIndex !== index) {
+                pendingTimestampHighlightIndex = index;
+                scheduleHighlights();
+            }
         }
 
         function highlightActiveWordInTextEditor(index) {
             setPlaybackActiveIndex(index);
 
-            if (playbackRafId) return;
-            if (pendingTextHighlightIndex === index) return;
-            pendingTextHighlightIndex = index;
-            scheduleHighlights();
+            // Always update overlay during playback, even if paused
+            if (isAudioPlaying || currentActiveWordIndex >= 0) {
+                return; // Let overlay handle it during playback
+            }
+            
+            // Only use legacy selection when not in playback mode
+            if (!playbackRafId && pendingTextHighlightIndex !== index) {
+                pendingTextHighlightIndex = index;
+                scheduleHighlights();
+            }
         }
 
         function updateActiveWord(currentTime) {
@@ -5530,18 +5543,30 @@
             if (activeWordPointer >= wordsWithTimestamps.length) activeWordPointer = wordsWithTimestamps.length - 1;
             if (activeWordPointer < 0) activeWordPointer = 0;
 
-            while (activeWordPointer > 0 && currentTime < wordsWithTimestamps[activeWordPointer].start) {
-                activeWordPointer--;
-            }
-            while (activeWordPointer < wordsWithTimestamps.length - 1 && currentTime > wordsWithTimestamps[activeWordPointer].end) {
+            // Fix: More precise timing logic to prevent premature jumping
+            const currentWord = wordsWithTimestamps[activeWordPointer];
+            
+            // Only move forward if we've truly passed the current word's end time
+            while (activeWordPointer < wordsWithTimestamps.length - 1 && 
+                   currentTime > wordsWithTimestamps[activeWordPointer].end + 0.02) {
                 activeWordPointer++;
+            }
+            
+            // Only move backward if we're truly before the current word's start time
+            while (activeWordPointer > 0 && 
+                   currentTime < wordsWithTimestamps[activeWordPointer].start - 0.02) {
+                activeWordPointer--;
             }
 
             const foundIndex = activeWordPointer;
             if (foundIndex !== currentActiveWordIndex && foundIndex >= 0) {
-                currentActiveWordIndex = foundIndex;
-                highlightActiveTimestampLine(foundIndex);
-                highlightActiveWordInTextEditor(foundIndex);
+                // Only update if we're actually within the word's time range (with small tolerance)
+                const word = wordsWithTimestamps[foundIndex];
+                if (currentTime >= word.start - 0.01 && currentTime <= word.end + 0.01) {
+                    currentActiveWordIndex = foundIndex;
+                    highlightActiveTimestampLine(foundIndex);
+                    highlightActiveWordInTextEditor(foundIndex);
+                }
             }
         }
 
