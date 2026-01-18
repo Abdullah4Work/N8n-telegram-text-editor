@@ -922,21 +922,32 @@
             min-height: 400px;
             font-family: 'Courier New', monospace !important;
             font-size: 14px !important;
-            direction: rtl !important;
-            text-align: right !important;
+            direction: ltr !important;
+            text-align: left !important;
+            unicode-bidi: plaintext;
             white-space: pre;
             overflow-wrap: normal;
             overflow-x: auto;
         }
 
         .timestamp-json-editor::selection {
-            background: linear-gradient(135deg, #ffd700, #ffed4e) !important;
+            background: #ffd700 !important;
             color: #000 !important;
         }
 
         .timestamp-json-editor::-moz-selection {
-            background: linear-gradient(135deg, #ffd700, #ffed4e) !important;
+            background: #ffd700 !important;
             color: #000 !important;
+        }
+
+        .editor-textarea::selection {
+            background: #ffd700;
+            color: #000;
+        }
+
+        .editor-textarea::-moz-selection {
+            background: #ffd700;
+            color: #000;
         }
 
         .timestamp-action-btn.copy-btn {
@@ -3334,7 +3345,7 @@
                     </div>
                     <textarea class="editor-textarea timestamp-json-editor" id="timestampJsonEditor" 
                         placeholder="جاري تحميل التواقيت..." 
-                        style="font-family: 'Courier New', monospace; font-size: 14px; direction: rtl; text-align: right;"></textarea>
+                        style="font-family: 'Courier New', monospace; font-size: 14px; direction: ltr; text-align: left;"></textarea>
                     <div class="editor-stats">
                         <div class="stat-item"><span>📊</span><span class="stat-value"
                                 id="timestampWordsCount">0</span><span>كلمة</span></div>
@@ -4011,7 +4022,7 @@
             document.getElementById('currentTime').textContent = formatTime(audioElement.currentTime);
             document.getElementById('currentTimeFixed').textContent = formatTime(audioElement.currentTime);
 
-            if (isAudioPlaying && timestampModeActive) {
+            if (isAudioPlaying && wordsWithTimestamps.length > 0) {
                 updateActiveWord(audioElement.currentTime);
             }
         });
@@ -4177,6 +4188,43 @@
         const textEditor = document.getElementById('textEditor');
         let isTextEditorFocused = false;
 
+        let isUserInteractingWithTimestampEditor = false;
+        let isUserInteractingWithTextEditor = false;
+        let timestampEditorInteractionTimeout = null;
+        let textEditorInteractionTimeout = null;
+
+        let cachedWordRangesText = '';
+        let cachedWordRanges = [];
+
+        function rebuildWordRanges() {
+            const text = textEditor.value || '';
+            if (text === cachedWordRangesText) return;
+            cachedWordRangesText = text;
+            cachedWordRanges = [];
+
+            const re = /\S+/g;
+            let match;
+            while ((match = re.exec(text)) !== null) {
+                cachedWordRanges.push([match.index, match.index + match[0].length]);
+            }
+        }
+
+        function markTimestampEditorInteraction() {
+            isUserInteractingWithTimestampEditor = true;
+            if (timestampEditorInteractionTimeout) clearTimeout(timestampEditorInteractionTimeout);
+            timestampEditorInteractionTimeout = setTimeout(() => {
+                isUserInteractingWithTimestampEditor = false;
+            }, 1200);
+        }
+
+        function markTextEditorInteraction() {
+            isUserInteractingWithTextEditor = true;
+            if (textEditorInteractionTimeout) clearTimeout(textEditorInteractionTimeout);
+            textEditorInteractionTimeout = setTimeout(() => {
+                isUserInteractingWithTextEditor = false;
+            }, 1200);
+        }
+
         function enterEditingMode() {
             const stepContent = document.querySelector('.step-content[data-step="1"]');
             document.getElementById('audioPlayerSection').classList.add('hidden');
@@ -4240,6 +4288,7 @@
             document.getElementById('charCount').textContent = text.length.toLocaleString('ar');
             document.getElementById('wordCount').textContent = (text.trim() ? text.trim().split(/\s+/).length : 0).toLocaleString('ar');
             formData.corrected_full_text = text;
+            rebuildWordRanges();
             validateCurrentStep();
         }
 
@@ -4611,6 +4660,10 @@
             const editor = document.getElementById('timestampJsonEditor');
             if (editor) {
                 editor.setSelectionRange(0, 0);
+            }
+
+            if (textEditor && !isTextEditorFocused) {
+                textEditor.setSelectionRange(0, 0);
             }
             currentActiveWordIndex = -1;
         }
@@ -5117,6 +5170,7 @@
         function highlightActiveTimestampLine(index) {
             const editor = document.getElementById('timestampJsonEditor');
             if (!editor || !timestampModeActive) return;
+            if (isUserInteractingWithTimestampEditor) return;
             
             const lines = editor.value.split('\n');
             if (index >= 0 && index < lines.length) {
@@ -5128,7 +5182,9 @@
                 const lineEnd = lineStart + lines[index].length;
                 
                 // تمييز السطر مع خلفية ملونة
-                editor.focus();
+                if (document.activeElement !== editor) {
+                    editor.focus();
+                }
                 editor.setSelectionRange(lineStart, lineEnd);
                 
                 // سكرول تلقائي سريع ودقيق
@@ -5149,8 +5205,20 @@
             }
         }
 
+        function highlightActiveWordInTextEditor(index) {
+            if (!textEditor) return;
+            if (isTextEditorFocused) return;
+            if (isUserInteractingWithTextEditor) return;
+
+            rebuildWordRanges();
+            if (index >= 0 && index < cachedWordRanges.length) {
+                const [start, end] = cachedWordRanges[index];
+                textEditor.setSelectionRange(start, end);
+            }
+        }
+
         function updateActiveWord(currentTime) {
-            if (!timestampModeActive || wordsWithTimestamps.length === 0) return;
+            if (wordsWithTimestamps.length === 0) return;
 
             let foundIndex = -1;
 
@@ -5175,6 +5243,7 @@
             if (foundIndex !== currentActiveWordIndex && foundIndex >= 0) {
                 currentActiveWordIndex = foundIndex;
                 highlightActiveTimestampLine(foundIndex);
+                highlightActiveWordInTextEditor(foundIndex);
             }
         }
 
@@ -5201,6 +5270,19 @@
         document.getElementById('timestampJsonEditor').addEventListener('input', debounce(() => {
             syncTimestampsFromJsonEditor();
         }, 300));
+
+        const timestampJsonEditorEl = document.getElementById('timestampJsonEditor');
+        timestampJsonEditorEl.addEventListener('mousedown', markTimestampEditorInteraction);
+        timestampJsonEditorEl.addEventListener('touchstart', markTimestampEditorInteraction, { passive: true });
+        timestampJsonEditorEl.addEventListener('keydown', markTimestampEditorInteraction);
+        timestampJsonEditorEl.addEventListener('select', markTimestampEditorInteraction);
+        timestampJsonEditorEl.addEventListener('blur', () => { isUserInteractingWithTimestampEditor = false; });
+
+        textEditor.addEventListener('mousedown', markTextEditorInteraction);
+        textEditor.addEventListener('touchstart', markTextEditorInteraction, { passive: true });
+        textEditor.addEventListener('keydown', markTextEditorInteraction);
+        textEditor.addEventListener('select', markTextEditorInteraction);
+        textEditor.addEventListener('blur', () => { isUserInteractingWithTextEditor = false; });
 
         document.getElementById('newWordInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
