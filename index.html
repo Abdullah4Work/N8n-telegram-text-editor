@@ -5543,26 +5543,50 @@
             if (activeWordPointer >= wordsWithTimestamps.length) activeWordPointer = wordsWithTimestamps.length - 1;
             if (activeWordPointer < 0) activeWordPointer = 0;
 
-            // Fix: More precise timing logic to prevent premature jumping
+            // Enhanced logic for handling identical timestamps and zero-duration words
             const currentWord = wordsWithTimestamps[activeWordPointer];
             
-            // Only move forward if we've truly passed the current word's end time
-            while (activeWordPointer < wordsWithTimestamps.length - 1 && 
-                   currentTime > wordsWithTimestamps[activeWordPointer].end + 0.02) {
-                activeWordPointer++;
+            // Move forward logic - handle zero-duration and identical timestamps
+            while (activeWordPointer < wordsWithTimestamps.length - 1) {
+                const nextWord = wordsWithTimestamps[activeWordPointer + 1];
+                const currentWord = wordsWithTimestamps[activeWordPointer];
+                
+                // If next word has the same start time, move to it immediately
+                if (nextWord.start <= currentWord.start + 0.001) {
+                    activeWordPointer++;
+                } 
+                // If we've truly passed the current word's end time (with tolerance)
+                else if (currentTime > currentWord.end + 0.01) {
+                    activeWordPointer++;
+                } else {
+                    break;
+                }
             }
             
-            // Only move backward if we're truly before the current word's start time
-            while (activeWordPointer > 0 && 
-                   currentTime < wordsWithTimestamps[activeWordPointer].start - 0.02) {
-                activeWordPointer--;
+            // Move backward logic - handle zero-duration and identical timestamps
+            while (activeWordPointer > 0) {
+                const prevWord = wordsWithTimestamps[activeWordPointer - 1];
+                const currentWord = wordsWithTimestamps[activeWordPointer];
+                
+                // If prev word has the same end time, move to it
+                if (prevWord.end >= currentWord.end - 0.001) {
+                    activeWordPointer--;
+                }
+                // If we're truly before the current word's start time (with tolerance)
+                else if (currentTime < currentWord.start - 0.01) {
+                    activeWordPointer--;
+                } else {
+                    break;
+                }
             }
 
             const foundIndex = activeWordPointer;
             if (foundIndex !== currentActiveWordIndex && foundIndex >= 0) {
-                // Only update if we're actually within the word's time range (with small tolerance)
+                // More permissive timing check for zero-duration words
                 const word = wordsWithTimestamps[foundIndex];
-                if (currentTime >= word.start - 0.01 && currentTime <= word.end + 0.01) {
+                const tolerance = (word.end - word.start < 0.01) ? 0.05 : 0.01;
+                
+                if (currentTime >= word.start - tolerance && currentTime <= word.end + tolerance) {
                     currentActiveWordIndex = foundIndex;
                     highlightActiveTimestampLine(foundIndex);
                     highlightActiveWordInTextEditor(foundIndex);
