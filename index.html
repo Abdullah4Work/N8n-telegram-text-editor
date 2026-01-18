@@ -2807,14 +2807,30 @@
             border: none;
             color: var(--primary);
             cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            padding: 4px 0;
+            font-size: 11px;
+            font-weight: 500;
+            padding: 2px 6px;
             margin-top: 4px;
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
             direction: rtl;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .review-expand-btn:hover {
+            background: rgba(59, 130, 246, 0.1);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .review-expand-btn {
+                font-size: 9px;
+                padding: 1px 3px;
+                gap: 1px;
+            }
         }
 
         .review-tags-preview {
