@@ -918,6 +918,32 @@
             box-shadow: var(--shadow-lg);
         }
 
+        .timestamp-json-editor {
+            min-height: 400px;
+            font-family: 'Courier New', monospace !important;
+            font-size: 14px !important;
+            direction: ltr !important;
+            text-align: left !important;
+            white-space: pre;
+            overflow-wrap: normal;
+            overflow-x: auto;
+        }
+
+        .timestamp-json-editor::selection {
+            background: linear-gradient(135deg, #ffd700, #ffed4e) !important;
+            color: #000 !important;
+        }
+
+        .timestamp-json-editor::-moz-selection {
+            background: linear-gradient(135deg, #ffd700, #ffed4e) !important;
+            color: #000 !important;
+        }
+
+        .timestamp-action-btn.copy-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+
         .timestamp-editor-header {
             display: flex;
             justify-content: space-between;
@@ -3298,34 +3324,22 @@
             <div class="timestamp-editor-container" id="timestampEditorContainer">
                 <div class="timestamp-editor-content">
                     <div class="timestamp-editor-header">
-                        <div class="timestamp-editor-title"><span>⏱️</span><span>محرر التواقيت المتقدم</span></div>
+                        <div class="timestamp-editor-title"><span>⏱️</span><span>محرر التواقيت</span></div>
                         <div class="timestamp-editor-actions">
                             <button class="timestamp-action-btn back-to-text-btn"
                                 id="backToTextBtn"><span>📝</span><span>العودة للنص</span></button>
-                            <button class="timestamp-action-btn sort-btn"
-                                id="sortTimestampsBtn"><span>🔄</span><span>ترتيب</span></button>
+                            <button class="timestamp-action-btn copy-btn"
+                                id="copyTimestampsBtn"><span>📄</span><span>نسخ التواقيت</span></button>
                         </div>
                     </div>
-                    <div class="timestamp-words-list" id="timestampWordsList">
-                        <!-- سيتم ملؤها ديناميكياً -->
-                    </div>
-                    <div class="loading-more-words" id="loadingMoreWords">
-                        <div class="spinner" style="width: 30px; height: 30px; margin: 0 auto 10px;"></div>
-                        <div>جاري تحميل المزيد من الكلمات...</div>
-                    </div>
-                    <div class="timestamp-stats">
-                        <div class="timestamp-stat-item">
-                            <div class="timestamp-stat-value" id="totalWordsCount">0</div>
-                            <div class="timestamp-stat-label">كلمة</div>
-                        </div>
-                        <div class="timestamp-stat-item">
-                            <div class="timestamp-stat-value" id="totalDuration">0:00</div>
-                            <div class="timestamp-stat-label">المدة الكلية</div>
-                        </div>
-                        <div class="timestamp-stat-item">
-                            <div class="timestamp-stat-value" id="modifiedCount">0</div>
-                            <div class="timestamp-stat-label">تم تعديلها</div>
-                        </div>
+                    <textarea class="editor-textarea timestamp-json-editor" id="timestampJsonEditor" 
+                        placeholder="جاري تحميل التواقيت..." 
+                        style="font-family: 'Courier New', monospace; font-size: 14px; direction: ltr; text-align: left;"></textarea>
+                    <div class="editor-stats">
+                        <div class="stat-item"><span>📊</span><span class="stat-value"
+                                id="timestampWordsCount">0</span><span>كلمة</span></div>
+                        <div class="stat-item"><span>⏱️</span><span class="stat-value"
+                                id="timestampTotalDuration">0:00</span><span>المدة</span></div>
                     </div>
                 </div>
             </div>
@@ -4241,6 +4255,10 @@
             if (!currentText) {
                 // إذا كان النص فارغاً، امسح التواقيت
                 wordsWithTimestamps = [];
+                if (timestampModeActive) {
+                    document.getElementById('timestampJsonEditor').value = '';
+                    updateTimestampStats();
+                }
                 return;
             }
 
@@ -4265,6 +4283,12 @@
                     originalTimestamps = JSON.parse(JSON.stringify(wordsWithTimestamps));
                 }
                 timestampsModified = false;
+                
+                // تحديث محرر JSON إذا كان نشطاً
+                if (timestampModeActive) {
+                    document.getElementById('timestampJsonEditor').value = formatTimestampsToJSON(wordsWithTimestamps);
+                    updateTimestampStats();
+                }
                 return;
             }
 
@@ -4293,6 +4317,13 @@
                         currentTime = wordsWithTimestamps[i].end + 0.08;
                     } else {
                         // ✅ إذا كانت كلمة جديدة أو مختلفة، أنشئ تواقيت جديدة
+                        // حساب الوقت بناءً على الكلمة السابقة
+                        if (i > 0 && i - 1 < newTimestamps.length) {
+                            currentTime = newTimestamps[i - 1].end + 0.08;
+                        } else if (i > 0 && i - 1 < wordsWithTimestamps.length) {
+                            currentTime = wordsWithTimestamps[i - 1].end + 0.08;
+                        }
+                        
                         const duration = calculateWordDuration(word);
                         const start = currentTime;
                         const end = currentTime + duration;
@@ -4307,6 +4338,12 @@
                 
                 wordsWithTimestamps = newTimestamps;
                 timestampsModified = true;
+                
+                // تحديث محرر JSON إذا كان نشطاً
+                if (timestampModeActive) {
+                    document.getElementById('timestampJsonEditor').value = formatTimestampsToJSON(wordsWithTimestamps);
+                    updateTimestampStats();
+                }
             }
         }
 
@@ -4382,11 +4419,60 @@
             return Math.min(Math.max(duration, 0.12), 2.5);
         }
 
+        function formatTimestampsToJSON(timestamps) {
+            if (!timestamps || timestamps.length === 0) return '';
+            return timestamps.map(ts => {
+                return ` {"start": ${ts.start.toFixed(2)}, "end": ${ts.end.toFixed(2)}, "text": "${ts.text.replace(/"/g, '\\"')}"},`;
+            }).join('\n');
+        }
+
+        function parseTimestampsFromJSON(jsonText) {
+            try {
+                // تنظيف النص وإزالة الفواصل الزائدة
+                let cleaned = jsonText.trim();
+                if (cleaned.startsWith('[')) cleaned = cleaned.slice(1);
+                if (cleaned.endsWith(']')) cleaned = cleaned.slice(0, -1);
+                if (cleaned.endsWith(',')) cleaned = cleaned.slice(0, -1);
+                
+                // تقسيم إلى أسطر
+                const lines = cleaned.split('\n').filter(line => line.trim());
+                const timestamps = [];
+                
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (!trimmed || !trimmed.startsWith('{')) continue;
+                    
+                    // إزالة الفاصلة في النهاية إن وجدت
+                    let cleanLine = trimmed;
+                    if (cleanLine.endsWith(',')) cleanLine = cleanLine.slice(0, -1);
+                    
+                    try {
+                        const obj = JSON.parse(cleanLine);
+                        if (obj.start !== undefined && obj.end !== undefined && obj.text) {
+                            timestamps.push({
+                                start: parseFloat(obj.start),
+                                end: parseFloat(obj.end),
+                                text: obj.text
+                            });
+                        }
+                    } catch (e) {
+                        console.warn('خطأ في تحليل السطر:', cleanLine);
+                    }
+                }
+                
+                return timestamps;
+            } catch (error) {
+                console.error('خطأ في تحليل JSON:', error);
+                return [];
+            }
+        }
+
         function toggleTimestampMode() {
             timestampModeActive = !timestampModeActive;
             const toggle = document.getElementById('timestampModeToggle');
             const editorContainer = document.getElementById('editorContainer');
             const timestampContainer = document.getElementById('timestampEditorContainer');
+            const timestampJsonEditor = document.getElementById('timestampJsonEditor');
             const stepContent = document.querySelector('.step-content[data-step="1"]');
 
             if (timestampModeActive) {
@@ -4433,10 +4519,9 @@
                     }
                 }
 
-                calculateAverageSpeechRate();
-                displayedWordsCount = 0;
-                renderTimestampWords();
-                setupScrollListener();
+                // عرض التواقيت في محرر JSON
+                timestampJsonEditor.value = formatTimestampsToJSON(wordsWithTimestamps);
+                updateTimestampStats();
             } else {
                 toggle.classList.remove('active');
                 toggle.innerHTML = '<span>⏱️</span><span>محرر التواقيت</span>';
@@ -4447,6 +4532,13 @@
                 document.getElementById('audioPlayerFixed').classList.remove('visible');
                 document.getElementById('audioPlayerSection').classList.remove('hidden');
 
+                // حفظ التغييرات من محرر JSON
+                const jsonText = timestampJsonEditor.value;
+                const parsed = parseTimestampsFromJSON(jsonText);
+                if (parsed.length > 0) {
+                    wordsWithTimestamps = parsed;
+                    timestampsModified = true;
+                }
                 syncTextFromTimestamps();
             }
         }
@@ -4456,7 +4548,16 @@
             const toggle = document.getElementById('timestampModeToggle');
             const editorContainer = document.getElementById('editorContainer');
             const timestampContainer = document.getElementById('timestampEditorContainer');
+            const timestampJsonEditor = document.getElementById('timestampJsonEditor');
             const stepContent = document.querySelector('.step-content[data-step="1"]');
+
+            // حفظ التغييرات من محرر JSON
+            const jsonText = timestampJsonEditor.value;
+            const parsed = parseTimestampsFromJSON(jsonText);
+            if (parsed.length > 0) {
+                wordsWithTimestamps = parsed;
+                timestampsModified = true;
+            }
 
             toggle.classList.remove('active');
             toggle.innerHTML = '<span>⏱️</span><span>محرر التواقيت</span>';
@@ -4468,6 +4569,7 @@
             document.getElementById('audioPlayerSection').classList.remove('hidden');
 
             syncTextFromTimestamps();
+            removeActiveWordHighlight();
         }
 
         function loadTimestampsFromData(timingsData) {
@@ -4490,6 +4592,13 @@
 
                 originalTimestamps = JSON.parse(JSON.stringify(wordsWithTimestamps));
                 calculateAverageSpeechRate();
+                
+                // تحديث محرر JSON إذا كان نشطاً
+                if (timestampModeActive) {
+                    document.getElementById('timestampJsonEditor').value = formatTimestampsToJSON(wordsWithTimestamps);
+                    updateTimestampStats();
+                }
+                
                 console.log('✅ تم تحميل', wordsWithTimestamps.length, 'كلمة مع التواقيت');
             } catch (error) {
                 console.error('❌ خطأ في تحميل التواقيت:', error);
@@ -4497,47 +4606,12 @@
             }
         }
 
-        function updateActiveWord(currentTime) {
-            if (!timestampModeActive || wordsWithTimestamps.length === 0) return;
-
-            let foundIndex = -1;
-
-            for (let i = 0; i < wordsWithTimestamps.length; i++) {
-                const word = wordsWithTimestamps[i];
-                if (currentTime >= word.start && currentTime <= word.end) {
-                    foundIndex = i;
-                    break;
-                }
-            }
-
-            if (foundIndex === -1) {
-                for (let i = 0; i < wordsWithTimestamps.length; i++) {
-                    const word = wordsWithTimestamps[i];
-                    if (currentTime < word.start) {
-                        foundIndex = Math.max(0, i - 1);
-                        break;
-                    }
-                }
-            }
-
-            if (foundIndex !== currentActiveWordIndex && foundIndex >= 0 && foundIndex < displayedWordsCount) {
-                removeActiveWordHighlight();
-                currentActiveWordIndex = foundIndex;
-                highlightActiveWord(foundIndex);
-                scrollToActiveWord(foundIndex);
-            }
-        }
-
-        function highlightActiveWord(index) {
-            const wordItem = document.querySelector(`.timestamp-word-item[data-index="${index}"]`);
-            if (wordItem) {
-                wordItem.classList.add('active-word');
-            }
-        }
 
         function removeActiveWordHighlight() {
-            const activeWords = document.querySelectorAll('.timestamp-word-item.active-word');
-            activeWords.forEach(el => el.classList.remove('active-word'));
+            const editor = document.getElementById('timestampJsonEditor');
+            if (editor) {
+                editor.setSelectionRange(0, 0);
+            }
             currentActiveWordIndex = -1;
         }
 
@@ -5003,30 +5077,21 @@
         }
 
         function updateTimestampStats() {
-            document.getElementById('totalWordsCount').textContent = wordsWithTimestamps.length;
-
-            if (wordsWithTimestamps.length > 0) {
-                const lastWord = wordsWithTimestamps[wordsWithTimestamps.length - 1];
-                document.getElementById('totalDuration').textContent = formatTime(lastWord.end);
-            } else {
-                document.getElementById('totalDuration').textContent = '0:00';
+            const wordsCount = document.getElementById('timestampWordsCount');
+            const durationCount = document.getElementById('timestampTotalDuration');
+            
+            if (wordsCount) {
+                wordsCount.textContent = wordsWithTimestamps.length.toLocaleString('ar');
             }
 
-            let modifiedCount = 0;
-            const len = Math.min(wordsWithTimestamps.length, originalTimestamps.length);
-
-            for (let i = 0; i < len; i++) {
-                const word = wordsWithTimestamps[i];
-                const original = originalTimestamps[i];
-                if (word.text !== original.text ||
-                    Math.abs(word.start - original.start) > 0.001 ||
-                    Math.abs(word.end - original.end) > 0.001) {
-                    modifiedCount++;
+            if (durationCount) {
+                if (wordsWithTimestamps.length > 0) {
+                    const lastWord = wordsWithTimestamps[wordsWithTimestamps.length - 1];
+                    durationCount.textContent = formatTime(lastWord.end);
+                } else {
+                    durationCount.textContent = '0:00';
                 }
             }
-            modifiedCount += Math.abs(wordsWithTimestamps.length - originalTimestamps.length);
-
-            document.getElementById('modifiedCount').textContent = modifiedCount;
         }
 
         function syncTextFromTimestamps() {
@@ -5038,12 +5103,104 @@
             }
         }
 
+        function syncTimestampsFromJsonEditor() {
+            const jsonText = document.getElementById('timestampJsonEditor').value;
+            const parsed = parseTimestampsFromJSON(jsonText);
+            if (parsed.length > 0) {
+                wordsWithTimestamps = parsed;
+                timestampsModified = true;
+                syncTextFromTimestamps();
+                updateTimestampStats();
+            }
+        }
+
+        function highlightActiveTimestampLine(index) {
+            const editor = document.getElementById('timestampJsonEditor');
+            if (!editor || !timestampModeActive) return;
+            
+            const lines = editor.value.split('\n');
+            if (index >= 0 && index < lines.length) {
+                // حساب موضع السطر بدقة
+                let lineStart = 0;
+                for (let i = 0; i < index; i++) {
+                    lineStart += lines[i].length + 1; // +1 للـ newline
+                }
+                const lineEnd = lineStart + lines[index].length;
+                
+                // تمييز السطر مع خلفية ملونة
+                editor.focus();
+                editor.setSelectionRange(lineStart, lineEnd);
+                
+                // سكرول تلقائي سريع ودقيق
+                const lineHeight = 20;
+                const editorHeight = editor.clientHeight;
+                const currentScrollTop = editor.scrollTop;
+                const lineTop = index * lineHeight;
+                const lineBottom = lineTop + lineHeight;
+                const visibleTop = currentScrollTop;
+                const visibleBottom = currentScrollTop + editorHeight;
+                
+                // إذا كان السطر خارج المنطقة المرئية، قم بالسكرول فوراً
+                if (lineTop < visibleTop) {
+                    editor.scrollTop = Math.max(0, lineTop - 80);
+                } else if (lineBottom > visibleBottom) {
+                    editor.scrollTop = lineTop - editorHeight + 120;
+                }
+            }
+        }
+
+        function updateActiveWord(currentTime) {
+            if (!timestampModeActive || wordsWithTimestamps.length === 0) return;
+
+            let foundIndex = -1;
+
+            for (let i = 0; i < wordsWithTimestamps.length; i++) {
+                const word = wordsWithTimestamps[i];
+                if (currentTime >= word.start && currentTime <= word.end) {
+                    foundIndex = i;
+                    break;
+                }
+            }
+
+            if (foundIndex === -1) {
+                for (let i = 0; i < wordsWithTimestamps.length; i++) {
+                    const word = wordsWithTimestamps[i];
+                    if (currentTime < word.start) {
+                        foundIndex = Math.max(0, i - 1);
+                        break;
+                    }
+                }
+            }
+
+            if (foundIndex !== currentActiveWordIndex && foundIndex >= 0) {
+                currentActiveWordIndex = foundIndex;
+                highlightActiveTimestampLine(foundIndex);
+            }
+        }
+
         // ربط أحداث التواقيت
         document.getElementById('timestampModeToggle').addEventListener('click', toggleTimestampMode);
         document.getElementById('backToTextBtn').addEventListener('click', backToTextMode);
-        document.getElementById('sortTimestampsBtn').addEventListener('click', sortTimestamps);
-        document.getElementById('confirmAddWord').addEventListener('click', confirmAddWord);
-        document.getElementById('cancelAddWord').addEventListener('click', closeAddWordModal);
+        
+        // زر نسخ التواقيت
+        document.getElementById('copyTimestampsBtn').addEventListener('click', async () => {
+            const jsonText = document.getElementById('timestampJsonEditor').value;
+            try {
+                await navigator.clipboard.writeText(jsonText);
+                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+                showToast('✅ تم نسخ التواقيت');
+            } catch (err) {
+                const editor = document.getElementById('timestampJsonEditor');
+                editor.select();
+                document.execCommand('copy');
+                showToast('✅ تم نسخ التواقيت');
+            }
+        });
+
+        // مستمع لتغييرات محرر JSON
+        document.getElementById('timestampJsonEditor').addEventListener('input', debounce(() => {
+            syncTimestampsFromJsonEditor();
+        }, 300));
 
         document.getElementById('newWordInput').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
