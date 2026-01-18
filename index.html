@@ -3548,6 +3548,12 @@
                 <div class="form-hint">سيُستخدم كعنوان في SEO</div>
                 <div class="char-counter"><span id="titleCount">0</span> / 50</div>
             </div>
+            <div class="form-group">
+                <label class="form-label"><span>🔢</span><span>رقم الاستخدام (Usage Count)</span></label>
+                <input type="number" class="form-input" id="usageCountInput" placeholder="مثال: 1" min="0" max="9999">
+                <div class="form-hint">رقم الاستخدام للقالب المحدد</div>
+                <div class="char-counter"><span id="usageCountValue">1</span></div>
+            </div>
             <div class="promo-card-section">
                 <div class="promo-card-header">
                     <div class="promo-card-title"><span>🎁</span><span>البطاقة الإعلانية</span></div>
@@ -3838,6 +3844,7 @@
             tags: [],
             promo_card_title: '',
             promo_card_description: '',
+            usage_count: 1,
             status: 'completed',
             updated_at: new Date().toISOString()
         };
@@ -5719,6 +5726,12 @@
                     updateCharCounters();
                 }
 
+                // تحميل usage_count إذا وجد
+                const usageCount = loadedData.usage_count || loadedData.usageCount || 1;
+                document.getElementById('usageCountInput').value = usageCount;
+                formData.usage_count = usageCount;
+                document.getElementById('usageCountValue').textContent = usageCount;
+
                 if (loadedData.templates && Array.isArray(loadedData.templates)) {
                     loadedTemplatesData = loadedData.templates;
                     console.log('✅ تم تحميل', loadedTemplatesData.length, 'قالب');
@@ -5928,6 +5941,12 @@
             formData.subSeries = color.sub_series_text || '';
             formData.finalSeries = color.final_series_text || '';
 
+            // تحديث usage_count من بيانات القالب
+            const templateUsageCount = color.usage_count || color.usageCount || 1;
+            document.getElementById('usageCountInput').value = templateUsageCount;
+            formData.usage_count = templateUsageCount;
+            document.getElementById('usageCountValue').textContent = templateUsageCount;
+
             document.getElementById('promoTitleInput').value = color.promo_card_title || '';
             document.getElementById('promoDescInput').value = color.promo_card_description || '';
             formData.promo_card_title = color.promo_card_title || '';
@@ -6070,6 +6089,15 @@
                 }
             });
 
+            // معالجة حقل usage_count
+            const usageCountInput = document.getElementById('usageCountInput');
+            const usageCountValue = document.getElementById('usageCountValue');
+            if (usageCountInput && usageCountValue) {
+                const value = parseInt(usageCountInput.value) || 1;
+                usageCountValue.textContent = value;
+                formData.usage_count = value;
+            }
+
             const promoTitle = document.getElementById('promoTitleInput').value;
             const promoDesc = document.getElementById('promoDescInput').value;
             document.getElementById('promoTitleCount').textContent = promoTitle.length;
@@ -6078,7 +6106,7 @@
             formData.promo_card_description = promoDesc;
         }
 
-        ['titleInput', 'mainSeriesInput', 'subSeriesInput', 'finalSeriesInput'].forEach(id => {
+        ['titleInput', 'mainSeriesInput', 'subSeriesInput', 'finalSeriesInput', 'usageCountInput'].forEach(id => {
             document.getElementById(id).addEventListener('input', () => {
                 updateCharCounters();
                 validateCurrentStep();
