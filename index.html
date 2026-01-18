@@ -379,12 +379,12 @@
         }
 
         .seek-btn-new {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
             border: 2px solid var(--border-color);
-            font-size: 18px;
+            font-size: 14px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -395,8 +395,8 @@
         .seek-btn-new:hover {
             background: var(--primary-lighter);
             border-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
         }
 
         .seek-btn-new:active {
@@ -406,10 +406,10 @@
         .speed-controls-new {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             background: linear-gradient(135deg, var(--primary-lighter), rgba(74, 144, 226, 0.1));
-            padding: 6px 12px;
-            border-radius: 12px;
+            padding: 4px;
+            border-radius: 8px;
             border: 2px solid var(--primary);
             direction: rtl;
             flex-shrink: 0;
@@ -417,13 +417,13 @@
         }
 
         .speed-btn-new {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
             background: white;
             border: 2px solid var(--primary);
             color: var(--primary);
-            font-size: 16px;
+            font-size: 12px;
             font-weight: 700;
             cursor: pointer;
             display: flex;
@@ -435,7 +435,7 @@
         .speed-btn-new:hover {
             background: var(--primary);
             color: white;
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
         .speed-btn-new:active {
@@ -443,15 +443,95 @@
         }
 
         .speed-display {
-            min-width: 50px;
+            min-width: 36px;
             text-align: center;
-            font-size: 16px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--primary);
             background: white;
-            padding: 6px 10px;
-            border-radius: 8px;
+            padding: 4px 8px;
+            border-radius: 6px;
             box-shadow: var(--shadow-sm);
+        }
+
+        @media (max-width: 768px) {
+            .seek-btn-new {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+            
+            .speed-btn-new {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+            }
+            
+            .speed-display {
+                font-size: 10px;
+                min-width: 30px;
+                padding: 3px 6px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .seek-btn-new {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+            }
+            
+            .speed-btn-new {
+                width: 20px;
+                height: 20px;
+                font-size: 8px;
+            }
+            
+            .speed-display {
+                font-size: 9px;
+                min-width: 26px;
+                padding: 2px 4px;
+            }
+        }
+
+        @media (max-width: 768px) and (min-device-width: 768px) and (max-device-width: 1024px) {
+            .seek-btn-new {
+                width: 28px;
+                height: 28px;
+                font-size: 12px;
+            }
+            
+            .speed-btn-new {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+            }
+            
+            .speed-display {
+                font-size: 10px;
+                min-width: 30px;
+                padding: 3px 6px;
+            }
+        }
+
+        @media (max-width: 480px) and (min-device-width: 480px) and (max-device-width: 768px) {
+            .seek-btn-new {
+                width: 24px;
+                height: 24px;
+                font-size: 10px;
+            }
+            
+            .speed-btn-new {
+                width: 20px;
+                height: 20px;
+                font-size: 8px;
+            }
+            
+            .speed-display {
+                font-size: 9px;
+                min-width: 26px;
+                padding: 2px 4px;
+            }
         }
 
         /* ═══════════════════════════════════════════════════════════════════
