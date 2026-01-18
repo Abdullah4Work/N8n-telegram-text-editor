@@ -941,6 +941,49 @@
             color: #000 !important;
         }
 
+        .playback-editor-wrapper {
+            position: relative;
+        }
+
+        .playback-editor-wrapper .editor-textarea {
+            position: relative;
+            z-index: 1;
+        }
+
+        .playback-editor-wrapper.playback-active .editor-textarea {
+            color: transparent !important;
+            caret-color: transparent !important;
+            text-shadow: none !important;
+        }
+
+        .playback-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            overflow: auto;
+            white-space: pre-wrap;
+            color: var(--text-primary);
+            box-sizing: border-box;
+            display: none;
+        }
+
+        .playback-editor-wrapper.playback-active .playback-overlay {
+            display: block;
+        }
+
+        .playback-overlay .playback-active-item {
+            background: #ffd700;
+            color: #000;
+            border-radius: 4px;
+        }
+
+        #timestampPlaybackView {
+            white-space: pre;
+            overflow-wrap: normal;
+            word-break: normal;
+        }
+
         .editor-textarea::selection {
             background: #ffd700;
             color: #000;
@@ -3323,7 +3366,10 @@
                 <div class="editor-header">
                     <div class="editor-label"><span>📝</span><span>النص المصحح</span></div>
                 </div>
-                <textarea class="editor-textarea" id="textEditor" placeholder="جاري تحميل النص..."></textarea>
+                <div class="playback-editor-wrapper" id="textEditorWrapper">
+                    <textarea class="editor-textarea" id="textEditor" placeholder="جاري تحميل النص..."></textarea>
+                    <div class="playback-overlay" id="textPlaybackView" aria-hidden="true"></div>
+                </div>
                 <div class="editor-stats">
                     <div class="stat-item"><span>📊</span><span class="stat-value"
                             id="charCount">0</span><span>حرف</span></div>
@@ -3344,9 +3390,12 @@
                                 id="copyTimestampsBtn"><span>📄</span><span>نسخ التواقيت</span></button>
                         </div>
                     </div>
-                    <textarea class="editor-textarea timestamp-json-editor" id="timestampJsonEditor" 
-                        placeholder="جاري تحميل التواقيت..." 
-                        style="font-family: 'Courier New', monospace; font-size: 14px; direction: ltr; text-align: left;"></textarea>
+                    <div class="playback-editor-wrapper" id="timestampEditorWrapper">
+                        <textarea class="editor-textarea timestamp-json-editor" id="timestampJsonEditor" 
+                            placeholder="جاري تحميل التواقيت..." 
+                            style="font-family: 'Courier New', monospace; font-size: 14px; direction: ltr; text-align: left;"></textarea>
+                        <div class="playback-overlay" id="timestampPlaybackView" aria-hidden="true"></div>
+                    </div>
                     <div class="editor-stats">
                         <div class="stat-item"><span>📊</span><span class="stat-value"
                                 id="timestampWordsCount">0</span><span>كلمة</span></div>
@@ -4023,7 +4072,7 @@
             document.getElementById('currentTime').textContent = formatTime(audioElement.currentTime);
             document.getElementById('currentTimeFixed').textContent = formatTime(audioElement.currentTime);
 
-            if (isAudioPlaying && wordsWithTimestamps.length > 0) {
+            if (!playbackRafId && isAudioPlaying && wordsWithTimestamps.length > 0) {
                 updateActiveWord(audioElement.currentTime);
             }
         });
@@ -4032,11 +4081,12 @@
             isAudioPlaying = false;
             document.getElementById('playPauseBtn').textContent = '▶️';
             document.getElementById('playPauseBtnFixed').textContent = '▶️';
+            stopPlaybackLoop();
             removeActiveWordHighlight();
         });
 
-        audioElement.addEventListener('pause', () => { isAudioPlaying = false; });
-        audioElement.addEventListener('play', () => { isAudioPlaying = true; });
+        audioElement.addEventListener('pause', () => { isAudioPlaying = false; stopPlaybackLoop(); });
+        audioElement.addEventListener('play', () => { isAudioPlaying = true; startPlaybackLoop(); });
 
         document.getElementById('playPauseBtn').addEventListener('click', toggleAudioPlayback);
         document.getElementById('playPauseBtnFixed').addEventListener('click', toggleAudioPlayback);
@@ -4205,6 +4255,166 @@
         let highlightRafId = null;
         let timestampPlaybackFocusDone = false;
 
+        let playbackRafId = null;
+
+        let textPlaybackCacheValue = '';
+        let textPlaybackSpans = [];
+        let timestampPlaybackCacheValue = '';
+        let timestampPlaybackLines = [];
+        let playbackActiveIndex = -1;
+
+        function clamp(n, min, max) {
+            return Math.max(min, Math.min(max, n));
+        }
+
+        function setWrapperPlaybackActive(wrapperId, active) {
+            const w = document.getElementById(wrapperId);
+            if (!w) return;
+            if (active) w.classList.add('playback-active');
+            else w.classList.remove('playback-active');
+        }
+
+        function syncOverlayStyleFromTextarea(textarea, overlay) {
+            if (!textarea || !overlay) return;
+            const cs = window.getComputedStyle(textarea);
+            overlay.style.fontFamily = cs.fontFamily;
+            overlay.style.fontSize = cs.fontSize;
+            overlay.style.lineHeight = cs.lineHeight;
+            overlay.style.padding = cs.padding;
+            overlay.style.direction = cs.direction;
+            overlay.style.textAlign = cs.textAlign;
+        }
+
+        function rebuildTextPlaybackView() {
+            const overlay = document.getElementById('textPlaybackView');
+            if (!overlay || !textEditor) return;
+            const text = textEditor.value || '';
+            if (text === textPlaybackCacheValue) return;
+            textPlaybackCacheValue = text;
+
+            overlay.textContent = '';
+            textPlaybackSpans = [];
+
+            syncOverlayStyleFromTextarea(textEditor, overlay);
+
+            const frag = document.createDocumentFragment();
+            const re = /\S+|\s+/g;
+            let m;
+            let idx = 0;
+            while ((m = re.exec(text)) !== null) {
+                const tok = m[0];
+                if (/^\s+$/.test(tok)) {
+                    frag.appendChild(document.createTextNode(tok));
+                } else {
+                    const s = document.createElement('span');
+                    s.textContent = tok;
+                    s.dataset.idx = String(idx);
+                    textPlaybackSpans[idx] = s;
+                    idx++;
+                    frag.appendChild(s);
+                }
+            }
+            overlay.appendChild(frag);
+        }
+
+        function rebuildTimestampPlaybackView() {
+            const editor = document.getElementById('timestampJsonEditor');
+            const overlay = document.getElementById('timestampPlaybackView');
+            if (!editor || !overlay) return;
+            const v = editor.value || '';
+            if (v === timestampPlaybackCacheValue) return;
+            timestampPlaybackCacheValue = v;
+
+            overlay.textContent = '';
+            timestampPlaybackLines = [];
+
+            syncOverlayStyleFromTextarea(editor, overlay);
+
+            const lines = v.split('\n');
+            const frag = document.createDocumentFragment();
+            for (let i = 0; i < lines.length; i++) {
+                const d = document.createElement('div');
+                d.textContent = lines[i];
+                d.dataset.idx = String(i);
+                timestampPlaybackLines[i] = d;
+                frag.appendChild(d);
+            }
+            overlay.appendChild(frag);
+        }
+
+        function setPlaybackActiveIndex(index) {
+            if (index === playbackActiveIndex) return;
+            const prev = playbackActiveIndex;
+            playbackActiveIndex = index;
+
+            rebuildTextPlaybackView();
+            rebuildTimestampPlaybackView();
+
+            if (prev >= 0) {
+                const p1 = textPlaybackSpans[prev];
+                if (p1) p1.classList.remove('playback-active-item');
+                const p2 = timestampPlaybackLines[prev];
+                if (p2) p2.classList.remove('playback-active-item');
+            }
+
+            if (index >= 0) {
+                const n1 = textPlaybackSpans[index];
+                if (n1) n1.classList.add('playback-active-item');
+                const n2 = timestampPlaybackLines[index];
+                if (n2) n2.classList.add('playback-active-item');
+
+                const textOverlay = document.getElementById('textPlaybackView');
+                if (textOverlay && n1) {
+                    const targetTop = n1.offsetTop - (textOverlay.clientHeight / 2) + (n1.offsetHeight / 2);
+                    const maxTop = Math.max(0, textOverlay.scrollHeight - textOverlay.clientHeight);
+                    textOverlay.scrollTop = clamp(targetTop, 0, maxTop);
+                    textEditor.scrollTop = textOverlay.scrollTop;
+                }
+
+                const tsOverlay = document.getElementById('timestampPlaybackView');
+                const tsEditor = document.getElementById('timestampJsonEditor');
+                if (tsOverlay && tsEditor && n2) {
+                    const targetTop = n2.offsetTop - (tsOverlay.clientHeight / 2) + (n2.offsetHeight / 2);
+                    const maxTop = Math.max(0, tsOverlay.scrollHeight - tsOverlay.clientHeight);
+                    tsOverlay.scrollTop = clamp(targetTop, 0, maxTop);
+                    tsEditor.scrollTop = tsOverlay.scrollTop;
+                }
+            }
+        }
+
+        function updatePlaybackModeState() {
+            const canTextOverlay = isAudioPlaying && !isTextEditorFocused && !isUserInteractingWithTextEditor;
+            const canTsOverlay = isAudioPlaying && timestampModeActive && !isUserInteractingWithTimestampEditor;
+
+            setWrapperPlaybackActive('textEditorWrapper', canTextOverlay);
+            setWrapperPlaybackActive('timestampEditorWrapper', canTsOverlay);
+        }
+
+        function playbackLoop() {
+            if (!isAudioPlaying) {
+                playbackRafId = null;
+                return;
+            }
+            playbackRafId = requestAnimationFrame(playbackLoop);
+            updatePlaybackModeState();
+            if (wordsWithTimestamps.length > 0) updateActiveWord(audioElement.currentTime);
+        }
+
+        function startPlaybackLoop() {
+            if (playbackRafId) return;
+            updatePlaybackModeState();
+            playbackRafId = requestAnimationFrame(playbackLoop);
+        }
+
+        function stopPlaybackLoop() {
+            if (playbackRafId) {
+                cancelAnimationFrame(playbackRafId);
+                playbackRafId = null;
+            }
+            setWrapperPlaybackActive('textEditorWrapper', false);
+            setWrapperPlaybackActive('timestampEditorWrapper', false);
+        }
+
         let cachedWordRangesText = '';
         let cachedWordRanges = [];
 
@@ -4274,6 +4484,9 @@
             if (!editor || !timestampModeActive) return;
             if (isUserInteractingWithTimestampEditor) return;
 
+            const tsWrapper = document.getElementById('timestampEditorWrapper');
+            if (tsWrapper && tsWrapper.classList.contains('playback-active')) return;
+
             if (!timestampPlaybackFocusDone && document.activeElement !== editor) {
                 editor.focus();
                 timestampPlaybackFocusDone = true;
@@ -4284,6 +4497,7 @@
 
             const start = timestampLineOffsets[index];
             const end = start + (timestampLineLengths[index] || 0);
+
             editor.setSelectionRange(start, end);
 
             const lineHeight = getEditorLineHeightPx(editor);
@@ -4296,6 +4510,9 @@
             if (!textEditor) return;
             if (isTextEditorFocused) return;
             if (isUserInteractingWithTextEditor) return;
+
+            const textWrapper = document.getElementById('textEditorWrapper');
+            if (textWrapper && textWrapper.classList.contains('playback-active')) return;
 
             rebuildWordRanges();
             if (index < 0 || index >= cachedWordRanges.length) return;
@@ -4764,6 +4981,7 @@
             activeWordPointer = 0;
             lastActiveWordTime = -1;
             timestampPlaybackFocusDone = false;
+            setPlaybackActiveIndex(-1);
         }
 
         function scrollToActiveWord(index) {
@@ -5267,12 +5485,18 @@
 
         function highlightActiveTimestampLine(index) {
             if (!timestampModeActive) return;
+            setPlaybackActiveIndex(index);
+
+            if (playbackRafId) return;
             if (pendingTimestampHighlightIndex === index) return;
             pendingTimestampHighlightIndex = index;
             scheduleHighlights();
         }
 
         function highlightActiveWordInTextEditor(index) {
+            setPlaybackActiveIndex(index);
+
+            if (playbackRafId) return;
             if (pendingTextHighlightIndex === index) return;
             pendingTextHighlightIndex = index;
             scheduleHighlights();
@@ -5344,7 +5568,27 @@
         document.getElementById('timestampJsonEditor').addEventListener('input', debounce(() => {
             syncTimestampsFromJsonEditor();
             rebuildTimestampLineCache();
+            timestampPlaybackCacheValue = '';
         }, 300));
+
+        document.getElementById('timestampJsonEditor').addEventListener('scroll', () => {
+            const overlay = document.getElementById('timestampPlaybackView');
+            const editor = document.getElementById('timestampJsonEditor');
+            if (!overlay || !editor) return;
+            overlay.scrollTop = editor.scrollTop;
+            overlay.scrollLeft = editor.scrollLeft;
+        });
+
+        textEditor.addEventListener('scroll', () => {
+            const overlay = document.getElementById('textPlaybackView');
+            if (!overlay) return;
+            overlay.scrollTop = textEditor.scrollTop;
+            overlay.scrollLeft = textEditor.scrollLeft;
+        });
+
+        textEditor.addEventListener('input', () => {
+            textPlaybackCacheValue = '';
+        });
 
         const timestampJsonEditorEl = document.getElementById('timestampJsonEditor');
         timestampJsonEditorEl.addEventListener('mousedown', markTimestampEditorInteraction);
