@@ -1065,12 +1065,13 @@
         .playback-overlay .playback-active-item {
             background: rgba(255, 215, 0, 0.4);
             color: transparent;
-            border-radius: 4px;
+            border-radius: 2px;
             mix-blend-mode: multiply;
-            box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 6px rgba(255, 215, 0, 0.2);
             display: inline;
-            padding: 0 2px;
+            padding: 0;
             margin: 0;
+            position: relative;
             vertical-align: baseline;
             line-height: inherit;
         }
@@ -4418,12 +4419,25 @@
             overlay.style.letterSpacing = cs.letterSpacing;
             overlay.style.fontWeight = cs.fontWeight;
             overlay.style.fontStyle = cs.fontStyle;
+            overlay.style.border = cs.border;
+            overlay.style.borderRadius = cs.borderRadius;
+            overlay.style.width = cs.width;
+            overlay.style.height = cs.height;
+            overlay.style.boxSizing = cs.boxSizing;
+            overlay.style.overflow = cs.overflow;
+            overlay.style.resize = cs.resize;
         }
 
         function syncOverlayScrollFromTextarea(textarea, overlay) {
             if (!textarea || !overlay) return;
             overlay.scrollTop = textarea.scrollTop;
             overlay.scrollLeft = textarea.scrollLeft;
+            
+            // Force precise alignment to prevent drift
+            requestAnimationFrame(() => {
+                overlay.scrollTop = textarea.scrollTop;
+                overlay.scrollLeft = textarea.scrollLeft;
+            });
         }
 
         function syncTextareaScrollFromOverlay(textarea, overlay) {
@@ -4465,20 +4479,23 @@
             while ((m = re.exec(text)) !== null) {
                 const tok = m[0];
                 const start = m.index;
-                // Add any whitespace before this word as plain text
+                // Add any whitespace before this word as plain text (preserves exact spacing)
                 if (start > lastEnd) {
                     frag.appendChild(document.createTextNode(text.substring(lastEnd, start)));
                 }
-                // Add the word as a highlightable span
+                // Add the word as a highlightable span with precise positioning
                 const s = document.createElement('span');
                 s.textContent = tok;
                 s.dataset.idx = String(idx);
+                s.style.display = 'inline';
+                s.style.position = 'relative';
+                s.style.verticalAlign = 'baseline';
                 textPlaybackSpans[idx] = s;
                 idx++;
                 frag.appendChild(s);
                 lastEnd = start + tok.length;
             }
-            // Add any trailing whitespace
+            // Add any trailing whitespace (preserves exact spacing)
             if (lastEnd < text.length) {
                 frag.appendChild(document.createTextNode(text.substring(lastEnd)));
             }
@@ -4498,36 +4515,25 @@
 
             syncOverlayStyleFromTextarea(editor, overlay);
 
-            // Parse JSON to get word-by-word data
-            try {
-                const jsonData = JSON.parse(v);
-                const frag = document.createDocumentFragment();
-                
-                // Create spans for each word in the timestamps array
-                jsonData.forEach((wordData, index) => {
-                    const line = JSON.stringify(wordData, null, 2);
-                    const d = document.createElement('div');
-                    d.textContent = line;
-                    d.dataset.idx = String(index);
-                    timestampPlaybackLines[index] = d;
-                    frag.appendChild(d);
-                });
-                
-                overlay.appendChild(frag);
-            } catch (e) {
-                // Fallback: treat as plain text lines
-                const lines = v.split('\n');
-                const frag = document.createDocumentFragment();
-                for (let i = 0; i < lines.length; i++) {
-                    const line = lines[i];
+            const lines = v.split('\n');
+            const frag = document.createDocumentFragment();
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                // Only create highlightable divs for lines that look like timestamp entries
+                if (line.trim() && (line.includes('"start"') || line.includes('"end"') || line.includes('"text"'))) {
                     const d = document.createElement('div');
                     d.textContent = line;
                     d.dataset.idx = String(i);
                     timestampPlaybackLines[i] = d;
                     frag.appendChild(d);
+                } else {
+                    // For non-timestamp lines, just add plain text without dataset.idx
+                    const d = document.createElement('div');
+                    d.textContent = line;
+                    frag.appendChild(d);
                 }
-                overlay.appendChild(frag);
             }
+            overlay.appendChild(frag);
         }
 
         function setPlaybackActiveIndex(index) {
@@ -4535,13 +4541,8 @@
             const prev = playbackActiveIndex;
             playbackActiveIndex = index;
 
-            // Only rebuild if content changed (not on every highlight change)
-            if (textEditor.value !== textPlaybackCacheValue) {
-                rebuildTextPlaybackView();
-            }
-            if (document.getElementById('timestampJsonEditor').value !== timestampPlaybackCacheValue) {
-                rebuildTimestampPlaybackView();
-            }
+            rebuildTextPlaybackView();
+            rebuildTimestampPlaybackView();
 
             if (prev >= 0) {
                 const p1 = textPlaybackSpans[prev];
@@ -4603,6 +4604,19 @@
             playbackRafId = requestAnimationFrame(playbackLoop);
             updatePlaybackModeState();
             if (wordsWithTimestamps.length > 0) updateActiveWord(audioElement.currentTime);
+            
+            // Enhanced scroll synchronization to prevent drift
+            if (currentActiveWordIndex >= 0) {
+                const textOverlay = document.getElementById('textPlaybackView');
+                const timestampOverlay = document.getElementById('timestampPlaybackView');
+                
+                if (textOverlay && textEditor) {
+                    syncOverlayScrollFromTextarea(textEditor, textOverlay);
+                }
+                if (timestampOverlay && timestampJsonEditor) {
+                    syncOverlayScrollFromTextarea(timestampJsonEditor, timestampOverlay);
+                }
+            }
         }
 
         function startPlaybackLoop() {
@@ -4816,20 +4830,6 @@
             if (wordsWithTimestamps.length > 0) {
                 syncTimestampsFromTextChanges();
             }
-            // Force rebuild of text overlay when content changes
-            textPlaybackCacheValue = '';
-        });
-
-        const timestampJsonEditorEl = document.getElementById('timestampJsonEditor');
-        timestampJsonEditorEl.addEventListener('input', () => {
-            // Force rebuild of timestamp overlay when content changes
-            timestampPlaybackCacheValue = '';
-        });
-        timestampJsonEditorEl.addEventListener('scroll', () => {
-            const overlay = document.getElementById('timestampPlaybackView');
-            const wrapper = document.getElementById('timestampEditorWrapper');
-            if (!overlay || !wrapper || !wrapper.classList.contains('playback-active')) return;
-            syncOverlayScrollFromTextarea(timestampJsonEditorEl, overlay);
         });
 
         function syncTimestampsFromTextChanges() {
@@ -5855,6 +5855,13 @@
             textPlaybackCacheValue = '';
         });
 
+        const timestampJsonEditorEl = document.getElementById('timestampJsonEditor');
+        timestampJsonEditorEl.addEventListener('scroll', () => {
+            const overlay = document.getElementById('timestampPlaybackView');
+            const wrapper = document.getElementById('timestampEditorWrapper');
+            if (!overlay || !wrapper || !wrapper.classList.contains('playback-active')) return;
+            syncOverlayScrollFromTextarea(timestampJsonEditorEl, overlay);
+        });
         timestampJsonEditorEl.addEventListener('mousedown', markTimestampEditorInteraction);
         timestampJsonEditorEl.addEventListener('touchstart', markTimestampEditorInteraction, { passive: true });
         timestampJsonEditorEl.addEventListener('keydown', markTimestampEditorInteraction);
