@@ -1064,7 +1064,7 @@
 
         .playback-overlay .playback-active-item {
             background: rgba(255, 215, 0, 0.4);
-            color: transparent;
+            color: var(--text-primary);
             border-radius: 2px;
             mix-blend-mode: multiply;
             box-shadow: 0 0 6px rgba(255, 215, 0, 0.2);
@@ -4578,8 +4578,7 @@
             const prev = playbackActiveIndex;
             playbackActiveIndex = index;
 
-            rebuildTextPlaybackView();
-            rebuildTimestampPlaybackView();
+            // لا تعيد البناء هنا - فقط حدث التمييز
 
             if (prev >= 0) {
                 const p1 = textPlaybackSpans[prev];
@@ -4641,18 +4640,7 @@
             updatePlaybackModeState();
             if (wordsWithTimestamps.length > 0) updateActiveWord(audioElement.currentTime);
             
-            // Enhanced scroll synchronization to prevent drift
-            if (currentActiveWordIndex >= 0) {
-                const textOverlay = document.getElementById('textPlaybackView');
-                const timestampOverlay = document.getElementById('timestampPlaybackView');
-                
-                if (textOverlay && textEditor) {
-                    syncOverlayScrollFromTextarea(textEditor, textOverlay);
-                }
-                if (timestampOverlay && timestampJsonEditor) {
-                    syncOverlayScrollFromTextarea(timestampJsonEditor, timestampOverlay);
-                }
-            }
+            // تمت إزالة مزامنة التمرير المستمرة - الآن تتم فقط عند تغيير الكلمة النشطة
         }
 
         function startPlaybackLoop() {
