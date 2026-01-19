@@ -1055,6 +1055,7 @@
             color: transparent;
             box-sizing: border-box;
             display: none;
+            white-space: pre-wrap;
         }
 
         .playback-editor-wrapper.playback-active .playback-overlay {
@@ -1067,6 +1068,11 @@
             border-radius: 4px;
             mix-blend-mode: multiply;
             box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+            display: inline;
+            padding: 0 2px;
+            margin: 0;
+            vertical-align: baseline;
+            line-height: inherit;
         }
 
         .editor-textarea::selection {
@@ -4452,21 +4458,29 @@
             syncOverlayStyleFromTextarea(textEditor, overlay);
 
             const frag = document.createDocumentFragment();
-            const re = /\S+|\s+/g;
+            const re = /\S+/g;
             let m;
             let idx = 0;
+            let lastEnd = 0;
             while ((m = re.exec(text)) !== null) {
                 const tok = m[0];
-                if (/^\s+$/.test(tok)) {
-                    frag.appendChild(document.createTextNode(tok));
-                } else {
-                    const s = document.createElement('span');
-                    s.textContent = tok;
-                    s.dataset.idx = String(idx);
-                    textPlaybackSpans[idx] = s;
-                    idx++;
-                    frag.appendChild(s);
+                const start = m.index;
+                // Add any whitespace before this word as plain text
+                if (start > lastEnd) {
+                    frag.appendChild(document.createTextNode(text.substring(lastEnd, start)));
                 }
+                // Add the word as a highlightable span
+                const s = document.createElement('span');
+                s.textContent = tok;
+                s.dataset.idx = String(idx);
+                textPlaybackSpans[idx] = s;
+                idx++;
+                frag.appendChild(s);
+                lastEnd = start + tok.length;
+            }
+            // Add any trailing whitespace
+            if (lastEnd < text.length) {
+                frag.appendChild(document.createTextNode(text.substring(lastEnd)));
             }
             overlay.appendChild(frag);
         }
@@ -4487,11 +4501,20 @@
             const lines = v.split('\n');
             const frag = document.createDocumentFragment();
             for (let i = 0; i < lines.length; i++) {
-                const d = document.createElement('div');
-                d.textContent = lines[i];
-                d.dataset.idx = String(i);
-                timestampPlaybackLines[i] = d;
-                frag.appendChild(d);
+                const line = lines[i];
+                // Only create highlightable divs for lines that look like timestamp entries
+                if (line.trim() && (line.includes('"start"') || line.includes('"end"') || line.includes('"text"'))) {
+                    const d = document.createElement('div');
+                    d.textContent = line;
+                    d.dataset.idx = String(i);
+                    timestampPlaybackLines[i] = d;
+                    frag.appendChild(d);
+                } else {
+                    // For non-timestamp lines, just add plain text without dataset.idx
+                    const d = document.createElement('div');
+                    d.textContent = line;
+                    frag.appendChild(d);
+                }
             }
             overlay.appendChild(frag);
         }
