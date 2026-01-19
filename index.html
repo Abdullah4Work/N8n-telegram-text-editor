@@ -4517,15 +4517,17 @@
 
             const lines = v.split('\n');
             const frag = document.createDocumentFragment();
+            let timestampLineCounter = 0;
             for (let i = 0; i < lines.length; i++) {
                 const line = lines[i];
                 // Only create highlightable divs for lines that look like timestamp entries
                 if (line.trim() && (line.includes('"start"') || line.includes('"end"') || line.includes('"text"'))) {
                     const d = document.createElement('div');
                     d.textContent = line;
-                    d.dataset.idx = String(i);
-                    timestampPlaybackLines[i] = d;
+                    d.dataset.idx = String(timestampLineCounter); // Use timestamp counter as index
+                    timestampPlaybackLines[timestampLineCounter] = d; // Store at timestamp counter position
                     frag.appendChild(d);
+                    timestampLineCounter++;
                 } else {
                     // For non-timestamp lines, just add plain text without dataset.idx
                     const d = document.createElement('div');
