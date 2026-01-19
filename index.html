@@ -4521,17 +4521,88 @@
                 const line = lines[i];
                 // Only create highlightable divs for lines that look like timestamp entries
                 if (line.trim() && (line.includes('"start"') || line.includes('"end"') || line.includes('"text"'))) {
-                    const d = document.createElement('div');
-                    d.textContent = line;
-                    d.dataset.idx = String(i);
-                    d.style.display = 'block';
-                    d.style.position = 'relative';
-                    d.style.verticalAlign = 'baseline';
-                    d.style.margin = '0';
-                    d.style.padding = '0';
-                    d.style.lineHeight = 'inherit';
-                    timestampPlaybackLines[i] = d;
-                    frag.appendChild(d);
+                    try {
+                        // Parse JSON to extract the text field
+                        const jsonMatch = line.match(/\{.*\}/);
+                        if (jsonMatch) {
+                            const jsonData = JSON.parse(jsonMatch[0]);
+                            if (jsonData.text) {
+                                // Create a div with structured content
+                                const d = document.createElement('div');
+                                d.dataset.idx = String(i);
+                                d.style.display = 'block';
+                                d.style.position = 'relative';
+                                d.style.verticalAlign = 'baseline';
+                                d.style.margin = '0';
+                                d.style.padding = '0';
+                                d.style.lineHeight = 'inherit';
+                                d.style.whiteSpace = 'pre';
+                                
+                                // Parse the line to find the text field and highlight individual words
+                                const textFieldMatch = line.match(/("text":\s*")(.*)(")/);
+                                if (textFieldMatch) {
+                                    const prefix = line.substring(0, textFieldMatch.index);
+                                    const textContent = textFieldMatch[2];
+                                    const suffix = line.substring(textFieldMatch.index + textFieldMatch[0].length);
+                                    
+                                    // Add prefix
+                                    d.appendChild(document.createTextNode(prefix + '"'));
+                                    
+                                    // Process text content word by word
+                                    const words = textContent.split(/\s+/);
+                                    words.forEach((word, idx) => {
+                                        if (idx > 0) {
+                                            d.appendChild(document.createTextNode(' '));
+                                        }
+                                        const span = document.createElement('span');
+                                        span.textContent = word;
+                                        span.dataset.wordIdx = String(idx);
+                                        span.dataset.lineIdx = String(i);
+                                        span.style.display = 'inline';
+                                        span.style.position = 'relative';
+                                        span.style.verticalAlign = 'baseline';
+                                        d.appendChild(span);
+                                    });
+                                    
+                                    // Add suffix
+                                    d.appendChild(document.createTextNode('"' + suffix));
+                                } else {
+                                    // Fallback to full line if parsing fails
+                                    d.textContent = line;
+                                }
+                                
+                                timestampPlaybackLines[i] = d;
+                                frag.appendChild(d);
+                            } else {
+                                // No text field, treat as normal line
+                                const d = document.createElement('div');
+                                d.textContent = line;
+                                d.style.display = 'block';
+                                d.style.margin = '0';
+                                d.style.padding = '0';
+                                d.style.lineHeight = 'inherit';
+                                frag.appendChild(d);
+                            }
+                        } else {
+                            // No valid JSON, treat as normal line
+                            const d = document.createElement('div');
+                            d.textContent = line;
+                            d.style.display = 'block';
+                            d.style.margin = '0';
+                            d.style.padding = '0';
+                            d.style.lineHeight = 'inherit';
+                            frag.appendChild(d);
+                        }
+                    } catch (e) {
+                        // JSON parse failed, treat as normal line
+                        const d = document.createElement('div');
+                        d.textContent = line;
+                        d.style.display = 'block';
+                        d.style.margin = '0';
+                        d.style.padding = '0';
+                        d.style.lineHeight = 'inherit';
+                        frag.appendChild(d);
+                    }
                 } else {
                     // For non-timestamp lines, just add plain text without dataset.idx
                     const d = document.createElement('div');
@@ -4557,8 +4628,10 @@
             if (prev >= 0) {
                 const p1 = textPlaybackSpans[prev];
                 if (p1) p1.classList.remove('playback-active-item');
-                const p2 = timestampPlaybackLines[prev];
-                if (p2) p2.classList.remove('playback-active-item');
+                
+                // Remove highlight from individual word spans in timestamp editor
+                const prevWordSpans = document.querySelectorAll(`[data-line-idx="${prev}"].playback-active-item`);
+                prevWordSpans.forEach(span => span.classList.remove('playback-active-item'));
             }
 
             if (index >= 0) {
@@ -4570,12 +4643,22 @@
                     console.log(`🔍 DEBUG: No text span found at index ${index}`);
                 }
                 
-                const n2 = timestampPlaybackLines[index];
-                if (n2) {
-                    n2.classList.add('playback-active-item');
-                    console.log(`🔍 DEBUG: Timestamp overlay highlighting line "${n2.textContent}" at index ${index}`);
+                // Highlight specific word in timestamp editor
+                const wordSpans = document.querySelectorAll(`[data-line-idx="${index}"][data-word-idx]`);
+                if (wordSpans.length > 0) {
+                    // Find the word that matches the current word text
+                    const currentWord = wordsWithTimestamps[index]?.text || '';
+                    const matchingSpan = Array.from(wordSpans).find(span => span.textContent === currentWord);
+                    if (matchingSpan) {
+                        matchingSpan.classList.add('playback-active-item');
+                        console.log(`🔍 DEBUG: Timestamp overlay highlighting word "${matchingSpan.textContent}" at index ${index}`);
+                    } else {
+                        // Fallback: highlight first word if exact match not found
+                        wordSpans[0].classList.add('playback-active-item');
+                        console.log(`🔍 DEBUG: Timestamp overlay highlighting fallback word "${wordSpans[0].textContent}" at index ${index}`);
+                    }
                 } else {
-                    console.log(`🔍 DEBUG: No timestamp line found at index ${index}`);
+                    console.log(`🔍 DEBUG: No timestamp word spans found at index ${index}`);
                 }
 
                 const textOverlay = document.getElementById('textPlaybackView');
@@ -4588,11 +4671,15 @@
 
                 const tsOverlay = document.getElementById('timestampPlaybackView');
                 const tsEditor = document.getElementById('timestampJsonEditor');
-                if (tsOverlay && tsEditor && n2) {
-                    const targetTop = n2.offsetTop - (tsOverlay.clientHeight / 2) + (n2.offsetHeight / 2);
-                    const maxTop = Math.max(0, tsOverlay.scrollHeight - tsOverlay.clientHeight);
-                    tsOverlay.scrollTop = clamp(targetTop, 0, maxTop);
-                    syncTextareaScrollFromOverlay(tsEditor, tsOverlay);
+                if (tsOverlay && tsEditor) {
+                    // Find the highlighted word span for scrolling
+                    const highlightedWord = document.querySelector(`[data-line-idx="${index}"].playback-active-item`);
+                    if (highlightedWord) {
+                        const targetTop = highlightedWord.offsetTop - (tsOverlay.clientHeight / 2) + (highlightedWord.offsetHeight / 2);
+                        const maxTop = Math.max(0, tsOverlay.scrollHeight - tsOverlay.clientHeight);
+                        tsOverlay.scrollTop = clamp(targetTop, 0, maxTop);
+                        syncTextareaScrollFromOverlay(tsEditor, tsOverlay);
+                    }
                 }
             }
         }
