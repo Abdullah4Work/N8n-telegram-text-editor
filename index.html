@@ -4515,53 +4515,62 @@
 
             syncOverlayStyleFromTextarea(editor, overlay);
 
-            // نهج جديد: عرض التواقيت كقائمة بسيطة
+            // إصلاح جذري: بناء الـ overlay بنفس الطريقة تماماً مثل الـ textarea
             const frag = document.createDocumentFragment();
             
-            // إنشاء حاوية للقائمة
-            const listContainer = document.createElement('div');
-            listContainer.style.cssText = `
-                font-family: 'Courier New', monospace;
-                font-size: 14px;
-                line-height: 1.5;
-                white-space: pre-wrap;
-                direction: ltr;
-                text-align: left;
-            `;
+            // احتفظ بنفس النص تماماً ولكن أضف spans للكلمات القابلة للتمييز
+            const lines = v.split('\n');
+            let wordIndex = 0;
             
-            // إضافة رأس JSON
-            const header = document.createElement('div');
-            header.textContent = '[\n';
-            header.style.cssText = 'color: #666; margin-bottom: 5px;';
-            listContainer.appendChild(header);
-            
-            // إضافة كل توقيت كعنصر منفصل
-            wordsWithTimestamps.forEach((word, index) => {
-                const item = document.createElement('div');
-                const wordText = word.text || '';
-                const startTime = word.start || 0;
-                const endTime = word.end || 0;
+            lines.forEach((line, lineIndex) => {
+                const lineDiv = document.createElement('div');
+                lineDiv.style.cssText = 'white-space: pre; font-family: inherit; font-size: inherit; line-height: inherit;';
                 
-                item.textContent = `  { "start": ${startTime}, "end": ${endTime}, "text": "${wordText}" }${index < wordsWithTimestamps.length - 1 ? ',' : ''}`;
-                item.dataset.idx = String(index);
-                item.style.cssText = `
-                    padding: 2px 5px;
-                    margin: 2px 0;
-                    border-radius: 3px;
-                    transition: all 0.2s ease;
-                `;
+                // تحقق إذا كان هذا السطر يحتوي على كلمة من wordsWithTimestamps
+                let foundWord = false;
+                if (wordIndex < wordsWithTimestamps.length) {
+                    const currentWord = wordsWithTimestamps[wordIndex];
+                    const wordText = currentWord.text || '';
+                    
+                    // ابحث عن نص الكلمة في السطر
+                    const wordPos = line.indexOf(wordText);
+                    if (wordPos !== -1) {
+                        foundWord = true;
+                        
+                        // أضف النص قبل الكلمة
+                        if (wordPos > 0) {
+                            const beforeSpan = document.createElement('span');
+                            beforeSpan.textContent = line.substring(0, wordPos);
+                            lineDiv.appendChild(beforeSpan);
+                        }
+                        
+                        // أضف الكلمة القابلة للتمييز
+                        const wordSpan = document.createElement('span');
+                        wordSpan.textContent = wordText;
+                        wordSpan.dataset.idx = String(wordIndex);
+                        timestampPlaybackLines[wordIndex] = wordSpan;
+                        lineDiv.appendChild(wordSpan);
+                        
+                        // أضف النص بعد الكلمة
+                        if (wordPos + wordText.length < line.length) {
+                            const afterSpan = document.createElement('span');
+                            afterSpan.textContent = line.substring(wordPos + wordText.length);
+                            lineDiv.appendChild(afterSpan);
+                        }
+                        
+                        wordIndex++;
+                    }
+                }
                 
-                timestampPlaybackLines[index] = item;
-                listContainer.appendChild(item);
+                // إذا لم يتم العثور على كلمة، أضف السطر كاملاً
+                if (!foundWord) {
+                    lineDiv.textContent = line;
+                }
+                
+                frag.appendChild(lineDiv);
             });
             
-            // إضافة نهاية JSON
-            const footer = document.createElement('div');
-            footer.textContent = '\n]';
-            footer.style.cssText = 'color: #666; margin-top: 5px;';
-            listContainer.appendChild(footer);
-            
-            overlay.appendChild(listContainer);
+            overlay.appendChild(frag);
         }
 
         function setPlaybackActiveIndex(index) {
@@ -4610,12 +4619,14 @@
                 const tsOverlay = document.getElementById('timestampPlaybackView');
                 const tsEditor = document.getElementById('timestampJsonEditor');
                 if (tsOverlay && tsEditor && n2) {
-                    // نهج جديد: تمرير بسيط باستخدام scrollIntoView
-                    n2.scrollIntoView({ 
-                        behavior: 'smooth', 
-                        block: 'center',
-                        inline: 'nearest'
-                    });
+                    // إصلاح جذري: تمرير دقيق باستخدام offsetParent
+                    const parent = n2.offsetParent || tsOverlay;
+                    const targetTop = n2.offsetTop - (tsOverlay.clientHeight / 2) + (n2.offsetHeight / 2);
+                    const maxTop = Math.max(0, tsOverlay.scrollHeight - tsOverlay.clientHeight);
+                    const finalScrollTop = Math.max(0, Math.min(targetTop, maxTop));
+                    
+                    tsOverlay.scrollTop = finalScrollTop;
+                    tsEditor.scrollTop = finalScrollTop;
                 }
             }
         }
