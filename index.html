@@ -4515,69 +4515,24 @@
 
             syncOverlayStyleFromTextarea(editor, overlay);
 
-            // Parse the JSON to get the actual words with timestamps
-            let timestampData = [];
-            try {
-                timestampData = JSON.parse(v);
-            } catch (e) {
-                // If JSON is invalid, fall back to line-based highlighting
-                const lines = v.split('\n');
-                const frag = document.createDocumentFragment();
-                for (let i = 0; i < lines.length; i++) {
-                    const line = lines[i];
+            const lines = v.split('\n');
+            const frag = document.createDocumentFragment();
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                // Only create highlightable divs for lines that look like timestamp entries
+                if (line.trim() && (line.includes('"start"') || line.includes('"end"') || line.includes('"text"'))) {
+                    const d = document.createElement('div');
+                    d.textContent = line;
+                    d.dataset.idx = String(i);
+                    timestampPlaybackLines[i] = d;
+                    frag.appendChild(d);
+                } else {
+                    // For non-timestamp lines, just add plain text without dataset.idx
                     const d = document.createElement('div');
                     d.textContent = line;
                     frag.appendChild(d);
                 }
-                overlay.appendChild(frag);
-                return;
             }
-
-            // Build overlay based on actual words array, not JSON lines
-            const frag = document.createDocumentFragment();
-            
-            // Add opening brace if present
-            const lines = v.split('\n');
-            let lineIndex = 0;
-            
-            // Add any content before the array
-            while (lineIndex < lines.length && !lines[lineIndex].includes('[')) {
-                const d = document.createElement('div');
-                d.textContent = lines[lineIndex];
-                frag.appendChild(d);
-                lineIndex++;
-            }
-            
-            // Add opening bracket
-            if (lineIndex < lines.length && lines[lineIndex].includes('[')) {
-                const d = document.createElement('div');
-                d.textContent = lines[lineIndex];
-                frag.appendChild(d);
-                lineIndex++;
-            }
-            
-            // Create highlightable elements for each word in the timestamps array
-            timestampData.forEach((word, index) => {
-                const d = document.createElement('div');
-                // Create a nicely formatted representation of the word data
-                const wordText = word.text || '';
-                const startTime = word.start || 0;
-                const endTime = word.end || 0;
-                d.textContent = `  { "start": ${startTime}, "end": ${endTime}, "text": "${wordText}" }${index < timestampData.length - 1 ? ',' : ''}`;
-                d.dataset.idx = String(index);
-                d.dataset.wordIndex = String(index);
-                timestampPlaybackLines[index] = d;
-                frag.appendChild(d);
-            });
-            
-            // Add closing content
-            while (lineIndex < lines.length) {
-                const d = document.createElement('div');
-                d.textContent = lines[lineIndex];
-                frag.appendChild(d);
-                lineIndex++;
-            }
-            
             overlay.appendChild(frag);
         }
 
@@ -4624,20 +4579,9 @@
                 const tsOverlay = document.getElementById('timestampPlaybackView');
                 const tsEditor = document.getElementById('timestampJsonEditor');
                 if (tsOverlay && tsEditor && n2) {
-                    // Calculate the exact position to center the highlighted line
-                    const overlayHeight = tsOverlay.clientHeight;
-                    const lineHeight = n2.offsetHeight;
-                    const lineTop = n2.offsetTop;
-                    
-                    // Center the line in the viewport
-                    const targetScrollTop = lineTop - (overlayHeight / 2) + (lineHeight / 2);
-                    
-                    // Apply smooth scrolling with bounds checking
-                    const maxScrollTop = Math.max(0, tsOverlay.scrollHeight - overlayHeight);
-                    const finalScrollTop = Math.max(0, Math.min(maxScrollTop, targetScrollTop));
-                    
-                    tsOverlay.scrollTop = finalScrollTop;
-                    tsEditor.scrollTop = finalScrollTop;
+                    const targetTop = n2.offsetTop - (tsOverlay.clientHeight / 2) + (n2.offsetHeight / 2);
+                    tsOverlay.scrollTop = Math.max(0, targetTop);
+                    tsEditor.scrollTop = Math.max(0, targetTop);
                 }
             }
         }
@@ -4726,11 +4670,20 @@
 
             const lines = v.split('\n');
             let pos = 0;
+            let timestampLineIndex = 0;
+            
             for (let i = 0; i < lines.length; i++) {
-                const len = lines[i].length;
-                timestampLineOffsets.push(pos);
-                timestampLineLengths.push(len);
-                pos += len + 1;
+                const line = lines[i];
+                const len = line.length;
+                
+                // فقط للأسطر التي تحتوي على تواقيت، نخزن موقعها
+                if (line.trim() && (line.includes('"start"') || line.includes('"end"') || line.includes('"text"'))) {
+                    timestampLineOffsets[timestampLineIndex] = pos;
+                    timestampLineLengths[timestampLineIndex] = len;
+                    timestampLineIndex++;
+                }
+                
+                pos += len + 1; // +1 for newline character
             }
         }
 
@@ -4774,29 +4727,10 @@
 
             editor.setSelectionRange(start, end);
 
-            // Improved scroll positioning using the overlay approach
-            const overlay = document.getElementById('timestampPlaybackView');
-            if (overlay && timestampPlaybackLines[index]) {
-                const highlightedElement = timestampPlaybackLines[index];
-                const overlayHeight = overlay.clientHeight;
-                const lineHeight = highlightedElement.offsetHeight;
-                const lineTop = highlightedElement.offsetTop;
-                
-                // Center the line in the viewport
-                const targetScrollTop = lineTop - (overlayHeight / 2) + (lineHeight / 2);
-                
-                // Apply bounds checking
-                const maxScrollTop = Math.max(0, overlay.scrollHeight - overlayHeight);
-                const finalScrollTop = Math.max(0, Math.min(maxScrollTop, targetScrollTop));
-                
-                editor.scrollTop = finalScrollTop;
-            } else {
-                // Fallback to the old method if overlay is not available
-                const lineHeight = getEditorLineHeightPx(editor);
-                const targetTop = (index * lineHeight) - (editor.clientHeight / 2) + (lineHeight / 2);
-                const maxTop = Math.max(0, editor.scrollHeight - editor.clientHeight);
-                editor.scrollTop = Math.max(0, Math.min(maxTop, targetTop));
-            }
+            const lineHeight = getEditorLineHeightPx(editor);
+            const targetTop = (index * lineHeight) - (editor.clientHeight / 2) + (lineHeight / 2);
+            const maxTop = Math.max(0, editor.scrollHeight - editor.clientHeight);
+            editor.scrollTop = Math.max(0, Math.min(maxTop, targetTop));
         }
 
         function applyTextHighlight(index) {
