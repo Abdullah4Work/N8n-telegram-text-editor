@@ -4515,62 +4515,53 @@
 
             syncOverlayStyleFromTextarea(editor, overlay);
 
-            // الجذري: استخدم البيانات الفعلية بدلاً من تحليل النص
+            // نهج جديد: عرض التواقيت كقائمة بسيطة
             const frag = document.createDocumentFragment();
             
-            // أضف الأسطر قبل المصفوفة
-            const lines = v.split('\n');
-            let arrayStartIndex = -1;
-            for (let i = 0; i < lines.length; i++) {
-                if (lines[i].trim().includes('[')) {
-                    arrayStartIndex = i;
-                    break;
-                }
-            }
+            // إنشاء حاوية للقائمة
+            const listContainer = document.createElement('div');
+            listContainer.style.cssText = `
+                font-family: 'Courier New', monospace;
+                font-size: 14px;
+                line-height: 1.5;
+                white-space: pre-wrap;
+                direction: ltr;
+                text-align: left;
+            `;
             
-            // أضف الأسطر قبل المصفوفة
-            for (let i = 0; i < arrayStartIndex; i++) {
-                const d = document.createElement('span');
-                d.textContent = lines[i] + (i < arrayStartIndex - 1 ? '\n' : '');
-                frag.appendChild(d);
-            }
+            // إضافة رأس JSON
+            const header = document.createElement('div');
+            header.textContent = '[\n';
+            header.style.cssText = 'color: #666; margin-bottom: 5px;';
+            listContainer.appendChild(header);
             
-            // أضف قوس البداية
-            if (arrayStartIndex >= 0) {
-                const d = document.createElement('span');
-                d.textContent = lines[arrayStartIndex] + '\n';
-                frag.appendChild(d);
-            }
-            
-            // الجذري: أنشئ عناصر لكل كلمة في wordsWithTimestamps
+            // إضافة كل توقيت كعنصر منفصل
             wordsWithTimestamps.forEach((word, index) => {
-                const d = document.createElement('span');
+                const item = document.createElement('div');
                 const wordText = word.text || '';
                 const startTime = word.start || 0;
                 const endTime = word.end || 0;
-                d.textContent = `  { "start": ${startTime}, "end": ${endTime}, "text": "${wordText}" }${index < wordsWithTimestamps.length - 1 ? ',' : ''}\n`;
-                d.dataset.idx = String(index);
-                timestampPlaybackLines[index] = d;
-                frag.appendChild(d);
+                
+                item.textContent = `  { "start": ${startTime}, "end": ${endTime}, "text": "${wordText}" }${index < wordsWithTimestamps.length - 1 ? ',' : ''}`;
+                item.dataset.idx = String(index);
+                item.style.cssText = `
+                    padding: 2px 5px;
+                    margin: 2px 0;
+                    border-radius: 3px;
+                    transition: all 0.2s ease;
+                `;
+                
+                timestampPlaybackLines[index] = item;
+                listContainer.appendChild(item);
             });
             
-            // أضف قوس النهاية والأسطر بعده
-            let arrayEndIndex = -1;
-            for (let i = arrayStartIndex + 1; i < lines.length; i++) {
-                if (lines[i].trim().includes(']')) {
-                    arrayEndIndex = i;
-                    break;
-                }
-            }
+            // إضافة نهاية JSON
+            const footer = document.createElement('div');
+            footer.textContent = '\n]';
+            footer.style.cssText = 'color: #666; margin-top: 5px;';
+            listContainer.appendChild(footer);
             
-            // أضف قوس النهاية وما بعده
-            for (let i = arrayEndIndex; i < lines.length; i++) {
-                const d = document.createElement('span');
-                d.textContent = lines[i] + (i < lines.length - 1 ? '\n' : '');
-                frag.appendChild(d);
-            }
-            
-            overlay.appendChild(frag);
+            overlay.appendChild(listContainer);
         }
 
         function setPlaybackActiveIndex(index) {
@@ -4619,12 +4610,12 @@
                 const tsOverlay = document.getElementById('timestampPlaybackView');
                 const tsEditor = document.getElementById('timestampJsonEditor');
                 if (tsOverlay && tsEditor && n2) {
-                    const rect2 = n2.getBoundingClientRect();
-                    const tsOverlayRect = tsOverlay.getBoundingClientRect();
-                    const relativeTop = rect2.top - tsOverlayRect.top + tsOverlay.scrollTop;
-                    const targetTop = relativeTop - (tsOverlay.clientHeight / 2) + (rect2.height / 2);
-                    tsOverlay.scrollTop = Math.max(0, targetTop);
-                    tsEditor.scrollTop = Math.max(0, targetTop);
+                    // نهج جديد: تمرير بسيط باستخدام scrollIntoView
+                    n2.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center',
+                        inline: 'nearest'
+                    });
                 }
             }
         }
