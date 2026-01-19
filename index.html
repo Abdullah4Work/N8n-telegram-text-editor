@@ -4505,7 +4505,10 @@
         function rebuildTimestampPlaybackView() {
             // لا نحتاج overlay بعد الآن، سنقوم بتلوين النص مباشرة في textarea
             const editor = document.getElementById('timestampJsonEditor');
-            if (!editor) return;
+            if (!editor) {
+                console.log('🔍 DEBUG: No timestamp editor found');
+                return;
+            }
             
             // إعادة تعيين المصفوفة لتخزين مواقع الكلمات
             timestampPlaybackLines = [];
@@ -4513,6 +4516,9 @@
             const v = editor.value || '';
             if (v === timestampPlaybackCacheValue) return;
             timestampPlaybackCacheValue = v;
+
+            console.log('🔍 DEBUG: Rebuilding timestamp playback view');
+            console.log('🔍 DEBUG: Editor value length:', v.length);
 
             // تحليل النص للعثور على بطاقات التواقيت وتخزين مواقعها
             const re = /\{\s*"start":\s*[\d.]+\s*,\s*"end":\s*[\d.]+\s*,\s*"text":\s*"[^"]*"\s*\}/g;
@@ -4530,8 +4536,12 @@
                     end: end,
                     text: timestampBlock
                 };
+                
+                console.log(`🔍 DEBUG: Found timestamp ${idx}: "${timestampBlock}" at ${start}-${end}`);
                 idx++;
             }
+            
+            console.log(`🔍 DEBUG: Total timestamps found: ${idx}`);
         }
 
         function setPlaybackActiveIndex(index) {
@@ -4562,8 +4572,9 @@
                 const editor = document.getElementById('timestampJsonEditor');
                 const timestampInfo = timestampPlaybackLines[index];
                 if (editor && timestampInfo) {
-                    // إزالة التظليل القديم
-                    editor.style.backgroundColor = '';
+                    console.log(`🔍 DEBUG: Attempting to highlight timestamp at index ${index}`);
+                    console.log(`🔍 DEBUG: Timestamp info:`, timestampInfo);
+                    console.log(`🔍 DEBUG: Editor value length:`, editor.value.length);
                     
                     // تمرير إلى البطاقة التوقيتية
                     const lineHeight = parseInt(getComputedStyle(editor).lineHeight) || 20;
@@ -4575,7 +4586,9 @@
                     
                     console.log(`🔍 DEBUG: Timestamp highlighting "${timestampInfo.text}" from ${timestampInfo.start} to ${timestampInfo.end}`);
                 } else {
-                    console.log(`🔍 DEBUG: No timestamp info found at index ${index}`);
+                    console.log(`🔍 DEBUG: No timestamp info found at index ${index} or editor not found`);
+                    console.log(`🔍 DEBUG: timestampPlaybackLines:`, timestampPlaybackLines);
+                    console.log(`🔍 DEBUG: editor:`, editor);
                 }
 
                 const textOverlay = document.getElementById('textPlaybackView');
@@ -4593,16 +4606,17 @@
             if (!textarea) return;
             
             const text = textarea.value;
+            if (start >= text.length || end > text.length || start >= end) return;
+            
             const before = text.substring(0, start);
             const highlighted = text.substring(start, end);
             const after = text.substring(end);
             
             // إنشاء محتوى HTML مع التلوين
-            const highlightedHTML = `<span style="background-color: ${color}; color: black;">${highlighted}</span>`;
+            const highlightedHTML = `<span style="background-color: ${color}; color: black; font-weight: bold;">${highlighted}</span>`;
             const newHTML = before + highlightedHTML + after;
             
-            // لا يمكن تطبيق HTML مباشرة على textarea، لذا نستخدم خدعة بسيطة
-            // سنقوم بإنشاء div مؤقت يعرض النص الملون
+            // الحصول على أو إنشاء div التظليل
             let highlightDiv = document.getElementById('timestampHighlight');
             if (!highlightDiv) {
                 highlightDiv = document.createElement('div');
@@ -4611,33 +4625,48 @@
                     position: absolute;
                     background: transparent;
                     pointer-events: none;
-                    z-index: 1;
-                    white-space: pre;
+                    z-index: 10;
+                    white-space: pre-wrap;
                     overflow: hidden;
-                    font-family: inherit;
-                    font-size: inherit;
-                    line-height: inherit;
-                    padding: inherit;
-                    border: inherit;
-                    border-radius: inherit;
+                    font-family: monospace;
+                    font-size: 14px;
+                    line-height: 1.4;
+                    padding: 8px;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
                     color: transparent;
+                    box-sizing: border-box;
+                    text-align: left;
+                    direction: ltr;
                 `;
                 textarea.parentNode.style.position = 'relative';
                 textarea.parentNode.insertBefore(highlightDiv, textarea);
             }
             
-            // تحديث أبعاد الـ div لتطابق الـ textarea
-            const rect = textarea.getBoundingClientRect();
-            const parentRect = textarea.parentNode.getBoundingClientRect();
-            highlightDiv.style.width = rect.width + 'px';
-            highlightDiv.style.height = rect.height + 'px';
-            highlightDiv.style.left = (rect.left - parentRect.left) + 'px';
-            highlightDiv.style.top = (rect.top - parentRect.top) + 'px';
+            // تحديث أبعاد الـ div لتطابق الـ textarea تماماً
+            const computedStyle = getComputedStyle(textarea);
+            highlightDiv.style.width = textarea.offsetWidth + 'px';
+            highlightDiv.style.height = textarea.offsetHeight + 'px';
+            highlightDiv.style.padding = computedStyle.padding;
+            highlightDiv.style.border = computedStyle.border;
+            highlightDiv.style.borderRadius = computedStyle.borderRadius;
+            highlightDiv.style.fontFamily = computedStyle.fontFamily;
+            highlightDiv.style.fontSize = computedStyle.fontSize;
+            highlightDiv.style.lineHeight = computedStyle.lineHeight;
+            
+            // مزامنة التمرير
             highlightDiv.scrollTop = textarea.scrollTop;
             highlightDiv.scrollLeft = textarea.scrollLeft;
             
-            // تطبيق النص الملون
-            highlightDiv.innerHTML = newHTML.replace(/\n/g, '<br>');
+            // تطبيق النص الملون مع الحفاظ على الأسطر
+            const lines = newHTML.split('\n');
+            highlightDiv.innerHTML = lines.map(line => line || '<br>').join('<br>');
+            
+            // إضافة event listener لمزامنة التمرير
+            textarea.addEventListener('scroll', () => {
+                highlightDiv.scrollTop = textarea.scrollTop;
+                highlightDiv.scrollLeft = textarea.scrollLeft;
+            });
         }
 
         function updatePlaybackModeState() {
