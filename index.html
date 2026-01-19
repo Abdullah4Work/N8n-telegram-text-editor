@@ -4607,7 +4607,10 @@
 
                 const textOverlay = document.getElementById('textPlaybackView');
                 if (textOverlay && n1) {
-                    const targetTop = n1.offsetTop - (textOverlay.clientHeight / 2) + (n1.offsetHeight / 2);
+                    const rect1 = n1.getBoundingClientRect();
+                    const overlayRect = textOverlay.getBoundingClientRect();
+                    const relativeTop = rect1.top - overlayRect.top + textOverlay.scrollTop;
+                    const targetTop = relativeTop - (textOverlay.clientHeight / 2) + (rect1.height / 2);
                     const maxTop = Math.max(0, textOverlay.scrollHeight - textOverlay.clientHeight);
                     textOverlay.scrollTop = clamp(targetTop, 0, maxTop);
                     syncTextareaScrollFromOverlay(textEditor, textOverlay);
@@ -4616,7 +4619,10 @@
                 const tsOverlay = document.getElementById('timestampPlaybackView');
                 const tsEditor = document.getElementById('timestampJsonEditor');
                 if (tsOverlay && tsEditor && n2) {
-                    const targetTop = n2.offsetTop - (tsOverlay.clientHeight / 2) + (n2.offsetHeight / 2);
+                    const rect2 = n2.getBoundingClientRect();
+                    const tsOverlayRect = tsOverlay.getBoundingClientRect();
+                    const relativeTop = rect2.top - tsOverlayRect.top + tsOverlay.scrollTop;
+                    const targetTop = relativeTop - (tsOverlay.clientHeight / 2) + (rect2.height / 2);
                     tsOverlay.scrollTop = Math.max(0, targetTop);
                     tsEditor.scrollTop = Math.max(0, targetTop);
                 }
