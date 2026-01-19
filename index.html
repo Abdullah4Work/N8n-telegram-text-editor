@@ -1076,21 +1076,6 @@
             line-height: inherit;
         }
 
-        /* تلوين أصلي محسن لمحاربة الانزياح في محرر التواقيت فقط */
-        #timestampPlaybackView .playback-active-item {
-            background: rgba(255, 215, 0, 0.6) !important;
-            color: transparent !important;
-            border-radius: 3px !important;
-            box-shadow: 0 0 8px rgba(255, 215, 0, 0.4) !important;
-            display: inline !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            position: relative !important;
-            vertical-align: baseline !important;
-            line-height: inherit !important;
-            mix-blend-mode: multiply !important;
-        }
-
         .editor-textarea::selection {
             background: #ffd700;
             color: #000;
@@ -4588,63 +4573,7 @@
             overlay.appendChild(frag);
         }
 
-function syncOverlayStyleFromTextarea(textarea, overlay) {
-    if (!textarea || !overlay) return;
-    const cs = window.getComputedStyle(textarea);
-    overlay.style.fontFamily = cs.fontFamily;
-    overlay.style.fontSize = cs.fontSize;
-    overlay.style.lineHeight = cs.lineHeight;
-    overlay.style.padding = cs.padding;
-    overlay.style.direction = cs.direction;
-    overlay.style.textAlign = cs.textAlign;
-    overlay.style.whiteSpace = cs.whiteSpace;
-    overlay.style.overflowWrap = cs.overflowWrap;
-    overlay.style.wordBreak = cs.wordBreak;
-    overlay.style.tabSize = cs.tabSize;
-    overlay.style.letterSpacing = cs.letterSpacing;
-    overlay.style.fontWeight = cs.fontWeight;
-    overlay.style.fontStyle = cs.fontStyle;
-    overlay.style.border = cs.border;
-    overlay.style.borderRadius = cs.borderRadius;
-    overlay.style.width = cs.width;
-    overlay.style.height = cs.height;
-    overlay.style.boxSizing = cs.boxSizing;
-    overlay.style.overflow = cs.overflow;
-    overlay.style.resize = cs.resize;
-}
-
-function syncOverlayScrollFromTextarea(textarea, overlay) {
-    if (!textarea || !overlay) return;
-    overlay.scrollTop = textarea.scrollTop;
-    overlay.scrollLeft = textarea.scrollLeft;
-    
-    // Force precise alignment to prevent drift
-    requestAnimationFrame(() => {
-        overlay.scrollTop = textarea.scrollTop;
-        overlay.scrollLeft = textarea.scrollLeft;
-    });
-}
-
-function syncTextareaScrollFromOverlay(textarea, overlay) {
-    if (!textarea || !overlay) return;
-    textarea.scrollTop = overlay.scrollTop;
-    textarea.scrollLeft = overlay.scrollLeft;
-}
-
-function forceRefreshPlaybackViews() {
-    // Force rebuild even if text didn't change (e.g. font-size/line-height changed)
-    textPlaybackCacheValue = '';
-    timestampPlaybackCacheValue = '';
-    rebuildTextPlaybackView();
-    rebuildTimestampPlaybackView();
-
-    const tsEditor = document.getElementById('timestampJsonEditor');
-    const tsOverlay = document.getElementById('timestampPlaybackView');
-    syncOverlayScrollFromTextarea(textEditor, document.getElementById('textPlaybackView'));
-    syncOverlayScrollFromTextarea(tsEditor, tsOverlay);
-}
-
-function setPlaybackActiveIndex(index) {
+        function setPlaybackActiveIndex(index) {
             if (index === playbackActiveIndex) return;
             const prev = playbackActiveIndex;
             playbackActiveIndex = index;
@@ -4659,10 +4588,8 @@ function setPlaybackActiveIndex(index) {
                 if (p2) p2.classList.remove('playback-active-item');
             }
 
-            let n1 = null, n2 = null;
-            
             if (index >= 0) {
-                n1 = textPlaybackSpans[index];
+                const n1 = textPlaybackSpans[index];
                 if (n1) {
                     n1.classList.add('playback-active-item');
                     console.log(`🔍 DEBUG: Text overlay highlighting span "${n1.textContent}" at index ${index}`);
@@ -4670,17 +4597,14 @@ function setPlaybackActiveIndex(index) {
                     console.log(`🔍 DEBUG: No text span found at index ${index}`);
                 }
                 
-                n2 = timestampPlaybackLines[index];
+                const n2 = timestampPlaybackLines[index];
                 if (n2) {
                     n2.classList.add('playback-active-item');
                     console.log(`🔍 DEBUG: Timestamp overlay highlighting line "${n2.textContent}" at index ${index}`);
                 } else {
                     console.log(`🔍 DEBUG: No timestamp line found at index ${index}`);
                 }
-            }
 
-            // Enhanced scroll synchronization to prevent drift
-            if (currentActiveWordIndex >= 0) {
                 const textOverlay = document.getElementById('textPlaybackView');
                 if (textOverlay && n1) {
                     const targetTop = n1.offsetTop - (textOverlay.clientHeight / 2) + (n1.offsetHeight / 2);
