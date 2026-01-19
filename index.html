@@ -4425,6 +4425,7 @@
             overlay.style.height = cs.height;
             overlay.style.boxSizing = cs.boxSizing;
             overlay.style.overflow = cs.overflow;
+            overlay.style.overflowY = 'auto'; // ضمان وجود شريط تمرير عمودي
             overlay.style.resize = cs.resize;
         }
 
@@ -4528,10 +4529,17 @@
                 }
             }
             
+            // تخزين arrayStartIndex للاستخدام في setPlaybackActiveIndex
+            window.timestampArrayStartIndex = arrayStartIndex;
+            
             // أضف الأسطر قبل المصفوفة
             for (let i = 0; i < arrayStartIndex; i++) {
                 const d = document.createElement('div');
                 d.textContent = lines[i];
+                d.style.height = '20px';
+                d.style.lineHeight = '20px';
+                d.style.margin = '0';
+                d.style.padding = '0';
                 frag.appendChild(d);
             }
             
@@ -4539,6 +4547,10 @@
             if (arrayStartIndex >= 0) {
                 const d = document.createElement('div');
                 d.textContent = lines[arrayStartIndex];
+                d.style.height = '20px';
+                d.style.lineHeight = '20px';
+                d.style.margin = '0';
+                d.style.padding = '0';
                 frag.appendChild(d);
             }
             
@@ -4550,6 +4562,13 @@
                 const endTime = word.end || 0;
                 d.textContent = `  { "start": ${startTime}, "end": ${endTime}, "text": "${wordText}" }${index < wordsWithTimestamps.length - 1 ? ',' : ''}`;
                 d.dataset.idx = String(index);
+                d.style.height = '20px';
+                d.style.lineHeight = '20px';
+                d.style.margin = '0';
+                d.style.padding = '0';
+                d.style.fontFamily = 'monospace';
+                d.style.fontSize = '14px';
+                d.style.whiteSpace = 'nowrap';
                 timestampPlaybackLines[index] = d;
                 frag.appendChild(d);
             });
@@ -4567,6 +4586,10 @@
             for (let i = arrayEndIndex; i < lines.length; i++) {
                 const d = document.createElement('div');
                 d.textContent = lines[i];
+                d.style.height = '20px';
+                d.style.lineHeight = '20px';
+                d.style.margin = '0';
+                d.style.padding = '0';
                 frag.appendChild(d);
             }
             
@@ -4616,20 +4639,24 @@
                 const tsOverlay = document.getElementById('timestampPlaybackView');
                 const tsEditor = document.getElementById('timestampJsonEditor');
                 if (tsOverlay && tsEditor && n2) {
-                    // حساب التمرير الصحيح بناءً على ارتفاع العنصر الفعلي
-                    const itemHeight = n2.offsetHeight || 20; // ارتفاع البطاقة التوقيتية
+                    // حساب التمرير باستخدام ارتفاع ثابت 20px
+                    const itemHeight = 20; // ارتفاع ثابت لكل عنصر
                     const overlayHeight = tsOverlay.clientHeight;
-                    const scrollTop = n2.offsetTop - (overlayHeight / 2) + (itemHeight / 2);
+                    const currentIndex = parseInt(n2.dataset.idx);
+                    const arrayStartIndex = window.timestampArrayStartIndex || 0;
+                    const totalItemsBefore = arrayStartIndex + 1 + currentIndex; // الأسطر قبل + قوس البداية + العناصر قبل الحالي
+                    const targetScrollTop = totalItemsBefore * itemHeight - (overlayHeight / 2) + (itemHeight / 2);
                     
-                    // تطبيق التمرير على كل من الـ overlay والـ textarea
-                    const finalScrollTop = Math.max(0, scrollTop);
+                    // تطبيق التمرير مع الحفاظ على شريط التمرير
+                    const finalScrollTop = Math.max(0, targetScrollTop);
+                    
+                    // التأكد من أن المحتوى له ارتفاع كافٍ للتمرير
+                    const minContentHeight = Math.max(overlayHeight + 100, (arrayStartIndex + 1 + wordsWithTimestamps.length + 10) * itemHeight);
+                    
+                    // لا نغير ارتفاع الـ overlay والـ textarea، نتركهما كما هما
+                    // فقط نطبق التمرير
                     tsOverlay.scrollTop = finalScrollTop;
                     tsEditor.scrollTop = finalScrollTop;
-                    
-                    // مزامنة فورية للتمرير
-                    setTimeout(() => {
-                        syncTextareaScrollFromOverlay(tsEditor, tsOverlay);
-                    }, 10);
                 }
             }
         }
