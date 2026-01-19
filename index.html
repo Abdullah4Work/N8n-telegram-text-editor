@@ -4503,55 +4503,35 @@
         }
 
         function rebuildTimestampPlaybackView() {
+            // لا نحتاج overlay بعد الآن، سنقوم بتلوين النص مباشرة في textarea
             const editor = document.getElementById('timestampJsonEditor');
-            const overlay = document.getElementById('timestampPlaybackView');
-            if (!editor || !overlay) return;
+            if (!editor) return;
+            
+            // إعادة تعيين المصفوفة لتخزين مواقع الكلمات
+            timestampPlaybackLines = [];
+            
             const v = editor.value || '';
             if (v === timestampPlaybackCacheValue) return;
             timestampPlaybackCacheValue = v;
 
-            overlay.textContent = '';
-            timestampPlaybackLines = [];
-
-            syncOverlayStyleFromTextarea(editor, overlay);
-
-            // نفس استراتيجية محرر النصوص: تحليل النص والحفاظ على المسافات
-            const frag = document.createDocumentFragment();
-            
-            // نمط للعثور على بطاقات التواقيت الكاملة
+            // تحليل النص للعثور على بطاقات التواقيت وتخزين مواقعها
             const re = /\{\s*"start":\s*[\d.]+\s*,\s*"end":\s*[\d.]+\s*,\s*"text":\s*"[^"]*"\s*\}/g;
             let m;
             let idx = 0;
-            let lastEnd = 0;
             
             while ((m = re.exec(v)) !== null) {
                 const timestampBlock = m[0];
                 const start = m.index;
+                const end = start + timestampBlock.length;
                 
-                // أضف أي نص قبل هذه البطاقة (الحفاظ على المسافات)
-                if (start > lastEnd) {
-                    frag.appendChild(document.createTextNode(v.substring(lastEnd, start)));
-                }
-                
-                // أضف البطاقة التوقيتية كاملة كـ span قابل للتظليل
-                const s = document.createElement('span');
-                s.textContent = timestampBlock;
-                s.dataset.idx = String(idx);
-                s.style.display = 'inline';
-                s.style.position = 'relative';
-                s.style.verticalAlign = 'baseline';
-                timestampPlaybackLines[idx] = s;
+                // تخزين معلومات عن كل بطاقة توقيتية
+                timestampPlaybackLines[idx] = {
+                    start: start,
+                    end: end,
+                    text: timestampBlock
+                };
                 idx++;
-                frag.appendChild(s);
-                lastEnd = start + timestampBlock.length;
             }
-            
-            // أضف أي نص متبقي (الحفاظ على المسافات)
-            if (lastEnd < v.length) {
-                frag.appendChild(document.createTextNode(v.substring(lastEnd)));
-            }
-            
-            overlay.appendChild(frag);
         }
 
         function setPlaybackActiveIndex(index) {
@@ -4562,13 +4542,13 @@
             rebuildTextPlaybackView();
             rebuildTimestampPlaybackView();
 
+            // إزالة التظليل من الكلمة السابقة في محرر النصوص
             if (prev >= 0) {
                 const p1 = textPlaybackSpans[prev];
                 if (p1) p1.classList.remove('playback-active-item');
-                const p2 = timestampPlaybackLines[prev];
-                if (p2) p2.classList.remove('playback-active-item');
             }
 
+            // تظليل الكلمة الجديدة في محرر النصوص
             if (index >= 0) {
                 const n1 = textPlaybackSpans[index];
                 if (n1) {
@@ -4578,12 +4558,24 @@
                     console.log(`🔍 DEBUG: No text span found at index ${index}`);
                 }
                 
-                const n2 = timestampPlaybackLines[index];
-                if (n2) {
-                    n2.classList.add('playback-active-item');
-                    console.log(`🔍 DEBUG: Timestamp overlay highlighting line "${n2.textContent}" at index ${index}`);
+                // تظليل البطاقة التوقيتية مباشرة في textarea
+                const editor = document.getElementById('timestampJsonEditor');
+                const timestampInfo = timestampPlaybackLines[index];
+                if (editor && timestampInfo) {
+                    // إزالة التظليل القديم
+                    editor.style.backgroundColor = '';
+                    
+                    // تمرير إلى البطاقة التوقيتية
+                    const lineHeight = parseInt(getComputedStyle(editor).lineHeight) || 20;
+                    const targetScrollTop = Math.max(0, Math.floor(timestampInfo.start / editor.value.length * editor.scrollHeight) - editor.clientHeight / 2);
+                    editor.scrollTop = targetScrollTop;
+                    
+                    // تلوين البطاقة التوقيتية باللون الذهبي
+                    highlightTextInTextarea(editor, timestampInfo.start, timestampInfo.end, 'gold');
+                    
+                    console.log(`🔍 DEBUG: Timestamp highlighting "${timestampInfo.text}" from ${timestampInfo.start} to ${timestampInfo.end}`);
                 } else {
-                    console.log(`🔍 DEBUG: No timestamp line found at index ${index}`);
+                    console.log(`🔍 DEBUG: No timestamp info found at index ${index}`);
                 }
 
                 const textOverlay = document.getElementById('textPlaybackView');
@@ -4593,17 +4585,59 @@
                     textOverlay.scrollTop = clamp(targetTop, 0, maxTop);
                     syncTextareaScrollFromOverlay(textEditor, textOverlay);
                 }
-
-                const tsOverlay = document.getElementById('timestampPlaybackView');
-                const tsEditor = document.getElementById('timestampJsonEditor');
-                if (tsOverlay && tsEditor && n2) {
-                    // نفس استراتيجية محرر النصوص: تمرير دقيق لـ span
-                    const targetTop = n2.offsetTop - (tsOverlay.clientHeight / 2) + (n2.offsetHeight / 2);
-                    const maxTop = Math.max(0, tsOverlay.scrollHeight - tsOverlay.clientHeight);
-                    tsOverlay.scrollTop = clamp(targetTop, 0, maxTop);
-                    syncTextareaScrollFromOverlay(tsEditor, tsOverlay);
-                }
             }
+        }
+
+        function highlightTextInTextarea(textarea, start, end, color) {
+            // دالة لتلوين النص مباشرة في textarea
+            if (!textarea) return;
+            
+            const text = textarea.value;
+            const before = text.substring(0, start);
+            const highlighted = text.substring(start, end);
+            const after = text.substring(end);
+            
+            // إنشاء محتوى HTML مع التلوين
+            const highlightedHTML = `<span style="background-color: ${color}; color: black;">${highlighted}</span>`;
+            const newHTML = before + highlightedHTML + after;
+            
+            // لا يمكن تطبيق HTML مباشرة على textarea، لذا نستخدم خدعة بسيطة
+            // سنقوم بإنشاء div مؤقت يعرض النص الملون
+            let highlightDiv = document.getElementById('timestampHighlight');
+            if (!highlightDiv) {
+                highlightDiv = document.createElement('div');
+                highlightDiv.id = 'timestampHighlight';
+                highlightDiv.style.cssText = `
+                    position: absolute;
+                    background: transparent;
+                    pointer-events: none;
+                    z-index: 1;
+                    white-space: pre;
+                    overflow: hidden;
+                    font-family: inherit;
+                    font-size: inherit;
+                    line-height: inherit;
+                    padding: inherit;
+                    border: inherit;
+                    border-radius: inherit;
+                    color: transparent;
+                `;
+                textarea.parentNode.style.position = 'relative';
+                textarea.parentNode.insertBefore(highlightDiv, textarea);
+            }
+            
+            // تحديث أبعاد الـ div لتطابق الـ textarea
+            const rect = textarea.getBoundingClientRect();
+            const parentRect = textarea.parentNode.getBoundingClientRect();
+            highlightDiv.style.width = rect.width + 'px';
+            highlightDiv.style.height = rect.height + 'px';
+            highlightDiv.style.left = (rect.left - parentRect.left) + 'px';
+            highlightDiv.style.top = (rect.top - parentRect.top) + 'px';
+            highlightDiv.scrollTop = textarea.scrollTop;
+            highlightDiv.scrollLeft = textarea.scrollLeft;
+            
+            // تطبيق النص الملون
+            highlightDiv.innerHTML = newHTML.replace(/\n/g, '<br>');
         }
 
         function updatePlaybackModeState() {
