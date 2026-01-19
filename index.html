@@ -1052,16 +1052,9 @@
             z-index: 3;
             pointer-events: none;
             overflow: auto;
-            white-space: pre-wrap;
             color: transparent;
             box-sizing: border-box;
             display: none;
-            padding: 16px;
-            font-family: inherit;
-            font-size: 18px;
-            text-align: right;
-            direction: rtl;
-            line-height: normal;
         }
 
         .playback-editor-wrapper.playback-active .playback-overlay {
@@ -1074,13 +1067,6 @@
             border-radius: 4px;
             mix-blend-mode: multiply;
             box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
-            display: inline;
-            padding: 0 2px;
-            margin: 0;
-            vertical-align: baseline;
-            line-height: 1;
-            position: relative;
-            top: -1px;
         }
 
         .editor-textarea::selection {
@@ -4392,8 +4378,22 @@
         function setWrapperPlaybackActive(wrapperId, active) {
             const w = document.getElementById(wrapperId);
             if (!w) return;
-            if (active) w.classList.add('playback-active');
-            else w.classList.remove('playback-active');
+            if (active) {
+                w.classList.add('playback-active');
+                // Ensure overlay always matches textarea at the moment we show it (prevents drift after seek)
+                if (wrapperId === 'textEditorWrapper') {
+                    const overlay = document.getElementById('textPlaybackView');
+                    syncOverlayStyleFromTextarea(textEditor, overlay);
+                    syncOverlayScrollFromTextarea(textEditor, overlay);
+                } else if (wrapperId === 'timestampEditorWrapper') {
+                    const editor = document.getElementById('timestampJsonEditor');
+                    const overlay = document.getElementById('timestampPlaybackView');
+                    syncOverlayStyleFromTextarea(editor, overlay);
+                    syncOverlayScrollFromTextarea(editor, overlay);
+                }
+            } else {
+                w.classList.remove('playback-active');
+            }
         }
 
         function syncOverlayStyleFromTextarea(textarea, overlay) {
@@ -4405,6 +4405,38 @@
             overlay.style.padding = cs.padding;
             overlay.style.direction = cs.direction;
             overlay.style.textAlign = cs.textAlign;
+            overlay.style.whiteSpace = cs.whiteSpace;
+            overlay.style.overflowWrap = cs.overflowWrap;
+            overlay.style.wordBreak = cs.wordBreak;
+            overlay.style.tabSize = cs.tabSize;
+            overlay.style.letterSpacing = cs.letterSpacing;
+            overlay.style.fontWeight = cs.fontWeight;
+            overlay.style.fontStyle = cs.fontStyle;
+        }
+
+        function syncOverlayScrollFromTextarea(textarea, overlay) {
+            if (!textarea || !overlay) return;
+            overlay.scrollTop = textarea.scrollTop;
+            overlay.scrollLeft = textarea.scrollLeft;
+        }
+
+        function syncTextareaScrollFromOverlay(textarea, overlay) {
+            if (!textarea || !overlay) return;
+            textarea.scrollTop = overlay.scrollTop;
+            textarea.scrollLeft = overlay.scrollLeft;
+        }
+
+        function forceRefreshPlaybackViews() {
+            // Force rebuild even if text didn't change (e.g. font-size/line-height changed)
+            textPlaybackCacheValue = '';
+            timestampPlaybackCacheValue = '';
+            rebuildTextPlaybackView();
+            rebuildTimestampPlaybackView();
+
+            const tsEditor = document.getElementById('timestampJsonEditor');
+            const tsOverlay = document.getElementById('timestampPlaybackView');
+            syncOverlayScrollFromTextarea(textEditor, document.getElementById('textPlaybackView'));
+            syncOverlayScrollFromTextarea(tsEditor, tsOverlay);
         }
 
         function rebuildTextPlaybackView() {
@@ -4490,7 +4522,7 @@
                     const targetTop = n1.offsetTop - (textOverlay.clientHeight / 2) + (n1.offsetHeight / 2);
                     const maxTop = Math.max(0, textOverlay.scrollHeight - textOverlay.clientHeight);
                     textOverlay.scrollTop = clamp(targetTop, 0, maxTop);
-                    textEditor.scrollTop = textOverlay.scrollTop;
+                    syncTextareaScrollFromOverlay(textEditor, textOverlay);
                 }
 
                 const tsOverlay = document.getElementById('timestampPlaybackView');
@@ -4499,7 +4531,7 @@
                     const targetTop = n2.offsetTop - (tsOverlay.clientHeight / 2) + (n2.offsetHeight / 2);
                     const maxTop = Math.max(0, tsOverlay.scrollHeight - tsOverlay.clientHeight);
                     tsOverlay.scrollTop = clamp(targetTop, 0, maxTop);
-                    tsEditor.scrollTop = tsOverlay.scrollTop;
+                    syncTextareaScrollFromOverlay(tsEditor, tsOverlay);
                 }
             }
         }
@@ -4694,6 +4726,7 @@
             if (currentTextSize < MAX_TEXT_SIZE) {
                 currentTextSize += 2;
                 textEditor.style.fontSize = currentTextSize + 'px';
+                forceRefreshPlaybackViews();
             }
         });
 
@@ -4702,6 +4735,7 @@
             if (currentTextSize > MIN_TEXT_SIZE) {
                 currentTextSize -= 2;
                 textEditor.style.fontSize = currentTextSize + 'px';
+                forceRefreshPlaybackViews();
             }
         });
 
@@ -5742,19 +5776,11 @@
             timestampPlaybackCacheValue = '';
         }, 300));
 
-        document.getElementById('timestampJsonEditor').addEventListener('scroll', () => {
-            const overlay = document.getElementById('timestampPlaybackView');
-            const editor = document.getElementById('timestampJsonEditor');
-            if (!overlay || !editor) return;
-            overlay.scrollTop = editor.scrollTop;
-            overlay.scrollLeft = editor.scrollLeft;
-        });
-
         textEditor.addEventListener('scroll', () => {
             const overlay = document.getElementById('textPlaybackView');
-            if (!overlay) return;
-            overlay.scrollTop = textEditor.scrollTop;
-            overlay.scrollLeft = textEditor.scrollLeft;
+            const wrapper = document.getElementById('textEditorWrapper');
+            if (!overlay || !wrapper || !wrapper.classList.contains('playback-active')) return;
+            syncOverlayScrollFromTextarea(textEditor, overlay);
         });
 
         textEditor.addEventListener('input', () => {
@@ -5762,6 +5788,12 @@
         });
 
         const timestampJsonEditorEl = document.getElementById('timestampJsonEditor');
+        timestampJsonEditorEl.addEventListener('scroll', () => {
+            const overlay = document.getElementById('timestampPlaybackView');
+            const wrapper = document.getElementById('timestampEditorWrapper');
+            if (!overlay || !wrapper || !wrapper.classList.contains('playback-active')) return;
+            syncOverlayScrollFromTextarea(timestampJsonEditorEl, overlay);
+        });
         timestampJsonEditorEl.addEventListener('mousedown', markTimestampEditorInteraction);
         timestampJsonEditorEl.addEventListener('touchstart', markTimestampEditorInteraction, { passive: true });
         timestampJsonEditorEl.addEventListener('keydown', markTimestampEditorInteraction);
