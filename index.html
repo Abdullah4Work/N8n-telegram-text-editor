@@ -4515,60 +4515,41 @@
 
             syncOverlayStyleFromTextarea(editor, overlay);
 
-            // إصلاح جذري: بناء الـ overlay بنفس الطريقة تماماً مثل الـ textarea
+            // نفس استراتيجية محرر النصوص: تحليل النص والحفاظ على المسافات
             const frag = document.createDocumentFragment();
             
-            // احتفظ بنفس النص تماماً ولكن أضف spans للكلمات القابلة للتمييز
-            const lines = v.split('\n');
-            let wordIndex = 0;
+            // نمط للعثور على بطاقات التواقيت الكاملة
+            const re = /\{\s*"start":\s*[\d.]+\s*,\s*"end":\s*[\d.]+\s*,\s*"text":\s*"[^"]*"\s*\}/g;
+            let m;
+            let idx = 0;
+            let lastEnd = 0;
             
-            lines.forEach((line, lineIndex) => {
-                const lineDiv = document.createElement('div');
-                lineDiv.style.cssText = 'white-space: pre; font-family: inherit; font-size: inherit; line-height: inherit;';
+            while ((m = re.exec(v)) !== null) {
+                const timestampBlock = m[0];
+                const start = m.index;
                 
-                // تحقق إذا كان هذا السطر يحتوي على كلمة من wordsWithTimestamps
-                let foundWord = false;
-                if (wordIndex < wordsWithTimestamps.length) {
-                    const currentWord = wordsWithTimestamps[wordIndex];
-                    const wordText = currentWord.text || '';
-                    
-                    // ابحث عن نص الكلمة في السطر
-                    const wordPos = line.indexOf(wordText);
-                    if (wordPos !== -1) {
-                        foundWord = true;
-                        
-                        // أضف النص قبل الكلمة
-                        if (wordPos > 0) {
-                            const beforeSpan = document.createElement('span');
-                            beforeSpan.textContent = line.substring(0, wordPos);
-                            lineDiv.appendChild(beforeSpan);
-                        }
-                        
-                        // أضف الكلمة القابلة للتمييز
-                        const wordSpan = document.createElement('span');
-                        wordSpan.textContent = wordText;
-                        wordSpan.dataset.idx = String(wordIndex);
-                        timestampPlaybackLines[wordIndex] = wordSpan;
-                        lineDiv.appendChild(wordSpan);
-                        
-                        // أضف النص بعد الكلمة
-                        if (wordPos + wordText.length < line.length) {
-                            const afterSpan = document.createElement('span');
-                            afterSpan.textContent = line.substring(wordPos + wordText.length);
-                            lineDiv.appendChild(afterSpan);
-                        }
-                        
-                        wordIndex++;
-                    }
+                // أضف أي نص قبل هذه البطاقة (الحفاظ على المسافات)
+                if (start > lastEnd) {
+                    frag.appendChild(document.createTextNode(v.substring(lastEnd, start)));
                 }
                 
-                // إذا لم يتم العثور على كلمة، أضف السطر كاملاً
-                if (!foundWord) {
-                    lineDiv.textContent = line;
-                }
-                
-                frag.appendChild(lineDiv);
-            });
+                // أضف البطاقة التوقيتية كاملة كـ span قابل للتظليل
+                const s = document.createElement('span');
+                s.textContent = timestampBlock;
+                s.dataset.idx = String(idx);
+                s.style.display = 'inline';
+                s.style.position = 'relative';
+                s.style.verticalAlign = 'baseline';
+                timestampPlaybackLines[idx] = s;
+                idx++;
+                frag.appendChild(s);
+                lastEnd = start + timestampBlock.length;
+            }
+            
+            // أضف أي نص متبقي (الحفاظ على المسافات)
+            if (lastEnd < v.length) {
+                frag.appendChild(document.createTextNode(v.substring(lastEnd)));
+            }
             
             overlay.appendChild(frag);
         }
@@ -4607,10 +4588,7 @@
 
                 const textOverlay = document.getElementById('textPlaybackView');
                 if (textOverlay && n1) {
-                    const rect1 = n1.getBoundingClientRect();
-                    const overlayRect = textOverlay.getBoundingClientRect();
-                    const relativeTop = rect1.top - overlayRect.top + textOverlay.scrollTop;
-                    const targetTop = relativeTop - (textOverlay.clientHeight / 2) + (rect1.height / 2);
+                    const targetTop = n1.offsetTop - (textOverlay.clientHeight / 2) + (n1.offsetHeight / 2);
                     const maxTop = Math.max(0, textOverlay.scrollHeight - textOverlay.clientHeight);
                     textOverlay.scrollTop = clamp(targetTop, 0, maxTop);
                     syncTextareaScrollFromOverlay(textEditor, textOverlay);
@@ -4619,14 +4597,11 @@
                 const tsOverlay = document.getElementById('timestampPlaybackView');
                 const tsEditor = document.getElementById('timestampJsonEditor');
                 if (tsOverlay && tsEditor && n2) {
-                    // إصلاح جذري: تمرير دقيق باستخدام offsetParent
-                    const parent = n2.offsetParent || tsOverlay;
+                    // نفس استراتيجية محرر النصوص: تمرير دقيق لـ span
                     const targetTop = n2.offsetTop - (tsOverlay.clientHeight / 2) + (n2.offsetHeight / 2);
                     const maxTop = Math.max(0, tsOverlay.scrollHeight - tsOverlay.clientHeight);
-                    const finalScrollTop = Math.max(0, Math.min(targetTop, maxTop));
-                    
-                    tsOverlay.scrollTop = finalScrollTop;
-                    tsEditor.scrollTop = finalScrollTop;
+                    tsOverlay.scrollTop = clamp(targetTop, 0, maxTop);
+                    syncTextareaScrollFromOverlay(tsEditor, tsOverlay);
                 }
             }
         }
