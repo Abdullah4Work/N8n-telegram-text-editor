@@ -4536,9 +4536,20 @@
 
             if (index >= 0) {
                 const n1 = textPlaybackSpans[index];
-                if (n1) n1.classList.add('playback-active-item');
+                if (n1) {
+                    n1.classList.add('playback-active-item');
+                    console.log(`🔍 DEBUG: Text overlay highlighting span "${n1.textContent}" at index ${index}`);
+                } else {
+                    console.log(`🔍 DEBUG: No text span found at index ${index}`);
+                }
+                
                 const n2 = timestampPlaybackLines[index];
-                if (n2) n2.classList.add('playback-active-item');
+                if (n2) {
+                    n2.classList.add('playback-active-item');
+                    console.log(`🔍 DEBUG: Timestamp overlay highlighting line "${n2.textContent}" at index ${index}`);
+                } else {
+                    console.log(`🔍 DEBUG: No timestamp line found at index ${index}`);
+                }
 
                 const textOverlay = document.getElementById('textPlaybackView');
                 if (textOverlay && n1) {
@@ -5767,6 +5778,10 @@
                 
                 if (currentTime >= word.start - tolerance && currentTime <= word.end + tolerance) {
                     currentActiveWordIndex = foundIndex;
+                    
+                    // Debug logging
+                    console.log(`🔍 DEBUG: Highlighting word "${word.text}" at index ${foundIndex} (time: ${currentTime.toFixed(2)}, start: ${word.start.toFixed(2)}, end: ${word.end.toFixed(2)})`);
+                    
                     highlightActiveTimestampLine(foundIndex);
                     highlightActiveWordInTextEditor(foundIndex);
                 }
