@@ -4573,13 +4573,71 @@
             overlay.appendChild(frag);
         }
 
-        function setPlaybackActiveIndex(index) {
+function syncOverlayStyleFromTextarea(textarea, overlay) {
+    if (!textarea || !overlay) return;
+    const cs = window.getComputedStyle(textarea);
+    overlay.style.fontFamily = cs.fontFamily;
+    overlay.style.fontSize = cs.fontSize;
+    overlay.style.lineHeight = cs.lineHeight;
+    overlay.style.padding = cs.padding;
+    overlay.style.direction = cs.direction;
+    overlay.style.textAlign = cs.textAlign;
+    overlay.style.whiteSpace = cs.whiteSpace;
+    overlay.style.overflowWrap = cs.overflowWrap;
+    overlay.style.wordBreak = cs.wordBreak;
+    overlay.style.tabSize = cs.tabSize;
+    overlay.style.letterSpacing = cs.letterSpacing;
+    overlay.style.fontWeight = cs.fontWeight;
+    overlay.style.fontStyle = cs.fontStyle;
+    overlay.style.border = cs.border;
+    overlay.style.borderRadius = cs.borderRadius;
+    overlay.style.width = cs.width;
+    overlay.style.height = cs.height;
+    overlay.style.boxSizing = cs.boxSizing;
+    overlay.style.overflow = cs.overflow;
+    overlay.style.resize = cs.resize;
+}
+
+function syncOverlayScrollFromTextarea(textarea, overlay) {
+    if (!textarea || !overlay) return;
+    overlay.scrollTop = textarea.scrollTop;
+    overlay.scrollLeft = textarea.scrollLeft;
+    
+    // Force precise alignment to prevent drift
+    requestAnimationFrame(() => {
+        overlay.scrollTop = textarea.scrollTop;
+        overlay.scrollLeft = textarea.scrollLeft;
+    });
+}
+
+function syncTextareaScrollFromOverlay(textarea, overlay) {
+    if (!textarea || !overlay) return;
+    textarea.scrollTop = overlay.scrollTop;
+    textarea.scrollLeft = overlay.scrollLeft;
+}
+
+function forceRefreshPlaybackViews() {
+    // Force rebuild even if text didn't change (e.g. font-size/line-height changed)
+    textPlaybackCacheValue = '';
+    timestampPlaybackCacheValue = '';
+    rebuildTextPlaybackView();
+    rebuildTimestampPlaybackView();
+
+    const tsEditor = document.getElementById('timestampJsonEditor');
+    const tsOverlay = document.getElementById('timestampPlaybackView');
+    syncOverlayScrollFromTextarea(textEditor, document.getElementById('textPlaybackView'));
+    syncOverlayScrollFromTextarea(tsEditor, tsOverlay);
+}
+
+function setPlaybackActiveIndex(index) {
             if (index === playbackActiveIndex) return;
             const prev = playbackActiveIndex;
             playbackActiveIndex = index;
 
-            rebuildTextPlaybackView();
-            // rebuildTimestampPlaybackView(); // هذا هو السبب في المشكلة!
+            // إعادة بناء overlay فقط إذا كان فارغاً (المرة الأولى فقط)
+            if (timestampPlaybackLines.length === 0) {
+                rebuildTimestampPlaybackView();
+            }
 
             if (prev >= 0) {
                 const p1 = textPlaybackSpans[prev];
@@ -4604,7 +4662,10 @@
                 } else {
                     console.log(`🔍 DEBUG: No timestamp line found at index ${index}`);
                 }
+            }
 
+            // Enhanced scroll synchronization to prevent drift
+            if (currentActiveWordIndex >= 0) {
                 const textOverlay = document.getElementById('textPlaybackView');
                 if (textOverlay && n1) {
                     const targetTop = n1.offsetTop - (textOverlay.clientHeight / 2) + (n1.offsetHeight / 2);
