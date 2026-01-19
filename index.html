@@ -4579,7 +4579,7 @@
             playbackActiveIndex = index;
 
             rebuildTextPlaybackView();
-            rebuildTimestampPlaybackView();
+            // rebuildTimestampPlaybackView(); // هذا هو السبب في المشكلة!
 
             if (prev >= 0) {
                 const p1 = textPlaybackSpans[prev];
