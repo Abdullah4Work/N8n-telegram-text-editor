@@ -4634,10 +4634,8 @@ function setPlaybackActiveIndex(index) {
             const prev = playbackActiveIndex;
             playbackActiveIndex = index;
 
-            // إعادة بناء overlay فقط إذا كان فارغاً (المرة الأولى فقط)
-            if (timestampPlaybackLines.length === 0) {
-                rebuildTimestampPlaybackView();
-            }
+            rebuildTextPlaybackView();
+            rebuildTimestampPlaybackView();
 
             if (prev >= 0) {
                 const p1 = textPlaybackSpans[prev];
@@ -4646,8 +4644,10 @@ function setPlaybackActiveIndex(index) {
                 if (p2) p2.classList.remove('playback-active-item');
             }
 
+            let n1 = null, n2 = null;
+            
             if (index >= 0) {
-                const n1 = textPlaybackSpans[index];
+                n1 = textPlaybackSpans[index];
                 if (n1) {
                     n1.classList.add('playback-active-item');
                     console.log(`🔍 DEBUG: Text overlay highlighting span "${n1.textContent}" at index ${index}`);
@@ -4655,7 +4655,7 @@ function setPlaybackActiveIndex(index) {
                     console.log(`🔍 DEBUG: No text span found at index ${index}`);
                 }
                 
-                const n2 = timestampPlaybackLines[index];
+                n2 = timestampPlaybackLines[index];
                 if (n2) {
                     n2.classList.add('playback-active-item');
                     console.log(`🔍 DEBUG: Timestamp overlay highlighting line "${n2.textContent}" at index ${index}`);
