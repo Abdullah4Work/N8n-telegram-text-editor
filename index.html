@@ -4515,26 +4515,61 @@
 
             syncOverlayStyleFromTextarea(editor, overlay);
 
-            const lines = v.split('\n');
+            // الجذري: استخدم البيانات الفعلية بدلاً من تحليل النص
             const frag = document.createDocumentFragment();
-            let timestampLineCounter = 0;
+            
+            // أضف الأسطر قبل المصفوفة
+            const lines = v.split('\n');
+            let arrayStartIndex = -1;
             for (let i = 0; i < lines.length; i++) {
-                const line = lines[i];
-                // Only create highlightable divs for lines that look like timestamp entries
-                if (line.trim() && (line.includes('"start"') || line.includes('"end"') || line.includes('"text"'))) {
-                    const d = document.createElement('div');
-                    d.textContent = line;
-                    d.dataset.idx = String(timestampLineCounter); // Use timestamp counter as index
-                    timestampPlaybackLines[timestampLineCounter] = d; // Store at timestamp counter position
-                    frag.appendChild(d);
-                    timestampLineCounter++;
-                } else {
-                    // For non-timestamp lines, just add plain text without dataset.idx
-                    const d = document.createElement('div');
-                    d.textContent = line;
-                    frag.appendChild(d);
+                if (lines[i].trim().includes('[')) {
+                    arrayStartIndex = i;
+                    break;
                 }
             }
+            
+            // أضف الأسطر قبل المصفوفة
+            for (let i = 0; i < arrayStartIndex; i++) {
+                const d = document.createElement('div');
+                d.textContent = lines[i];
+                frag.appendChild(d);
+            }
+            
+            // أضف قوس البداية
+            if (arrayStartIndex >= 0) {
+                const d = document.createElement('div');
+                d.textContent = lines[arrayStartIndex];
+                frag.appendChild(d);
+            }
+            
+            // الجذري: أنشئ عناصر لكل كلمة في wordsWithTimestamps
+            wordsWithTimestamps.forEach((word, index) => {
+                const d = document.createElement('div');
+                const wordText = word.text || '';
+                const startTime = word.start || 0;
+                const endTime = word.end || 0;
+                d.textContent = `  { "start": ${startTime}, "end": ${endTime}, "text": "${wordText}" }${index < wordsWithTimestamps.length - 1 ? ',' : ''}`;
+                d.dataset.idx = String(index);
+                timestampPlaybackLines[index] = d;
+                frag.appendChild(d);
+            });
+            
+            // أضف قوس النهاية والأسطر بعده
+            let arrayEndIndex = -1;
+            for (let i = arrayStartIndex + 1; i < lines.length; i++) {
+                if (lines[i].trim().includes(']')) {
+                    arrayEndIndex = i;
+                    break;
+                }
+            }
+            
+            // أضف قوس النهاية وما بعده
+            for (let i = arrayEndIndex; i < lines.length; i++) {
+                const d = document.createElement('div');
+                d.textContent = lines[i];
+                frag.appendChild(d);
+            }
+            
             overlay.appendChild(frag);
         }
 
