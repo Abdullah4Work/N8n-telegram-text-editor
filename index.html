@@ -4524,12 +4524,22 @@
                     const d = document.createElement('div');
                     d.textContent = line;
                     d.dataset.idx = String(i);
+                    d.style.display = 'block';
+                    d.style.position = 'relative';
+                    d.style.verticalAlign = 'baseline';
+                    d.style.margin = '0';
+                    d.style.padding = '0';
+                    d.style.lineHeight = 'inherit';
                     timestampPlaybackLines[i] = d;
                     frag.appendChild(d);
                 } else {
                     // For non-timestamp lines, just add plain text without dataset.idx
                     const d = document.createElement('div');
                     d.textContent = line;
+                    d.style.display = 'block';
+                    d.style.margin = '0';
+                    d.style.padding = '0';
+                    d.style.lineHeight = 'inherit';
                     frag.appendChild(d);
                 }
             }
