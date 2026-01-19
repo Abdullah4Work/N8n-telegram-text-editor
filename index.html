@@ -4530,25 +4530,25 @@
             
             // أضف الأسطر قبل المصفوفة
             for (let i = 0; i < arrayStartIndex; i++) {
-                const d = document.createElement('div');
-                d.textContent = lines[i];
+                const d = document.createElement('span');
+                d.textContent = lines[i] + (i < arrayStartIndex - 1 ? '\n' : '');
                 frag.appendChild(d);
             }
             
             // أضف قوس البداية
             if (arrayStartIndex >= 0) {
-                const d = document.createElement('div');
-                d.textContent = lines[arrayStartIndex];
+                const d = document.createElement('span');
+                d.textContent = lines[arrayStartIndex] + '\n';
                 frag.appendChild(d);
             }
             
             // الجذري: أنشئ عناصر لكل كلمة في wordsWithTimestamps
             wordsWithTimestamps.forEach((word, index) => {
-                const d = document.createElement('div');
+                const d = document.createElement('span');
                 const wordText = word.text || '';
                 const startTime = word.start || 0;
                 const endTime = word.end || 0;
-                d.textContent = `  { "start": ${startTime}, "end": ${endTime}, "text": "${wordText}" }${index < wordsWithTimestamps.length - 1 ? ',' : ''}`;
+                d.textContent = `  { "start": ${startTime}, "end": ${endTime}, "text": "${wordText}" }${index < wordsWithTimestamps.length - 1 ? ',' : ''}\n`;
                 d.dataset.idx = String(index);
                 timestampPlaybackLines[index] = d;
                 frag.appendChild(d);
@@ -4565,8 +4565,8 @@
             
             // أضف قوس النهاية وما بعده
             for (let i = arrayEndIndex; i < lines.length; i++) {
-                const d = document.createElement('div');
-                d.textContent = lines[i];
+                const d = document.createElement('span');
+                d.textContent = lines[i] + (i < lines.length - 1 ? '\n' : '');
                 frag.appendChild(d);
             }
             
