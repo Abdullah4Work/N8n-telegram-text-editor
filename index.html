@@ -4425,6 +4425,7 @@
             overlay.style.height = cs.height;
             overlay.style.boxSizing = cs.boxSizing;
             overlay.style.overflow = cs.overflow;
+            overlay.style.overflowY = 'auto'; // ضمان وجود شريط تمرير عمودي
             overlay.style.resize = cs.resize;
         }
 
@@ -4528,10 +4529,17 @@
                 }
             }
             
+            // تخزين arrayStartIndex للاستخدام في setPlaybackActiveIndex
+            window.timestampArrayStartIndex = arrayStartIndex;
+            
             // أضف الأسطر قبل المصفوفة
             for (let i = 0; i < arrayStartIndex; i++) {
                 const d = document.createElement('div');
                 d.textContent = lines[i];
+                d.style.height = '20px';
+                d.style.lineHeight = '20px';
+                d.style.margin = '0';
+                d.style.padding = '0';
                 frag.appendChild(d);
             }
             
@@ -4539,6 +4547,10 @@
             if (arrayStartIndex >= 0) {
                 const d = document.createElement('div');
                 d.textContent = lines[arrayStartIndex];
+                d.style.height = '20px';
+                d.style.lineHeight = '20px';
+                d.style.margin = '0';
+                d.style.padding = '0';
                 frag.appendChild(d);
             }
             
@@ -4550,6 +4562,13 @@
                 const endTime = word.end || 0;
                 d.textContent = `  { "start": ${startTime}, "end": ${endTime}, "text": "${wordText}" }${index < wordsWithTimestamps.length - 1 ? ',' : ''}`;
                 d.dataset.idx = String(index);
+                d.style.height = '20px';
+                d.style.lineHeight = '20px';
+                d.style.margin = '0';
+                d.style.padding = '0';
+                d.style.fontFamily = 'monospace';
+                d.style.fontSize = '14px';
+                d.style.whiteSpace = 'nowrap';
                 timestampPlaybackLines[index] = d;
                 frag.appendChild(d);
             });
@@ -4567,6 +4586,10 @@
             for (let i = arrayEndIndex; i < lines.length; i++) {
                 const d = document.createElement('div');
                 d.textContent = lines[i];
+                d.style.height = '20px';
+                d.style.lineHeight = '20px';
+                d.style.margin = '0';
+                d.style.padding = '0';
                 frag.appendChild(d);
             }
             
@@ -4616,9 +4639,24 @@
                 const tsOverlay = document.getElementById('timestampPlaybackView');
                 const tsEditor = document.getElementById('timestampJsonEditor');
                 if (tsOverlay && tsEditor && n2) {
-                    const targetTop = n2.offsetTop - (tsOverlay.clientHeight / 2) + (n2.offsetHeight / 2);
-                    tsOverlay.scrollTop = Math.max(0, targetTop);
-                    tsEditor.scrollTop = Math.max(0, targetTop);
+                    // حساب التمرير باستخدام ارتفاع ثابت 20px
+                    const itemHeight = 20; // ارتفاع ثابت لكل عنصر
+                    const overlayHeight = tsOverlay.clientHeight;
+                    const currentIndex = parseInt(n2.dataset.idx);
+                    const arrayStartIndex = window.timestampArrayStartIndex || 0;
+                    const totalItemsBefore = arrayStartIndex + 1 + currentIndex; // الأسطر قبل + قوس البداية + العناصر قبل الحالي
+                    const targetScrollTop = totalItemsBefore * itemHeight - (overlayHeight / 2) + (itemHeight / 2);
+                    
+                    // تطبيق التمرير مع الحفاظ على شريط التمرير
+                    const finalScrollTop = Math.max(0, targetScrollTop);
+                    
+                    // التأكد من أن المحتوى له ارتفاع كافٍ للتمرير
+                    const minContentHeight = Math.max(overlayHeight + 100, (arrayStartIndex + 1 + wordsWithTimestamps.length + 10) * itemHeight);
+                    
+                    // لا نغير ارتفاع الـ overlay والـ textarea، نتركهما كما هما
+                    // فقط نطبق التمرير
+                    tsOverlay.scrollTop = finalScrollTop;
+                    tsEditor.scrollTop = finalScrollTop;
                 }
             }
         }
@@ -4679,10 +4717,36 @@
             cachedWordRangesText = text;
             cachedWordRanges = [];
 
-            const re = /\S+/g;
-            let match;
-            while ((match = re.exec(text)) !== null) {
-                cachedWordRanges.push([match.index, match.index + match[0].length]);
+            // 🎯 **تحسين: تقسيم النص مع دمج الرموز مع الكلمات السابقة**
+            const words = [];
+            const wordArray = text.split(/\s+/);
+            
+            for (let i = 0; i < wordArray.length; i++) {
+                const word = wordArray[i];
+                
+                // إذا كانت الكلمة تحتوي على رموز فقط، أضفها للكلمة السابقة
+                if (/^[!@#$%^&*()_+=\-\[\]{};':"\\|,.<>\/?؟]+$/.test(word)) {
+                    if (words.length > 0) {
+                        words[words.length - 1] += ' ' + word;
+                    } else {
+                        words.push(word);
+                    }
+                } else {
+                    words.push(word);
+                }
+            }
+            
+            // إعادة بناء النص المدمج وحساب المواقع
+            const mergedText = words.join(' ');
+            let currentIndex = 0;
+            
+            for (const word of words) {
+                const wordStart = text.indexOf(word, currentIndex);
+                if (wordStart !== -1) {
+                    const wordEnd = wordStart + word.length;
+                    cachedWordRanges.push([wordStart, wordEnd]);
+                    currentIndex = wordEnd;
+                }
             }
         }
 
@@ -4889,7 +4953,25 @@
                 return;
             }
 
-            const currentWords = currentText.split(/\s+/).filter(w => w);
+            // 🎯 **تحسين: تجاهل الرموز والعلامات في التقسيم**
+            // تقسيم النص مع الحفاظ على الرموز مع الكلمات السابقة
+            const currentWords = [];
+            const words = currentText.split(/\s+/);
+            
+            for (let i = 0; i < words.length; i++) {
+                const word = words[i];
+                
+                // إذا كانت الكلمة تحتوي على رموز فقط، أضفها للكلمة السابقة
+                if (/^[!@#$%^&*()_+=\-\[\]{};':"\\|,.<>\/?؟]+$/.test(word)) {
+                    if (currentWords.length > 0) {
+                        currentWords[currentWords.length - 1] += ' ' + word;
+                    } else {
+                        currentWords.push(word);
+                    }
+                } else {
+                    currentWords.push(word);
+                }
+            }
             
             // إذا لم تكن هناك تواقيت، أنشئ تواقيت جديدة
             if (wordsWithTimestamps.length === 0) {
@@ -4921,34 +5003,50 @@
 
             const timestampWords = wordsWithTimestamps.map(w => w.text);
             
-            // ✅ إذا كان النص مختلف تماماً، أعد بناء التواقيت بالكامل
+            // 🔄 **التحسين الجديد: الحفاظ على التواقيت عند اللصق**
             if (currentWords.join(' ') !== timestampWords.join(' ')) {
                 // حساب متوسط سرعة النطق من التواقيت الموجودة
                 calculateAverageSpeechRate();
                 
-                // إعادة بناء التواقيت من النص الجديد
+                // 🎯 **خوارزمية مطورة للحفاظ على التواقيت**
                 const newTimestamps = [];
+                const oldTimestampMap = new Map();
+                
+                // إنشاء خريطة للكلمات القديمة مع تواقيتها
+                wordsWithTimestamps.forEach((word, index) => {
+                    if (!oldTimestampMap.has(word.text)) {
+                        oldTimestampMap.set(word.text, []);
+                    }
+                    oldTimestampMap.get(word.text).push({
+                        start: word.start,
+                        end: word.end,
+                        index: index
+                    });
+                });
+                
                 let currentTime = 0;
+                let lastUsedTimestamp = null;
                 
                 for (let i = 0; i < currentWords.length; i++) {
                     const word = currentWords[i];
+                    const wordTimestamps = oldTimestampMap.get(word);
                     
-                    // ✅ تحقق إذا كانت الكلمة موجودة في نفس الموضع في التواقيت القديمة
-                    if (i < wordsWithTimestamps.length && wordsWithTimestamps[i].text === word) {
-                        // استخدم التواقيت الأصلية للكلمة في نفس الموضع
+                    if (wordTimestamps && wordTimestamps.length > 0) {
+                        // ✅ استخدم أقدم توقيت متاح لهذه الكلمة
+                        const timestamp = wordTimestamps.shift();
                         newTimestamps.push({
                             text: word,
-                            start: wordsWithTimestamps[i].start,
-                            end: wordsWithTimestamps[i].end
+                            start: timestamp.start,
+                            end: timestamp.end
                         });
-                        currentTime = wordsWithTimestamps[i].end + 0.08;
+                        lastUsedTimestamp = timestamp;
+                        currentTime = timestamp.end + 0.08;
                     } else {
-                        // ✅ إذا كانت كلمة جديدة أو مختلفة، أنشئ تواقيت جديدة
-                        // حساب الوقت بناءً على الكلمة السابقة
-                        if (i > 0 && i - 1 < newTimestamps.length) {
+                        // ✅ إذا لم يوجد توقيت للكلمة، أنشئ توقيت جديد
+                        if (lastUsedTimestamp) {
+                            currentTime = lastUsedTimestamp.end + 0.08;
+                        } else if (i > 0 && newTimestamps.length > 0) {
                             currentTime = newTimestamps[i - 1].end + 0.08;
-                        } else if (i > 0 && i - 1 < wordsWithTimestamps.length) {
-                            currentTime = wordsWithTimestamps[i - 1].end + 0.08;
                         }
                         
                         const duration = calculateWordDuration(word);
@@ -4959,6 +5057,7 @@
                             start: start,
                             end: end
                         });
+                        lastUsedTimestamp = { end: end };
                         currentTime = end + 0.08;
                     }
                 }
@@ -4971,6 +5070,8 @@
                     document.getElementById('timestampJsonEditor').value = formatTimestampsToJSON(wordsWithTimestamps);
                     updateTimestampStats();
                 }
+                
+                console.log('🔄 تم تحديث التواقيت مع الحفاظ على التوقيتات الأصلية');
             }
         }
 
@@ -5031,12 +5132,15 @@
         }
 
         function calculateWordDuration(word) {
-            const wordLength = word.length;
+            // 🎯 **تحسين: حساب طول الكلمة الحقيقي فقط (بدون رموز)**
+            // إزالة الرموز والعلامات لحساب المدة الصحيحة
+            const cleanWord = word.replace(/[!@#$%^&*()_+=\-\[\]{};':"\\|,.<>\/?؟]/g, '');
+            const wordLength = cleanWord.length;
 
             // استخدام معدل الحروف المحسوب من سرعة القارئ
             const charRate = window.charRate || 0.05;
 
-            // حساب المدة بناءً على طول الكلمة ومعدل الحروف
+            // حساب المدة بناءً على طول الكلمة الفعلي (بدون رموز)
             let duration = wordLength * charRate;
 
             // إضافة وقت أساسي لكل كلمة (الفراغ بين الكلمات)
