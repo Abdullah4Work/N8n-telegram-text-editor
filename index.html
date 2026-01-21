@@ -4088,30 +4088,34 @@ if (typeof window.Telegram === 'undefined') {
 
         async function loadAudioWithProxy(url) {
             console.log('🎵 تحميل الصوت:', url);
+            
+            // 🔄 **التحسين: تجاوز الـ proxy والتحميل المباشر أولاً**
             try {
-                const proxyUrl = `${WORKER_API_URL}/proxy-audio?url=${encodeURIComponent(url)}`;
-                const response = await fetch(proxyUrl);
-                if (response.ok) {
-                    const blob = await response.blob();
-                    if (audioBlobUrl) URL.revokeObjectURL(audioBlobUrl);
-                    audioBlobUrl = URL.createObjectURL(blob);
-                    audioElement.src = audioBlobUrl;
-                    audioElement.load();
-                    console.log('✅ تم تحميل الصوت');
-                    audioLoaded = true;
-                    return true;
-                } else {
-                    throw new Error('Proxy failed');
-                }
-            } catch (proxyError) {
-                console.log('⚠️ فشل Proxy، محاولة مباشرة...');
+                console.log('🔄 محاولة التحميل المباشر أولاً...');
+                audioElement.src = url;
+                audioElement.load();
+                audioLoaded = true;
+                console.log('✅ تم تحميل الصوت مباشرة');
+                return true;
+            } catch (directError) {
+                console.log('⚠️ فشل التحميل المباشر، محاولة Proxy...');
                 try {
-                    audioElement.src = url;
-                    audioElement.load();
-                    audioLoaded = true;
-                    return true;
-                } catch (directError) {
-                    console.error('❌ فشل التحميل:', directError);
+                    const proxyUrl = `${WORKER_API_URL}/proxy-audio?url=${encodeURIComponent(url)}`;
+                    const response = await fetch(proxyUrl);
+                    if (response.ok) {
+                        const blob = await response.blob();
+                        if (audioBlobUrl) URL.revokeObjectURL(audioBlobUrl);
+                        audioBlobUrl = URL.createObjectURL(blob);
+                        audioElement.src = audioBlobUrl;
+                        audioElement.load();
+                        console.log('✅ تم تحميل الصوت عبر Proxy');
+                        audioLoaded = true;
+                        return true;
+                    } else {
+                        throw new Error('Proxy failed');
+                    }
+                } catch (proxyError) {
+                    console.error('❌ فشل جميع محاولات التحميل:', proxyError);
                     return false;
                 }
             }
@@ -4202,8 +4206,16 @@ if (typeof window.Telegram === 'undefined') {
             audioLoaded = true;
         });
 
-        audioElement.addEventListener('canplaythrough', () => { audioLoaded = true; });
-        audioElement.addEventListener('error', () => { audioLoaded = false; });
+        audioElement.addEventListener('canplaythrough', () => { 
+            audioLoaded = true; 
+            console.log('✅ الصوت جاهز للتشغيل');
+        });
+        
+        audioElement.addEventListener('error', (e) => { 
+            audioLoaded = false; 
+            console.error('❌ خطأ في تحميل الصوت:', e);
+            showToast('⚠️ فشل تحميل الصوت، يرجى المحاولة مرة أخرى', true);
+        });
 
         // ✅ التعديل الأخير: تحديث حركة الدائرة لتكون من اليمين
         audioElement.addEventListener('timeupdate', () => {
