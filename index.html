@@ -11,6 +11,21 @@
         href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>">
     <title>نشر محتوى احترافي - رقيتي v3.6 Complete</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+// 🔄 **تحميل احتياطي لمكتبة تليجرام**
+if (typeof window.Telegram === 'undefined') {
+    console.warn('⚠️ محاولة تحميل مكتبة تليجرام البديلة');
+    const script = document.createElement('script');
+    script.src = 'https://telegram.org/js/telegram-web-app.js';
+    script.onerror = function() {
+        console.error('❌ فشل تحميل مكتبة تليجرام، سيتم استخدام وضع التوافق');
+    };
+    script.onload = function() {
+        console.log('✅ تم تحميل مكتبة تليجرام البديلة بنجاح');
+    };
+    document.head.appendChild(script);
+}
+</script>
     <style>
         /* ═══════════════════════════════════════════════════════════════════
            🎨  2 المتغيرات الأساسية والإعدادات العامة
@@ -3872,10 +3887,30 @@
         const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor';
         const N8N_TEMPLATE_UPDATE_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor-response';
 
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        if (tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) {
-            try { tg.enableClosingConfirmation(); } catch (e) { }
+        // 🛡️ **التحقق من تحميل مكتبة تليجرام**
+        let tg;
+        if (window.Telegram && window.Telegram.WebApp) {
+            tg = window.Telegram.WebApp;
+            tg.expand();
+            if (tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) {
+                try { tg.enableClosingConfirmation(); } catch (e) { }
+            }
+        } else {
+            // إنشاء كائن وهمي لتليجرام إذا لم يتم تحميل المكتبة
+            console.warn('⚠️ مكتبة تليجرام لم يتم تحميلها، استخدام وضع التوافق');
+            tg = {
+                expand: () => {},
+                isVersionAtLeast: () => false,
+                enableClosingConfirmation: () => {},
+                sendData: () => {},
+                showAlert: (message, callback) => {
+                    alert(message);
+                    if (callback) callback();
+                },
+                close: () => {
+                    console.log('محاكاة إغلاق تليجرام');
+                }
+            };
         }
 
         // ═══════════════════════════════════════════════════════════════════════════
