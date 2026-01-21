@@ -4880,8 +4880,10 @@
             setTimeout(() => {
                 const afterPasteText = textEditor.value;
                 
-                // If we had timestamps before and the text changed, try to preserve timings
-                if (beforePasteTimestamps.length > 0 && afterPasteText !== beforePasteText) {
+                // Always try to use original timestamps if they exist, regardless of current state
+                if (originalTimestamps.length > 0 && afterPasteText !== beforePasteText) {
+                    preserveTimingsOnPaste(beforePasteText, afterPasteText, originalTimestamps);
+                } else if (beforePasteTimestamps.length > 0 && afterPasteText !== beforePasteText) {
                     preserveTimingsOnPaste(beforePasteText, afterPasteText, beforePasteTimestamps);
                 }
             }, 10);
@@ -4896,11 +4898,11 @@
 
         function preserveTimingsOnPaste(beforeText, afterText, oldTimestamps) {
             // دائماً استخدم التوقيتات الأصلية المتوفرة
-            const originalTimestamps = originalTimestamps.length > 0 ? originalTimestamps : oldTimestamps;
+            const sourceTimestamps = originalTimestamps.length > 0 ? originalTimestamps : oldTimestamps;
             const newWords = splitTextWithPunctuation(afterText);
             
             // إذا لم يكن هناك توقيتات أصلية، أنشئ توقيتات جديدة
-            if (originalTimestamps.length === 0) {
+            if (sourceTimestamps.length === 0) {
                 let currentTime = 0;
                 wordsWithTimestamps = newWords.map(word => {
                     const duration = calculateWordDuration(word);
@@ -4913,22 +4915,22 @@
             } else {
                 // استخدم التوقيتات الأصلية بالترتيب
                 const newTimestamps = [];
-                const minCount = Math.min(newWords.length, originalTimestamps.length);
+                const minCount = Math.min(newWords.length, sourceTimestamps.length);
                 
                 // طبق التوقيتات الأصلية على الكلمات الجديدة بالترتيب
                 for (let i = 0; i < minCount; i++) {
                     newTimestamps.push({
                         text: newWords[i],
-                        start: originalTimestamps[i].start,
-                        end: originalTimestamps[i].end
+                        start: sourceTimestamps[i].start,
+                        end: sourceTimestamps[i].end
                     });
                 }
                 
                 // إذا كان النص الجديد أطول، أنشئ توقيتات تقديرية للكلمات الإضافية
-                if (newWords.length > originalTimestamps.length) {
-                    let lastEndTime = originalTimestamps[originalTimestamps.length - 1].end;
+                if (newWords.length > sourceTimestamps.length) {
+                    let lastEndTime = sourceTimestamps[sourceTimestamps.length - 1].end;
                     
-                    for (let i = originalTimestamps.length; i < newWords.length; i++) {
+                    for (let i = sourceTimestamps.length; i < newWords.length; i++) {
                         const start = lastEndTime + 0.08;
                         const duration = calculateWordDuration(newWords[i]);
                         const end = start + duration;
