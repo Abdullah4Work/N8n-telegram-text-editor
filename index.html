@@ -4999,8 +4999,12 @@
                 const isLetter = /[a-zA-Z\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF0-9]/.test(char);
                 
                 if (isLetter) {
-                    // If we have accumulated punctuation/symbols, add them to current word
-                    currentWord += char;
+                    // If we have accumulated punctuation/symbols at the beginning, attach to current word
+                    if (currentWord.trim() && !/[a-zA-Z\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF0-9]/.test(currentWord)) {
+                        currentWord += char;
+                    } else {
+                        currentWord += char;
+                    }
                     lastLetterIndex = i;
                 } else if (char === ' ' || char === '\n' || char === '\t') {
                     // Word separator - only add word if it contains letters
