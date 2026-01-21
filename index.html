@@ -3986,7 +3986,13 @@
             try {
                 const fileIdMatch = url.match(/[?&]id=([^&]+)/);
                 if (fileIdMatch && fileIdMatch[1]) {
-                    return `https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w1000`;
+                    const timestamp = Date.now();
+                    return `https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w1000&t=${timestamp}`;
+                }
+                // Add cache busting for non-Drive URLs too
+                if (url.includes('googleusercontent.com')) {
+                    const separator = url.includes('?') ? '&' : '?';
+                    return `${url}${separator}t=${Date.now()}`;
                 }
                 return url;
             } catch (error) {
@@ -4852,7 +4858,7 @@
             e.preventDefault();
             try {
                 await navigator.clipboard.writeText(textEditor.value);
-                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+                if (tg.HapticFeedback && tg.HapticFeedback.notificationOccurred) tg.HapticFeedback.notificationOccurred('success');
                 showToast('✅ تم النسخ');
             } catch (err) {
                 textEditor.select();
@@ -6003,7 +6009,7 @@
             const jsonText = document.getElementById('timestampJsonEditor').value;
             try {
                 await navigator.clipboard.writeText(jsonText);
-                if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+                if (tg.HapticFeedback && tg.HapticFeedback.notificationOccurred) tg.HapticFeedback.notificationOccurred('success');
                 showToast('✅ تم نسخ التواقيت');
             } catch (err) {
                 const editor = document.getElementById('timestampJsonEditor');
