@@ -556,21 +556,17 @@
             transition: padding-top 0.3s ease;
         }
 
-        /* ✅ حل المشكلة 3: padding للمشغل الثابت فقط */
-        .step-content {
-            padding: 12px 14px 100px;
-            animation: fadeInUp 0.4s ease;
-            -webkit-overflow-scrolling: touch;
-            direction: rtl;
-            transition: padding-top 0.3s ease;
-        }
-
         .step-content.with-fixed-player {
             padding-top: calc(var(--audio-player-height) + 20px) !important;
         }
 
         .step-content.timestamp-active {
             padding-top: calc(var(--audio-player-height) + 20px) !important;
+        }
+
+        /* إصلاح: إزالة padding الزائد عن المحررين */
+        .editor-container, #timestampEditorContainer {
+            margin-top: -20px;
         }
 
         .step-content.active {
@@ -3183,7 +3179,6 @@
         @media (max-width: 480px) {
             .step-content {
                 padding: 10px 12px 100px;
-                padding-top: calc(var(--audio-player-height) + 15px) !important;
             }
 
             .step-content.with-fixed-player {
@@ -3192,6 +3187,11 @@
 
             .step-content.timestamp-active {
                 padding-top: calc(var(--audio-player-height) + 15px) !important;
+            }
+
+            /* إصلاح: إزالة padding الزائد عن المحررين في الجوال */
+            .editor-container, #timestampEditorContainer {
+                margin-top: -15px;
             }
 
             .color-wheel-container {
@@ -3433,8 +3433,8 @@
 
         <!-- الخطوة 1: التصحيح + محرر التواقيت -->
         <div class="step-content active" data-step="1">
-            <!-- مشغل الصوت الأصلي مخفي -->
-            <div class="audio-player-section" id="audioPlayerSection" style="display: none;">
+            <!-- مشغل الصوت العادي -->
+            <div class="audio-player-section" id="audioPlayerSection">
                 <div class="audio-section-title"><span>🎵</span><span>المقطع الصوتي</span></div>
                 <div class="audio-player">
                     <audio id="audioElement" style="display: none;" preload="auto" playsinline
