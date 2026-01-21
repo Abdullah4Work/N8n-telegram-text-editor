@@ -568,6 +568,7 @@
         .step-content.active {
             display: flex;
             flex-direction: column;
+            padding-top: calc(var(--audio-player-height) + 20px) !important;
         }
 
         @keyframes fadeInUp {
@@ -621,6 +622,14 @@
             border: 2px solid var(--primary-lighter);
             transition: all 0.3s ease;
             direction: rtl;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            border-bottom: 3px solid var(--primary);
         }
 
         .audio-player-section.hidden {
@@ -3175,6 +3184,7 @@
         @media (max-width: 480px) {
             .step-content {
                 padding: 10px 12px 100px;
+                padding-top: calc(var(--audio-player-height) + 15px) !important;
             }
 
             .step-content.with-fixed-player {
@@ -3203,7 +3213,7 @@
                 min-height: 350px;
             }
 
-            .audio-player-fixed {
+            .audio-player-section {
                 padding: 12px;
             }
 
@@ -4818,9 +4828,7 @@
 
         function enterEditingMode() {
             const stepContent = document.querySelector('.step-content[data-step="1"]');
-            document.getElementById('audioPlayerSection').classList.add('hidden');
-            document.getElementById('audioPlayerFixed').classList.add('visible');
-            stepContent.classList.add('with-fixed-player');
+            // المشغل الآن ثابت دائماً، لا حاجة لإخفاءه أو إظهار بديل
             document.getElementById('editorContainer').classList.add('editing-mode');
             isTextEditorFocused = true;
         }
@@ -4828,9 +4836,7 @@
         function exitEditingMode() {
             if (timestampModeActive) return; // لا تخفي الهيدر في وضع التواقيت
             const stepContent = document.querySelector('.step-content[data-step="1"]');
-            document.getElementById('audioPlayerSection').classList.remove('hidden');
-            document.getElementById('audioPlayerFixed').classList.remove('visible');
-            stepContent.classList.remove('with-fixed-player');
+            // المشغل الآن ثابت دائماً، لا حاجة لإظهار أو إخفاء
             document.getElementById('editorContainer').classList.remove('editing-mode');
             isTextEditorFocused = false;
         }
@@ -5255,8 +5261,7 @@
                 timestampContainer.classList.add('visible');
                 stepContent.classList.add('timestamp-active');
 
-                document.getElementById('audioPlayerFixed').classList.add('visible');
-                document.getElementById('audioPlayerSection').classList.add('hidden');
+                // المشغل الآن ثابت دائماً، لا حاجة لإظهار أو إخفاء
 
                 // ✅ مزامنة النص مع التواقيت قبل العرض
                 const currentText = textEditor.value.trim();
@@ -5302,8 +5307,7 @@
                 timestampContainer.classList.remove('visible');
                 stepContent.classList.remove('timestamp-active');
 
-                document.getElementById('audioPlayerFixed').classList.remove('visible');
-                document.getElementById('audioPlayerSection').classList.remove('hidden');
+                // المشغل الآن ثابت دائماً، لا حاجة لإظهار أو إخفاء
 
                 // حفظ التغييرات من محرر JSON
                 const jsonText = timestampJsonEditor.value;
@@ -5338,8 +5342,7 @@
             timestampContainer.classList.remove('visible');
             stepContent.classList.remove('timestamp-active');
 
-            document.getElementById('audioPlayerFixed').classList.remove('visible');
-            document.getElementById('audioPlayerSection').classList.remove('hidden');
+            // المشغل الآن ثابت دائماً، لا حاجة لإظهار أو إخفاء
 
             syncTextFromTimestamps();
             removeActiveWordHighlight();
@@ -6779,7 +6782,7 @@
                     document.getElementById('playPauseBtnFixed').textContent = '▶️';
                 }
                 exitEditingMode();
-                document.getElementById('audioPlayerFixed').classList.remove('visible');
+                // المشغل الآن ثابت دائماً، لا حاجة لإخفاء
                 removeActiveWordHighlight();
 
                 document.querySelectorAll('.step-content').forEach(content => {
