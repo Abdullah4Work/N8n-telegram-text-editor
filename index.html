@@ -4864,11 +4864,28 @@
         function updateTextStats() {
             const text = textEditor.value || '';
             document.getElementById('charCount').textContent = text.length.toLocaleString('ar');
-            document.getElementById('wordCount').textContent = (text.trim() ? text.trim().split(/\s+/).length : 0).toLocaleString('ar');
+            const words = splitTextWithPunctuation(text);
+            document.getElementById('wordCount').textContent = words.length.toLocaleString('ar');
             formData.corrected_full_text = text;
             rebuildWordRanges();
             validateCurrentStep();
         }
+
+        textEditor.addEventListener('paste', (e) => {
+            // Store current timestamps before paste
+            const beforePasteText = textEditor.value;
+            const beforePasteTimestamps = JSON.parse(JSON.stringify(wordsWithTimestamps));
+            
+            // Process the paste after it happens
+            setTimeout(() => {
+                const afterPasteText = textEditor.value;
+                
+                // If we had timestamps before and the text changed, try to preserve timings
+                if (beforePasteTimestamps.length > 0 && afterPasteText !== beforePasteText) {
+                    preserveTimingsOnPaste(beforePasteText, afterPasteText, beforePasteTimestamps);
+                }
+            }, 10);
+        });
 
         textEditor.addEventListener('input', () => {
             updateTextStats();
@@ -4876,6 +4893,118 @@
                 syncTimestampsFromTextChanges();
             }
         });
+
+        function preserveTimingsOnPaste(beforeText, afterText, oldTimestamps) {
+            // دائماً استخدم التوقيتات الأصلية المتوفرة
+            const originalTimestamps = originalTimestamps.length > 0 ? originalTimestamps : oldTimestamps;
+            const newWords = splitTextWithPunctuation(afterText);
+            
+            // إذا لم يكن هناك توقيتات أصلية، أنشئ توقيتات جديدة
+            if (originalTimestamps.length === 0) {
+                let currentTime = 0;
+                wordsWithTimestamps = newWords.map(word => {
+                    const duration = calculateWordDuration(word);
+                    const start = currentTime;
+                    const end = currentTime + duration;
+                    currentTime = end + 0.08;
+                    return { text: word, start: start, end: end };
+                });
+                timestampsModified = true;
+            } else {
+                // استخدم التوقيتات الأصلية بالترتيب
+                const newTimestamps = [];
+                const minCount = Math.min(newWords.length, originalTimestamps.length);
+                
+                // طبق التوقيتات الأصلية على الكلمات الجديدة بالترتيب
+                for (let i = 0; i < minCount; i++) {
+                    newTimestamps.push({
+                        text: newWords[i],
+                        start: originalTimestamps[i].start,
+                        end: originalTimestamps[i].end
+                    });
+                }
+                
+                // إذا كان النص الجديد أطول، أنشئ توقيتات تقديرية للكلمات الإضافية
+                if (newWords.length > originalTimestamps.length) {
+                    let lastEndTime = originalTimestamps[originalTimestamps.length - 1].end;
+                    
+                    for (let i = originalTimestamps.length; i < newWords.length; i++) {
+                        const start = lastEndTime + 0.08;
+                        const duration = calculateWordDuration(newWords[i]);
+                        const end = start + duration;
+                        
+                        newTimestamps.push({
+                            text: newWords[i],
+                            start: start,
+                            end: end
+                        });
+                        
+                        lastEndTime = end;
+                    }
+                }
+                
+                wordsWithTimestamps = newTimestamps;
+                timestampsModified = true;
+            }
+            
+            // Update the JSON editor if active
+            if (timestampModeActive) {
+                document.getElementById('timestampJsonEditor').value = formatTimestampsToJSON(wordsWithTimestamps);
+                updateTimestampStats();
+            }
+        }
+
+        function splitTextWithPunctuation(text) {
+            // Enhanced word splitting that keeps punctuation attached to previous word
+            if (!text || !text.trim()) return [];
+            
+            const words = [];
+            const cleanText = text.trim();
+            let currentWord = '';
+            let lastLetterIndex = -1;
+            
+            for (let i = 0; i < cleanText.length; i++) {
+                const char = cleanText[i];
+                
+                // Check if character is a letter (Arabic or English) or number
+                const isLetter = /[a-zA-Z\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF0-9]/.test(char);
+                
+                if (isLetter) {
+                    // If we have accumulated punctuation/symbols, add them to current word
+                    currentWord += char;
+                    lastLetterIndex = i;
+                } else if (char === ' ' || char === '\n' || char === '\t') {
+                    // Word separator - only add word if it contains letters
+                    if (currentWord.trim() && /[a-zA-Z\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF0-9]/.test(currentWord)) {
+                        words.push(currentWord.trim());
+                        currentWord = '';
+                        lastLetterIndex = -1;
+                    } else if (currentWord.trim()) {
+                        // This is only punctuation/symbols, attach to previous word if exists
+                        if (words.length > 0) {
+                            words[words.length - 1] += currentWord.trim();
+                        }
+                        currentWord = '';
+                        lastLetterIndex = -1;
+                    }
+                } else {
+                    // Punctuation or symbol, add to current word
+                    currentWord += char;
+                }
+            }
+            
+            // Handle the last word
+            if (currentWord.trim()) {
+                if (/[a-zA-Z\u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFF0-9]/.test(currentWord)) {
+                    words.push(currentWord.trim());
+                } else if (words.length > 0) {
+                    // Only punctuation/symbols, attach to previous word
+                    words[words.length - 1] += currentWord.trim();
+                }
+            }
+            
+            return words.filter(word => word.length > 0);
+        }
 
         function syncTimestampsFromTextChanges() {
             const currentText = textEditor.value.trim();
@@ -4889,7 +5018,7 @@
                 return;
             }
 
-            const currentWords = currentText.split(/\s+/).filter(w => w);
+            const currentWords = splitTextWithPunctuation(currentText);
             
             // إذا لم تكن هناك تواقيت، أنشئ تواقيت جديدة
             if (wordsWithTimestamps.length === 0) {
@@ -5123,7 +5252,7 @@
                     // إذا كان هناك نص في المحرر
                     if (wordsWithTimestamps.length === 0) {
                         // إذا لم تكن هناك تواقيت، أنشئ تواقيت جديدة من النص
-                        const words = currentText.split(/\s+/).filter(w => w);
+                        const words = splitTextWithPunctuation(currentText);
                         let currentTime = 0;
                         wordsWithTimestamps = words.map(word => {
                             const duration = calculateWordDuration(word);
@@ -5136,7 +5265,7 @@
                         timestampsModified = false;
                     } else {
                         // إذا كانت هناك تواقيت موجودة، قارن النص وحدث التواقيت
-                        const currentWords = currentText.split(/\s+/).filter(w => w);
+                        const currentWords = splitTextWithPunctuation(currentText);
                         const timestampWords = wordsWithTimestamps.map(w => w.text);
                         
                         // إذا كان النص مختلف، قم بالمزامنة
