@@ -5081,57 +5081,17 @@
                 return;
             }
 
+            // ✅ تم التعديل: الحفاظ على التواقيت الموجودة وعدم تعديلها تلقائياً
+            // فقط أضف تواقيت للكلمات الجديدة في النهاية إذا وجدت
             const timestampWords = wordsWithTimestamps.map(w => w.text);
-            
-            // ✅ تحقق إذا كانت الإضافة فقط في النهاية (كلمات جديدة)
             const isOnlySuffixAdded = checkIfOnlySuffixAdded(currentWords, timestampWords);
             
             if (isOnlySuffixAdded) {
                 // أضف تواقيت للكلمات الجديدة في النهاية فقط
                 handleSuffixAddition(currentWords, wordsWithTimestamps);
-            } else if (currentWords.join(' ') !== timestampWords.join(' ')) {
-                // إذا كان النص مختلف تماماً، أعد بناء التواقيت بالكامل
-                calculateAverageSpeechRate();
-                
-                // إعادة بناء التواقيت من النص الجديد
-                const newTimestamps = [];
-                let currentTime = 0;
-                
-                for (let i = 0; i < currentWords.length; i++) {
-                    const word = currentWords[i];
-                    
-                    // ✅ تحقق إذا كانت الكلمة موجودة في نفس الموضع في التواقيت القديمة
-                    if (i < wordsWithTimestamps.length && wordsWithTimestamps[i].text === word) {
-                        // استخدم التواقيت الأصلية للكلمة في نفس الموضع
-                        newTimestamps.push({
-                            text: word,
-                            start: wordsWithTimestamps[i].start,
-                            end: wordsWithTimestamps[i].end
-                        });
-                        currentTime = wordsWithTimestamps[i].end + 0.08;
-                    } else {
-                        // ✅ إذا كانت كلمة جديدة أو مختلفة، أنشئ تواقيت جديدة
-                        // حساب الوقت بناءً على الكلمة السابقة
-                        if (i > 0 && i - 1 < newTimestamps.length) {
-                            currentTime = newTimestamps[i - 1].end + 0.08;
-                        } else if (i > 0 && i - 1 < wordsWithTimestamps.length) {
-                            currentTime = wordsWithTimestamps[i - 1].end + 0.08;
-                        }
-                        
-                        const duration = calculateWordDuration(word);
-                        const start = currentTime;
-                        const end = currentTime + duration;
-                        newTimestamps.push({
-                            text: word,
-                            start: start,
-                            end: end
-                        });
-                        currentTime = end + 0.08;
-                    }
-                }
-                
-                wordsWithTimestamps = newTimestamps;
-                timestampsModified = true;
+            } else {
+                // ✅ لا تفعل شيئاً عند تعديل النص الموجود - احتفظ بالتواقيت كما هي
+                // هذا يمنع التعديل التلقائي للتوقيتات عند تغيير النص
             }
             
             // تحديث محرر JSON إذا كان نشطاً
