@@ -4899,28 +4899,30 @@
         }
 
         textEditor.addEventListener('paste', (e) => {
+            // ✅ تم تعطيل مزامنة التواقيت التلقائية عند اللصق - تبقى التواقيت ثابتة دائماً
             // Store current timestamps before paste
-            const beforePasteText = textEditor.value;
-            const beforePasteTimestamps = JSON.parse(JSON.stringify(wordsWithTimestamps));
+            // const beforePasteText = textEditor.value;
+            // const beforePasteTimestamps = JSON.parse(JSON.stringify(wordsWithTimestamps));
             
             // Process the paste after it happens
-            setTimeout(() => {
-                const afterPasteText = textEditor.value;
+            // setTimeout(() => {
+            //     const afterPasteText = textEditor.value;
                 
-                // Always try to use original timestamps if they exist, regardless of current state
-                if (originalTimestamps.length > 0 && afterPasteText !== beforePasteText) {
-                    preserveTimingsOnPaste(beforePasteText, afterPasteText, originalTimestamps);
-                } else if (beforePasteTimestamps.length > 0 && afterPasteText !== beforePasteText) {
-                    preserveTimingsOnPaste(beforePasteText, afterPasteText, beforePasteTimestamps);
-                }
-            }, 10);
+            //     // Always try to use original timestamps if they exist, regardless of current state
+            //     if (originalTimestamps.length > 0 && afterPasteText !== beforePasteText) {
+            //         preserveTimingsOnPaste(beforePasteText, afterPasteText, originalTimestamps);
+            //     } else if (beforePasteTimestamps.length > 0 && afterPasteText !== beforePasteText) {
+            //         preserveTimingsOnPaste(beforePasteText, afterPasteText, beforePasteTimestamps);
+            //     }
+            // }, 10);
         });
 
         textEditor.addEventListener('input', () => {
             updateTextStats();
-            if (wordsWithTimestamps.length > 0) {
-                syncTimestampsFromTextChanges();
-            }
+            // ✅ تم تعطيل مزامنة التواقيت التلقائية - تبقى التواقيت ثابتة دائماً
+            // if (wordsWithTimestamps.length > 0) {
+            //     syncTimestampsFromTextChanges();
+            // }
         });
 
         function preserveTimingsOnPaste(beforeText, afterText, oldTimestamps) {
@@ -5396,14 +5398,15 @@
                         originalTimestamps = JSON.parse(JSON.stringify(wordsWithTimestamps));
                         timestampsModified = false;
                     } else {
-                        // إذا كانت هناك تواقيت موجودة، قارن النص وحدث التواقيت
-                        const currentWords = splitTextWithPunctuation(currentText);
-                        const timestampWords = wordsWithTimestamps.map(w => w.text);
+                        // ✅ تم تعطيل مزامنة التواقيت التلقائية - تبقى التواقيت ثابتة دائماً
+                        // إذا كانت هناك تواقيت موجودة، لا تقارن النص ولا تحدث التواقيت
+                        // const currentWords = splitTextWithPunctuation(currentText);
+                        // const timestampWords = wordsWithTimestamps.map(w => w.text);
                         
-                        // إذا كان النص مختلف، قم بالمزامنة
-                        if (currentWords.join(' ') !== timestampWords.join(' ')) {
-                            syncTimestampsFromTextChanges();
-                        }
+                        // // إذا كان النص مختلف، قم بالمزامنة
+                        // if (currentWords.join(' ') !== timestampWords.join(' ')) {
+                        //     syncTimestampsFromTextChanges();
+                        // }
                     }
                 }
 
