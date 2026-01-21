@@ -3508,6 +3508,8 @@
                         <div class="timestamp-editor-actions">
                             <button class="timestamp-action-btn back-to-text-btn"
                                 id="backToTextBtn"><span>📝</span><span>العودة للنص</span></button>
+                            <button class="timestamp-action-btn restore-btn"
+                                id="restoreOriginalTimestampsBtn"><span>🔄</span><span>استعادة الأصلية</span></button>
                             <button class="timestamp-action-btn copy-btn"
                                 id="copyTimestampsBtn"><span>📄</span><span>نسخ التواقيت</span></button>
                         </div>
@@ -5077,9 +5079,14 @@
 
             const timestampWords = wordsWithTimestamps.map(w => w.text);
             
-            // ✅ إذا كان النص مختلف تماماً، أعد بناء التواقيت بالكامل
-            if (currentWords.join(' ') !== timestampWords.join(' ')) {
-                // حساب متوسط سرعة النطق من التواقيت الموجودة
+            // ✅ تحقق إذا كانت الإضافة فقط في البداية (رموز، أقواس، إلخ)
+            const isOnlyPrefixAdded = checkIfOnlyPrefixAdded(currentWords, timestampWords);
+            
+            if (isOnlyPrefixAdded) {
+                // أضف التواقيت للرموز الجديدة في البداية فقط
+                handlePrefixAddition(currentWords, wordsWithTimestamps);
+            } else if (currentWords.join(' ') !== timestampWords.join(' ')) {
+                // إذا كان النص مختلف تماماً، أعد بناء التواقيت بالكامل
                 calculateAverageSpeechRate();
                 
                 // إعادة بناء التواقيت من النص الجديد
@@ -5121,13 +5128,64 @@
                 
                 wordsWithTimestamps = newTimestamps;
                 timestampsModified = true;
-                
-                // تحديث محرر JSON إذا كان نشطاً
-                if (timestampModeActive) {
-                    document.getElementById('timestampJsonEditor').value = formatTimestampsToJSON(wordsWithTimestamps);
-                    updateTimestampStats();
+            }
+            
+            // تحديث محرر JSON إذا كان نشطاً
+            if (timestampModeActive) {
+                document.getElementById('timestampJsonEditor').value = formatTimestampsToJSON(wordsWithTimestamps);
+                updateTimestampStats();
+            }
+        }
+        
+        // ✅ دالة للتحقق إذا كانت الإضافة فقط في البداية
+        function checkIfOnlyPrefixAdded(currentWords, timestampWords) {
+            if (currentWords.length <= timestampWords.length) return false;
+            
+            // تحقق إذا كانت الكلمات الإضافية فقط في البداية
+            let prefixLength = currentWords.length - timestampWords.length;
+            
+            // تحقق إذا كانت الكلمات المتبقية متطابقة
+            for (let i = 0; i < timestampWords.length; i++) {
+                if (currentWords[i + prefixLength] !== timestampWords[i]) {
+                    return false;
                 }
             }
+            
+            return true;
+        }
+        
+        // ✅ دالة للتعامل مع الإضافات في البداية
+        function handlePrefixAddition(currentWords, existingTimestamps) {
+            const prefixLength = currentWords.length - existingTimestamps.length;
+            const newTimestamps = [];
+            let currentTime = 0;
+            
+            // أضف تواقيت للكلمات الجديدة في البداية
+            for (let i = 0; i < prefixLength; i++) {
+                const word = currentWords[i];
+                const duration = calculateWordDuration(word);
+                const start = currentTime;
+                const end = currentTime + duration;
+                newTimestamps.push({
+                    text: word,
+                    start: start,
+                    end: end
+                });
+                currentTime = end + 0.08;
+            }
+            
+            // أضف التواقيت الموجودة مع تعديل الأوقات
+            const timeOffset = currentTime;
+            for (let i = 0; i < existingTimestamps.length; i++) {
+                newTimestamps.push({
+                    text: existingTimestamps[i].text,
+                    start: existingTimestamps[i].start + timeOffset,
+                    end: existingTimestamps[i].end + timeOffset
+                });
+            }
+            
+            wordsWithTimestamps = newTimestamps;
+            timestampsModified = true;
         }
 
         // البحث عن مكان إضافة الكلمة الجديدة
@@ -6019,6 +6077,25 @@
         // ربط أحداث التواقيت
         document.getElementById('timestampModeToggle').addEventListener('click', toggleTimestampMode);
         document.getElementById('backToTextBtn').addEventListener('click', backToTextMode);
+        
+        // زر استعادة التواقيت الأصلية
+        document.getElementById('restoreOriginalTimestampsBtn').addEventListener('click', () => {
+            if (originalTimestamps.length > 0) {
+                wordsWithTimestamps = JSON.parse(JSON.stringify(originalTimestamps));
+                timestampsModified = false;
+                
+                // تحديث محرر JSON
+                document.getElementById('timestampJsonEditor').value = formatTimestampsToJSON(wordsWithTimestamps);
+                updateTimestampStats();
+                
+                // تحديث النص في المحرر
+                syncTextFromTimestamps();
+                
+                showToast('✅ تم استعادة التواقيت الأصلية');
+            } else {
+                showToast('⚠️ لا توجد تواقيت أصلية للاستعادة', true);
+            }
+        });
         
         // زر نسخ التواقيت
         document.getElementById('copyTimestampsBtn').addEventListener('click', async () => {
