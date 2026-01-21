@@ -5081,8 +5081,7 @@
                 return;
             }
 
-            // ✅ تم التعديل: الحفاظ على التواقيت الموجودة وعدم تعديلها تلقائياً
-            // فقط أضف تواقيت للكلمات الجديدة في النهاية إذا وجدت
+            // ✅ تم التعديل: تحديث النص فقط مع الحفاظ على التواقيت الموجودة
             const timestampWords = wordsWithTimestamps.map(w => w.text);
             const isOnlySuffixAdded = checkIfOnlySuffixAdded(currentWords, timestampWords);
             
@@ -5090,8 +5089,37 @@
                 // أضف تواقيت للكلمات الجديدة في النهاية فقط
                 handleSuffixAddition(currentWords, wordsWithTimestamps);
             } else {
-                // ✅ لا تفعل شيئاً عند تعديل النص الموجود - احتفظ بالتواقيت كما هي
-                // هذا يمنع التعديل التلقائي للتوقيتات عند تغيير النص
+                // ✅ تحديث النص فقط مع الحفاظ على نفس التواقيت
+                const newTimestamps = [];
+                const minCount = Math.min(currentWords.length, wordsWithTimestamps.length);
+                
+                // طبق نفس التواقيت على الكلمات الجديدة بالترتيب
+                for (let i = 0; i < minCount; i++) {
+                    newTimestamps.push({
+                        text: currentWords[i],
+                        start: wordsWithTimestamps[i].start,
+                        end: wordsWithTimestamps[i].end
+                    });
+                }
+                
+                // إذا كانت هناك كلمات جديدة أكثر من التواقيت الموجودة، أضف تواقيت جديدة
+                if (currentWords.length > wordsWithTimestamps.length) {
+                    let currentTime = wordsWithTimestamps[wordsWithTimestamps.length - 1].end + 0.08;
+                    for (let i = wordsWithTimestamps.length; i < currentWords.length; i++) {
+                        const duration = calculateWordDuration(currentWords[i]);
+                        const start = currentTime;
+                        const end = currentTime + duration;
+                        newTimestamps.push({
+                            text: currentWords[i],
+                            start: start,
+                            end: end
+                        });
+                        currentTime = end + 0.08;
+                    }
+                }
+                
+                wordsWithTimestamps = newTimestamps;
+                timestampsModified = true;
             }
             
             // تحديث محرر JSON إذا كان نشطاً
