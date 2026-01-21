@@ -5083,12 +5083,12 @@
 
             const timestampWords = wordsWithTimestamps.map(w => w.text);
             
-            // ✅ تحقق إذا كانت الإضافة فقط في البداية (رموز، أقواس، إلخ)
-            const isOnlyPrefixAdded = checkIfOnlyPrefixAdded(currentWords, timestampWords);
+            // ✅ تحقق إذا كانت الإضافة فقط في النهاية (كلمات جديدة)
+            const isOnlySuffixAdded = checkIfOnlySuffixAdded(currentWords, timestampWords);
             
-            if (isOnlyPrefixAdded) {
-                // أضف التواقيت للرموز الجديدة في البداية فقط
-                handlePrefixAddition(currentWords, wordsWithTimestamps);
+            if (isOnlySuffixAdded) {
+                // أضف تواقيت للكلمات الجديدة في النهاية فقط
+                handleSuffixAddition(currentWords, wordsWithTimestamps);
             } else if (currentWords.join(' ') !== timestampWords.join(' ')) {
                 // إذا كان النص مختلف تماماً، أعد بناء التواقيت بالكامل
                 calculateAverageSpeechRate();
@@ -5141,16 +5141,19 @@
             }
         }
         
-        // ✅ دالة للتحقق إذا كانت الإضافة فقط في البداية
-        function checkIfOnlyPrefixAdded(currentWords, timestampWords) {
+        // ✅ دالة للتحقق إذا كانت الإضافة فقط في النهاية
+        function checkIfOnlySuffixAdded(currentWords, timestampWords) {
             if (currentWords.length <= timestampWords.length) return false;
             
-            // تحقق إذا كانت الكلمات الإضافية فقط في البداية
-            let prefixLength = currentWords.length - timestampWords.length;
+            // تحقق إذا كانت الإضافة فقط في النهاية
+            let suffixLength = currentWords.length - timestampWords.length;
             
-            // تحقق إذا كانت الكلمات المتبقية متطابقة
+            // إذا كانت الإضافة أكثر من 5 كلمات، اعتبرها تعديل كبير
+            if (suffixLength > 5) return false;
+            
+            // تحقق إذا كانت الكلمات الأولى متطابقة
             for (let i = 0; i < timestampWords.length; i++) {
-                if (currentWords[i + prefixLength] !== timestampWords[i]) {
+                if (currentWords[i] !== timestampWords[i]) {
                     return false;
                 }
             }
@@ -5158,14 +5161,27 @@
             return true;
         }
         
-        // ✅ دالة للتعامل مع الإضافات في البداية
-        function handlePrefixAddition(currentWords, existingTimestamps) {
-            const prefixLength = currentWords.length - existingTimestamps.length;
-            const newTimestamps = [];
-            let currentTime = 0;
+        // ✅ دالة للتعامل مع الإضافات في النهاية
+        function handleSuffixAddition(currentWords, existingTimestamps) {
+            const suffixLength = currentWords.length - existingTimestamps.length;
+            if (suffixLength <= 0) return;
             
-            // أضف تواقيت للكلمات الجديدة في البداية
-            for (let i = 0; i < prefixLength; i++) {
+            const newTimestamps = [];
+            
+            // أضف التواقيت الأصلية كما هي
+            for (let i = 0; i < existingTimestamps.length; i++) {
+                newTimestamps.push({
+                    text: existingTimestamps[i].text,
+                    start: existingTimestamps[i].start,
+                    end: existingTimestamps[i].end
+                });
+            }
+            
+            // أضف الكلمات الجديدة في النهاية مع توقيت جديد
+            const lastTimestamp = existingTimestamps[existingTimestamps.length - 1];
+            let currentTime = lastTimestamp.end + 0.2; // بداية بعد الكلمة الأخيرة
+            
+            for (let i = existingTimestamps.length; i < currentWords.length; i++) {
                 const word = currentWords[i];
                 const duration = calculateWordDuration(word);
                 const start = currentTime;
@@ -5175,17 +5191,7 @@
                     start: start,
                     end: end
                 });
-                currentTime = end + 0.08;
-            }
-            
-            // أضف التواقيت الموجودة مع تعديل الأوقات
-            const timeOffset = currentTime;
-            for (let i = 0; i < existingTimestamps.length; i++) {
-                newTimestamps.push({
-                    text: existingTimestamps[i].text,
-                    start: existingTimestamps[i].start + timeOffset,
-                    end: existingTimestamps[i].end + timeOffset
-                });
+                currentTime = end + 0.08; // مسافة بين الكلمات
             }
             
             wordsWithTimestamps = newTimestamps;
