@@ -3895,7 +3895,7 @@
         let audioCaption = '';
         let skipCorrection = false;
         let audioBlobUrl = null;
-        let showLowQuality = false;
+        let showLowQuality = true;
         let seriesColorDragging = false;
         let titleColorDragging = false;
 
@@ -3984,16 +3984,24 @@
         function convertDriveUrl(url) {
             if (!url) return '';
             try {
+                // Handle direct googleusercontent.com URLs
+                if (url.includes('googleusercontent.com/d/')) {
+                    const separator = url.includes('?') ? '&' : '?';
+                    return `${url}${separator}t=${Date.now()}`;
+                }
+                
                 const fileIdMatch = url.match(/[?&]id=([^&]+)/);
                 if (fileIdMatch && fileIdMatch[1]) {
                     const timestamp = Date.now();
                     return `https://drive.google.com/thumbnail?id=${fileIdMatch[1]}&sz=w1000&t=${timestamp}`;
                 }
-                // Add cache busting for non-Drive URLs too
+                
+                // Add cache busting for any googleusercontent URLs
                 if (url.includes('googleusercontent.com')) {
                     const separator = url.includes('?') ? '&' : '?';
                     return `${url}${separator}t=${Date.now()}`;
                 }
+                
                 return url;
             } catch (error) {
                 return url;
@@ -6199,6 +6207,25 @@
         // ═══════════════════════════════════════════════════════════════════════════
         // 🎨 القوالب والألوان
         // ═══════════════════════════════════════════════════════════════════════════
+
+        // Initialize quality toggle state
+        const qualityToggle = document.getElementById('qualityToggle');
+        const highText = document.querySelector('.quality-option:first-child');
+        const lowText = document.querySelector('.quality-option:last-child');
+        
+        // Set initial state to low quality
+        qualityToggle.checked = showLowQuality;
+        if (showLowQuality) {
+            highText.style.opacity = '0.5';
+            highText.style.fontWeight = '400';
+            lowText.style.opacity = '1';
+            lowText.style.fontWeight = '600';
+        } else {
+            highText.style.opacity = '1';
+            highText.style.fontWeight = '600';
+            lowText.style.opacity = '0.5';
+            lowText.style.fontWeight = '400';
+        }
 
         document.getElementById('qualityToggle').addEventListener('change', (e) => {
             showLowQuality = e.target.checked;
