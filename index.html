@@ -5083,63 +5083,14 @@
                 return;
             }
 
+            // ✅ لا تفعل شيئاً - احتفظ بالتواقيت كما هي دائماً
+            // لا تقم بتحديث التواقيت أبداً حتى لو تغير النص
+            
+            // فقط قم بمزامنة النص من التواقيت الحالية إذا كان النص مختلف
             const timestampWords = wordsWithTimestamps.map(w => w.text);
-            
-            // ✅ تحقق إذا كانت الإضافة فقط في البداية (رموز أو أقواس)
-            const isOnlyPrefixAdded = checkIfOnlyPrefixAdded(currentWords, timestampWords);
-            
-            if (isOnlyPrefixAdded) {
-                // أضف التواقيت للرموز الجديدة في البداية فقط
-                handlePrefixAddition(currentWords, wordsWithTimestamps);
-            } else if (currentWords.join(' ') !== timestampWords.join(' ')) {
-                // إذا كان النص مختلف تماماً، أعد بناء التواقيت بالكامل
-                calculateAverageSpeechRate();
-                
-                // إعادة بناء التواقيت من النص الجديد
-                const newTimestamps = [];
-                let currentTime = 0;
-                
-                for (let i = 0; i < currentWords.length; i++) {
-                    const word = currentWords[i];
-                    
-                    // ✅ تحقق إذا كانت الكلمة موجودة في نفس الموضع في التواقيت القديمة
-                    if (i < wordsWithTimestamps.length && wordsWithTimestamps[i].text === word) {
-                        // استخدم التواقيت الأصلية للكلمة في نفس الموضع
-                        newTimestamps.push({
-                            text: word,
-                            start: wordsWithTimestamps[i].start,
-                            end: wordsWithTimestamps[i].end
-                        });
-                        currentTime = wordsWithTimestamps[i].end + 0.08;
-                    } else {
-                        // ✅ إذا كانت كلمة جديدة أو مختلفة، أنشئ تواقيت جديدة
-                        // حساب الوقت بناءً على الكلمة السابقة
-                        if (i > 0 && i - 1 < newTimestamps.length) {
-                            currentTime = newTimestamps[i - 1].end + 0.08;
-                        } else if (i > 0 && i - 1 < wordsWithTimestamps.length) {
-                            currentTime = wordsWithTimestamps[i - 1].end + 0.08;
-                        }
-                        
-                        const duration = calculateWordDuration(word);
-                        const start = currentTime;
-                        const end = currentTime + duration;
-                        newTimestamps.push({
-                            text: word,
-                            start: start,
-                            end: end
-                        });
-                        currentTime = end + 0.08;
-                    }
-                }
-                
-                wordsWithTimestamps = newTimestamps;
-                timestampsModified = true;
-            }
-            
-            // تحديث محرر JSON إذا كان نشطاً
-            if (timestampModeActive) {
-                document.getElementById('timestampJsonEditor').value = formatTimestampsToJSON(wordsWithTimestamps);
-                updateTimestampStats();
+            if (currentWords.join(' ') !== timestampWords.join(' ')) {
+                // لا تغير التواقيت، فقط احتفظ بها كما هي
+                console.log('🔒 تم الاحتفاظ بالتواقيت الأصلية بدون تغيير');
             }
         }
         
