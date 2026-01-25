@@ -3760,6 +3760,41 @@
                     </div>
                 </div>
             </div>
+            <div class="seo-section">
+                <div class="seo-section-title"><span>#️⃣</span><span>هاشتاقات الـ SEO</span></div>
+                <div class="tags-input-section">
+                    <div class="tags-input-wrapper">
+                        <input type="text" class="tags-input" id="hashtagInput" placeholder="أدخل هاشتاق (بدون #)..."
+                            maxlength="30">
+                        <button class="tags-add-btn" id="addHashtagBtn">➕ إضافة</button>
+                    </div>
+                </div>
+                <div class="tags-container" id="hashtagsContainer">
+                    <div style="color: var(--text-secondary); font-size: 12px;">لا توجد هاشتاقات بعد</div>
+                </div>
+                <div class="seo-stats" id="seoStats" style="display: none;">
+                    <div class="seo-stat-item">
+                        <div class="seo-stat-label">عدد الكلمات</div>
+                        <div class="seo-stat-value" id="statWordCount">0</div>
+                    </div>
+                    <div class="seo-stat-item">
+                        <div class="seo-stat-label">عدد الأحرف</div>
+                        <div class="seo-stat-value" id="statCharCount">0</div>
+                    </div>
+                    <div class="seo-stat-item">
+                        <div class="seo-stat-label">الكلمات المفتاحية</div>
+                        <div class="seo-stat-value" id="statTagsCount">0</div>
+                    </div>
+                    <div class="seo-stat-item">
+                        <div class="seo-stat-label">الهاشتاقات</div>
+                        <div class="seo-stat-value" id="statHashtagsCount">0</div>
+                    </div>
+                    <div class="seo-stat-item">
+                        <div class="seo-stat-label">طول الوصف</div>
+                        <div class="seo-stat-value" id="statDescLength">0</div>
+                    </div>
+                </div>
+            </div>
             <div class="serp-preview" id="serpPreview" style="display: none;">
                 <div class="serp-preview-title"><span>🔍</span><span>معاينة نتيجة البحث</span></div>
                 <div class="serp-url">https://www.youtube.com/watch</div>
@@ -3853,6 +3888,14 @@
                         <div class="review-tags-preview" id="reviewTagsPreview"></div>
                         <button class="review-expand-btn" id="reviewTagsExpandBtn"><span id="reviewTagsExpandText">عرض
                                 الكل</span><span id="reviewTagsExpandIcon">▼</span></button>
+                    </div>
+                </div>
+                <div class="review-item">
+                    <span class="review-label">هاشتاقات الـ SEO:</span>
+                    <div class="review-value">
+                        <div class="review-tags-preview" id="reviewHashtagsPreview"></div>
+                        <button class="review-expand-btn" id="reviewHashtagsExpandBtn"><span id="reviewHashtagsExpandText">عرض
+                                الكل</span><span id="reviewHashtagsExpandIcon">▼</span></button>
                     </div>
                 </div>
             </div>
@@ -3966,6 +4009,7 @@
             seo_title: '',
             seo_description: '',
             tags: [],
+            seo_hashtags: [],
             promo_card_title: '',
             promo_card_description: '',
             usage_count: 0,
@@ -6757,6 +6801,37 @@
             });
         }
 
+        function addHashtag(hashtagText) {
+            const trimmed = hashtagText.trim().replace(/^#/, ''); // إزالة # إذا وجدت
+            if (!trimmed || formData.seo_hashtags.includes(trimmed)) return;
+            formData.seo_hashtags.push(trimmed);
+            renderHashtags();
+            document.getElementById('hashtagInput').value = '';
+            updateSeoStats();
+            validateCurrentStep();
+        }
+
+        function renderHashtags() {
+            const container = document.getElementById('hashtagsContainer');
+            container.innerHTML = '';
+            if (!formData.seo_hashtags.length) {
+                container.innerHTML = '<div style="color:var(--text-secondary);font-size:12px">لا توجد هاشتاقات بعد</div>';
+                return;
+            }
+            formData.seo_hashtags.forEach((hashtag, i) => {
+                const el = document.createElement('div');
+                el.className = 'tag-item';
+                el.innerHTML = `<span>#${hashtag}</span><button class="tag-remove">×</button>`;
+                el.querySelector('.tag-remove').onclick = () => {
+                    formData.seo_hashtags.splice(i, 1);
+                    renderHashtags();
+                    updateSeoStats();
+                    validateCurrentStep();
+                };
+                container.appendChild(el);
+            });
+        }
+
         function updateSeoStats() {
             const title = formData.seo_title || '';
             const desc = formData.seo_description || '';
@@ -6764,9 +6839,10 @@
             document.getElementById('statWordCount').textContent = title.trim() ? title.trim().split(/\s+/).length : 0;
             document.getElementById('statCharCount').textContent = title.length;
             document.getElementById('statTagsCount').textContent = formData.tags.length;
+            document.getElementById('statHashtagsCount').textContent = formData.seo_hashtags.length;
             document.getElementById('statDescLength').textContent = desc.length;
 
-            if (title || desc || formData.tags.length) {
+            if (title || desc || formData.tags.length || formData.seo_hashtags.length) {
                 document.getElementById('seoStats').style.display = 'grid';
             }
         }
@@ -6789,6 +6865,17 @@
             if (e.key === 'Enter') {
                 e.preventDefault();
                 addTag(e.target.value);
+            }
+        });
+
+        document.getElementById('addHashtagBtn').addEventListener('click', () => {
+            addHashtag(document.getElementById('hashtagInput').value);
+        });
+
+        document.getElementById('hashtagInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addHashtag(e.target.value);
             }
         });
 
@@ -7034,6 +7121,12 @@
                 formData.tags.map(t => `<div class="review-tag">${t}</div>`).join('') :
                 '<div style="color:var(--text-secondary);font-size:12px">لا توجد كلمات مفتاحية</div>';
 
+            // الهاشتاقات
+            const hashtagsPreview = document.getElementById('reviewHashtagsPreview');
+            hashtagsPreview.innerHTML = formData.seo_hashtags.length ?
+                formData.seo_hashtags.map(h => `<div class="review-tag">#${h}</div>`).join('') :
+                '<div style="color:var(--text-secondary);font-size:12px">لا توجد هاشتاقات</div>';
+
             // صور القالب
             if (formData.landscape_image_url) {
                 const img = document.getElementById('reviewLandscapeImage');
@@ -7064,6 +7157,15 @@
             document.getElementById('reviewTagsExpandText').textContent =
                 el.classList.contains('expanded') ? 'إخفاء' : 'عرض الكل';
             document.getElementById('reviewTagsExpandIcon').textContent =
+                el.classList.contains('expanded') ? '▲' : '▼';
+        });
+
+        document.getElementById('reviewHashtagsExpandBtn').addEventListener('click', () => {
+            const el = document.getElementById('reviewHashtagsPreview');
+            el.classList.toggle('expanded');
+            document.getElementById('reviewHashtagsExpandText').textContent =
+                el.classList.contains('expanded') ? 'إخفاء' : 'عرض الكل';
+            document.getElementById('reviewHashtagsExpandIcon').textContent =
                 el.classList.contains('expanded') ? '▲' : '▼';
         });
 
