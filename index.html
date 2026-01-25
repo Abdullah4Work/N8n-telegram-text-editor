@@ -6815,6 +6815,7 @@
             renderHashtags();
             document.getElementById('hashtagInput').value = '';
             updateSeoStats();
+            syncDescriptionWithHashtags(); // مزامنة مع الوصف
             validateCurrentStep();
         }
 
@@ -6833,10 +6834,54 @@
                     formData.seo_hashtags.splice(i, 1);
                     renderHashtags();
                     updateSeoStats();
+                    syncDescriptionWithHashtags(); // مزامنة مع الوصف
                     validateCurrentStep();
                 };
                 container.appendChild(el);
             });
+        }
+
+        function syncHashtagsWithDescription() {
+            // استخراج الهاشتاقات من الوصف
+            const desc = formData.seo_description || '';
+            const hashtagRegex = /#([^\s#]+)/g;
+            const extractedHashtags = [];
+            let match;
+            
+            while ((match = hashtagRegex.exec(desc)) !== null) {
+                const hashtag = match[1].replace(/_/g, ''); // إزالة _ من الهاشتاقات
+                if (hashtag.length > 1 && !extractedHashtags.includes(hashtag)) {
+                    extractedHashtags.push(hashtag);
+                }
+            }
+            
+            // تحديث الهاشتاقات في formData إذا تغيرت
+            if (JSON.stringify(extractedHashtags) !== JSON.stringify(formData.seo_hashtags)) {
+                formData.seo_hashtags = extractedHashtags;
+                renderHashtags();
+                updateSeoStats();
+            }
+        }
+
+        function syncDescriptionWithHashtags() {
+            // إزالة الهاشتاقات القديمة من الوصف
+            let desc = formData.seo_description || '';
+            desc = desc.replace(/\n\n#[^\n]*$/g, '').trim(); // إزالة سطر الهاشتاقات في النهاية
+            
+            // إضافة الهاشتاقات الجديدة في النهاية
+            if (formData.seo_hashtags.length > 0) {
+                const hashtagsText = formData.seo_hashtags.map(tag => `#${tag}`).join(' ');
+                desc += '\n\n' + hashtagsText;
+            }
+            
+            // تحديث الوصف فقط إذا تغير
+            if (desc !== formData.seo_description) {
+                formData.seo_description = desc;
+                document.getElementById('seoDescriptionInput').value = desc;
+                document.getElementById('seoDescCount').textContent = desc.length;
+                updateSeoStats();
+                updateSerpPreview();
+            }
         }
 
         function updateSeoStats() {
@@ -6950,6 +6995,7 @@
         document.getElementById('seoDescriptionInput').addEventListener('input', () => {
             formData.seo_description = document.getElementById('seoDescriptionInput').value;
             document.getElementById('seoDescCount').textContent = formData.seo_description.length;
+            syncHashtagsWithDescription(); // مزامنة الهاشتاقات من الوصف
             updateSeoStats();
             updateSerpPreview();
             validateCurrentStep();
