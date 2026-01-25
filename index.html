@@ -557,17 +557,15 @@
         }
 
         /* ✅ حل المشكلة 3: padding عند تفعيل المشغل الثابت */
-        .step-content.with-fixed-player {
-            padding-top: calc(var(--audio-player-height) + 20px) !important;
-        }
-
-        .step-content.timestamp-active {
-            padding-top: calc(var(--audio-player-height) + 20px) !important;
-        }
+        /* تم إزالة padding-top من هنا لأنه فقط الخطوة 1 تحتاجه */
 
         .step-content.active {
             display: flex;
             flex-direction: column;
+        }
+
+        /* فقط الخطوة 1 (المقطع الصوتي) تأخذ padding-top مع الـ audio player */
+        .step-content.step-1.active {
             padding-top: calc(var(--audio-player-height) + 20px) !important;
         }
 
