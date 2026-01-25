@@ -6912,6 +6912,7 @@
                     formData.seo_title = result.title || formData.title || '';
                     formData.seo_description = result.description || '';
                     formData.tags = result.tags || [];
+                    formData.seo_hashtags = result.hashtags || [];  // إضافة الهاشتاقات
 
                     document.getElementById('seoTitleInput').value = formData.seo_title;
                     document.getElementById('seoDescriptionInput').value = formData.seo_description;
@@ -6919,6 +6920,7 @@
                     document.getElementById('seoDescCount').textContent = formData.seo_description.length;
 
                     renderTags();
+                    renderHashtags();  // عرض الهاشتاقات
                     updateSeoStats();
                     updateSerpPreview();
 
