@@ -7275,6 +7275,7 @@
 
                 const finalData = {
                     ...formData,
+                    seo_hashtags: formData.seo_hashtags.map(tag => `#${tag}`),
                     words_timestamps: timestampsToSend,
                     timestamps_modified: timestampsModified,
                     timestamp: new Date().toISOString()
