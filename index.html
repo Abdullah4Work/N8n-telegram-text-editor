@@ -6842,36 +6842,66 @@
         }
 
         function syncHashtagsWithDescription() {
-            // استخراج الهاشتاقات من الوصف
+            // استخراج الهاشتاقات من نهاية الوصف فقط (بعد الـ footer)
             const desc = formData.seo_description || '';
-            const hashtagRegex = /#([^\s#]+)/g;
-            const extractedHashtags = [];
-            let match;
+            const footerIndex = desc.indexOf('ابو ثائر الراقي');
             
-            while ((match = hashtagRegex.exec(desc)) !== null) {
-                const hashtag = match[1].replace(/_/g, ''); // إزالة _ من الهاشتاقات
-                if (hashtag.length > 1 && !extractedHashtags.includes(hashtag)) {
-                    extractedHashtags.push(hashtag);
+            if (footerIndex !== -1) {
+                // البحث عن الهاشتاقات بعد الـ footer
+                const afterFooter = desc.substring(footerIndex);
+                const hashtagRegex = /#([^\s#]+)/g;
+                const extractedHashtags = [];
+                let match;
+                
+                while ((match = hashtagRegex.exec(afterFooter)) !== null) {
+                    const hashtag = match[1].replace(/_/g, ''); // إزالة _ من الهاشتاقات
+                    if (hashtag.length > 1 && !extractedHashtags.includes(hashtag)) {
+                        extractedHashtags.push(hashtag);
+                    }
                 }
-            }
-            
-            // تحديث الهاشتاقات في formData إذا تغيرت
-            if (JSON.stringify(extractedHashtags) !== JSON.stringify(formData.seo_hashtags)) {
-                formData.seo_hashtags = extractedHashtags;
-                renderHashtags();
-                updateSeoStats();
+                
+                // تحديث الهاشتاقات في formData إذا تغيرت
+                if (JSON.stringify(extractedHashtags) !== JSON.stringify(formData.seo_hashtags)) {
+                    formData.seo_hashtags = extractedHashtags;
+                    renderHashtags();
+                    updateSeoStats();
+                }
             }
         }
 
         function syncDescriptionWithHashtags() {
-            // إزالة الهاشتاقات القديمة من الوصف
+            // إزالة الهاشتاقات القديمة من نهاية الوصف
             let desc = formData.seo_description || '';
-            desc = desc.replace(/\n\n#[^\n]*$/g, '').trim(); // إزالة سطر الهاشتاقات في النهاية
+            const footerIndex = desc.indexOf('ابو ثائر الراقي');
             
-            // إضافة الهاشتاقات الجديدة في النهاية
-            if (formData.seo_hashtags.length > 0) {
-                const hashtagsText = formData.seo_hashtags.map(tag => `#${tag}`).join(' ');
-                desc += '\n\n' + hashtagsText;
+            if (footerIndex !== -1) {
+                // إبقاء كل شيء حتى نهاية الـ footer
+                const beforeHashtags = desc.substring(0, footerIndex);
+                const footerEnd = desc.indexOf('\n\n', footerIndex);
+                let footerText = '';
+                
+                if (footerEnd !== -1) {
+                    footerText = desc.substring(footerIndex, footerEnd);
+                } else {
+                    // البحث عن نهاية الـ footer
+                    const lines = desc.substring(footerIndex).split('\n');
+                    let footerLines = [];
+                    for (const line of lines) {
+                        footerLines.push(line);
+                        if (line.includes('https://www.tiktok.com/@myroqia')) {
+                            break;
+                        }
+                    }
+                    footerText = footerLines.join('\n');
+                }
+                
+                // إضافة الهاشتاقات الجديدة
+                if (formData.seo_hashtags.length > 0) {
+                    const hashtagsText = '\n\n' + formData.seo_hashtags.map(tag => `#${tag}`).join(' ');
+                    desc = beforeHashtags + footerText + hashtagsText;
+                } else {
+                    desc = beforeHashtags + footerText;
+                }
             }
             
             // تحديث الوصف فقط إذا تغير
