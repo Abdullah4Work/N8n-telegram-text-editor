@@ -489,6 +489,24 @@
             .step-content.step-1.active .timestamp-editor-container {
                 margin-top: 12px !important;
             }
+
+            /* تحسين الأزرار للتابلت */
+            .text-controls {
+                left: 8px;
+                top: 8px;
+                gap: 4px;
+                right: 8px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                align-items: center;
+            }
+
+            .timestamp-toggle-btn-new {
+                padding: 0 8px;
+                font-size: 10px;
+                max-width: 120px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -3268,9 +3286,14 @@
             }
 
             .text-controls {
-                left: 8px;
-                top: 8px;
-                gap: 4px;
+                left: 5px;
+                top: 5px;
+                gap: 3px;
+                right: 5px;
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: flex-start;
+                align-items: center;
             }
 
             .control-btn {
@@ -3281,8 +3304,12 @@
 
             .timestamp-toggle-btn-new {
                 height: 32px;
-                padding: 0 8px;
-                font-size: 10px;
+                padding: 0 6px;
+                font-size: 9px;
+                max-width: 100px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
             }
 
             /* تحسين محرر التواقيت للهواتف */
