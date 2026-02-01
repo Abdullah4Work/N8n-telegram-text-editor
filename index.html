@@ -472,6 +472,23 @@
                 min-width: 30px;
                 padding: 3px 6px;
             }
+
+            /* تحسين المسافات للمحررين في التابلت */
+            .editor-container {
+                margin-top: 12px !important;
+            }
+
+            .timestamp-editor-container {
+                margin-top: 12px !important;
+            }
+
+            .step-content.step-1.active .editor-container {
+                margin-top: 12px !important;
+            }
+
+            .step-content.step-1.active .timestamp-editor-container {
+                margin-top: 12px !important;
+            }
         }
 
         @media (max-width: 480px) {
@@ -564,18 +581,18 @@
             flex-direction: column;
         }
 
-        /* فقط الخطوة 1 (المقطع الصوتي) تأخذ مسافة 160px من الأعلى */
+        /* فقط الخطوة 1 (المقطع الصوتي) تأخذ مسافة مناسبة من الأعلى */
         .step-content.step-1.active {
-            padding-top: 160px !important;
+            padding-top: calc(var(--audio-player-height) + 20px) !important;
         }
 
-        /* فقط في الخطوة 1: إضافة مسافة للمحررين */
+        /* فقط في الخطوة 1: إضافة مسافة مناسبة للمحررين */
         .step-content.step-1.active .editor-container {
-            margin-top: 160px !important;
+            margin-top: 15px !important;
         }
 
         .step-content.step-1.active .timestamp-editor-container {
-            margin-top: 160px !important;
+            margin-top: 15px !important;
         }
 
         @keyframes fadeInUp {
@@ -3195,15 +3212,15 @@
         @media (max-width: 480px) {
             .step-content {
                 padding: 10px 12px 100px;
-                padding-top: calc(var(--audio-player-height) + 15px) !important;
+                padding-top: calc(var(--audio-player-height) + 20px) !important;
             }
 
             .step-content.with-fixed-player {
-                padding-top: calc(var(--audio-player-height) + 15px) !important;
+                padding-top: calc(var(--audio-player-height) + 20px) !important;
             }
 
             .step-content.timestamp-active {
-                padding-top: calc(var(--audio-player-height) + 15px) !important;
+                padding-top: calc(var(--audio-player-height) + 20px) !important;
             }
 
             .color-wheel-container {
@@ -3226,6 +3243,23 @@
 
             .audio-player-section {
                 padding: 12px;
+            }
+
+            /* تحسين المسافات للمحررين في الموبايل */
+            .editor-container {
+                margin-top: 10px !important;
+            }
+
+            .timestamp-editor-container {
+                margin-top: 10px !important;
+            }
+
+            .step-content.step-1.active .editor-container {
+                margin-top: 10px !important;
+            }
+
+            .step-content.step-1.active .timestamp-editor-container {
+                margin-top: 10px !important;
             }
 
             .seek-btn {
