@@ -6924,49 +6924,47 @@
         }
 
         function syncDescriptionWithHashtags() {
-            // إزالة الهاشتاقات القديمة من نهاية الوصف فقط
             let desc = formData.seo_description || '';
+            
+            // البحث عن نص "ابو ثائر الراقي"
             const footerIndex = desc.indexOf('ابو ثائر الراقي');
             
             if (footerIndex !== -1) {
-                // إبقاء كل شيء حتى نهاية الـ footer
-                const beforeHashtags = desc.substring(0, footerIndex);
-                const footerEnd = desc.indexOf('\n\n', footerIndex);
-                let footerText = '';
-                
-                if (footerEnd !== -1) {
-                    footerText = desc.substring(footerIndex, footerEnd);
-                } else {
-                    // البحث عن نهاية الـ footer
-                    const lines = desc.substring(footerIndex).split('\n');
-                    let footerLines = [];
-                    for (const line of lines) {
-                        footerLines.push(line);
-                        if (line.includes('https://www.tiktok.com/@myroqia')) {
-                            break;
-                        }
-                    }
-                    footerText = footerLines.join('\n');
-                }
-                
-                // البحث عن بداية الهاشتاقات القديمة وإزالتها فقط
+                // استخراج كل المحتوى قبل الهاشتاقات
                 let contentBeforeHashtags = desc;
-                const hashtagStartIndex = desc.lastIndexOf('\n\n', footerIndex);
+                let existingHashtagsStart = -1;
                 
-                if (hashtagStartIndex !== -1) {
-                    const textAfterHashtagStart = desc.substring(hashtagStartIndex + 2);
-                    // التحقق إذا كان النص التالي يبدأ بـ #
-                    if (textAfterHashtagStart.trim().startsWith('#')) {
-                        contentBeforeHashtags = desc.substring(0, hashtagStartIndex);
+                // البحث عن بداية الهاشتاقات الحالية
+                const lines = desc.split('\n');
+                let footerLineIndex = -1;
+                let hashtagsLineIndex = -1;
+                
+                for (let i = 0; i < lines.length; i++) {
+                    if (lines[i].includes('ابو ثائر الراقي')) {
+                        footerLineIndex = i;
+                    }
+                    // البحث عن أول سطر يبدأ بـ # بعد الفوتر
+                    if (footerLineIndex !== -1 && lines[i].trim().startsWith('#') && hashtagsLineIndex === -1) {
+                        hashtagsLineIndex = i;
+                        break;
                     }
                 }
                 
-                // إعادة بناء الوصف مع الهاشتاقات الجديدة
+                // إعادة بناء الوصف
+                if (hashtagsLineIndex !== -1) {
+                    // وجود هاشتاقات سابقة - إزالتها فقط
+                    contentBeforeHashtags = lines.slice(0, hashtagsLineIndex).join('\n');
+                } else {
+                    // لا يوجد هاشتاقات سابقة - إبقاء كل النص
+                    contentBeforeHashtags = desc;
+                }
+                
+                // إضافة الهاشتاقات الجديدة في المكان الصحيح
                 if (formData.seo_hashtags.length > 0) {
                     const hashtagsText = '\n\n' + formData.seo_hashtags.map(tag => `#${tag}`).join(' ');
-                    desc = contentBeforeHashtags + footerText + hashtagsText;
+                    desc = contentBeforeHashtags + hashtagsText;
                 } else {
-                    desc = contentBeforeHashtags + footerText;
+                    desc = contentBeforeHashtags;
                 }
             }
             
