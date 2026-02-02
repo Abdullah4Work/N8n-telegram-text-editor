@@ -2842,11 +2842,31 @@
             font-size: 16px;
             line-height: 1;
             padding: 0;
-            width: 16px;
-            height: 16px;
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
+            min-width: 20px;
+            min-height: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .tag-remove {
+                width: 24px;
+                height: 24px;
+                min-width: 24px;
+                min-height: 24px;
+                font-size: 18px;
+                font-weight: bold;
+            }
+        }
+
+        @media (hover: hover) {
+            .tag-remove:hover {
+                background: rgba(220, 53, 69, 0.1);
+                border-radius: 50%;
+            }
         }
 
         .seo-stats {
@@ -6904,7 +6924,7 @@
         }
 
         function syncDescriptionWithHashtags() {
-            // إزالة الهاشتاقات القديمة من نهاية الوصف
+            // إزالة الهاشتاقات القديمة من نهاية الوصف فقط
             let desc = formData.seo_description || '';
             const footerIndex = desc.indexOf('ابو ثائر الراقي');
             
@@ -6929,12 +6949,24 @@
                     footerText = footerLines.join('\n');
                 }
                 
-                // إضافة الهاشتاقات الجديدة
+                // البحث عن بداية الهاشتاقات القديمة وإزالتها فقط
+                let contentBeforeHashtags = desc;
+                const hashtagStartIndex = desc.lastIndexOf('\n\n', footerIndex);
+                
+                if (hashtagStartIndex !== -1) {
+                    const textAfterHashtagStart = desc.substring(hashtagStartIndex + 2);
+                    // التحقق إذا كان النص التالي يبدأ بـ #
+                    if (textAfterHashtagStart.trim().startsWith('#')) {
+                        contentBeforeHashtags = desc.substring(0, hashtagStartIndex);
+                    }
+                }
+                
+                // إعادة بناء الوصف مع الهاشتاقات الجديدة
                 if (formData.seo_hashtags.length > 0) {
                     const hashtagsText = '\n\n' + formData.seo_hashtags.map(tag => `#${tag}`).join(' ');
-                    desc = beforeHashtags + footerText + hashtagsText;
+                    desc = contentBeforeHashtags + footerText + hashtagsText;
                 } else {
-                    desc = beforeHashtags + footerText;
+                    desc = contentBeforeHashtags + footerText;
                 }
             }
             
