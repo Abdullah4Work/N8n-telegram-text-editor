@@ -6863,8 +6863,8 @@
         }
 
         function addHashtag(hashtagText) {
-            const trimmed = hashtagText.trim().replace(/^#/, ''); // إزالة # إذا وجدت
-            if (!trimmed || formData.seo_hashtags.includes(trimmed)) return;
+            const trimmed = hashtagText.trim().replace(/^#/, '').replace(/_/g, ''); // إزالة # و _
+            if (!trimmed || trimmed.length < 2 || formData.seo_hashtags.includes(trimmed)) return;
             formData.seo_hashtags.push(trimmed);
             renderHashtags();
             document.getElementById('hashtagInput').value = '';
@@ -6895,116 +6895,67 @@
             });
         }
 
+        /**
+         * استخراج الهاشتاقات من الوصف فقط من القسم الذي يلي الفوتر.
+         * الفوتر ينتهي بـ "موقع رقيتي للرقية الشرعية" ولا نستخرج أي هاشتاق قبله.
+         */
         function syncHashtagsWithDescription() {
-            // استخراج الهاشتاقات فقط من قسم الهاشتاقات في نهاية الوصف
             const desc = formData.seo_description || '';
-            const footerIndex = desc.indexOf('ابو ثائر الراقي');
-            
-            if (footerIndex !== -1) {
-                // البحث عن قسم الهاشتاقات بعد الفوتر
-                const lines = desc.split('\n');
-                const extractedHashtags = [];
-                let foundFooter = false;
-                let inHashtagSection = false;
-                
-                for (let i = 0; i < lines.length; i++) {
-                    const line = lines[i];
-                    
-                    // البحث عن الفوتر
-                    if (line.includes('ابو ثائر الراقي')) {
-                        foundFooter = true;
-                        continue;
-                    }
-                    
-                    // بعد الفوتر، ابحث عن قسم الهاشتاقات
-                    if (foundFooter && line.trim().startsWith('#')) {
-                        inHashtagSection = true;
-                        // استخراج الهاشتاقات من هذا السطر
-                        const hashtags = line.match(/#([^\s#]+)/g);
-                        if (hashtags) {
-                            hashtags.forEach(hashtag => {
-                                const cleanTag = hashtag.replace('#', '').replace(/_/g, '');
-                                if (cleanTag.length > 1 && !extractedHashtags.includes(cleanTag)) {
-                                    extractedHashtags.push(cleanTag);
-                                }
-                            });
-                        }
-                    }
-                    // إذا انتهى قسم الهاشتاقات
-                    else if (inHashtagSection && !line.trim().startsWith('#') && line.trim() !== '') {
-                        break;
-                    }
+            const footerEndText = 'موقع رقيتي للرقية الشرعية';
+            const footerEndIndex = desc.indexOf(footerEndText);
+            if (footerEndIndex === -1) return;
+
+            const afterFooter = desc.slice(footerEndIndex + footerEndText.length);
+            const hashtagRegex = /#([^\s#]+)/g;
+            const extractedHashtags = [];
+            let match;
+            while ((match = hashtagRegex.exec(afterFooter)) !== null) {
+                const cleanTag = match[1].replace(/_/g, '').trim();
+                if (cleanTag.length > 1 && !extractedHashtags.includes(cleanTag)) {
+                    extractedHashtags.push(cleanTag);
                 }
-                
-                // تحديث الهاشتاقات فقط إذا تغيرت
-                if (JSON.stringify(extractedHashtags.sort()) !== JSON.stringify(formData.seo_hashtags.sort())) {
-                    formData.seo_hashtags = extractedHashtags;
-                    renderHashtags();
-                    updateSeoStats();
-                }
+            }
+            const sortedExtracted = [...extractedHashtags].sort();
+            const sortedCurrent = [...formData.seo_hashtags].sort();
+            if (JSON.stringify(sortedExtracted) !== JSON.stringify(sortedCurrent)) {
+                formData.seo_hashtags = extractedHashtags;
+                renderHashtags();
+                updateSeoStats();
             }
         }
 
+        /**
+         * وضع الهاشتاقات في الوصف تحت الفوتر "ابو ثائر الراقي موقع رقيتي للرقية الشرعية"
+         * مع الحفاظ على كل النص قبل الفوتر وباقي النص بعد الهاشتاقات.
+         */
         function syncDescriptionWithHashtags() {
             let desc = formData.seo_description || '';
-            
-            // البحث عن نص "ابو ثائر الراقي"
-            const footerIndex = desc.indexOf('ابو ثائر الراقي');
-            
-            if (footerIndex !== -1) {
-                // تقسيم النص إلى أسطر للمعالجة الدقيقة
-                const lines = desc.split('\n');
-                let resultLines = [];
-                let foundFooter = false;
-                let hashtagsSectionStarted = false;
-                
-                for (let i = 0; i < lines.length; i++) {
-                    const line = lines[i];
-                    
-                    // البحث عن سطر الفوتر
-                    if (line.includes('ابو ثائر الراقي')) {
-                        foundFooter = true;
-                        resultLines.push(line);
-                        // إضافة السطر التالي إذا كان "موقع رقيتي للرقية الشرعية"
-                        if (i + 1 < lines.length && lines[i + 1].includes('موقع رقيتي للرقية الشرعية')) {
-                            resultLines.push(lines[i + 1]);
-                            i++; // تخطي السطر التالي لأن تمت إضافته
-                        }
-                        continue;
-                    }
-                    
-                    // إذا وجدنا الفوتر والسطر الحالي يبدأ بـ # فهو بداية قسم الهاشتاقات
-                    if (foundFooter && line.trim().startsWith('#')) {
-                        hashtagsSectionStarted = true;
-                        continue; // تخطي جميع الهاشتاقات القديمة
-                    }
-                    
-                    // إذا بدأ قسم الهاشتاقات وانتهى، نضيف باقي النص
-                    if (hashtagsSectionStarted && !line.trim().startsWith('#') && line.trim() !== '') {
-                        hashtagsSectionStarted = false;
-                    }
-                    
-                    // إضافة السطر إذا لم يكن جزء من قسم الهاشتاقات القديم
-                    if (!hashtagsSectionStarted) {
-                        resultLines.push(line);
-                    }
-                }
-                
-                // إضافة الهاشتاقات الجديدة في المكان الصحيح
-                if (formData.seo_hashtags.length > 0) {
-                    resultLines.push(''); // سطر فارغ
-                    resultLines.push(formData.seo_hashtags.map(tag => `#${tag}`).join(' '));
-                }
-                
-                // إعادة بناء الوصف
-                desc = resultLines.join('\n');
-            }
-            
-            // تحديث الوصف فقط إذا تغير
-            if (desc !== formData.seo_description) {
-                formData.seo_description = desc;
-                document.getElementById('seoDescriptionInput').value = desc;
-                document.getElementById('seoDescCount').textContent = desc.length;
+            const footerStartText = 'ابو ثائر الراقي';
+            const footerEndText = 'موقع رقيتي للرقية الشرعية';
+            const footerStartIndex = desc.indexOf(footerStartText);
+            const footerEndIndex = desc.indexOf(footerEndText);
+
+            if (footerStartIndex === -1 || footerEndIndex === -1 || footerEndIndex < footerStartIndex) return;
+
+            const beforeFooter = desc.slice(0, footerStartIndex);
+            const footer = desc.slice(footerStartIndex, footerEndIndex + footerEndText.length);
+            const afterFooter = desc.slice(footerEndIndex + footerEndText.length).trim();
+
+            const hashtagRegex = /#([^\s#]+)/g;
+            const restAfterHashtags = afterFooter.replace(hashtagRegex, '').replace(/\n+/g, '\n').replace(/\s+/g, ' ').trim();
+
+            const hashtagsLine = formData.seo_hashtags.length > 0
+                ? formData.seo_hashtags.map(tag => `#${tag}`).join(' ')
+                : '';
+            const parts = [beforeFooter.trimEnd(), footer];
+            if (hashtagsLine) parts.push('', hashtagsLine);
+            if (restAfterHashtags) parts.push('', restAfterHashtags);
+            const newDesc = parts.join('\n');
+
+            if (newDesc !== formData.seo_description) {
+                formData.seo_description = newDesc;
+                document.getElementById('seoDescriptionInput').value = newDesc;
+                document.getElementById('seoDescCount').textContent = newDesc.length;
                 updateSeoStats();
                 updateSerpPreview();
             }
