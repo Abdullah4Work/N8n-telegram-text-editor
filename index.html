@@ -6896,30 +6896,24 @@
         }
 
         function syncHashtagsWithDescription() {
-            // استخراج الهاشتاقات من نهاية الوصف فقط (بعد الـ footer)
+            // استخراج جميع الهاشتاقات من الوصف كامل
             const desc = formData.seo_description || '';
-            const footerIndex = desc.indexOf('ابو ثائر الراقي');
+            const hashtagRegex = /#([^\s#]+)/g;
+            const extractedHashtags = [];
+            let match;
             
-            if (footerIndex !== -1) {
-                // البحث عن الهاشتاقات بعد الـ footer
-                const afterFooter = desc.substring(footerIndex);
-                const hashtagRegex = /#([^\s#]+)/g;
-                const extractedHashtags = [];
-                let match;
-                
-                while ((match = hashtagRegex.exec(afterFooter)) !== null) {
-                    const hashtag = match[1].replace(/_/g, ''); // إزالة _ من الهاشتاقات
-                    if (hashtag.length > 1 && !extractedHashtags.includes(hashtag)) {
-                        extractedHashtags.push(hashtag);
-                    }
+            while ((match = hashtagRegex.exec(desc)) !== null) {
+                const hashtag = match[1].replace(/_/g, ''); // إزالة _ من الهاشتاقات
+                if (hashtag.length > 1 && !extractedHashtags.includes(hashtag)) {
+                    extractedHashtags.push(hashtag);
                 }
-                
-                // تحديث الهاشتاقات في formData إذا تغيرت
-                if (JSON.stringify(extractedHashtags) !== JSON.stringify(formData.seo_hashtags)) {
-                    formData.seo_hashtags = extractedHashtags;
-                    renderHashtags();
-                    updateSeoStats();
-                }
+            }
+            
+            // تحديث الهاشتاقات في formData إذا تغيرت
+            if (JSON.stringify(extractedHashtags) !== JSON.stringify(formData.seo_hashtags)) {
+                formData.seo_hashtags = extractedHashtags;
+                renderHashtags();
+                updateSeoStats();
             }
         }
 
@@ -6934,7 +6928,7 @@
                 const lines = desc.split('\n');
                 let resultLines = [];
                 let foundFooter = false;
-                let processedHashtags = false;
+                let hashtagsSectionStarted = false;
                 
                 for (let i = 0; i < lines.length; i++) {
                     const line = lines[i];
@@ -6943,30 +6937,34 @@
                     if (line.includes('ابو ثائر الراقي')) {
                         foundFooter = true;
                         resultLines.push(line);
+                        // إضافة السطر التالي إذا كان "موقع رقيتي للرقية الشرعية"
+                        if (i + 1 < lines.length && lines[i + 1].includes('موقع رقيتي للرقية الشرعية')) {
+                            resultLines.push(lines[i + 1]);
+                            i++; // تخطي السطر التالي لأن تمت إضافته
+                        }
                         continue;
                     }
                     
-                    // إذا وجدنا الفوتر والسطر الحالي يبدأ بـ # فهو هاشتاق
+                    // إذا وجدنا الفوتر والسطر الحالي يبدأ بـ # فهو بداية قسم الهاشتاقات
                     if (foundFooter && line.trim().startsWith('#')) {
-                        // تخطي الهاشتاقات القديمة - سنضيف الجديدة لاحقاً
-                        processedHashtags = true;
-                        continue;
+                        hashtagsSectionStarted = true;
+                        continue; // تخطي جميع الهاشتاقات القديمة
                     }
                     
-                    // إذا مررنا على الهاشتاقات ووصلنا هنا، فهذا يعني انتهت الهاشتاقات
-                    if (processedHashtags && !line.trim().startsWith('#')) {
-                        processedHashtags = false; // نهاية قسم الهاشتاقات
+                    // إذا بدأ قسم الهاشتاقات وانتهى، نضيف باقي النص
+                    if (hashtagsSectionStarted && !line.trim().startsWith('#')) {
+                        hashtagsSectionStarted = false;
                     }
                     
-                    // إضافة السطر الحالي إذا لم يكن هاشتاق قديم
-                    if (!foundFooter || !line.trim().startsWith('#')) {
+                    // إضافة السطر إذا لم يكن جزء من قسم الهاشتاقات القديم
+                    if (!hashtagsSectionStarted) {
                         resultLines.push(line);
                     }
                 }
                 
-                // إضافة الهاشتاقات الجديدة في النهاية
+                // إضافة الهاشتاقات الجديدة في المكان الصحيح
                 if (formData.seo_hashtags.length > 0) {
-                    resultLines.push(''); // سطر فارغ قبل الهاشتاقات
+                    resultLines.push(''); // سطر فارغ
                     resultLines.push(formData.seo_hashtags.map(tag => `#${tag}`).join(' '));
                 }
                 
