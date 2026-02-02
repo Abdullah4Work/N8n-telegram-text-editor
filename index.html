@@ -6896,24 +6896,52 @@
         }
 
         function syncHashtagsWithDescription() {
-            // استخراج جميع الهاشتاقات من الوصف كامل
+            // استخراج الهاشتاقات فقط من قسم الهاشتاقات في نهاية الوصف
             const desc = formData.seo_description || '';
-            const hashtagRegex = /#([^\s#]+)/g;
-            const extractedHashtags = [];
-            let match;
+            const footerIndex = desc.indexOf('ابو ثائر الراقي');
             
-            while ((match = hashtagRegex.exec(desc)) !== null) {
-                const hashtag = match[1].replace(/_/g, ''); // إزالة _ من الهاشتاقات
-                if (hashtag.length > 1 && !extractedHashtags.includes(hashtag)) {
-                    extractedHashtags.push(hashtag);
+            if (footerIndex !== -1) {
+                // البحث عن قسم الهاشتاقات بعد الفوتر
+                const lines = desc.split('\n');
+                const extractedHashtags = [];
+                let foundFooter = false;
+                let inHashtagSection = false;
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    
+                    // البحث عن الفوتر
+                    if (line.includes('ابو ثائر الراقي')) {
+                        foundFooter = true;
+                        continue;
+                    }
+                    
+                    // بعد الفوتر، ابحث عن قسم الهاشتاقات
+                    if (foundFooter && line.trim().startsWith('#')) {
+                        inHashtagSection = true;
+                        // استخراج الهاشتاقات من هذا السطر
+                        const hashtags = line.match(/#([^\s#]+)/g);
+                        if (hashtags) {
+                            hashtags.forEach(hashtag => {
+                                const cleanTag = hashtag.replace('#', '').replace(/_/g, '');
+                                if (cleanTag.length > 1 && !extractedHashtags.includes(cleanTag)) {
+                                    extractedHashtags.push(cleanTag);
+                                }
+                            });
+                        }
+                    }
+                    // إذا انتهى قسم الهاشتاقات
+                    else if (inHashtagSection && !line.trim().startsWith('#') && line.trim() !== '') {
+                        break;
+                    }
                 }
-            }
-            
-            // تحديث الهاشتاقات في formData إذا تغيرت
-            if (JSON.stringify(extractedHashtags) !== JSON.stringify(formData.seo_hashtags)) {
-                formData.seo_hashtags = extractedHashtags;
-                renderHashtags();
-                updateSeoStats();
+                
+                // تحديث الهاشتاقات فقط إذا تغيرت
+                if (JSON.stringify(extractedHashtags.sort()) !== JSON.stringify(formData.seo_hashtags.sort())) {
+                    formData.seo_hashtags = extractedHashtags;
+                    renderHashtags();
+                    updateSeoStats();
+                }
             }
         }
 
@@ -6952,7 +6980,7 @@
                     }
                     
                     // إذا بدأ قسم الهاشتاقات وانتهى، نضيف باقي النص
-                    if (hashtagsSectionStarted && !line.trim().startsWith('#')) {
+                    if (hashtagsSectionStarted && !line.trim().startsWith('#') && line.trim() !== '') {
                         hashtagsSectionStarted = false;
                     }
                     
