@@ -6930,42 +6930,48 @@
             const footerIndex = desc.indexOf('ابو ثائر الراقي');
             
             if (footerIndex !== -1) {
-                // استخراج كل المحتوى قبل الهاشتاقات
-                let contentBeforeHashtags = desc;
-                let existingHashtagsStart = -1;
-                
-                // البحث عن بداية الهاشتاقات الحالية
+                // تقسيم النص إلى أسطر للمعالجة الدقيقة
                 const lines = desc.split('\n');
-                let footerLineIndex = -1;
-                let hashtagsLineIndex = -1;
+                let resultLines = [];
+                let foundFooter = false;
+                let processedHashtags = false;
                 
                 for (let i = 0; i < lines.length; i++) {
-                    if (lines[i].includes('ابو ثائر الراقي')) {
-                        footerLineIndex = i;
+                    const line = lines[i];
+                    
+                    // البحث عن سطر الفوتر
+                    if (line.includes('ابو ثائر الراقي')) {
+                        foundFooter = true;
+                        resultLines.push(line);
+                        continue;
                     }
-                    // البحث عن أول سطر يبدأ بـ # بعد الفوتر
-                    if (footerLineIndex !== -1 && lines[i].trim().startsWith('#') && hashtagsLineIndex === -1) {
-                        hashtagsLineIndex = i;
-                        break;
+                    
+                    // إذا وجدنا الفوتر والسطر الحالي يبدأ بـ # فهو هاشتاق
+                    if (foundFooter && line.trim().startsWith('#')) {
+                        // تخطي الهاشتاقات القديمة - سنضيف الجديدة لاحقاً
+                        processedHashtags = true;
+                        continue;
                     }
+                    
+                    // إذا مررنا على الهاشتاقات ووصلنا هنا، فهذا يعني انتهت الهاشتاقات
+                    if (processedHashtags && !line.trim().startsWith('#')) {
+                        processedHashtags = false; // نهاية قسم الهاشتاقات
+                    }
+                    
+                    // إضافة السطر الحالي إذا لم يكن هاشتاق قديم
+                    if (!foundFooter || !line.trim().startsWith('#')) {
+                        resultLines.push(line);
+                    }
+                }
+                
+                // إضافة الهاشتاقات الجديدة في النهاية
+                if (formData.seo_hashtags.length > 0) {
+                    resultLines.push(''); // سطر فارغ قبل الهاشتاقات
+                    resultLines.push(formData.seo_hashtags.map(tag => `#${tag}`).join(' '));
                 }
                 
                 // إعادة بناء الوصف
-                if (hashtagsLineIndex !== -1) {
-                    // وجود هاشتاقات سابقة - إزالتها فقط
-                    contentBeforeHashtags = lines.slice(0, hashtagsLineIndex).join('\n');
-                } else {
-                    // لا يوجد هاشتاقات سابقة - إبقاء كل النص
-                    contentBeforeHashtags = desc;
-                }
-                
-                // إضافة الهاشتاقات الجديدة في المكان الصحيح
-                if (formData.seo_hashtags.length > 0) {
-                    const hashtagsText = '\n\n' + formData.seo_hashtags.map(tag => `#${tag}`).join(' ');
-                    desc = contentBeforeHashtags + hashtagsText;
-                } else {
-                    desc = contentBeforeHashtags;
-                }
+                desc = resultLines.join('\n');
             }
             
             // تحديث الوصف فقط إذا تغير
