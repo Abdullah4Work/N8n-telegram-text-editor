@@ -2806,6 +2806,23 @@
             transform: scale(0.95);
         }
 
+        .hashtags-separator-line {
+            height: 0;
+            min-height: 0;
+            border: none;
+            border-top: 2px solid var(--border-color);
+            margin: 10px 0 12px 0;
+            flex-shrink: 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        @media (max-width: 768px) {
+            .hashtags-separator-line {
+                border-top-width: 2px;
+                margin: 10px 0 12px 0;
+            }
+        }
+
         .tags-container {
             display: flex;
             flex-wrap: wrap;
@@ -3830,6 +3847,7 @@
                         <button class="tags-add-btn" id="addHashtagBtn">➕ إضافة</button>
                     </div>
                 </div>
+                <div class="hashtags-separator-line" aria-hidden="true"></div>
                 <div class="tags-container" id="hashtagsContainer">
                     <div style="color: var(--text-secondary); font-size: 12px;">لا توجد هاشتاقات بعد</div>
                 </div>
@@ -6863,8 +6881,8 @@
         }
 
         function addHashtag(hashtagText) {
-            const trimmed = hashtagText.trim().replace(/^#/, '').replace(/_/g, ''); // إزالة # و _
-            if (!trimmed || trimmed.length < 2 || formData.seo_hashtags.includes(trimmed)) return;
+            const trimmed = hashtagText.trim().replace(/^#/, ''); // إزالة # إذا وجدت
+            if (!trimmed || formData.seo_hashtags.includes(trimmed)) return;
             formData.seo_hashtags.push(trimmed);
             renderHashtags();
             document.getElementById('hashtagInput').value = '';
@@ -6880,77 +6898,151 @@
                 container.innerHTML = '<div style="color:var(--text-secondary);font-size:12px">لا توجد هاشتاقات بعد</div>';
                 return;
             }
-            formData.seo_hashtags.forEach((hashtag, i) => {
+            formData.seo_hashtags.forEach((hashtag) => {
                 const el = document.createElement('div');
                 el.className = 'tag-item';
-                el.innerHTML = `<span>#${hashtag}</span><button class="tag-remove">×</button>`;
+                el.innerHTML = `<span>#${hashtag}</span><button class="tag-remove" type="button" aria-label="حذف الهاشتاق">×</button>`;
                 el.querySelector('.tag-remove').onclick = () => {
-                    formData.seo_hashtags.splice(i, 1);
-                    renderHashtags();
-                    updateSeoStats();
-                    syncDescriptionWithHashtags(); // مزامنة مع الوصف
-                    validateCurrentStep();
+                    const idx = formData.seo_hashtags.indexOf(hashtag);
+                    if (idx !== -1) {
+                        formData.seo_hashtags.splice(idx, 1);
+                        renderHashtags();
+                        updateSeoStats();
+                        syncDescriptionWithHashtags();
+                        validateCurrentStep();
+                    }
                 };
                 container.appendChild(el);
             });
         }
 
-        /**
-         * استخراج الهاشتاقات من الوصف فقط من القسم الذي يلي الفوتر.
-         * الفوتر ينتهي بـ "موقع رقيتي للرقية الشرعية" ولا نستخرج أي هاشتاق قبله.
-         */
         function syncHashtagsWithDescription() {
+            // استخراج الهاشتاقات فقط من قسم الهاشتاقات في نهاية الوصف
             const desc = formData.seo_description || '';
-            const footerEndText = 'موقع رقيتي للرقية الشرعية';
-            const footerEndIndex = desc.indexOf(footerEndText);
-            if (footerEndIndex === -1) return;
-
-            const afterFooter = desc.slice(footerEndIndex + footerEndText.length);
-            const hashtagRegex = /#([^\s#]+)/g;
-            const extractedHashtags = [];
-            let match;
-            while ((match = hashtagRegex.exec(afterFooter)) !== null) {
-                const cleanTag = match[1].replace(/_/g, '').trim();
-                if (cleanTag.length > 1 && !extractedHashtags.includes(cleanTag)) {
-                    extractedHashtags.push(cleanTag);
+            const footerIndex = desc.indexOf('ابو ثائر الراقي');
+            
+            if (footerIndex !== -1) {
+                // البحث عن قسم الهاشتاقات بعد الفوتر
+                const lines = desc.split('\n');
+                const extractedHashtags = [];
+                let foundFooter = false;
+                let inHashtagSection = false;
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i];
+                    
+                    // البحث عن الفوتر
+                    if (line.includes('ابو ثائر الراقي')) {
+                        foundFooter = true;
+                        continue;
+                    }
+                    
+                    // بعد الفوتر، ابحث عن قسم الهاشتاقات
+                    if (foundFooter && line.trim().startsWith('#')) {
+                        inHashtagSection = true;
+                        // استخراج الهاشتاقات من هذا السطر
+                        const hashtags = line.match(/#([^\s#]+)/g);
+                        if (hashtags) {
+                            hashtags.forEach(hashtag => {
+                                const cleanTag = hashtag.replace('#', '').replace(/_/g, '');
+                                if (cleanTag.length > 1 && !extractedHashtags.includes(cleanTag)) {
+                                    extractedHashtags.push(cleanTag);
+                                }
+                            });
+                        }
+                    }
+                    // إذا انتهى قسم الهاشتاقات
+                    else if (inHashtagSection && !line.trim().startsWith('#') && line.trim() !== '') {
+                        break;
+                    }
                 }
-            }
-            const sortedExtracted = [...extractedHashtags].sort();
-            const sortedCurrent = [...formData.seo_hashtags].sort();
-            if (JSON.stringify(sortedExtracted) !== JSON.stringify(sortedCurrent)) {
-                formData.seo_hashtags = extractedHashtags;
-                renderHashtags();
-                updateSeoStats();
+                
+                // تحديث الهاشتاقات فقط إذا تغيرت
+                if (JSON.stringify(extractedHashtags.sort()) !== JSON.stringify(formData.seo_hashtags.sort())) {
+                    formData.seo_hashtags = extractedHashtags;
+                    renderHashtags();
+                    updateSeoStats();
+                }
             }
         }
 
-        /**
-         * وضع الهاشتاقات في الوصف تحت الفوتر "ابو ثائر الراقي موقع رقيتي للرقية الشرعية"
-         * مع الحفاظ على كل النص قبل الفوتر وباقي النص بعد الهاشتاقات.
-         */
         function syncDescriptionWithHashtags() {
             let desc = formData.seo_description || '';
-            const footerStartText = 'ابو ثائر الراقي';
-            const footerEndText = 'موقع رقيتي للرقية الشرعية';
-            const footerStartIndex = desc.indexOf(footerStartText);
-            const footerEndIndex = desc.indexOf(footerEndText);
+            const lines = desc.split('\n');
+            const footerMarker = 'ابو ثائر الراقي';
+            const siteMarker = 'موقع رقيتي للرقية الشرعية';
+            const footerLineIndex = lines.findIndex(l => l.includes(footerMarker));
+            if (footerLineIndex === -1) return;
 
-            if (footerStartIndex === -1 || footerEndIndex === -1 || footerEndIndex < footerStartIndex) return;
+            // 1) كل الأسطر قبل الفوتر (بدون تغيير) - نحافظ على كل شيء كما هو
+            const beforeFooter = lines.slice(0, footerLineIndex);
+            
+            // 2) سطر الفوتر + سطر الموقع إن وُجد - نحافظ على الأسطر كما هي
+            const footerBlock = [lines[footerLineIndex]];
+            let siteLineIndex = footerLineIndex + 1;
+            if (siteLineIndex < lines.length && lines[siteLineIndex].includes(siteMarker)) {
+                footerBlock.push(lines[siteLineIndex]);
+                siteLineIndex++;
+            }
+            
+            // 3) بعد الفوتر/الموقع: نحافظ على المسافات الفارغة قبل قسم الهاشتاقات
+            let hashtagSectionStart = siteLineIndex;
+            let emptyLinesBeforeHashtags = [];
+            while (hashtagSectionStart < lines.length) {
+                const trimmed = lines[hashtagSectionStart].trim();
+                if (trimmed === '') {
+                    emptyLinesBeforeHashtags.push(lines[hashtagSectionStart]);
+                    hashtagSectionStart++;
+                } else if (trimmed.startsWith('#')) {
+                    break; // بداية قسم الهاشتاقات
+                } else {
+                    // وصلنا لنص وليس هاشتاقات، لا يوجد قسم هاشتاقات قديم
+                    hashtagSectionStart = siteLineIndex;
+                    emptyLinesBeforeHashtags = [];
+                    break;
+                }
+            }
+            
+            // 4) تخطي قسم الهاشتاقات القديم (جميع الأسطر التي تبدأ بـ #)
+            let restStart = hashtagSectionStart;
+            while (restStart < lines.length) {
+                const trimmed = lines[restStart].trim();
+                if (trimmed.startsWith('#')) {
+                    restStart++;
+                } else {
+                    break; // انتهى قسم الهاشتاقات
+                }
+            }
+            
+            // 5) نحافظ على المسافات الفارغة بعد قسم الهاشتاقات
+            let emptyLinesAfterHashtags = [];
+            let contentStart = restStart;
+            while (contentStart < lines.length) {
+                const trimmed = lines[contentStart].trim();
+                if (trimmed === '') {
+                    emptyLinesAfterHashtags.push(lines[contentStart]);
+                    contentStart++;
+                } else {
+                    break; // بداية المحتوى الفعلي
+                }
+            }
+            
+            // 6) باقي الوصف (بعد قسم الهاشتاقات والمسافات الفارغة)
+            const restOfDescription = lines.slice(contentStart);
 
-            const beforeFooter = desc.slice(0, footerStartIndex);
-            const footer = desc.slice(footerStartIndex, footerEndIndex + footerEndText.length);
-            const afterFooter = desc.slice(footerEndIndex + footerEndText.length).trim();
-
-            const hashtagRegex = /#([^\s#]+)/g;
-            const restAfterHashtags = afterFooter.replace(hashtagRegex, '').replace(/\n+/g, '\n').replace(/\s+/g, ' ').trim();
-
-            const hashtagsLine = formData.seo_hashtags.length > 0
-                ? formData.seo_hashtags.map(tag => `#${tag}`).join(' ')
-                : '';
-            const parts = [beforeFooter.trimEnd(), footer];
-            if (hashtagsLine) parts.push('', hashtagsLine);
-            if (restAfterHashtags) parts.push('', restAfterHashtags);
-            const newDesc = parts.join('\n');
+            // 7) إعادة البناء مع الحفاظ على التنسيق والمسافات:
+            // قبل الفوتر + الفوتر والموقع + المسافات الفارغة الأصلية قبل الهاشتاقات + الهاشتاقات الجديدة + المسافات الفارغة الأصلية بعد الهاشتاقات + باقي الوصف
+            const resultLines = [];
+            resultLines.push(...beforeFooter);
+            resultLines.push(...footerBlock);
+            resultLines.push(...emptyLinesBeforeHashtags); // المسافات الفارغة الأصلية قبل الهاشتاقات
+            if (formData.seo_hashtags.length > 0) {
+                resultLines.push(formData.seo_hashtags.map(tag => `#${tag}`).join(' '));
+            }
+            resultLines.push(...emptyLinesAfterHashtags); // المسافات الفارغة الأصلية بعد الهاشتاقات
+            resultLines.push(...restOfDescription);
+            
+            const newDesc = resultLines.join('\n');
 
             if (newDesc !== formData.seo_description) {
                 formData.seo_description = newDesc;
