@@ -6412,19 +6412,202 @@
             try {
                 showLoading('جاري تحميل البيانات...', 'الرجاء الانتظار', '1/2');
 
-                const urlParams = new URLSearchParams(window.location.search);
-                const binId = urlParams.get('bin');
-                if (!binId) throw new Error('معرف البيانات غير موجود');
+                // Use sample data directly instead of API call
+                const loadedData = {
+                    id: "19c7dc11126d10f3b14",
+                    name: "REQ_1771636319889_0hlo2md0w",
+                    audioUrl: "https://api.telegram.org/file/bot8065319107:AAHJusW-pWYQ6ENJ0qBrx2_UOml22NVXaIk/music/file_402.m4a",
+                    text: "بسم الله الرحمن الرحيم توكلت على الله ولا حول ولا قوه الا بالله اللهم صل على محمد وعلى ال محمد كما صليت على ابراهيم وعلى ال ابراهيم انك حميد مجيد وبارك على محمد وعلى ال محمد كما باركت على ابراهيم وعلى ال ابراهيم في العالمين انك حميد مجيد حسبي الله لا اله الا هو عليه توكلت وهو رب العرش العظيم حصنت ديني وروحي ونفسي وعائلتي وبلدي ودابتي وقناتي والمجموعه العلاجيه بقوه الله العزيز الحكيم بحصنه العظيم الذي يليق بعظمته وجلالته حصنتكم بالله الرحمن الرحيم من شر الاخ الزهري المشيطن المفتن اسرتكم والمستهدف اجتماعكم العائلي في اول يوم فطوركم شهر رمضان المبارك حصنتكم بالله الرحمن الرحيم من شر الخنق المنامي الاقارب العقارب الانس الزهري المشيطن الانقطاع التنفسي داخل صدوركم في شهر رمضان المبارك حصنتكم بالله الرحمن الرحيم من شر استهداف الشرايين التي اراد بها مخطط الاقارب العقار",
+                    templates: [
+                        {
+                            "created_at": "2025-11-13 16:15:00",
+                            "color_id": 1,
+                            "color_name": "original",
+                            "final_series_text": "مخطط التاثير الجيني الشيطاني رقم ٤٩٠",
+                            "isLowQuality": false,
+                            "landscape_caption_color": "#ffffff",
+                            "landscape_finalseries_color": "#fce74e",
+                            "landscape_image": "template1_landscape_original",
+                            "landscape_link": "https://drive.google.com/uc?export=download&id=1OhcXo9hpCBbVK8rtX68s91PWm3ufspQ8",
+                            "landscape_series_color": "#b9d780",
+                            "landscape_subseries_color": "#ebbd27",
+                            "landscape_title_color": "#ffffff",
+                            "portrait_image": "template1_portrait_original",
+                            "portrait_link": "https://drive.google.com/uc?export=download&id=15PLpIMuEx4_WffgVlaEueXseDCfZyfto",
+                            "promo_card_description": "",
+                            "promo_card_title": "",
+                            "series_text": "السلالة الزهرية المستهدفة ",
+                            "sub_series_text": "شرح المخططات الشيطانية ",
+                            "template_id": 1,
+                            "template_name": "Template 1",
+                            "usage_count": 1
+                        },
+                        {
+                            "created_at": "2025-11-13 16:15:00",
+                            "color_id": 2,
+                            "color_name": "green",
+                            "final_series_text": "مخطط التاثير الجيني الشيطاني رقم ٤٩٠",
+                            "isLowQuality": false,
+                            "landscape_caption_color": "#ffffff",
+                            "landscape_finalseries_color": "#fce74e",
+                            "landscape_image": "template1_landscape_green",
+                            "landscape_link": "https://drive.google.com/uc?export=download&id=1Vh8X4SWAMl65_V8RGrIO6KOb_V11AhR2",
+                            "landscape_series_color": "#b9d780",
+                            "landscape_subseries_color": "#ebbd27",
+                            "landscape_title_color": "#ffffff",
+                            "portrait_image": "template1_portrait_green",
+                            "portrait_link": "https://drive.google.com/uc?export=download&id=1lZxBToJj2AL5HIl3Ee5f_Yh9h8nvP5c7",
+                            "promo_card_description": "",
+                            "promo_card_title": "",
+                            "series_text": "السلالة الزهرية المستهدفة ",
+                            "sub_series_text": "شرح المخططات الشيطانية ",
+                            "template_id": 1,
+                            "template_name": "Template 1",
+                            "usage_count": 1
+                        },
+                        {
+                            "created_at": "2025-11-13 16:15:00",
+                            "color_id": 1,
+                            "color_name": "original",
+                            "final_series_text": "مخططات التأثير الجيني",
+                            "isLowQuality": false,
+                            "landscape_caption_color": "#ffffff",
+                            "landscape_finalseries_color": "#fce74e",
+                            "landscape_image": "template2_landscape_original",
+                            "landscape_link": "https://drive.google.com/uc?export=download&id=1cSldR1_6W_r_h4j1oIgNER2vn42hUjkY",
+                            "landscape_series_color": "#b9d780",
+                            "landscape_subseries_color": "#ebbd27",
+                            "landscape_title_color": "#ffffff",
+                            "portrait_image": "template2_portrait_original",
+                            "portrait_link": "https://drive.google.com/uc?export=download&id=141zHAG5VS6PamqL_LYDVLzfzcNGGkDng",
+                            "promo_card_description": "",
+                            "promo_card_title": "",
+                            "series_text": "مخططات التأثير الجيني",
+                            "sub_series_text": "مخططات التأثير الجيني",
+                            "template_id": 2,
+                            "template_name": "Template 2",
+                            "usage_count": 1
+                        },
+                        {
+                            "created_at": "2025-11-13 16:15:00",
+                            "color_id": 2,
+                            "color_name": "blue",
+                            "final_series_text": "مخططات التأثير الجيني",
+                            "isLowQuality": false,
+                            "landscape_caption_color": "#ffffff",
+                            "landscape_finalseries_color": "#fce74e",
+                            "landscape_image": "template2_landscape_blue",
+                            "landscape_link": "https://drive.google.com/uc?export=download&id=1Mid30-PS57fhJuWPutfb6jwR1QMjKRUr",
+                            "landscape_series_color": "#b9d780",
+                            "landscape_subseries_color": "#ebbd27",
+                            "landscape_title_color": "#ffffff",
+                            "portrait_image": "template2_portrait_blue",
+                            "portrait_link": "https://drive.google.com/uc?export=download&id=1Bgz9T0a5Ynu-8JMleGGwh3t-nM8L0XSD",
+                            "promo_card_description": "",
+                            "promo_card_title": "",
+                            "series_text": "مخططات التأثير الجيني",
+                            "sub_series_text": "مخططات التأثير الجيني",
+                            "template_id": 2,
+                            "template_name": "Template 2",
+                            "usage_count": 1
+                        },
+                        {
+                            "created_at": "2025-11-13 16:15:00",
+                            "color_id": 1,
+                            "color_name": "original",
+                            "final_series_text": "مخططات التأثير الجيني",
+                            "isLowQuality": false,
+                            "landscape_caption_color": "#ffffff",
+                            "landscape_finalseries_color": "#fce74e",
+                            "landscape_image": "template3_landscape_original",
+                            "landscape_link": "https://drive.google.com/uc?export=download&id=1sstL2nz3LqTFQH18oQuWOxJOxS2VPJYw",
+                            "landscape_series_color": "#b9d780",
+                            "landscape_subseries_color": "#ebbd27",
+                            "landscape_title_color": "#ffffff",
+                            "portrait_image": "template3_portrait_original",
+                            "portrait_link": "https://drive.google.com/uc?export=download&id=1UQ9FW34vaf7Z7uFHNZ_6pPdSjEOuKVvp",
+                            "promo_card_description": "",
+                            "promo_card_title": "",
+                            "series_text": "مخططات التأثير الجيني",
+                            "sub_series_text": "مخططات التأثير الجيني ١",
+                            "template_id": 3,
+                            "template_name": "Template 3",
+                            "usage_count": 1
+                        },
+                        {
+                            "created_at": "2025-11-13 16:15:00",
+                            "color_id": 1,
+                            "color_name": "original",
+                            "final_series_text": "مخططات التأثير الجيني",
+                            "isLowQuality": false,
+                            "landscape_caption_color": "#ffffff",
+                            "landscape_finalseries_color": "#fcf84e",
+                            "landscape_image": "template4_landscape_original",
+                            "landscape_link": "https://drive.google.com/uc?export=download&id=1YHPD-fKvHgWLxqMc_JMgDDEHbyLcy_qb",
+                            "landscape_series_color": "#ff9e00",
+                            "landscape_subseries_color": "#9fde14",
+                            "landscape_title_color": "#ffffff",
+                            "portrait_image": "template4_portrait_original",
+                            "portrait_link": "https://drive.google.com/uc?export=download&id=1Jp4S29FlR4X8tqv5Bm3grU7if7DElKmF",
+                            "promo_card_description": "",
+                            "promo_card_title": "",
+                            "series_text": "مخططات التأثير الجيني",
+                            "sub_series_text": "مخططات التأثير الجيني",
+                            "template_id": 4,
+                            "template_name": "Template 4",
+                            "usage_count": 1
+                        },
+                        {
+                            "created_at": "2025-11-13 16:15:00",
+                            "color_id": 1,
+                            "color_name": "original",
+                            "final_series_text": "مخططات التأثير الجيني",
+                            "isLowQuality": false,
+                            "landscape_caption_color": "#ffffff",
+                            "landscape_finalseries_color": "#fce74e",
+                            "landscape_image": "template5_landscape_original",
+                            "landscape_link": "https://drive.google.com/uc?export=download&id=1L6Pj1_rSGggYZ7fv4RE91CA22VUot0Vg",
+                            "landscape_series_color": "#ffffff",
+                            "landscape_subseries_color": "#ebbd27",
+                            "landscape_title_color": "#ffffff",
+                            "portrait_image": "template5_portrait_original",
+                            "portrait_link": "https://drive.google.com/uc?export=download&id=1oGS1mSCnu-GK_3u_J4pUqsEO4HLpiRq8",
+                            "promo_card_description": "",
+                            "promo_card_title": "",
+                            "series_text": "مخططات التأثير الجيني",
+                            "sub_series_text": "مخططات التأثير الجيني",
+                            "template_id": 5,
+                            "template_name": "Template 5",
+                            "usage_count": 1
+                        },
+                        {
+                            "created_at": "2025-11-13 16:15:00",
+                            "color_id": 1,
+                            "color_name": "original",
+                            "final_series_text": "مخطط غاز الكيمتريل",
+                            "isLowQuality": true,
+                            "landscape_caption_color": "#ffffff",
+                            "landscape_finalseries_color": "#fce74e",
+                            "landscape_image": "template6_landscape_original_low",
+                            "landscape_link": "https://drive.google.com/uc?export=download&id=1wBROgt8_vj4YP06rm7WFN-W5iCFaJmq5",
+                            "landscape_series_color": "#b9d780",
+                            "landscape_subseries_color": "#ebbd27",
+                            "landscape_title_color": "#ffffff",
+                            "portrait_image": "template6_portrait_original_low",
+                            "portrait_link": "https://drive.google.com/uc?export=download&id=1MqKRFw6jNcui6OK_zrCv5-zvRM4JmJqY",
+                            "promo_card_description": "https://t.me/MyRoqia",
+                            "promo_card_title": "رابط قناة الرقية الشرعية واخر الزمان عالتليجرام ",
+                            "series_text": "السلالة الزهرية المستهدفة ",
+                            "sub_series_text": "دروس ومحاضرات السلالة الزهرية ",
+                            "template_id": 6,
+                            "template_name": "Template 6",
+                            "usage_count": 17
+                        }
+                    ]
+                };
 
-                const response = await fetch(`${WORKER_API_URL}/get-bin-data?binId=${binId}`);
-                if (!response.ok) throw new Error('فشل تحميل البيانات');
-
-                const result = await response.json();
-                if (!result.success) throw new Error(result.message || 'فشل تحميل البيانات');
-
-                const loadedData = result.data || {};
                 formData.ID = loadedData.id || '';
-                formData.binId = binId;
+                formData.binId = 'sample';
                 formData.audioUrl = loadedData.audioUrl || '';
 
                 formData.transcript_txt = loadedData.text || '';
