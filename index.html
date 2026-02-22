@@ -1797,6 +1797,10 @@
             transition: all 0.3s;
             position: relative;
             box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            height: auto;
+            min-height: 380px;
         }
 
         .template-card.large {
@@ -1814,7 +1818,7 @@
 
         .template-preview {
             width: 100%;
-            aspect-ratio: 16/9;
+            height: 180px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1894,9 +1898,48 @@
             padding: 14px;
             text-align: center;
             font-size: 15px;
-            font-weight: 700;
+            font-weight: 600;
             color: var(--text-primary);
-            background: linear-gradient(to bottom, white, #F8F9FA);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .template-info {
+            padding: 12px;
+        }
+
+        .template-data {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            padding: 4px 0;
+        }
+
+        .data-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .data-value {
+            color: var(--text-primary);
+            font-weight: 600;
+            text-align: left;
+            flex: 1.5;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .data-value.usage-count {
+            color: var(--primary);
+            font-weight: 700;
         }
 
         .section-title {
@@ -3260,17 +3303,42 @@
                 padding-top: calc(var(--audio-player-height) + 20px) !important;
             }
 
-            .color-wheel-container {
-                width: 160px;
-                height: 160px;
-            }
-
             .templates-grid {
                 grid-template-columns: 1fr;
             }
 
             .template-card.large {
                 grid-column: span 1;
+            }
+
+            .template-card {
+                min-height: 320px;
+            }
+
+            .template-preview {
+                height: 140px;
+            }
+
+            .template-name {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .template-info {
+                padding: 8px;
+            }
+
+            .data-row {
+                font-size: 11px;
+                padding: 2px 0;
+            }
+
+            .data-label {
+                font-size: 10px;
+            }
+
+            .data-value {
+                font-size: 11px;
             }
 
             .editor-textarea {
@@ -6569,6 +6637,9 @@
                 if (template.id === 5 || template.id === 10) card.classList.add('large');
                 card.dataset.templateId = template.id;
 
+                // Get first template data for display
+                const templateData = template.colors[0];
+
                 const qualityBadge = template.isLowQuality
                     ? '<div class="quality-badge low"><span>📦</span><span>جودة منخفضة</span></div>'
                     : '<div class="quality-badge high"><span>✅</span><span>جودة عالية</span></div>';
@@ -6580,6 +6651,26 @@
                         <div class="template-check">✓</div>
                     </div>
                     <div class="template-name">${template.name}</div>
+                    <div class="template-info">
+                        <div class="template-data">
+                            <div class="data-row">
+                                <span class="data-label">النص الرئيسي:</span>
+                                <span class="data-value">${templateData?.series_text || '-'}</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-label">النص الفرعي:</span>
+                                <span class="data-value">${templateData?.sub_series_text || '-'}</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-label">النص النهائي:</span>
+                                <span class="data-value">${templateData?.final_series_text || '-'}</span>
+                            </div>
+                            <div class="data-row">
+                                <span class="data-label">عدد الاستخدام:</span>
+                                <span class="data-value usage-count">${templateData?.usage_count || 0}</span>
+                            </div>
+                        </div>
+                    </div>
                 `;
                 card.onclick = () => selectTemplate(template);
                 grid.appendChild(card);
