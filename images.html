@@ -460,13 +460,13 @@
                 height: 28px;
                 font-size: 12px;
             }
-            
+
             .speed-btn-new {
                 width: 24px;
                 height: 24px;
                 font-size: 10px;
             }
-            
+
             .speed-display {
                 font-size: 10px;
                 min-width: 30px;
@@ -497,13 +497,13 @@
                 height: 24px;
                 font-size: 10px;
             }
-            
+
             .speed-btn-new {
                 width: 20px;
                 height: 20px;
                 font-size: 8px;
             }
-            
+
             .speed-display {
                 font-size: 9px;
                 min-width: 26px;
@@ -517,13 +517,13 @@
                 height: 28px;
                 font-size: 12px;
             }
-            
+
             .speed-btn-new {
                 width: 24px;
                 height: 24px;
                 font-size: 10px;
             }
-            
+
             .speed-display {
                 font-size: 10px;
                 min-width: 30px;
@@ -537,13 +537,13 @@
                 height: 24px;
                 font-size: 10px;
             }
-            
+
             .speed-btn-new {
                 width: 20px;
                 height: 20px;
                 font-size: 8px;
             }
-            
+
             .speed-display {
                 font-size: 9px;
                 min-width: 26px;
@@ -2900,6 +2900,7 @@
             width: 100%;
             box-sizing: border-box;
         }
+
         @media (max-width: 768px) {
             .hashtags-separator-line {
                 border-top-width: 2px;
@@ -3747,7 +3748,7 @@
 
     <!-- هنا يوضع الجزء 5/7 -->
 
-        <!-- 📦 Container الرئيسي -->
+    <!-- 📦 Container الرئيسي -->
     <div class="container">
 
         <!-- الخطوة 1: الصور -->
@@ -3756,22 +3757,29 @@
                 <div class="step-title"><span>🖼️</span><span>إدارة الصور</span></div>
                 <div class="step-description">أضف روابط الصور ورتبها مع تحديد مدة عرض كل صورة</div>
             </div>
-            
+
             <div class="form-group" style="display: flex; gap: 10px;">
-                <input type="url" class="form-input" id="newImageUrl" placeholder="https://example.com/image.jpg" style="direction:ltr; text-align:left; flex: 1;">
-                <button class="tags-add-btn" id="addImageBtn" style="white-space: nowrap; padding: 0 20px;">➕ إضافة</button>
+                <input type="url" class="form-input" id="newImageUrl" placeholder="https://example.com/image.jpg"
+                    style="direction:ltr; text-align:left; flex: 1;">
+                <button class="tags-add-btn" id="addImageBtn" style="white-space: nowrap; padding: 0 20px;">➕
+                    إضافة</button>
             </div>
-            
-            <div id="dropZone" style="border: 2px dashed var(--primary); border-radius: 12px; padding: 30px 20px; text-align: center; background: var(--bg-secondary); cursor: pointer; transition: all 0.3s; margin-top: 15px;">
+
+            <div id="dropZone"
+                style="border: 2px dashed var(--primary); border-radius: 12px; padding: 30px 20px; text-align: center; background: var(--bg-secondary); cursor: pointer; transition: all 0.3s; margin-top: 15px;">
                 <div style="font-size: 32px; margin-bottom: 10px;">📤</div>
                 <div style="font-size: 16px; font-weight: bold; color: var(--primary);">اضغط هنا لرفع صور من جهازك</div>
-                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 5px;">أو قم بسحب وإفلات الصور هنا</div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 5px;">أو قم بسحب وإفلات الصور هنا
+                </div>
                 <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
             </div>
-            
-            <div class="images-list-container" id="imagesListContainer" style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
+
+            <div class="images-list-container" id="imagesListContainer"
+                style="display: flex; flex-direction: column; gap: 12px; margin-top: 20px;">
                 <!-- الصور ستضاف هنا عبر الجافاسكربت -->
-                <div id="noImagesMsg" style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 20px;">لا توجد صور بعد، قم بإضافة رابط صورة للبدء</div>
+                <div id="noImagesMsg"
+                    style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 20px;">لا توجد
+                    صور بعد، قم بإضافة رابط صورة للبدء</div>
             </div>
         </div>
 
@@ -3781,11 +3789,13 @@
                 <div class="step-title"><span>🔍</span><span>تحسين محركات البحث (SEO)</span></div>
                 <div class="step-description">عنوان ووصف وكلمات مفتاحية للفيديو</div>
             </div>
-            <button class="seo-generate-btn" id="seoGenerateBtn"><span>✅</span><span>إنشاء SEO بالذكاء الاصطناعي</span></button>
+            <button class="seo-generate-btn" id="seoGenerateBtn"><span>✅</span><span>إنشاء SEO بالذكاء
+                    الاصطناعي</span></button>
             <div class="seo-section highlight">
                 <div class="seo-section-title"><span>🗃</span><span>عنوان الفيديو</span></div>
                 <div class="form-group">
-                    <textarea class="form-textarea" id="seoTitleInput" placeholder="أدخل عنوان الفيديو..." rows="2" style="min-height: 60px;"></textarea>
+                    <textarea class="form-textarea" id="seoTitleInput" placeholder="أدخل عنوان الفيديو..." rows="2"
+                        style="min-height: 60px;"></textarea>
                     <div class="form-hint">الأفضل: 60-70 حرف</div>
                     <div class="char-counter"><span id="seoTitleCount">0</span> / 100</div>
                 </div>
@@ -3793,7 +3803,8 @@
             <div class="seo-section highlight">
                 <div class="seo-section-title"><span>📝</span><span>وصف الفيديو</span></div>
                 <div class="form-group">
-                    <textarea class="form-textarea" id="seoDescriptionInput" placeholder="أدخل وصف الفيديو..." style="min-height: 180px;"></textarea>
+                    <textarea class="form-textarea" id="seoDescriptionInput" placeholder="أدخل وصف الفيديو..."
+                        style="min-height: 180px;"></textarea>
                     <div class="form-hint">وصف احترافي شامل</div>
                     <div class="char-counter"><span id="seoDescCount">0</span> / 5000</div>
                 </div>
@@ -3802,7 +3813,8 @@
                 <div class="seo-section-title"><span>🏷️</span><span>الكلمات المفتاحية</span></div>
                 <div class="tags-input-section">
                     <div class="tags-input-wrapper">
-                        <input type="text" class="tags-input" id="tagInput" placeholder="أدخل كلمة مفتاحية..." maxlength="30">
+                        <input type="text" class="tags-input" id="tagInput" placeholder="أدخل كلمة مفتاحية..."
+                            maxlength="30">
                         <button class="tags-add-btn" id="addTagBtn">➕ إضافة</button>
                     </div>
                 </div>
@@ -3814,7 +3826,8 @@
                 <div class="seo-section-title"><span>#️⃣</span><span>هاشتاقات الـ SEO</span></div>
                 <div class="tags-input-section">
                     <div class="tags-input-wrapper">
-                        <input type="text" class="tags-input" id="hashtagInput" placeholder="أدخل هاشتاق (بدون #)..." maxlength="30">
+                        <input type="text" class="tags-input" id="hashtagInput" placeholder="أدخل هاشتاق (بدون #)..."
+                            maxlength="30">
                         <button class="tags-add-btn" id="addHashtagBtn">➕ إضافة</button>
                     </div>
                 </div>
@@ -3831,13 +3844,15 @@
                 <div class="step-title"><span>✅</span><span>المراجعة النهائية</span></div>
                 <div class="step-description">راجع جميع البيانات قبل الإرسال</div>
             </div>
-            
+
             <div class="review-section">
                 <div class="review-section-title"><span>🖼️</span><span>ملخص الصور</span></div>
-                <div class="review-item"><span class="review-label">عدد الصور:</span><span class="review-value" id="reviewImagesCount">0</span></div>
-                <div class="review-item"><span class="review-label">المدة الإجمالية:</span><span class="review-value" id="reviewTotalDuration">0 ثانية</span></div>
+                <div class="review-item"><span class="review-label">عدد الصور:</span><span class="review-value"
+                        id="reviewImagesCount">0</span></div>
+                <div class="review-item"><span class="review-label">المدة الإجمالية:</span><span class="review-value"
+                        id="reviewTotalDuration">0 ثانية</span></div>
             </div>
-            
+
             <div class="review-section">
                 <div class="review-section-title"><span>🔍</span><span>SEO</span></div>
                 <div class="review-item">
@@ -3867,7 +3882,7 @@
             </div>
         </div>
     </div>
-    
+
     <!-- 🧭 شريط التنقل السفلي -->
     <div class="bottom-nav-wrapper" id="bottomNavWrapper">
         <div class="nav-container">
@@ -3886,11 +3901,11 @@
         </div>
     </div>
 
-        <script>
+    <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
         if (tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) {
-            try { tg.enableClosingConfirmation(); } catch (e) {}
+            try { tg.enableClosingConfirmation(); } catch (e) { }
         }
 
         // --- UI Utilities ---
@@ -3938,23 +3953,25 @@
 
         let currentStep = 1;
         const totalSteps = 3;
-        
+
+        // عنوان الـ Deno Worker (يحتوي على توكن HuggingFace بأمان)
+        const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.net';
+
         const state = {
             images: [],
             seo: { title: '', description: '', tags: [], hashtags: [] }
         };
 
-        const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.net';
 
         // --- Navigation ---
         function updateSteps() {
             document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
             document.querySelector(`.step-content[data-step="${currentStep}"]`).classList.add('active');
             document.getElementById('stepNumber').textContent = currentStep;
-            
+
             document.getElementById('btnBack').style.display = currentStep > 1 ? 'flex' : 'none';
             const btnNext = document.getElementById('btnNext');
-            
+
             if (currentStep === totalSteps) {
                 btnNext.innerHTML = '<span>🚀</span><span>إرسال</span>';
                 btnNext.classList.add('launch-btn');
@@ -3995,7 +4012,7 @@
             const container = document.getElementById('imagesListContainer');
             if (!container) return;
             container.innerHTML = '';
-            
+
             if (state.images.length === 0) {
                 container.innerHTML = '<div id="noImagesMsg" style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 40px; background: var(--bg-secondary); border-radius: 16px; border: 2px dashed var(--border-color);"><span>📸</span><br>لا توجد صور بعد، قم بإضافة رابط صورة أو ارفع ملفات من جهازك للبدء</div>';
                 return;
@@ -4006,7 +4023,7 @@
                 card.className = 'image-card';
                 card.setAttribute('draggable', true);
                 card.setAttribute('data-index', idx);
-                
+
                 card.innerHTML = `
                     <div class="drag-handle">⋮⋮</div>
                     
@@ -4156,19 +4173,19 @@
                         canvas.width = size;
                         canvas.height = size;
                         ctx.drawImage(img, 0, 0, size, size);
-                        
+
                         const imageData = ctx.getImageData(0, 0, size, size).data;
                         let edgeIntensity = 0;
-                        
+
                         // Simple edge detection heuristic
                         for (let i = 0; i < imageData.length; i += 4) {
-                            const avg = (imageData[i] + imageData[i+1] + imageData[i+2]) / 3;
+                            const avg = (imageData[i] + imageData[i + 1] + imageData[i + 2]) / 3;
                             if (i > 4) {
-                                const prevAvg = (imageData[i-4] + imageData[i-3] + imageData[i-2]) / 3;
+                                const prevAvg = (imageData[i - 4] + imageData[i - 3] + imageData[i - 2]) / 3;
                                 edgeIntensity += Math.abs(avg - prevAvg);
                             }
                         }
-                        
+
                         // Map intensity to 3-10 range (Tuned down from 15)
                         // Normalizing edge intensity: higher intensity = more details/text
                         const maxExpectedIntense = size * size * 35; // Increased threshold
@@ -4187,75 +4204,68 @@
         async function handleFiles(files) {
             if (!files || files.length === 0) return;
             showLoading('جاري تحليل ومعالجة الصور...', 'يرجى الانتظار');
-            
+
             const newImages = [];
             const filesArray = Array.from(files).filter(f => f.type.startsWith('image/'));
-            
+
             if (filesArray.length === 0) {
                 hideLoading();
                 return;
             }
-            
+
             for (const file of filesArray) {
                 const blobUrl = URL.createObjectURL(file);
                 const smartDuration = await analyzeImageComplexity(blobUrl);
                 newImages.push({ url: blobUrl, duration: smartDuration });
             }
-            
+
             state.images.push(...newImages);
             renderImagesList();
             hideLoading();
             showToast(`تمت إضافة ${newImages.length} صور مع تحديد المدة ذكياً`);
         }
 
-        // --- Load from Telegram ---
+        // --- Load from Telegram or URL Param ---
         async function fetchInitData() {
             try {
                 // استخراج معرف البيانات سواء من الرابط (URL param) أو من معطيات التليجرام
                 const params = new URLSearchParams(window.location.search);
                 const urlBinId = params.get('bin');
-                
+
                 let startParam = null;
                 try {
                     const initData = tg.initDataUnsafe;
                     if (initData && initData.start_param) {
                         startParam = initData.start_param;
                     }
-                } catch (e) {}
-                
+                } catch (e) { }
+
                 const processId = urlBinId || startParam;
 
                 if (processId) {
                     showLoading('جاري جلب البيانات...', 'يرجى الانتظار');
                     try {
-                        let response;
-                        try {
-                            // جلب البيانات من HuggingFace
-                            response = await fetch(`https://abdullah2omar-social-media-publishing-upload-file.hf.space/api/bins/${processId}`);
-                        } catch(e) {
-                            console.log('Worker failed, trying n8n direct');
-                            // يمكنك الإبقاء على المحاولات البديلة إن أردت
-                            response = await fetch(`https://n8n.srv902036.hstgr.cloud/webhook/telegram-file-proxy?binId=${processId}`);
-                        }
-                        
+                        // نستخدم Deno Worker كـ Proxy لإخفاء توكن HuggingFace
+                        const response = await fetch(`${WORKER_API_URL}/get-bin/${processId}`);
+
                         if (response && response.ok) {
-                            const data = await response.json();
-                            // نتحقق من شكل البيانات العائدة لأن HuggingFace يعيد البيانات بداخل data.data
-                            if (data && data.data && data.data.images) {
-                                state.images = data.data.images;
-                                renderImagesList();
-                            } else if (data && data.images) {
+                            const result = await response.json();
+                            // Worker يعيد: { success: true, data: { images: [...] } }
+                            const data = result.data || result.record || result;
+                            if (data && data.images && Array.isArray(data.images)) {
                                 state.images = data.images;
                                 renderImagesList();
-                            } else if (data && data.url) {
-                                state.images.push({ url: data.url, duration: 5 });
-                                renderImagesList();
+                                showToast(`✅ تم تحميل ${data.images.length} صورة`);
+                            } else {
+                                console.warn('No images found in bin data:', data);
                             }
                         } else {
-                            console.error('Failed to fetch data, Status:', response?.status);
+                            console.error('Failed to fetch bin. Status:', response?.status);
+                            showToast('تعذر تحميل الصور، حاول مرة أخرى', true);
                         }
-                    } catch(err) {
+                    } catch (err) {
                         console.error('Error fetching bin', err);
+                        showToast('خطأ في الاتصال بالخادم', true);
                     } finally {
                         hideLoading();
                     }
@@ -4264,7 +4274,7 @@
                 console.error(e);
             }
         }
-        
+
         // Execute fetch init data
         fetchInitData();
 
@@ -4305,13 +4315,13 @@
                 showToast('الرجاء إضافة صور أولاً لتحليلها', true);
                 return;
             }
-            
+
             showLoading('جاري تحليل الصور وتوليد SEO...', 'قد يستغرق ذلك بضع ثوانٍ');
             try {
                 // Get thumbnails for the first 3 images to send to the worker
                 const sampleImages = state.images.slice(0, 3);
                 const imageDataList = [];
-                
+
                 for (const imgObj of sampleImages) {
                     try {
                         if (imgObj.url.startsWith('blob:')) {
@@ -4343,7 +4353,7 @@
                         images: imageDataList
                     })
                 });
-                
+
                 if (response.ok) {
                     const data = await response.json();
                     if (data) {
@@ -4359,14 +4369,14 @@
                         }
                         if (data.tags) {
                             // تنظيف إضافي للكلمات المفتاحية
-                            state.seo.tags = Array.from(new Set(data.tags.map(t => 
+                            state.seo.tags = Array.from(new Set(data.tags.map(t =>
                                 t.trim().replace(/[\s\-_]+/g, '').replace(/[^\u0600-\u06FFa-zA-Z0-9]/g, '')
                             ).filter(t => t.length > 1)));
                             renderTagsList('tagsContainer', state.seo.tags);
                         }
                         if (data.hashtags) {
                             // تنظيف إضافي للهاشتاقات
-                            state.seo.hashtags = Array.from(new Set(data.hashtags.map(t => 
+                            state.seo.hashtags = Array.from(new Set(data.hashtags.map(t =>
                                 t.trim().replace(/^#/, '').replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '').replace(/\s+/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '').toLowerCase()
                             ).filter(t => t.length > 1)));
                             renderTagsList('hashtagsContainer', state.seo.hashtags);
@@ -4429,7 +4439,7 @@
             const val = input.value.trim()
                 .replace(/[\s\-_]+/g, '')
                 .replace(/[^\u0600-\u06FFa-zA-Z0-9]/g, '');
-                
+
             if (val && !state.seo.tags.includes(val)) {
                 state.seo.tags.push(val);
                 input.value = '';
@@ -4448,7 +4458,7 @@
                 .replace(/_+/g, '_')
                 .replace(/^_|_$/g, '')
                 .toLowerCase();
-                
+
             if (val && !state.seo.hashtags.includes(val)) {
                 state.seo.hashtags.push(val);
                 input.value = '';
@@ -4463,10 +4473,10 @@
             document.getElementById('reviewImagesCount').textContent = state.images.length;
             const totalDuration = state.images.reduce((acc, img) => acc + img.duration, 0);
             document.getElementById('reviewTotalDuration').textContent = totalDuration + ' ثانية';
-            
+
             document.getElementById('reviewSeoTitleBox').textContent = state.seo.title || '-';
             document.getElementById('reviewSeoDescBox').textContent = state.seo.description || '-';
-            
+
             document.getElementById('reviewTagsPreview').innerHTML = state.seo.tags.map(t => `<span class="review-tag" style="background:var(--bg-tertiary);padding:4px 8px;border-radius:4px;font-size:12px;margin:2px;display:inline-block;">${t}</span>`).join('') || '-';
             document.getElementById('reviewHashtagsPreview').innerHTML = state.seo.hashtags.map(t => `<span class="review-tag" style="background:var(--bg-tertiary);padding:4px 8px;border-radius:4px;font-size:12px;margin:2px;display:inline-block;">#${t}</span>`).join('') || '-';
         }
@@ -4476,4 +4486,5 @@
         renderImagesList();
     </script>
 </body>
+
 </html>
