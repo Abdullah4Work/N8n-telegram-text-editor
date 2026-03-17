@@ -3963,6 +3963,16 @@
         };
 
 
+        // --- Helpers ---
+        function getProxiedUrl(url) {
+            if (!url) return '';
+            // إذا كان الرابط من تليجرام، نستخدم البروكسي لتجنب مشاكل CORS
+            if (url.includes('api.telegram.org/file/bot')) {
+                return `${WORKER_API_URL}/proxy-image?url=${encodeURIComponent(url)}`;
+            }
+            return url;
+        }
+
         // --- Navigation ---
         function updateSteps() {
             document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
@@ -4028,7 +4038,7 @@
                     <div class="drag-handle">⋮⋮</div>
                     
                     <div class="image-thumb-wrapper">
-                        <img src="${img.url}" class="image-thumb" onerror="this.src='/api/placeholder/90/90'">
+                        <img src="${getProxiedUrl(img.url)}" class="image-thumb" onerror="this.src='/api/placeholder/90/90'">
                     </div>
                     
                     <div class="image-info">
@@ -4197,7 +4207,7 @@
                     }
                 };
                 img.onerror = () => resolve(5);
-                img.src = url;
+                img.src = getProxiedUrl(url);
             });
         }
 
@@ -4305,7 +4315,7 @@
                     }
                 };
                 img.onerror = () => resolve(null);
-                img.src = url;
+                img.src = getProxiedUrl(url);
             });
         }
 
