@@ -4211,27 +4211,48 @@
         // --- Load from Telegram ---
         async function fetchInitData() {
             try {
-                const initData = tg.initDataUnsafe;
-                if (initData && initData.start_param) {
+                // استخراج معرف البيانات سواء من الرابط (URL param) أو من معطيات التليجرام
+                const params = new URLSearchParams(window.location.search);
+                const urlBinId = params.get('bin');
+                
+                let startParam = null;
+                try {
+                    const initData = tg.initDataUnsafe;
+                    if (initData && initData.start_param) {
+                        startParam = initData.start_param;
+                    }
+                } catch (e) {}
+                
+                const processId = urlBinId || startParam;
+
+                if (processId) {
                     showLoading('جاري جلب البيانات...', 'يرجى الانتظار');
                     try {
                         let response;
                         try {
-                            response = await fetch(`${WORKER_API_URL}/get-bin/${initData.start_param}`);
+                            // جلب البيانات من HuggingFace
+                            response = await fetch(`https://abdullah2omar-social-media-publishing-upload-file.hf.space/api/bins/${processId}`);
                         } catch(e) {
                             console.log('Worker failed, trying n8n direct');
-                            response = await fetch(`https://n8n.srv902036.hstgr.cloud/webhook/telegram-file-proxy?binId=${initData.start_param}`);
+                            // يمكنك الإبقاء على المحاولات البديلة إن أردت
+                            response = await fetch(`https://n8n.srv902036.hstgr.cloud/webhook/telegram-file-proxy?binId=${processId}`);
                         }
                         
                         if (response && response.ok) {
                             const data = await response.json();
+                            // نتحقق من شكل البيانات العائدة لأن HuggingFace يعيد البيانات بداخل data.data
                             if (data && data.data && data.data.images) {
                                 state.images = data.data.images;
+                                renderImagesList();
+                            } else if (data && data.images) {
+                                state.images = data.images;
                                 renderImagesList();
                             } else if (data && data.url) {
                                 state.images.push({ url: data.url, duration: 5 });
                                 renderImagesList();
                             }
+                        } else {
+                            console.error('Failed to fetch data, Status:', response?.status);
                         }
                     } catch(err) {
                         console.error('Error fetching bin', err);
