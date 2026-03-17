@@ -4378,11 +4378,16 @@
                             document.getElementById('seoDescCount').textContent = data.description.length;
                         }
                         if (data.tags) {
-                            // تنظيف إضافي للكلمات المفتاحية
+                        if (data.tags) {
+                            // تنظيف الكلمات المفتاحية مع الحفاظ على المسافات
                             state.seo.tags = Array.from(new Set(data.tags.map(t =>
-                                t.trim().replace(/[\s\-_]+/g, '').replace(/[^\u0600-\u06FFa-zA-Z0-9]/g, '')
+                                t.trim()
+                                    .replace(/[\-_]+/g, ' ')             // تحويل الشرطات والشرطات السفلية لمسافات
+                                    .replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '') // إزالة الرموز مع إبقاء المسافات
+                                    .replace(/\s+/g, ' ')                // تطبيع المسافات
                             ).filter(t => t.length > 1)));
                             renderTagsList('tagsContainer', state.seo.tags);
+                        }
                         }
                         if (data.hashtags) {
                             // تنظيف إضافي للهاشتاقات
@@ -4445,10 +4450,11 @@
 
         document.getElementById('addTagBtn').addEventListener('click', () => {
             const input = document.getElementById('tagInput');
-            // تنظيف الكلمة المفتاحية (دمج الكلمات وحذف أي رموز)
+            // تنظيف الكلمة المفتاحية (الحفاظ على المسافات وحذف الرموز فقط)
             const val = input.value.trim()
-                .replace(/[\s\-_]+/g, '')
-                .replace(/[^\u0600-\u06FFa-zA-Z0-9]/g, '');
+                .replace(/[\-_]+/g, ' ')
+                .replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '')
+                .replace(/\s+/g, ' ');
 
             if (val && !state.seo.tags.includes(val)) {
                 state.seo.tags.push(val);
