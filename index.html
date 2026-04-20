@@ -6992,10 +6992,22 @@
             });
         }
 
+        function normalizeHashtag(hashtagText) {
+            if (!hashtagText) return '';
+
+            return hashtagText
+                .trim()
+                .replace(/^#+/, '')
+                .replace(/[\u200C\u200D\uFEFF]/g, '')
+                .replace(/\s+/g, '_')
+                .replace(/_+/g, '_')
+                .replace(/^_+|_+$/g, '');
+        }
+
         function addHashtag(hashtagText) {
-            const trimmed = hashtagText.trim().replace(/^#/, ''); // إزالة # إذا وجدت
-            if (!trimmed || formData.seo_hashtags.includes(trimmed)) return;
-            formData.seo_hashtags.push(trimmed);
+            const normalized = normalizeHashtag(hashtagText);
+            if (!normalized || formData.seo_hashtags.includes(normalized)) return;
+            formData.seo_hashtags.push(normalized);
             renderHashtags();
             document.getElementById('hashtagInput').value = '';
             updateSeoStats();
@@ -7056,7 +7068,7 @@
                         const hashtags = line.match(/#([^\s#]+)/g);
                         if (hashtags) {
                             hashtags.forEach(hashtag => {
-                                const cleanTag = hashtag.replace('#', '').replace(/_/g, '');
+                                const cleanTag = normalizeHashtag(hashtag);
                                 if (cleanTag.length > 1 && !extractedHashtags.includes(cleanTag)) {
                                     extractedHashtags.push(cleanTag);
                                 }
@@ -7238,7 +7250,9 @@
                     formData.seo_title = result.title || formData.title || '';
                     formData.seo_description = result.description || '';
                     formData.tags = result.tags || [];
-                    formData.seo_hashtags = result.hashtags || [];  // إضافة الهاشتاقات
+                    formData.seo_hashtags = (result.hashtags || [])
+                        .map(tag => normalizeHashtag(tag))
+                        .filter((tag, index, array) => tag && array.indexOf(tag) === index);  // إضافة الهاشتاقات
 
                     document.getElementById('seoTitleInput').value = formData.seo_title;
                     document.getElementById('seoDescriptionInput').value = formData.seo_description;
