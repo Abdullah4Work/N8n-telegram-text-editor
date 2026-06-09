@@ -4012,33 +4012,37 @@
                 btnNext.disabled = true;
 
                 try {
-                    // استنساخ الحالة لتجنب تعديل حالة واجهة المستخدم
-                    const cleanState = JSON.parse(JSON.stringify(state));
-                    
-                    // تنظيف الوصف من الفوتر الطويل لتجنب خطأ تجاوز الحد المسموح به في تليجرام (4096 بايت)
-                    if (cleanState.seo && cleanState.seo.description) {
-                        const footerMarkers = [
-                            'بشرى سارة',
-                            'موقع رقيتي',
-                            'ابو ثائر',
-                            'أبو ثائر',
-                            'للرقية الشرعية'
-                        ];
-                        let desc = cleanState.seo.description;
-                        for (const marker of footerMarkers) {
-                            const index = desc.indexOf(marker);
-                            if (index !== -1) {
-                                desc = desc.substring(0, index);
-                            }
-                        }
-                        cleanState.seo.description = desc.trim();
-                    }
+                    const params = new URLSearchParams(window.location.search);
+                    const urlBinId = params.get('bin');
+                    const processId = urlBinId || tg.initDataUnsafe?.start_param || Date.now().toString();
 
-                    // إرسال البيانات للتليجرام مباشرة عبر sendData لتوافق سير العمل
-                    tg.sendData(JSON.stringify({ 
+                    const finalData = {
                         type: 'images_sequence',
-                        data: cleanState
-                    }));
+                        data: state,
+                        id: processId,
+                        timestamp: new Date().toISOString()
+                    };
+
+                    console.log('📤 إرسال البيانات عبر Webhook:', finalData);
+
+                    const response = await fetch(N8N_WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(finalData)
+                    });
+
+                    if (!response.ok) throw new Error('فشل الإرسال للـ Webhook');
+
+                    // إرسال إشعار صغير فقط للتليجرام لتفادي مشكلة (Data is too long) وإنهاء الـ WebApp
+                    try {
+                        tg.sendData(JSON.stringify({ 
+                            type: 'images_sequence_completed',
+                            id: processId,
+                            status: 'completed'
+                        }));
+                    } catch (e) {
+                        console.log('⚠️ لا يمكن إرسال إشعار التليجرام:', e);
+                    }
 
                     if (tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) {
                         tg.showAlert('✅ تم الإرسال بنجاح!', () => {
