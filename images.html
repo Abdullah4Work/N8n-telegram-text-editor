@@ -4390,9 +4390,9 @@
                         }
                         }
                         if (data.hashtags) {
-                            // تنظيف إضافي للهاشتاقات
+                            // تنظيف إضافي للهاشتاقات - الحفاظ على _ بين الكلمات
                             state.seo.hashtags = Array.from(new Set(data.hashtags.map(t =>
-                                t.trim().replace(/^#/, '').replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '').replace(/\s+/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '').toLowerCase()
+                                t.trim().replace(/^#/, '').replace(/[^\u0600-\u06FFa-zA-Z0-9\s_]/g, '').replace(/\s+/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '').toLowerCase()
                             ).filter(t => t.length > 1)));
                             renderTagsList('hashtagsContainer', state.seo.hashtags);
                         }
@@ -4469,7 +4469,7 @@
             // تنظيف الهاشتاق (استبدال المسافات بـ _)
             const val = input.value.trim()
                 .replace(/^#/, '')
-                .replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '')
+                .replace(/[^\u0600-\u06FFa-zA-Z0-9\s_]/g, '')
                 .replace(/\s+/g, '_')
                 .replace(/_+/g, '_')
                 .replace(/^_|_$/g, '')
