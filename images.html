@@ -3956,6 +3956,7 @@
 
         // عنوان الـ Deno Worker (يحتوي على توكن HuggingFace بأمان)
         const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.net';
+        const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor-picture';
 
         const state = {
             images: [],
@@ -3997,13 +3998,66 @@
             }
         }
 
-        document.getElementById('btnNext').addEventListener('click', () => {
+        document.getElementById('btnNext').addEventListener('click', async () => {
             if (currentStep < totalSteps) {
                 currentStep++;
                 updateSteps();
                 window.scrollTo(0, 0);
             } else {
-                tg.sendData(JSON.stringify({ type: 'images_sequence', data: state }));
+                const btnNext = document.getElementById('btnNext');
+                const originalText = btnNext.innerHTML;
+                
+                // إضافة حالة التحميل
+                btnNext.innerHTML = '<span>⏳</span><span>جاري الإرسال...</span>';
+                btnNext.disabled = true;
+
+                try {
+                    const params = new URLSearchParams(window.location.search);
+                    const urlBinId = params.get('bin');
+                    const processId = urlBinId || tg.initDataUnsafe?.start_param || Date.now().toString();
+
+                    const finalData = {
+                        type: 'images_sequence',
+                        data: state,
+                        id: processId,
+                        timestamp: new Date().toISOString()
+                    };
+
+                    console.log('📤 إرسال البيانات عبر Webhook:', finalData);
+
+                    const response = await fetch(N8N_WEBHOOK_URL, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(finalData)
+                    });
+
+                    if (!response.ok) throw new Error('فشل الإرسال للـ Webhook');
+
+                    // إرسال إشعار صغير فقط للتليجرام لتفادي مشكلة (Data is too long) وإنهاء الـ WebApp
+                    try {
+                        tg.sendData(JSON.stringify({ 
+                            type: 'images_sequence_completed',
+                            id: processId,
+                            status: 'completed'
+                        }));
+                    } catch (e) {
+                        console.log('⚠️ لا يمكن إرسال إشعار التليجرام:', e);
+                    }
+
+                    if (tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) {
+                        tg.showAlert('✅ تم الإرسال بنجاح!', () => {
+                            setTimeout(() => tg.close(), 500);
+                        });
+                    } else {
+                        showToast('✅ تم الإرسال بنجاح!');
+                        setTimeout(() => tg.close(), 1500);
+                    }
+                } catch (error) {
+                    console.error('❌ خطأ في الإرسال:', error);
+                    showToast('❌ حدث خطأ أثناء الإرسال: ' + error.message, true);
+                    btnNext.innerHTML = originalText;
+                    btnNext.disabled = false;
+                }
             }
         });
 
