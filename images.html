@@ -4006,7 +4006,7 @@
             } else {
                 const btnNext = document.getElementById('btnNext');
                 const originalText = btnNext.innerHTML;
-
+                
                 // إضافة حالة التحميل
                 btnNext.innerHTML = '<span>⏳</span><span>جاري الإرسال...</span>';
                 btnNext.disabled = true;
@@ -4035,7 +4035,7 @@
 
                     // إرسال إشعار صغير فقط للتليجرام لتفادي مشكلة (Data is too long) وإنهاء الـ WebApp
                     try {
-                        tg.sendData(JSON.stringify({
+                        tg.sendData(JSON.stringify({ 
                             type: 'images_sequence_completed',
                             id: processId,
                             status: 'completed'
@@ -4265,18 +4265,9 @@
             });
         }
 
-        function fileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-                reader.readAsDataURL(file);
-            });
-        }
-
         async function handleFiles(files) {
             if (!files || files.length === 0) return;
-            showLoading('جاري رفع وتحليل الصور...', 'يرجى الانتظار');
+            showLoading('جاري تحليل ومعالجة الصور...', 'يرجى الانتظار');
 
             const newImages = [];
             const filesArray = Array.from(files).filter(f => f.type.startsWith('image/'));
@@ -4286,49 +4277,16 @@
                 return;
             }
 
-            try {
-                for (const file of filesArray) {
-                    // 1. تحويل الصورة إلى base64 للرفع
-                    const base64Data = await fileToBase64(file);
-
-                    // 2. تحديد مدة الصورة محلياً وذكياً عبر blob مؤقت
-                    const tempBlobUrl = URL.createObjectURL(file);
-                    const smartDuration = await analyzeImageComplexity(tempBlobUrl);
-                    URL.revokeObjectURL(tempBlobUrl);
-
-                    // 3. رفع الصورة إلى خادم Node
-                    const serverOrigin = window.location.origin.startsWith('http') ? window.location.origin : 'http://localhost:7860';
-                    const uploadUrl = `${serverOrigin}/upload-image`;
-
-                    const response = await fetch(uploadUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ image: base64Data })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`فشل الرفع: ${response.statusText}`);
-                    }
-
-                    const result = await response.json();
-                    if (!result.success) {
-                        throw new Error(result.error || 'فشل معالجة الصورة على الخادم');
-                    }
-
-                    // 4. استخدام الرابط المنشأ من الخادم
-                    const finalImageUrl = serverOrigin + result.url;
-                    newImages.push({ url: finalImageUrl, duration: smartDuration });
-                }
-
-                state.images.push(...newImages);
-                renderImagesList();
-                showToast(`تمت إضافة ورفع ${newImages.length} صور بنجاح`);
-            } catch (err) {
-                console.error(err);
-                showToast(`❌ خطأ أثناء رفع الصور: ${err.message}`, true);
-            } finally {
-                hideLoading();
+            for (const file of filesArray) {
+                const blobUrl = URL.createObjectURL(file);
+                const smartDuration = await analyzeImageComplexity(blobUrl);
+                newImages.push({ url: blobUrl, duration: smartDuration });
             }
+
+            state.images.push(...newImages);
+            renderImagesList();
+            hideLoading();
+            showToast(`تمت إضافة ${newImages.length} صور مع تحديد المدة ذكياً`);
         }
 
         // --- Load from Telegram or URL Param ---
@@ -4474,16 +4432,16 @@
                             document.getElementById('seoDescCount').textContent = data.description.length;
                         }
                         if (data.tags) {
-                            if (data.tags) {
-                                // تنظيف الكلمات المفتاحية مع الحفاظ على المسافات
-                                state.seo.tags = Array.from(new Set(data.tags.map(t =>
-                                    t.trim()
-                                        .replace(/[\-_]+/g, ' ')             // تحويل الشرطات والشرطات السفلية لمسافات
-                                        .replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '') // إزالة الرموز مع إبقاء المسافات
-                                        .replace(/\s+/g, ' ')                // تطبيع المسافات
-                                ).filter(t => t.length > 1)));
-                                renderTagsList('tagsContainer', state.seo.tags);
-                            }
+                        if (data.tags) {
+                            // تنظيف الكلمات المفتاحية مع الحفاظ على المسافات
+                            state.seo.tags = Array.from(new Set(data.tags.map(t =>
+                                t.trim()
+                                    .replace(/[\-_]+/g, ' ')             // تحويل الشرطات والشرطات السفلية لمسافات
+                                    .replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '') // إزالة الرموز مع إبقاء المسافات
+                                    .replace(/\s+/g, ' ')                // تطبيع المسافات
+                            ).filter(t => t.length > 1)));
+                            renderTagsList('tagsContainer', state.seo.tags);
+                        }
                         }
                         if (data.hashtags) {
                             // تنظيف إضافي للهاشتاقات - الحفاظ على _ بين الكلمات
