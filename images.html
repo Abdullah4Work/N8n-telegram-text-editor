@@ -3487,6 +3487,49 @@
                 padding: 8px;
                 font-size: 12px;
             }
+
+            /* تحسين كروت الصور للهواتف الشاشات الصغيرة */
+            .image-card {
+                padding: 10px;
+                gap: 8px;
+            }
+            .image-thumb-wrapper {
+                width: 65px;
+                height: 65px;
+                border-radius: 8px;
+            }
+            .image-info {
+                gap: 6px;
+            }
+            .image-number-label {
+                font-size: 13px;
+            }
+            .image-duration-container {
+                padding: 4px 8px;
+                gap: 4px;
+            }
+            .image-duration-container span {
+                font-size: 10px !important;
+            }
+            .duration-input-modern {
+                width: 45px;
+                padding: 4px;
+                font-size: 12px;
+            }
+            .action-btn-premium {
+                width: 30px;
+                height: 30px;
+                border-radius: 8px;
+                font-size: 12px;
+            }
+            .image-actions-vertical {
+                gap: 4px;
+            }
+            .drag-handle {
+                padding: 4px;
+                font-size: 16px;
+                margin-right: -4px;
+            }
         }
 
         /* 📸 Image Editor Premium UI */
@@ -4006,7 +4049,7 @@
             } else {
                 const btnNext = document.getElementById('btnNext');
                 const originalText = btnNext.innerHTML;
-                
+
                 // إضافة حالة التحميل
                 btnNext.innerHTML = '<span>⏳</span><span>جاري الإرسال...</span>';
                 btnNext.disabled = true;
@@ -4035,7 +4078,7 @@
 
                     // إرسال إشعار صغير فقط للتليجرام لتفادي مشكلة (Data is too long) وإنهاء الـ WebApp
                     try {
-                        tg.sendData(JSON.stringify({ 
+                        tg.sendData(JSON.stringify({
                             type: 'images_sequence_completed',
                             id: processId,
                             status: 'completed'
@@ -4102,7 +4145,7 @@
                         </div>
                         <div class="image-duration-container">
                             <span style="font-size: 12px; font-weight: bold; color: var(--text-secondary);">المدة:</span>
-                            <input type="number" value="${img.duration}" min="1" max="60" 
+                            <input type="number" value="${img.duration}" min="2" max="60" 
                                 class="duration-input-modern" 
                                 onchange="updateDuration(${idx}, this.value)">
                             <span style="font-size: 12px; font-weight: bold; color: var(--text-secondary);">ثواني</span>
@@ -4110,9 +4153,26 @@
                     </div>
                     
                     <div class="image-actions-vertical">
-                        <button onclick="moveImageUp(${idx})" class="action-btn-premium" title="تحريك لأعلى" ${idx === 0 ? 'disabled' : ''}>⬆️</button>
-                        <button onclick="moveImageDown(${idx})" class="action-btn-premium" title="تحريك لأسفل" ${idx === state.images.length - 1 ? 'disabled' : ''}>⬇️</button>
-                        <button onclick="removeImage(${idx})" class="action-btn-premium delete" title="حذف">🗑️</button>
+                        <button onclick="moveImageUp(${idx})" class="action-btn-premium" title="تحريك لأعلى" ${idx === 0 ? 'disabled' : ''}>
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="19" x2="12" y2="5"></line>
+                                <polyline points="5 12 12 5 19 12"></polyline>
+                            </svg>
+                        </button>
+                        <button onclick="moveImageDown(${idx})" class="action-btn-premium" title="تحريك لأسفل" ${idx === state.images.length - 1 ? 'disabled' : ''}>
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <polyline points="19 12 12 19 5 12"></polyline>
+                            </svg>
+                        </button>
+                        <button onclick="removeImage(${idx})" class="action-btn-premium delete" title="حذف">
+                            <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                <line x1="10" y1="11" x2="10" y2="17"></line>
+                                <line x1="14" y1="11" x2="14" y2="17"></line>
+                            </svg>
+                        </button>
                     </div>
                 `;
 
@@ -4157,7 +4217,9 @@
         }
 
         window.updateDuration = (idx, value) => {
-            state.images[idx].duration = parseInt(value) || 5;
+            let duration = parseInt(value) || 2;
+            if (duration < 2) duration = 2;
+            state.images[idx].duration = duration;
         };
 
         window.moveImageUp = (idx) => {
@@ -4250,24 +4312,33 @@
                             }
                         }
 
-                        // Map intensity to 3-10 range (Tuned down from 15)
+                        // Map intensity to 2-10 range
                         // Normalizing edge intensity: higher intensity = more details/text
                         const maxExpectedIntense = size * size * 35; // Increased threshold
                         const normalized = Math.min(edgeIntensity / maxExpectedIntense, 1);
-                        const duration = Math.round(3 + (normalized * 7)); // Range 3 to 10
+                        const duration = Math.round(2 + (normalized * 8)); // Range 2 to 10
                         resolve(duration);
                     } catch (e) {
-                        resolve(5); // Fallback
+                        resolve(2); // Fallback
                     }
                 };
-                img.onerror = () => resolve(5);
+                img.onerror = () => resolve(2);
                 img.src = getProxiedUrl(url);
+            });
+        }
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+                reader.readAsDataURL(file);
             });
         }
 
         async function handleFiles(files) {
             if (!files || files.length === 0) return;
-            showLoading('جاري تحليل ومعالجة الصور...', 'يرجى الانتظار');
+            showLoading('جاري رفع وتحليل الصور...', 'يرجى الانتظار');
 
             const newImages = [];
             const filesArray = Array.from(files).filter(f => f.type.startsWith('image/'));
@@ -4277,16 +4348,49 @@
                 return;
             }
 
-            for (const file of filesArray) {
-                const blobUrl = URL.createObjectURL(file);
-                const smartDuration = await analyzeImageComplexity(blobUrl);
-                newImages.push({ url: blobUrl, duration: smartDuration });
-            }
+            try {
+                for (const file of filesArray) {
+                    // 1. تحويل الصورة إلى base64 للرفع
+                    const base64Data = await fileToBase64(file);
 
-            state.images.push(...newImages);
-            renderImagesList();
-            hideLoading();
-            showToast(`تمت إضافة ${newImages.length} صور مع تحديد المدة ذكياً`);
+                    // 2. تحديد مدة الصورة محلياً وذكياً عبر blob مؤقت
+                    const tempBlobUrl = URL.createObjectURL(file);
+                    const smartDuration = await analyzeImageComplexity(tempBlobUrl);
+                    URL.revokeObjectURL(tempBlobUrl);
+
+                    // 3. رفع الصورة إلى خادم Node
+                    const serverOrigin = window.location.origin.startsWith('http') ? window.location.origin : 'http://localhost:7860';
+                    const uploadUrl = `${serverOrigin}/upload-image`;
+
+                    const response = await fetch(uploadUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ image: base64Data })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`فشل الرفع: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    if (!result.success) {
+                        throw new Error(result.error || 'فشل معالجة الصورة على الخادم');
+                    }
+
+                    // 4. استخدام الرابط المنشأ من الخادم
+                    const finalImageUrl = serverOrigin + result.url;
+                    newImages.push({ url: finalImageUrl, duration: smartDuration });
+                }
+
+                state.images.push(...newImages);
+                renderImagesList();
+                showToast(`تمت إضافة ورفع ${newImages.length} صور بنجاح`);
+            } catch (err) {
+                console.error(err);
+                showToast(`❌ خطأ أثناء رفع الصور: ${err.message}`, true);
+            } finally {
+                hideLoading();
+            }
         }
 
         // --- Load from Telegram or URL Param ---
@@ -4432,16 +4536,16 @@
                             document.getElementById('seoDescCount').textContent = data.description.length;
                         }
                         if (data.tags) {
-                        if (data.tags) {
-                            // تنظيف الكلمات المفتاحية مع الحفاظ على المسافات
-                            state.seo.tags = Array.from(new Set(data.tags.map(t =>
-                                t.trim()
-                                    .replace(/[\-_]+/g, ' ')             // تحويل الشرطات والشرطات السفلية لمسافات
-                                    .replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '') // إزالة الرموز مع إبقاء المسافات
-                                    .replace(/\s+/g, ' ')                // تطبيع المسافات
-                            ).filter(t => t.length > 1)));
-                            renderTagsList('tagsContainer', state.seo.tags);
-                        }
+                            if (data.tags) {
+                                // تنظيف الكلمات المفتاحية مع الحفاظ على المسافات
+                                state.seo.tags = Array.from(new Set(data.tags.map(t =>
+                                    t.trim()
+                                        .replace(/[\-_]+/g, ' ')             // تحويل الشرطات والشرطات السفلية لمسافات
+                                        .replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '') // إزالة الرموز مع إبقاء المسافات
+                                        .replace(/\s+/g, ' ')                // تطبيع المسافات
+                                ).filter(t => t.length > 1)));
+                                renderTagsList('tagsContainer', state.seo.tags);
+                            }
                         }
                         if (data.hashtags) {
                             // تنظيف إضافي للهاشتاقات - الحفاظ على _ بين الكلمات
