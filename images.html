@@ -4047,6 +4047,21 @@
             user_id: ''
         };
 
+        // نسخة كاملة من بيانات الـ BIN الأصلية (تُحدَّث عند التحميل وتُدمج مع التعديلات عند الإرسال)
+        let binData = {};
+
+        function getWebhookData() {
+            const userId = state.user_id
+                || binData.user_id
+                || (tg.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : '');
+
+            return {
+                ...binData,
+                images: state.images,
+                seo: { ...state.seo },
+                user_id: userId
+            };
+        }
 
         // --- Helpers ---
         function getProxiedUrl(url) {
@@ -4100,13 +4115,9 @@
                     const urlBinId = params.get('bin');
                     const processId = urlBinId || tg.initDataUnsafe?.start_param || Date.now().toString();
 
-                    if (!state.user_id && tg.initDataUnsafe?.user?.id) {
-                        state.user_id = String(tg.initDataUnsafe.user.id);
-                    }
-
                     const finalData = {
                         type: 'images_sequence',
-                        data: state,
+                        data: getWebhookData(),
                         id: processId,
                         timestamp: new Date().toISOString()
                     };
@@ -4466,37 +4477,35 @@
                             // Worker يعيد: { success: true, data: { images: [...] } }
                             const data = result.data || result.record || result;
                             if (data) {
-                                if (data.user_id) {
-                                    state.user_id = String(data.user_id);
+                                binData = { ...data };
+
+                                if (binData.user_id) {
+                                    state.user_id = String(binData.user_id);
                                 } else if (tg.initDataUnsafe?.user?.id) {
                                     state.user_id = String(tg.initDataUnsafe.user.id);
                                 }
-                                if (data.images && Array.isArray(data.images)) {
-                                    state.images = data.images;
+
+                                if (binData.images && Array.isArray(binData.images)) {
+                                    state.images = binData.images;
                                     renderImagesList();
-                                    showToast(`✅ تم تحميل ${data.images.length} صورة`);
+                                    showToast(`✅ تم تحميل ${binData.images.length} صورة`);
                                 } else {
-                                    console.warn('No images found in bin data:', data);
+                                    console.warn('No images found in bin data:', binData);
                                 }
-                                if (data.seo) {
-                                    if (data.seo.title) {
-                                        state.seo.title = data.seo.title;
-                                        document.getElementById('seoTitleInput').value = data.seo.title;
-                                        document.getElementById('seoTitleCount').textContent = data.seo.title.length;
-                                    }
-                                    if (data.seo.description) {
-                                        state.seo.description = data.seo.description;
-                                        document.getElementById('seoDescriptionInput').value = data.seo.description;
-                                        document.getElementById('seoDescCount').textContent = data.seo.description.length;
-                                    }
-                                    if (data.seo.tags && Array.isArray(data.seo.tags)) {
-                                        state.seo.tags = data.seo.tags;
-                                        renderTagsList('tagsContainer', state.seo.tags);
-                                    }
-                                    if (data.seo.hashtags && Array.isArray(data.seo.hashtags)) {
-                                        state.seo.hashtags = data.seo.hashtags;
-                                        renderTagsList('hashtagsContainer', state.seo.hashtags);
-                                    }
+
+                                if (binData.seo) {
+                                    state.seo = {
+                                        title: binData.seo.title || '',
+                                        description: binData.seo.description || '',
+                                        tags: Array.isArray(binData.seo.tags) ? [...binData.seo.tags] : [],
+                                        hashtags: Array.isArray(binData.seo.hashtags) ? [...binData.seo.hashtags] : []
+                                    };
+                                    document.getElementById('seoTitleInput').value = state.seo.title;
+                                    document.getElementById('seoTitleCount').textContent = state.seo.title.length;
+                                    document.getElementById('seoDescriptionInput').value = state.seo.description;
+                                    document.getElementById('seoDescCount').textContent = state.seo.description.length;
+                                    renderTagsList('tagsContainer', state.seo.tags);
+                                    renderTagsList('hashtagsContainer', state.seo.hashtags);
                                     updateSeoStats();
                                     updateSerpPreview();
                                 }
