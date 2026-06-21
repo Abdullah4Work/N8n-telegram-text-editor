@@ -3878,6 +3878,34 @@
                 <div class="tags-container" id="hashtagsContainer">
                     <div style="color: var(--text-secondary); font-size: 12px;">لا توجد هاشتاقات بعد</div>
                 </div>
+                <div class="seo-stats" id="seoStats" style="display: none;">
+                    <div class="seo-stat-item">
+                        <div class="seo-stat-label">عدد الكلمات</div>
+                        <div class="seo-stat-value" id="statWordCount">0</div>
+                    </div>
+                    <div class="seo-stat-item">
+                        <div class="seo-stat-label">عدد الأحرف</div>
+                        <div class="seo-stat-value" id="statCharCount">0</div>
+                    </div>
+                    <div class="seo-stat-item">
+                        <div class="seo-stat-label">الكلمات المفتاحية</div>
+                        <div class="seo-stat-value" id="statTagsCount">0</div>
+                    </div>
+                    <div class="seo-stat-item">
+                        <div class="seo-stat-label">الهاشتاقات</div>
+                        <div class="seo-stat-value" id="statHashtagsCount">0</div>
+                    </div>
+                    <div class="seo-stat-item">
+                        <div class="seo-stat-label">طول الوصف</div>
+                        <div class="seo-stat-value" id="statDescLength">0</div>
+                    </div>
+                </div>
+            </div>
+            <div class="serp-preview" id="serpPreview" style="display: none;">
+                <div class="serp-preview-title"><span>🔍</span><span>معاينة نتيجة البحث</span></div>
+                <div class="serp-url">https://www.youtube.com/watch</div>
+                <div class="serp-title" id="serpTitle">عنوان الفيديو</div>
+                <div class="serp-description" id="serpDescription">وصف الفيديو سيظهر هنا...</div>
             </div>
         </div>
 
@@ -3898,6 +3926,12 @@
 
             <div class="review-section">
                 <div class="review-section-title"><span>🔍</span><span>SEO</span></div>
+                <div class="serp-preview" id="reviewSerpPreview" style="display: block; margin-bottom: 16px;">
+                    <div class="serp-preview-title"><span>🔍</span><span>معاينة نتيجة البحث</span></div>
+                    <div class="serp-url">https://www.youtube.com/watch</div>
+                    <div class="serp-title" id="reviewSerpTitle">عنوان الفيديو</div>
+                    <div class="serp-description" id="reviewSerpDescription">وصف الفيديو...</div>
+                </div>
                 <div class="review-item">
                     <span class="review-label">العنوان:</span>
                     <div class="review-value">
@@ -3908,18 +3942,24 @@
                     <span class="review-label">الوصف:</span>
                     <div class="review-value">
                         <div class="review-seo-desc-box" id="reviewSeoDescBox">-</div>
+                        <button class="review-expand-btn" id="reviewDescExpandBtn"><span id="reviewDescExpandText">عرض
+                                الكل</span><span id="reviewDescExpandIcon">▼</span></button>
                     </div>
                 </div>
                 <div class="review-item">
                     <span class="review-label">الكلمات المفتاحية:</span>
                     <div class="review-value">
                         <div class="review-tags-preview" id="reviewTagsPreview"></div>
+                        <button class="review-expand-btn" id="reviewTagsExpandBtn"><span id="reviewTagsExpandText">عرض
+                                الكل</span><span id="reviewTagsExpandIcon">▼</span></button>
                     </div>
                 </div>
                 <div class="review-item">
-                    <span class="review-label">الهاشتاقات:</span>
+                    <span class="review-label">هاشتاقات الـ SEO:</span>
                     <div class="review-value">
                         <div class="review-tags-preview" id="reviewHashtagsPreview"></div>
+                        <button class="review-expand-btn" id="reviewHashtagsExpandBtn"><span id="reviewHashtagsExpandText">عرض
+                                الكل</span><span id="reviewHashtagsExpandIcon">▼</span></button>
                     </div>
                 </div>
             </div>
@@ -4003,7 +4043,8 @@
 
         const state = {
             images: [],
-            seo: { title: '', description: '', tags: [], hashtags: [] }
+            seo: { title: '', description: '', tags: [], hashtags: [] },
+            user_id: ''
         };
 
 
@@ -4058,6 +4099,10 @@
                     const params = new URLSearchParams(window.location.search);
                     const urlBinId = params.get('bin');
                     const processId = urlBinId || tg.initDataUnsafe?.start_param || Date.now().toString();
+
+                    if (!state.user_id && tg.initDataUnsafe?.user?.id) {
+                        state.user_id = String(tg.initDataUnsafe.user.id);
+                    }
 
                     const finalData = {
                         type: 'images_sequence',
@@ -4420,12 +4465,43 @@
                             const result = await response.json();
                             // Worker يعيد: { success: true, data: { images: [...] } }
                             const data = result.data || result.record || result;
-                            if (data && data.images && Array.isArray(data.images)) {
-                                state.images = data.images;
-                                renderImagesList();
-                                showToast(`✅ تم تحميل ${data.images.length} صورة`);
+                            if (data) {
+                                if (data.user_id) {
+                                    state.user_id = String(data.user_id);
+                                } else if (tg.initDataUnsafe?.user?.id) {
+                                    state.user_id = String(tg.initDataUnsafe.user.id);
+                                }
+                                if (data.images && Array.isArray(data.images)) {
+                                    state.images = data.images;
+                                    renderImagesList();
+                                    showToast(`✅ تم تحميل ${data.images.length} صورة`);
+                                } else {
+                                    console.warn('No images found in bin data:', data);
+                                }
+                                if (data.seo) {
+                                    if (data.seo.title) {
+                                        state.seo.title = data.seo.title;
+                                        document.getElementById('seoTitleInput').value = data.seo.title;
+                                        document.getElementById('seoTitleCount').textContent = data.seo.title.length;
+                                    }
+                                    if (data.seo.description) {
+                                        state.seo.description = data.seo.description;
+                                        document.getElementById('seoDescriptionInput').value = data.seo.description;
+                                        document.getElementById('seoDescCount').textContent = data.seo.description.length;
+                                    }
+                                    if (data.seo.tags && Array.isArray(data.seo.tags)) {
+                                        state.seo.tags = data.seo.tags;
+                                        renderTagsList('tagsContainer', state.seo.tags);
+                                    }
+                                    if (data.seo.hashtags && Array.isArray(data.seo.hashtags)) {
+                                        state.seo.hashtags = data.seo.hashtags;
+                                        renderTagsList('hashtagsContainer', state.seo.hashtags);
+                                    }
+                                    updateSeoStats();
+                                    updateSerpPreview();
+                                }
                             } else {
-                                console.warn('No images found in bin data:', data);
+                                console.warn('No data found in bin response:', result);
                             }
                         } else {
                             console.error('Failed to fetch bin. Status:', response?.status);
@@ -4442,9 +4518,6 @@
                 console.error(e);
             }
         }
-
-        // Execute fetch init data
-        fetchInitData();
 
         // Helper to convert any URL (blob or remote) to a low-res Base64 for vision analysis
         async function getImageThumbnailBase64(url) {
@@ -4554,6 +4627,8 @@
                             ).filter(t => t.length > 1)));
                             renderTagsList('hashtagsContainer', state.seo.hashtags);
                         }
+                        updateSeoStats();
+                        updateSerpPreview();
                         showToast('تم إنشاء بيانات SEO بنجاح');
                     }
                 } else {
@@ -4567,13 +4642,42 @@
         });
 
         // --- Step 2: SEO ---
+        function updateSeoStats() {
+            const title = state.seo.title || '';
+            const desc = state.seo.description || '';
+
+            document.getElementById('statWordCount').textContent = title.trim() ? title.trim().split(/\s+/).length : 0;
+            document.getElementById('statCharCount').textContent = title.length;
+            document.getElementById('statTagsCount').textContent = state.seo.tags.length;
+            document.getElementById('statHashtagsCount').textContent = state.seo.hashtags.length;
+            document.getElementById('statDescLength').textContent = desc.length;
+
+            if (title || desc || state.seo.tags.length || state.seo.hashtags.length) {
+                document.getElementById('seoStats').style.display = 'grid';
+            }
+        }
+
+        function updateSerpPreview() {
+            const title = state.seo.title || 'عنوان الفيديو';
+            const desc = state.seo.description || 'وصف الفيديو سيظهر هنا...';
+            document.getElementById('serpTitle').textContent = title;
+            document.getElementById('serpDescription').textContent = desc.substring(0, 160) + (desc.length > 160 ? '...' : '');
+            if (state.seo.title || state.seo.description) {
+                document.getElementById('serpPreview').style.display = 'block';
+            }
+        }
+
         document.getElementById('seoTitleInput').addEventListener('input', (e) => {
             state.seo.title = e.target.value;
             document.getElementById('seoTitleCount').textContent = e.target.value.length;
+            updateSeoStats();
+            updateSerpPreview();
         });
         document.getElementById('seoDescriptionInput').addEventListener('input', (e) => {
             state.seo.description = e.target.value;
             document.getElementById('seoDescCount').textContent = e.target.value.length;
+            updateSeoStats();
+            updateSerpPreview();
         });
 
         function renderTagsList(containerId, list) {
@@ -4604,6 +4708,8 @@
                 state.seo.hashtags.splice(idx, 1);
                 renderTagsList('hashtagsContainer', state.seo.hashtags);
             }
+            updateSeoStats();
+            updateSerpPreview();
         };
 
         document.getElementById('addTagBtn').addEventListener('click', () => {
@@ -4618,6 +4724,8 @@
                 state.seo.tags.push(val);
                 input.value = '';
                 renderTagsList('tagsContainer', state.seo.tags);
+                updateSeoStats();
+                updateSerpPreview();
             } else if (state.seo.tags.includes(val)) {
                 showToast('هذه الكلمة موجودة بالفعل');
             }
@@ -4637,6 +4745,8 @@
                 state.seo.hashtags.push(val);
                 input.value = '';
                 renderTagsList('hashtagsContainer', state.seo.hashtags);
+                updateSeoStats();
+                updateSerpPreview();
             } else if (state.seo.hashtags.includes(val)) {
                 showToast('هذا الهاشتاق موجود بالفعل');
             }
@@ -4648,16 +4758,55 @@
             const totalDuration = state.images.reduce((acc, img) => acc + img.duration, 0);
             document.getElementById('reviewTotalDuration').textContent = totalDuration + ' ثانية';
 
+            document.getElementById('reviewSerpTitle').textContent = state.seo.title || 'عنوان الفيديو';
+            document.getElementById('reviewSerpDescription').textContent =
+                (state.seo.description || '').substring(0, 160) +
+                (state.seo.description && state.seo.description.length > 160 ? '...' : '');
             document.getElementById('reviewSeoTitleBox').textContent = state.seo.title || '-';
             document.getElementById('reviewSeoDescBox').textContent = state.seo.description || '-';
 
-            document.getElementById('reviewTagsPreview').innerHTML = state.seo.tags.map(t => `<span class="review-tag" style="background:var(--bg-tertiary);padding:4px 8px;border-radius:4px;font-size:12px;margin:2px;display:inline-block;">${t}</span>`).join('') || '-';
-            document.getElementById('reviewHashtagsPreview').innerHTML = state.seo.hashtags.map(t => `<span class="review-tag" style="background:var(--bg-tertiary);padding:4px 8px;border-radius:4px;font-size:12px;margin:2px;display:inline-block;">#${t}</span>`).join('') || '-';
+            const tagsPreview = document.getElementById('reviewTagsPreview');
+            tagsPreview.innerHTML = state.seo.tags.length ?
+                state.seo.tags.map(t => `<div class="review-tag">${t}</div>`).join('') :
+                '<div style="color:var(--text-secondary);font-size:12px">لا توجد كلمات مفتاحية</div>';
+
+            const hashtagsPreview = document.getElementById('reviewHashtagsPreview');
+            hashtagsPreview.innerHTML = state.seo.hashtags.length ?
+                state.seo.hashtags.map(h => `<div class="review-tag">#${h}</div>`).join('') :
+                '<div style="color:var(--text-secondary);font-size:12px">لا توجد هاشتاقات</div>';
         }
+
+        document.getElementById('reviewTagsExpandBtn').addEventListener('click', () => {
+            const el = document.getElementById('reviewTagsPreview');
+            el.classList.toggle('expanded');
+            document.getElementById('reviewTagsExpandText').textContent =
+                el.classList.contains('expanded') ? 'إخفاء' : 'عرض الكل';
+            document.getElementById('reviewTagsExpandIcon').textContent =
+                el.classList.contains('expanded') ? '▲' : '▼';
+        });
+
+        document.getElementById('reviewHashtagsExpandBtn').addEventListener('click', () => {
+            const el = document.getElementById('reviewHashtagsPreview');
+            el.classList.toggle('expanded');
+            document.getElementById('reviewHashtagsExpandText').textContent =
+                el.classList.contains('expanded') ? 'إخفاء' : 'عرض الكل';
+            document.getElementById('reviewHashtagsExpandIcon').textContent =
+                el.classList.contains('expanded') ? '▲' : '▼';
+        });
+
+        document.getElementById('reviewDescExpandBtn').addEventListener('click', () => {
+            const el = document.getElementById('reviewSeoDescBox');
+            el.classList.toggle('expanded');
+            document.getElementById('reviewDescExpandText').textContent =
+                el.classList.contains('expanded') ? 'إخفاء' : 'عرض الكل';
+            document.getElementById('reviewDescExpandIcon').textContent =
+                el.classList.contains('expanded') ? '▲' : '▼';
+        });
 
         // Initialize state
         updateSteps();
         renderImagesList();
+        fetchInitData();
     </script>
 </body>
 
