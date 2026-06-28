@@ -4351,35 +4351,99 @@
                     try {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
-                        const size = 100; // Small size for fast analysis
+                        const size = 160;
                         canvas.width = size;
                         canvas.height = size;
                         ctx.drawImage(img, 0, 0, size, size);
 
-                        const imageData = ctx.getImageData(0, 0, size, size).data;
-                        let edgeIntensity = 0;
+                        const { data, width: w, height: h } = ctx.getImageData(0, 0, size, size);
+                        const lum = new Float32Array(w * h);
 
-                        // Simple edge detection heuristic
-                        for (let i = 0; i < imageData.length; i += 4) {
-                            const avg = (imageData[i] + imageData[i + 1] + imageData[i + 2]) / 3;
-                            if (i > 4) {
-                                const prevAvg = (imageData[i - 4] + imageData[i - 3] + imageData[i - 2]) / 3;
-                                edgeIntensity += Math.abs(avg - prevAvg);
+                        for (let y = 0; y < h; y++) {
+                            for (let x = 0; x < w; x++) {
+                                const i = (y * w + x) * 4;
+                                lum[y * w + x] = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
                             }
                         }
 
-                        // Map intensity to 2-10 range
-                        // Normalizing edge intensity: higher intensity = more details/text
-                        const maxExpectedIntense = size * size * 35; // Increased threshold
-                        const normalized = Math.min(edgeIntensity / maxExpectedIntense, 1);
-                        const duration = Math.round(2 + (normalized * 8)); // Range 2 to 10
-                        resolve(duration);
+                        // 1) تباين الإضاءة العام
+                        let sum = 0, sumSq = 0;
+                        for (let i = 0; i < lum.length; i++) {
+                            sum += lum[i];
+                            sumSq += lum[i] * lum[i];
+                        }
+                        const mean = sum / lum.length;
+                        const stdDev = Math.sqrt(Math.max(0, sumSq / lum.length - mean * mean));
+
+                        // 2) كثافة الحواف (مقارنة 4 جيران: أعلى/أسفل/يمين/يسار)
+                        let gradSum = 0, strongEdges = 0, samples = 0;
+                        const EDGE_THRESHOLD = 22;
+                        for (let y = 1; y < h - 1; y++) {
+                            for (let x = 1; x < w - 1; x++) {
+                                const idx = y * w + x;
+                                const gx = Math.abs(lum[idx + 1] - lum[idx - 1]);
+                                const gy = Math.abs(lum[idx + w] - lum[idx - w]);
+                                const g = (gx + gy) / 2;
+                                gradSum += g;
+                                if (g > EDGE_THRESHOLD) strongEdges++;
+                                samples++;
+                            }
+                        }
+                        const avgGradient = gradSum / samples;
+                        const edgeRatio = strongEdges / samples;
+
+                        // 3) تباين الكتل — يكشف النصوص والتفاصيل الكثيفة
+                        const blockSize = 20;
+                        const blockVariances = [];
+                        for (let by = 0; by <= h - blockSize; by += blockSize) {
+                            for (let bx = 0; bx <= w - blockSize; bx += blockSize) {
+                                let bSum = 0, bSumSq = 0, cnt = 0;
+                                for (let dy = 0; dy < blockSize; dy++) {
+                                    for (let dx = 0; dx < blockSize; dx++) {
+                                        const v = lum[(by + dy) * w + (bx + dx)];
+                                        bSum += v;
+                                        bSumSq += v * v;
+                                        cnt++;
+                                    }
+                                }
+                                blockVariances.push(Math.max(0, bSumSq / cnt - (bSum / cnt) ** 2));
+                            }
+                        }
+                        blockVariances.sort((a, b) => b - a);
+                        const topBlockVar = blockVariances[Math.floor(blockVariances.length * 0.15)] || 0;
+
+                        // 4) تنوع الألوان (عينة سريعة)
+                        const colorBuckets = new Set();
+                        for (let i = 0; i < data.length; i += 32) {
+                            colorBuckets.add(
+                                `${Math.floor(data[i] / 32)},${Math.floor(data[i + 1] / 32)},${Math.floor(data[i + 2] / 32)}`
+                            );
+                        }
+                        const colorScore = Math.min(colorBuckets.size / 180, 1);
+
+                        const stdScore = Math.min(stdDev / 55, 1);
+                        const gradScore = Math.min(avgGradient / 32, 1);
+                        const edgeScore = Math.min(edgeRatio / 0.14, 1);
+                        const blockScore = Math.min(topBlockVar / 900, 1);
+
+                        const complexity = (
+                            stdScore * 0.15 +
+                            gradScore * 0.25 +
+                            edgeScore * 0.35 +
+                            blockScore * 0.15 +
+                            colorScore * 0.10
+                        );
+
+                        // توزيع أفضل: 3–15 ثانية حسب التعقيد الفعلي
+                        const spread = Math.pow(Math.max(0, Math.min(1, complexity)), 0.7);
+                        const duration = Math.round(3 + spread * 12);
+                        resolve(Math.max(3, Math.min(15, duration)));
                     } catch (e) {
-                        resolve(2); // Fallback
+                        resolve(4);
                     }
                 };
-                img.onerror = () => resolve(2);
-                img.src = getProxiedUrl(url);
+                img.onerror = () => resolve(4);
+                img.src = (url.startsWith('blob:') || url.startsWith('data:')) ? url : getProxiedUrl(url);
             });
         }
 
