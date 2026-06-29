@@ -4039,6 +4039,7 @@
 
         // عنوان الـ Deno Worker (يحتوي على توكن HuggingFace بأمان)
         const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.net';
+        const VIDEO_API_URL = 'https://abdullah2omar-ffmpeg-video-api-beta-version.hf.space';
         const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor-picture';
 
         const state = {
@@ -4344,7 +4345,26 @@
         }
 
         function getServerOrigin() {
-            return window.location.origin.startsWith('http') ? window.location.origin : 'http://localhost:7860';
+            const params = new URLSearchParams(window.location.search);
+            const apiParam = params.get('api');
+            if (apiParam && apiParam.startsWith('http')) {
+                return apiParam.replace(/\/$/, '');
+            }
+
+            const host = window.location.hostname;
+            const port = window.location.port;
+
+            // المحرر يعمل من نفس سيرفر الـ API (HuggingFace أو محلي)
+            if (host.includes('hf.space')) {
+                return window.location.origin;
+            }
+            if (host === 'localhost' || host === '127.0.0.1') {
+                if (port === '7860' || port === '') return window.location.origin;
+                return 'http://localhost:7860';
+            }
+
+            // GitHub Pages / Telegram WebApp — الـ API على HuggingFace
+            return VIDEO_API_URL;
         }
 
         async function analyzeImageComplexity(url, base64 = null) {
