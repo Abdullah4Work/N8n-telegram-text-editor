@@ -4067,11 +4067,186 @@
         // --- Helpers ---
         function getProxiedUrl(url) {
             if (!url) return '';
+            if (url.startsWith('data:') || url.startsWith('blob:')) return url;
             // إذا كان الرابط من تليجرام، نستخدم البروكسي لتجنب مشاكل CORS
             if (url.includes('api.telegram.org/file/bot')) {
                 return `${WORKER_API_URL}/proxy-image?url=${encodeURIComponent(url)}`;
             }
             return url;
+        }
+
+        function getVideoApiCandidates() {
+            const candidates = [];
+            const apiParam = new URLSearchParams(window.location.search).get('api');
+            if (apiParam && apiParam.startsWith('http')) {
+                candidates.push(apiParam.replace(/\/$/, ''));
+            }
+            // ✅ نستخدم الـ Deno Worker أولاً لأنه يضيف Authorization تلقائياً للـ HF Space
+            candidates.push(WORKER_API_URL);
+            if (window.location.hostname.includes('hf.space')) {
+                candidates.push(window.location.origin);
+            }
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                candidates.push('http://localhost:7860');
+            }
+            candidates.push(VIDEO_API_URL);
+            return [...new Set(candidates.filter(Boolean))];
+        }
+
+        function getServerOrigin() {
+            return getVideoApiCandidates()[0] || VIDEO_API_URL;
+        }
+
+        function computeDurationFromImageElement(img) {
+            const size = 256;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = size;
+            canvas.height = size;
+
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, size, size);
+
+            const scale = Math.min(size / img.naturalWidth, size / img.naturalHeight);
+            const dw = Math.max(1, Math.round(img.naturalWidth * scale));
+            const dh = Math.max(1, Math.round(img.naturalHeight * scale));
+            ctx.drawImage(img, Math.floor((size - dw) / 2), Math.floor((size - dh) / 2), dw, dh);
+
+            const { data, width: w, height: h } = ctx.getImageData(0, 0, size, size);
+            const gradients = [];
+            let lumSum = 0, lumSumSq = 0, lumCount = 0;
+            const colorSet = new Set();
+
+            for (let y = 1; y < h - 1; y++) {
+                for (let x = 1; x < w - 1; x++) {
+                    const i = (y * w + x) * 4;
+                    const lum = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+                    if (lum > 12) {
+                        lumSum += lum;
+                        lumSumSq += lum * lum;
+                        lumCount++;
+                    }
+                    const gx = (0.299 * data[i + 4] + 0.587 * data[i + 5] + 0.114 * data[i + 6]) -
+                        (0.299 * data[i - 4] + 0.587 * data[i - 3] + 0.114 * data[i - 2]);
+                    const gy = (0.299 * data[i + w * 4] + 0.587 * data[i + w * 4 + 1] + 0.114 * data[i + w * 4 + 2]) -
+                        (0.299 * data[i - w * 4] + 0.587 * data[i - w * 4 + 1] + 0.114 * data[i - w * 4 + 2]);
+                    gradients.push(Math.abs(gx) + Math.abs(gy));
+                }
+            }
+
+            for (let i = 0; i < data.length; i += 12) {
+                const r = data[i], g = data[i + 1], b = data[i + 2];
+                if (r + g + b > 24) colorSet.add(`${r >> 4},${g >> 4},${b >> 4}`);
+            }
+
+            gradients.sort((a, b) => a - b);
+            const n = gradients.length || 1;
+            const p25 = gradients[Math.floor(n * 0.25)] || 0;
+            const p50 = gradients[Math.floor(n * 0.50)] || 0;
+            const p75 = gradients[Math.floor(n * 0.75)] || 0;
+            const p90 = gradients[Math.floor(n * 0.90)] || 0;
+            const p95 = gradients[Math.floor(n * 0.95)] || 0;
+
+            const detailRatio = p90 / Math.max(p50, 1);
+            const contrastRatio = p95 / Math.max(p25, 1);
+            const edgeDensity = gradients.filter(g => g > p75).length / n;
+            const fineDetailDensity = gradients.filter(g => g > p90).length / n;
+            const colorScore = Math.min(colorSet.size / 120, 1);
+
+            const detailScore = Math.min(detailRatio / 6, 1);
+            const contrastScore = Math.min(contrastRatio / 5, 1);
+            const textureScore = Math.min(edgeDensity / 0.30, 1);
+            const fineScore = Math.min(fineDetailDensity / 0.10, 1);
+
+            const complexity = (
+                detailScore * 0.30 +
+                contrastScore * 0.15 +
+                textureScore * 0.20 +
+                fineScore * 0.15 +
+                colorScore * 0.08 +
+                0.12
+            );
+
+            const spread = Math.pow(Math.max(0, Math.min(1, complexity)), 0.50);
+            return Math.max(3, Math.min(18, Math.round(3 + spread * 15)));
+        }
+
+        function loadImageElement(src) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = src;
+            });
+        }
+
+        async function analyzeImageFromBase64(base64) {
+            const img = await loadImageElement(base64);
+            return computeDurationFromImageElement(img);
+        }
+
+        async function analyzeImageFromUrl(url) {
+            let src = url;
+            if (url.startsWith('http') && url.includes('api.telegram.org/file/bot')) {
+                src = `${WORKER_API_URL}/proxy-image?url=${encodeURIComponent(url)}`;
+            }
+            const img = await loadImageElement(src);
+            return computeDurationFromImageElement(img);
+        }
+
+        async function tryVideoApiRequest(path, body) {
+            for (const base of getVideoApiCandidates()) {
+                try {
+                    const response = await fetch(`${base}${path}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(body)
+                    });
+                    if (response.ok) {
+                        const result = await response.json();
+                        if (result.success) return { base, result };
+                    }
+                } catch (err) {
+                    console.warn(`Video API ${base}${path} failed:`, err);
+                }
+            }
+            return null;
+        }
+
+        async function tryUploadImage(base64Data) {
+            const apiResult = await tryVideoApiRequest('/upload-image', { image: base64Data });
+            if (!apiResult) return null;
+
+            const { base, result } = apiResult;
+            const fullUrl = result.url.startsWith('http') ? result.url : `${base}${result.url}`;
+            return { fullUrl, duration: result.duration };
+        }
+
+        async function analyzeImageComplexity(url, base64 = null) {
+            if (base64) {
+                try {
+                    return await analyzeImageFromBase64(base64);
+                } catch (err) {
+                    console.warn('Local base64 analysis failed:', err);
+                }
+            }
+
+            const apiResult = await tryVideoApiRequest(
+                '/analyze-image-duration',
+                base64 ? { image: base64 } : { url }
+            );
+            if (apiResult?.result?.duration) {
+                return apiResult.result.duration;
+            }
+
+            try {
+                if (base64) return await analyzeImageFromBase64(base64);
+                return await analyzeImageFromUrl(url);
+            } catch (err) {
+                console.warn('Local URL analysis failed:', err);
+                return 4;
+            }
         }
 
         // --- Navigation ---
@@ -4344,63 +4519,6 @@
             });
         }
 
-        function getServerOrigin() {
-            const params = new URLSearchParams(window.location.search);
-            const apiParam = params.get('api');
-            if (apiParam && apiParam.startsWith('http')) {
-                return apiParam.replace(/\/$/, '');
-            }
-
-            const host = window.location.hostname;
-            const port = window.location.port;
-
-            // المحرر يعمل من نفس سيرفر الـ API (HuggingFace أو محلي)
-            if (host.includes('hf.space')) {
-                return window.location.origin;
-            }
-            if (host === 'localhost' || host === '127.0.0.1') {
-                if (port === '7860' || port === '') return window.location.origin;
-                return 'http://localhost:7860';
-            }
-
-            // GitHub Pages / Telegram WebApp — الـ API على HuggingFace
-            return VIDEO_API_URL;
-        }
-
-        async function analyzeImageComplexity(url, base64 = null) {
-            const serverOrigin = getServerOrigin();
-            try {
-                const payload = base64 ? { image: base64 } : { url };
-                const response = await fetch(`${serverOrigin}/analyze-image-duration`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                if (response.ok) {
-                    const result = await response.json();
-                    if (result.success && result.duration) {
-                        return result.duration;
-                    }
-                }
-            } catch (err) {
-                console.warn('Server duration analysis failed:', err);
-            }
-            return estimateDurationFallback(url);
-        }
-
-        function estimateDurationFallback(url) {
-            return new Promise((resolve) => {
-                const img = new Image();
-                img.onload = () => {
-                    const mp = (img.naturalWidth * img.naturalHeight) / 1_000_000;
-                    const spread = Math.min(mp / 4, 1);
-                    resolve(Math.max(3, Math.min(12, Math.round(3 + spread * 9))));
-                };
-                img.onerror = () => resolve(4);
-                img.src = (url && (url.startsWith('blob:') || url.startsWith('data:'))) ? url : getProxiedUrl(url);
-            });
-        }
-
         function fileToBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -4425,33 +4543,21 @@
             try {
                 for (const file of filesArray) {
                     const base64Data = await fileToBase64(file);
+                    let smartDuration = await analyzeImageComplexity(null, base64Data);
 
-                    const serverOrigin = getServerOrigin();
-                    const uploadUrl = `${serverOrigin}/upload-image`;
-
-                    const response = await fetch(uploadUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ image: base64Data })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`فشل الرفع: ${response.statusText}`);
+                    let finalImageUrl = base64Data;
+                    const uploadResult = await tryUploadImage(base64Data);
+                    if (uploadResult) {
+                        finalImageUrl = uploadResult.fullUrl;
+                        if (uploadResult.duration) smartDuration = uploadResult.duration;
                     }
 
-                    const result = await response.json();
-                    if (!result.success) {
-                        throw new Error(result.error || 'فشل معالجة الصورة على الخادم');
-                    }
-
-                    const finalImageUrl = serverOrigin + result.url;
-                    const smartDuration = result.duration || await analyzeImageComplexity(finalImageUrl, base64Data);
                     newImages.push({ url: finalImageUrl, duration: smartDuration });
                 }
 
                 state.images.push(...newImages);
                 renderImagesList();
-                showToast(`تمت إضافة ورفع ${newImages.length} صور بنجاح`);
+                showToast(`تمت إضافة ${newImages.length} صور بنجاح`);
             } catch (err) {
                 console.error(err);
                 showToast(`❌ خطأ أثناء رفع الصور: ${err.message}`, true);
