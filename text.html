@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, viewport-fit=cover">
+    <meta name="description" content="محرر النصوص - رقيتي">
+    <meta name="theme-color" content="#4A90E2">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✍️</text></svg>">
+    <title>محرر النصوص - رقيتي v2.0</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #4A90E2;
+            --primary-light: #5BA3F5;
+            --primary-dark: #3A7BC8;
+            --primary-lighter: #E8F4FD;
+            --success: #27AE60;
+            --success-light: #2ECC71;
+            --danger: #E74C3C;
+            --warning: #F39C12;
+            --orange-gold: #ebbd27;
+            --text-primary: #2C3E50;
+            --text-secondary: #7F8C8D;
+            --text-light: #95A5A6;
+            --bg-primary: #F7F9FC;
+            --bg-secondary: #FFFFFF;
+            --bg-tertiary: #ECF0F1;
+            --border-color: #E1E8ED;
+            --border-light: #F0F3F5;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            direction: rtl;
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg-tertiary); }
+        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255, 255, 255, 0.98);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .loading-overlay.visible { display: flex; }
+        .spinner {
+            width: 50px; height: 50px;
+            border: 5px solid var(--primary-lighter);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { font-size: 16px; color: var(--text-primary); font-weight: 700; }
+        .loading-subtext { font-size: 14px; color: var(--text-secondary); text-align: center; max-width: 280px; }
+        .loading-step { font-size: 13px; color: var(--primary); font-weight: 700; margin-top: 8px; }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            direction: rtl;
+        }
+
+        .step-content {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px 14px 100px;
+            animation: fadeInUp 0.4s ease;
+            -webkit-overflow-scrolling: touch;
+            direction: rtl;
+        }
+        .step-content.active { display: flex; flex-direction: column; }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .step-header {
+            margin-bottom: 14px;
+            padding: 12px;
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(92, 168, 245, 0.05));
+            border-radius: 10px;
+            border-right: 4px solid var(--primary);
+            direction: rtl;
+        }
+        .step-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            direction: rtl;
+        }
+        .step-description {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            direction: rtl;
+        }
+
+        .form-group { margin-bottom: 20px; direction: rtl; }
+        .form-label {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            direction: rtl;
+        }
+        .form-hint { font-size: 12px; color: var(--text-secondary); margin-top: 4px; direction: rtl; }
+        .form-input {
+            width: 100%;
+            padding: 13px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: white;
+            direction: rtl;
+            text-align: right;
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+        .form-textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 18px;
+            line-height: 1.8;
+            resize: vertical;
+            font-family: inherit;
+            transition: all 0.3s;
+            background: #FAFBFC;
+            direction: rtl;
+            text-align: right;
+        }
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+            background: white;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px;
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(92, 168, 245, 0.05));
+            border-radius: 10px;
+            border-right: 3px solid var(--primary);
+            direction: rtl;
+        }
+        .section-title .badge {
+            margin-right: auto;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+            direction: rtl;
+        }
+        .template-card {
+            background: var(--bg-secondary);
+            border: 3px solid var(--border-color);
+            border-radius: 14px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            box-shadow: var(--shadow-sm);
+        }
+        .template-card:active { transform: scale(0.98); }
+        .template-card.selected {
+            border-color: var(--primary);
+            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
+        }
+        .template-preview {
+            width: 100%;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .template-number {
+            position: relative;
+            z-index: 2;
+            font-weight: 800;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+        }
+        .template-check {
+            position: absolute;
+            top: 10px; left: 10px;
+            width: 32px; height: 32px;
+            background: var(--success);
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            z-index: 3;
+        }
+        .template-card.selected .template-check { display: flex; animation: scaleIn 0.3s ease; }
+        @keyframes scaleIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .template-name {
+            padding: 14px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            background: linear-gradient(to bottom, white, #F8F9FA);
+        }
+
+        .colors-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            direction: rtl;
+        }
+        .color-option {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 14px;
+            border: 3px solid var(--border-color);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            box-shadow: var(--shadow-sm);
+        }
+        .color-option:active { transform: scale(0.98); }
+        .color-option.selected {
+            border-color: var(--primary);
+            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.4);
+        }
+        .color-option .template-check { display: none; }
+        .color-option.selected .template-check { display: flex; }
+        .color-name-tag {
+            position: absolute;
+            bottom: 10px; right: 10px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        .dual-preview-section {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            direction: rtl;
+        }
+        .dual-preview-container {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border-radius: 14px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #2d3748;
+        }
+        .dual-preview-inner {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            align-items: center;
+        }
+        .dual-preview-item {
+            flex: 1;
+            max-width: 240px;
+        }
+        .dual-preview-item .label {
+            font-size: 11px;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        .preview-card {
+            width: 100%;
+            aspect-ratio: 16/9;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--bg-primary);
+        }
+        .preview-card.portrait { aspect-ratio: 9/16; max-width: 140px; margin: 0 auto; }
+        .preview-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        .preview-card img.loaded { display: block; }
+        .preview-card .preview-loading {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.35);
+        }
+        .preview-card .preview-loading.hidden { display: none; }
+        .preview-card .preview-placeholder {
+            color: rgba(255,255,255,0.55);
+            font-size: 12px;
+            padding: 8px;
+            text-align: center;
+        }
+        .preview-cards-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .preview-cards-actions .btn-secondary { flex: 1; }
+
+        .review-template-images {
+            display: flex;
+            gap: 12px;
+            margin-top: 14px;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        .review-image-box {
+            flex: 1;
+            min-width: 120px;
+            max-width: 220px;
+            text-align: center;
+        }
+        .review-image-box .label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .review-image-box img {
+            width: 100%;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: #111;
+            display: block;
+        }
+        .review-image-box.portrait { max-width: 120px; }
+
+        .batch-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+            padding: 8px;
+            max-height: 65vh;
+            overflow-y: auto;
+            direction: rtl;
+        }
+        .batch-card-item {
+            background: #fff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid var(--border-color);
+        }
+        .batch-card-item img { width: 100%; display: block; }
+        .batch-card-item .meta {
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+            direction: rtl;
+        }
+        .batch-card-item .badge-num {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: #fff;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-weight: 700;
+            font-size: 11px;
+            margin-bottom: 6px;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 16px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 2px solid var(--border-light);
+        }
+        .stat-item {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .stat-item strong { color: var(--primary); font-weight: 700; }
+
+        .cards-split-section {
+            margin-top: 16px;
+            padding: 16px;
+            background: var(--bg-primary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .cards-split-section .header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-weight: bold;
+            color: var(--text-primary);
+        }
+        .cards-split-section .badge {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-right: auto;
+        }
+        .cards-split-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .cards-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            align-items: flex-start;
+        }
+        .cards-num {
+            background: var(--primary);
+            color: white;
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+        .cards-text {
+            font-size: 14px;
+            color: var(--text-primary);
+            line-height: 1.6;
+            word-break: break-word;
+            flex: 1;
+        }
+        .cards-meta {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+        .cards-total {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: linear-gradient(135deg, rgba(74,144,226,0.1), rgba(138,180,248,0.1));
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
+            direction: rtl;
+            margin-bottom: 20px;
+        }
+        .btn-primary:active { transform: scale(0.98); }
+        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+        .btn-primary.generated { background: linear-gradient(135deg, var(--success), var(--success-light)); }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-secondary:active { transform: scale(0.98); }
+
+        .bottom-nav-wrapper {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background: white;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            direction: rtl;
+            padding: 12px 16px;
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            direction: rtl;
+        }
+        .step-indicator-badge {
+            position: relative;
+            width: 56px; height: 56px;
+            flex-shrink: 0;
+        }
+        .step-pulse-ring {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+            opacity: 0.6;
+        }
+        @keyframes pulse-ring {
+            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.4; }
+            100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+        }
+        .step-circle-main {
+            position: relative;
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.5);
+            z-index: 2;
+        }
+        .step-number { font-size: 20px; font-weight: 900; color: white; line-height: 1; }
+        .step-total { font-size: 9px; color: rgba(255,255,255,0.9); font-weight: 700; }
+        .nav-buttons {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+            direction: rtl;
+        }
+        .nav-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .nav-btn:active { transform: scale(0.98); }
+        .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-back {
+            background: white;
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+        }
+        .btn-next {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+        .btn-submit {
+            background: linear-gradient(135deg, var(--success), var(--success-light));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .review-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-md);
+            direction: rtl;
+        }
+        .review-section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .review-item {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .review-item:last-child { border-bottom: none; }
+        .review-label { font-size: 13px; color: var(--text-secondary); min-width: 80px; }
+        .review-value { font-size: 14px; font-weight: 600; color: var(--text-primary); text-align: left; flex: 1; word-break: break-word; }
+
+        .seo-section {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 18px;
+            box-shadow: var(--shadow-md);
+            border: 2px solid var(--border-color);
+            direction: rtl;
+        }
+        .seo-section.highlight { border-color: var(--primary); box-shadow: 0 4px 20px rgba(74, 144, 226, 0.2); }
+        .seo-section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .seo-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+        .seo-stat-item {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        .seo-stat-value { font-size: 18px; font-weight: 800; color: var(--primary); }
+        .seo-stat-label { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+        .char-counter {
+            text-align: left;
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px;
+            background: var(--bg-primary);
+            border-radius: 8px;
+            min-height: 50px;
+        }
+        .tag-item {
+            background: white;
+            border: 2px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .tag-remove {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+            width: 20px; height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Modal Styles - مطابقة لـ index.html */
+        .template-preview-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.95);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+        .template-preview-modal.visible { display: flex; }
+
+        .preview-content {
+            background: white;
+            border-radius: 18px;
+            padding: 22px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.4s ease;
+            direction: rtl;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            direction: rtl;
+        }
+        .preview-title { font-size: 18px; font-weight: 700; color: var(--text-primary); }
+        .close-preview {
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            background: var(--bg-tertiary);
+            border: none; color: var(--text-primary);
+            font-size: 24px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .close-preview:active { transform: scale(0.95); }
+
+        .preview-images { display: flex; flex-direction: column; gap: 18px; }
+        .preview-image-wrapper { text-align: center; }
+        .preview-image-label {
+            font-size: 14px; font-weight: 700; color: var(--text-secondary);
+            margin-bottom: 12px;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+
+        .preview-image {
+            width: 100%; border-radius: 12px; box-shadow: var(--shadow-lg);
+            display: none; border: 1px solid var(--border-color);
+        }
+        .preview-image.loaded { display: block; }
+
+        .preview-image-loading {
+            width: 100%; aspect-ratio: 16/9;
+            display: flex; align-items: center; justify-content: center;
+            background: var(--bg-primary); border-radius: 12px;
+        }
+        .preview-image-loading.hidden { display: none; }
+
+        .preview-next-btn {
+            width: 100%; padding: 16px; margin-top: 18px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white; border: none; border-radius: 12px;
+            font-size: 16px; font-weight: 700; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+            transition: all 0.2s;
+        }
+        .preview-next-btn:active { transform: scale(0.98); }
+
+        @media (max-width: 480px) {
+            .templates-grid { grid-template-columns: 1fr; }
+            .form-textarea { font-size: 17px; min-height: 180px; }
+            .stats-row { flex-wrap: wrap; gap: 8px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text" id="loadingText">جاري تحميل البيانات...</div>
+        <div class="loading-subtext" id="loadingSubtext">الرجاء الانتظار</div>
+        <div class="loading-step" id="loadingStep">1/2</div>
+    </div>
+
+    <div class="container">
+
+        <!-- ===== STEP 1: TEXT ===== -->
+        <div class="step-content active" data-step="1" id="step1">
+            <div class="step-header">
+                <div class="step-title"><span>✍️</span><span>النص</span></div>
+                <div class="step-description">أدخل النص الذي تريد تحويله إلى بطاقات فيديو</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">📝 النص</label>
+                <textarea class="form-textarea" id="textInput" placeholder="أدخل النص هنا..." maxlength="5000"></textarea>
+                <div class="stats-row">
+                    <span class="stat-item">الأحرف: <strong id="charCount">0</strong></span>
+                    <span class="stat-item">الكلمات: <strong id="wordCount">0</strong></span>
+                    <span class="stat-item">البطاقات: <strong id="cardsCount">0</strong></span>
+                    <span class="stat-item">المدة: <strong id="estDuration">0</strong>ث</span>
+                </div>
+            </div>
+
+            <!-- CARDS PREVIEW -->
+            <div id="cardsSection" class="hidden">
+                <div class="section-title">📑 معاينة البطاقات <span class="badge" id="cardsBadge">0</span></div>
+                <div class="cards-split-section" style="margin-top:0;">
+                    <div class="cards-split-list" id="cardsList"></div>
+                    <div class="cards-total" id="cardsTotal"></div>
+                    <div class="preview-cards-actions">
+                        <button type="button" class="btn-secondary" id="previewCardsBtn"><span>🖼️</span><span>معاينة البطاقات كصور</span></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TEMPLATES -->
+            <div class="section-title">
+                <span>🎨 اختر القالب</span>
+                <button class="badge" id="exportAllTemplatesBtn" style="cursor:pointer; border:none; margin-right:auto;">📥 تصدير الخلفيات مفرغة</button>
+            </div>
+            <div class="templates-grid" id="templatesGrid"></div>
+
+            <!-- COLORS -->
+            <div id="colorsSection" class="hidden">
+                <div class="section-title">🌈 اختر اللون</div>
+                <div class="colors-grid" id="colorsRow"></div>
+            </div>
+
+            <!-- DUAL LIVE PREVIEW -->
+            <div id="dualPreviewSection" class="dual-preview-section hidden">
+                <div class="section-title">🖥️ معاينة Landscape و Portrait</div>
+                <div class="dual-preview-container">
+                    <div class="dual-preview-inner">
+                        <div class="dual-preview-item">
+                            <div class="label">Landscape (16:9)</div>
+                            <div class="preview-card" id="landscapePreviewBox">
+                                <div class="preview-loading hidden" id="landscapeLoading"><div class="spinner"></div></div>
+                                <img id="landscapePreview" alt="Landscape preview" />
+                                <div class="preview-placeholder" id="landscapePlaceholder">اختر قالباً ولوناً</div>
+                            </div>
+                        </div>
+                        <div class="dual-preview-item">
+                            <div class="label">Portrait (9:16)</div>
+                            <div class="preview-card portrait" id="portraitPreviewBox">
+                                <div class="preview-loading hidden" id="portraitLoading"><div class="spinner"></div></div>
+                                <img id="portraitPreview" alt="Portrait preview" />
+                                <div class="preview-placeholder" id="portraitPlaceholder">اختر قالباً ولوناً</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ===== STEP 2: SEO ===== -->
+        <div class="step-content" data-step="2" id="step2">
+            <div class="step-header">
+                <div class="step-title"><span>🔍</span><span>تحسين محركات البحث (SEO)</span></div>
+                <div class="step-description">عنوان ووصف وكلمات مفتاحية للفيديو</div>
+            </div>
+
+            <button class="btn-primary" id="seoGenerateBtn"><span>🤖</span><span>إنشاء SEO بالذكاء الاصطناعي</span></button>
+
+            <div class="seo-section highlight">
+                <div class="seo-section-title"><span>🗃</span><span>عنوان الفيديو</span></div>
+                <div class="form-group">
+                    <textarea class="form-textarea" id="seoTitle" placeholder="أدخل عنوان الفيديو..." rows="2" style="min-height:60px;"></textarea>
+                    <div class="form-hint">الأفضل: 60-70 حرف</div>
+                    <div class="char-counter"><span id="seoTitleCount">0</span> / 100</div>
+                </div>
+            </div>
+
+            <div class="seo-section highlight">
+                <div class="seo-section-title"><span>📝</span><span>وصف الفيديو</span></div>
+                <div class="form-group">
+                    <textarea class="form-textarea" id="seoDesc" placeholder="أدخل وصف الفيديو..." style="min-height:180px;"></textarea>
+                    <div class="form-hint">وصف احترافي شامل</div>
+                    <div class="char-counter"><span id="seoDescCount">0</span> / 5000</div>
+                </div>
+            </div>
+
+            <div class="seo-section">
+                <div class="seo-section-title"><span>🏷️</span><span>الكلمات المفتاحية</span></div>
+                <div style="display:flex;gap:8px;margin-bottom:12px;">
+                    <input type="text" class="form-input" id="tagInput" placeholder="أدخل كلمة مفتاحية..." maxlength="30" style="flex:1;">
+                    <button class="btn-secondary" id="addTagBtn" style="flex:0;padding:13px 20px;white-space:nowrap;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white;">➕ إضافة</button>
+                </div>
+                <div class="tags-container" id="tagsContainer">
+                    <span style="color:var(--text-secondary);font-size:12px;">لا توجد كلمات مفتاحية بعد</span>
+                </div>
+            </div>
+
+            <div class="seo-stats" id="seoStats" style="display:none;">
+                <div class="seo-stat-item"><div class="seo-stat-value" id="statWords">0</div><div class="seo-stat-label">الكلمات</div></div>
+                <div class="seo-stat-item"><div class="seo-stat-value" id="statChars">0</div><div class="seo-stat-label">الأحرف</div></div>
+                <div class="seo-stat-item"><div class="seo-stat-value" id="statTags">0</div><div class="seo-stat-label">الكلمات المفتاحية</div></div>
+                <div class="seo-stat-item"><div class="seo-stat-value" id="statDescLen">0</div><div class="seo-stat-label">طول الوصف</div></div>
+            </div>
+        </div>
+
+        <!-- ===== STEP 3: REVIEW ===== -->
+        <div class="step-content" data-step="3" id="step3">
+            <div class="step-header">
+                <div class="step-title"><span>✅</span><span>المراجعة النهائية</span></div>
+                <div class="step-description">راجع جميع البيانات قبل الإرسال</div>
+            </div>
+
+            <div class="review-section">
+                <div class="review-section-title"><span>✍️</span><span>ملخص النص</span></div>
+                <div class="review-item"><span class="review-label">النص:</span><span class="review-value" id="rText" style="font-size:13px;max-height:60px;overflow:hidden;text-align:right;"></span></div>
+                <div class="review-item"><span class="review-label">الأحرف:</span><span class="review-value" id="rChars">0</span></div>
+                <div class="review-item"><span class="review-label">الكلمات:</span><span class="review-value" id="rWords">0</span></div>
+                <div class="review-item"><span class="review-label">البطاقات:</span><span class="review-value" id="rCards">0</span></div>
+                <div class="review-item"><span class="review-label">المدة:</span><span class="review-value" id="rDuration">-</span></div>
+            </div>
+
+            <div class="review-section">
+                <div class="review-section-title"><span>🎨</span><span>القالب</span></div>
+                <div class="review-item"><span class="review-label">القالب:</span><span class="review-value" id="rTemplate">-</span></div>
+                <div class="review-item"><span class="review-label">اللون:</span><span class="review-value" id="rColor">-</span></div>
+                <div class="review-template-images">
+                    <div class="review-image-box">
+                        <div class="label">Landscape</div>
+                        <img id="reviewLandscapeImage" alt="Review Landscape" src="">
+                    </div>
+                    <div class="review-image-box portrait">
+                        <div class="label">Portrait</div>
+                        <img id="reviewPortraitImage" alt="Review Portrait" src="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="review-section">
+                <div class="review-section-title"><span>🔍</span><span>SEO</span></div>
+                <div class="review-item"><span class="review-label">العنوان:</span><span class="review-value" id="rSeoTitle">-</span></div>
+                <div class="review-item"><span class="review-label">الوصف:</span><span class="review-value" id="rSeoDesc" style="font-size:12px;max-height:40px;overflow:hidden;text-align:right;">-</span></div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav-wrapper" id="bottomNav">
+        <div class="nav-container">
+            <div class="step-indicator-badge">
+                <div class="step-pulse-ring"></div>
+                <div class="step-circle-main">
+                    <div class="step-number" id="stepNumber">1</div>
+                    <div class="step-total">من 3</div>
+                </div>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn btn-back" id="btnBack" style="display:none;"><span>←</span><span>السابق</span></button>
+                <button class="nav-btn btn-next" id="btnNext"><span>التالي</span><span>→</span></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Batch Preview Modal -->
+    <div class="template-preview-modal" id="batchPreviewModal">
+        <div class="preview-content" style="max-width:920px;">
+            <div class="preview-header">
+                <div class="preview-title">✅ معاينة البطاقات</div>
+                <button class="close-preview" id="batchModalClose" type="button">×</button>
+            </div>
+            <div class="preview-image-loading" id="batchLoading">
+                <div class="spinner"></div>
+            </div>
+            <div id="batchPreview" class="batch-cards-grid" style="display:none;"></div>
+            <button class="preview-next-btn" id="batchModalConfirm" type="button"><span>إغلاق</span><span>✓</span></button>
+        </div>
+    </div>
+
+    <!-- Template Preview Modal -->
+    <div class="template-preview-modal" id="templatePreviewModal">
+        <div class="preview-content">
+            <div class="preview-header">
+                <div class="preview-title" id="templateModalTitle">✅ معاينة القالب</div>
+                <button class="close-preview" id="templateModalClose" type="button">×</button>
+            </div>
+            <div class="preview-images">
+                <div class="preview-image-wrapper">
+                    <div class="preview-image-label"><span>🖥️</span><span>Landscape (16:9)</span></div>
+                    <div class="preview-image-loading" id="modalLandscapeLoading">
+                        <div class="spinner"></div>
+                    </div>
+                    <img src="" alt="Landscape" class="preview-image" id="modalLandscapePreview">
+                </div>
+                <div class="preview-image-wrapper">
+                    <div class="preview-image-label"><span>📱</span><span>Portrait (9:16)</span></div>
+                    <div class="preview-image-loading" id="modalPortraitLoading">
+                        <div class="spinner"></div>
+                    </div>
+                    <img src="" alt="Portrait" class="preview-image" id="modalPortraitPreview">
+                </div>
+            </div>
+            <button class="preview-next-btn" id="templateModalConfirm" type="button"><span>اختيار هذا القالب</span><span>→</span></button>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.net';
+
+        // ===== FALLBACK TEMPLATES (synced with TEXT_TEMPLATES_CONFIG on server) =====
+        const FALLBACK_TEMPLATES = [
+            { template_id: 1, template_name: "ليلي أنيق", color_id: 2, color_name: "كحلي", gradient_start: "#0c1445", gradient_mid: "#1a2980", gradient_end: "#0c1445", accent: "#60a5fa", text_color: "#ffffff" },
+            { template_id: 1, template_name: "ليلي أنيق", color_id: 3, color_name: "نيلي", gradient_start: "#0f0c29", gradient_mid: "#302b63", gradient_end: "#0f0c29", accent: "#a78bfa", text_color: "#ffffff" },
+            { template_id: 2, template_name: "ذهبي فاخر", color_id: 1, color_name: "عنبري غامق", gradient_start: "#1a0f00", gradient_mid: "#3d2000", gradient_end: "#1a0f00", accent: "#fbbf24", text_color: "#fef3c7" },
+            { template_id: 2, template_name: "ذهبي فاخر", color_id: 2, color_name: "ذهبي فاتح", gradient_start: "#2d1f00", gradient_mid: "#5c3d00", gradient_end: "#2d1f00", accent: "#fcd34d", text_color: "#fffbeb" },
+            { template_id: 2, template_name: "ذهبي فاخر", color_id: 3, color_name: "نحاسي", gradient_start: "#1a0a00", gradient_mid: "#4a1f00", gradient_end: "#1a0a00", accent: "#fb923c", text_color: "#fff7ed" },
+            { template_id: 3, template_name: "طبيعي هادئ", color_id: 1, color_name: "زيتوني", gradient_start: "#0a1a0a", gradient_mid: "#1a3d1a", gradient_end: "#0a1a0a", accent: "#4ade80", text_color: "#f0fdf4" },
+            { template_id: 3, template_name: "طبيعي هادئ", color_id: 2, color_name: "أخضر زمردي", gradient_start: "#022c22", gradient_mid: "#065f46", gradient_end: "#022c22", accent: "#34d399", text_color: "#ecfdf5" },
+            { template_id: 3, template_name: "طبيعي هادئ", color_id: 3, color_name: "طحلبي", gradient_start: "#0f1a14", gradient_mid: "#1a3d2e", gradient_end: "#0f1a14", accent: "#2dd4bf", text_color: "#f0fdfa" },
+            { template_id: 5, template_name: "حديث أنيق", color_id: 1, color_name: "كحلي فاتح", gradient_start: "#0a1628", gradient_mid: "#162d50", gradient_end: "#0a1628", accent: "#93c5fd", text_color: "#eff6ff" },
+            { template_id: 5, template_name: "حديث أنيق", color_id: 2, color_name: "رمادي أنيق", gradient_start: "#0f131a", gradient_mid: "#1f2937", gradient_end: "#0f131a", accent: "#e2e8f0", text_color: "#f8fafc" },
+            { template_id: 6, template_name: "مشرق جذاب", color_id: 2, color_name: "برتقالي حيوي", gradient_start: "#1f0a00", gradient_mid: "#4a1f00", gradient_end: "#1f0a00", accent: "#fdba74", text_color: "#fff7ed" },
+            { template_id: 7, template_name: "سماء صافية", color_id: 1, color_name: "أزرق ساطع", gradient_start: "#0c1f3d", gradient_mid: "#1a3d6b", gradient_end: "#0c1f3d", accent: "#7dd3fc", text_color: "#f0f9ff" },
+            { template_id: 7, template_name: "سماء صافية", color_id: 2, color_name: "فيروزي", gradient_start: "#0a1f1a", gradient_mid: "#0f3d3d", gradient_end: "#0a1f1a", accent: "#5eead4", text_color: "#f0fdfa" },
+            { template_id: 8, template_name: "ليلة ملكية", color_id: 2, color_name: "أزرق ملكي", gradient_start: "#000d1a", gradient_mid: "#001a3d", gradient_end: "#000d1a", accent: "#818cf8", text_color: "#eef2ff" },
+        ];
+
+        // ===== STATE =====
+        const state = {
+            textContent: '', templateId: '', colorId: '',
+            selectedTemplate: null, selectedColor: null,
+            seo: { title: '', description: '', tags: [] },
+            textCards: [], user_id: '',
+            previewLandscape: '', previewPortrait: ''
+        };
+        let templatesCache = [];
+        let binData = {};
+        let previewRequestId = 0;
+        let pendingTemplateId = null;
+        let previewColorId = null;
+        let modalMode = 'template'; // 'template' | 'color'
+
+        // ===== UTILS =====
+        function showLoading(text, sub) {
+            document.getElementById('loadingText').textContent = text || 'جاري التحميل...';
+            const subEl = document.getElementById('loadingSubtext');
+            if (subEl) subEl.textContent = sub || '';
+            document.getElementById('loadingOverlay').classList.add('visible');
+        }
+        function hideLoading() { document.getElementById('loadingOverlay').classList.remove('visible'); }
+        function showToast(msg, err) {
+            const t = document.createElement('div');
+            t.textContent = msg;
+            t.style.cssText = `position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:${err?'#E74C3C':'#27AE60'};color:white;padding:12px 24px;border-radius:8px;z-index:99999;font-weight:700;text-align:center;max-width:80%;box-shadow:0 4px 20px rgba(0,0,0,0.3);direction:rtl`;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 2000);
+        }
+
+        async function fetchTemplatePreview(templateId, colorId) {
+            const response = await fetch(`${WORKER_API_URL}/api/template-preview?template_id=${templateId}&color_id=${colorId}`);
+            if (!response.ok) throw new Error('فشل جلب المعاينة');
+            const data = await response.json();
+            if (!data.success) throw new Error(data.error || 'فشل جلب المعاينة');
+            return data;
+        }
+
+        // ===== TEXT SPLIT =====
+        function splitTextIntoCards(text, max = 140) {
+            if (!text || !text.trim()) return [];
+            const t = text.trim();
+            if (t.length <= max) return [t];
+            let paras = t.split(/\n\s*\n/).filter(p => p.trim());
+            if (paras.length <= 1) paras = t.split(/\n/).filter(p => p.trim());
+            const cards = [];
+            let cur = '';
+            for (const p of paras) {
+                const tp = p.trim(); if (!tp) continue;
+                if (tp.length > max) {
+                    if (cur && (cur.length + tp.length + 1) <= max) { cur = cur + '\n\n' + tp; continue }
+                    if (cur.trim()) { cards.push(cur.trim()); cur = '' }
+                    const sents = tp.match(/[^.!?؟\n]+[.!?؟\n]*/g) || [tp];
+                    for (const s of sents) {
+                        const ts = s.trim(); if (!ts) continue;
+                        if (!cur) cur = ts;
+                        else if ((cur.length + ts.length + 1) <= max) cur = cur + ' ' + ts;
+                        else { if (cur.trim()) cards.push(cur.trim()); cur = ts }
+                    }
+                } else {
+                    if (cur && (cur.length + tp.length + 2) > max) { if (cur.trim()) cards.push(cur.trim()); cur = tp }
+                    else cur = cur ? cur + '\n\n' + tp : tp;
+                }
+            }
+            if (cur.trim()) cards.push(cur.trim());
+            return cards.length ? cards : [t];
+        }
+
+        // ===== UPDATE CARDS =====
+        function updateCards() {
+            const text = state.textContent.trim();
+            const sec = document.getElementById('cardsSection');
+            const list = document.getElementById('cardsList');
+            const badge = document.getElementById('cardsBadge');
+            const total = document.getElementById('cardsTotal');
+            const cardsCount = document.getElementById('cardsCount');
+            const estDur = document.getElementById('estDuration');
+
+            if (!text || text.length < 5) {
+                sec.classList.add('hidden'); state.textCards = [];
+                cardsCount.textContent = '0'; estDur.textContent = '0';
+                return;
+            }
+            const cards = splitTextIntoCards(text);
+            state.textCards = cards;
+            sec.classList.remove('hidden');
+            badge.textContent = cards.length === 1 ? '1 بطاقة' : `${cards.length} بطاقات`;
+            cardsCount.textContent = cards.length;
+
+            list.innerHTML = cards.map((c, i) => {
+                const w = c.trim().split(/\s+/).length;
+                const ch = c.length;
+                const prev = c.length > 120 ? c.substring(0, 120) + '...' : c;
+                const dur = Math.max(4, Math.min(15, Math.ceil(w / 2.5) + (w > 20 ? Math.ceil((w - 20) / 10) : 0)));
+                return `<div class="cards-item"><div class="cards-num">${i+1}</div><div style="flex:1"><div class="cards-text">${prev.replace(/\n/g,'<br>')}</div><div class="cards-meta">${ch} حرف | ${w} كلمة | ~${dur}ث</div></div></div>`;
+            }).join('');
+
+            let totalDur = 0, totalWords = 0, totalChars = 0;
+            for (const c of cards) {
+                const w = c.trim().split(/\s+/).length;
+                totalWords += w; totalChars += c.length;
+                totalDur += Math.max(4, Math.min(15, Math.ceil(w / 2.5) + (w > 20 ? Math.ceil((w - 20) / 10) : 0)));
+            }
+            estDur.textContent = totalDur;
+            total.innerHTML = `<span>📊</span><span><strong>${cards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${totalDur}</strong> ثانية</span>`;
+        }
+
+        // ===== RENDER TEMPLATES =====
+        function renderTemplates(templates) {
+            const grid = document.getElementById('templatesGrid');
+            const seen = new Set();
+            const tmpls = [];
+            for (const t of templates) {
+                if (!seen.has(t.template_id)) { seen.add(t.template_id); tmpls.push(t); }
+            }
+            grid.innerHTML = tmpls.map(t => {
+                const sel = String(t.template_id) === String(state.templateId) ? 'selected' : '';
+                return `<div class="template-card ${sel}" data-id="${t.template_id}" data-name="${t.template_name}">
+                    <div class="template-preview" style="background:radial-gradient(ellipse at center,${t.gradient_mid} 0%,${t.gradient_start} 80%);border-radius:14px 14px 0 0">
+                        <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,${t.accent}08 0%,transparent 60%)"></div>
+                        <div style="position:absolute;top:20%;left:12%;right:12%;bottom:20%;background:rgba(0,0,0,0.25);border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.4)"></div>
+                        <div style="position:absolute;top:20%;left:12%;right:12%;bottom:20%;border:1.5px solid ${t.accent}25;border-radius:8px"></div>
+                        <div style="position:absolute;top:calc(20% + 8%);left:50%;transform:translateX(-50%);width:12%;height:2px;background:linear-gradient(90deg,transparent,${t.accent}35,transparent)"></div>
+                        <div style="position:absolute;top:calc(20% + 14%);left:calc(12% + 18px);right:calc(12% + 18px);bottom:calc(20% + 8%);display:flex;align-items:center;justify-content:center;text-align:center;direction:rtl">
+                            <span style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-weight:bold;font-size:14px;color:${t.text_color};text-shadow:0 2px 8px rgba(0,0,0,0.6);line-height:1.8">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</span>
+                        </div>
+                        <div style="position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:7px;color:${t.accent}15">myroqia.com</div>
+                        <div class="template-check">✓</div>
+                    </div>
+                    <div class="template-name">${t.template_name}</div>
+                </div>`;
+            }).join('');
+
+            grid.querySelectorAll('.template-card').forEach(el => {
+                el.addEventListener('click', () => {
+                    const id = el.dataset.id;
+                    state.templateId = id;
+                    state.colorId = '';
+                    state.selectedTemplate = tmpls.find(t => String(t.template_id) === id);
+                    grid.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
+                    el.classList.add('selected');
+                    showTemplatePreviewModal(state.selectedTemplate);
+                });
+            });
+        }
+
+        // ===== TEMPLATE PREVIEW MODAL =====
+        async function showTemplatePreviewModal(template, colorOverride, mode) {
+            pendingTemplateId = template.template_id;
+            modalMode = mode || 'template';
+            const modal = document.getElementById('templatePreviewModal');
+            const titleEl = document.getElementById('templateModalTitle');
+            const confirmBtn = document.getElementById('templateModalConfirm');
+            const landscapeLoading = document.getElementById('modalLandscapeLoading');
+            const portraitLoading = document.getElementById('modalPortraitLoading');
+            const landscapeImg = document.getElementById('modalLandscapePreview');
+            const portraitImg = document.getElementById('modalPortraitPreview');
+
+            titleEl.textContent = modalMode === 'color' ? '✅ معاينة اللون' : '✅ معاينة القالب';
+            confirmBtn.innerHTML = modalMode === 'color'
+                ? '<span>اختيار هذا اللون</span><span>✓</span>'
+                : '<span>اختيار هذا القالب</span><span>→</span>';
+
+            landscapeLoading.classList.remove('hidden');
+            portraitLoading.classList.remove('hidden');
+            landscapeLoading.innerHTML = '<div class="spinner"></div>';
+            portraitLoading.innerHTML = '<div class="spinner"></div>';
+            landscapeImg.classList.remove('loaded');
+            portraitImg.classList.remove('loaded');
+            landscapeImg.src = '';
+            portraitImg.src = '';
+
+            modal.classList.add('visible');
+            document.body.style.overflow = 'hidden';
+
+            try {
+                const templateColors = templatesCache.filter(t => String(t.template_id) === String(template.template_id));
+                const color = colorOverride || templateColors[0];
+                if (!color) throw new Error('لا يوجد لون لهذا القالب');
+                previewColorId = color.color_id;
+
+                const data = await fetchTemplatePreview(template.template_id, previewColorId);
+                landscapeImg.onload = () => {
+                    landscapeLoading.classList.add('hidden');
+                    landscapeImg.classList.add('loaded');
+                };
+                portraitImg.onload = () => {
+                    portraitLoading.classList.add('hidden');
+                    portraitImg.classList.add('loaded');
+                };
+                landscapeImg.src = data.landscape;
+                portraitImg.src = data.portrait;
+                state.previewLandscape = data.landscape;
+                state.previewPortrait = data.portrait;
+            } catch (e) {
+                console.error('Error loading preview:', e);
+                landscapeLoading.innerHTML = '<span style="color:red">فشل تحميل المعاينة</span>';
+                portraitLoading.innerHTML = '<span style="color:red">فشل تحميل المعاينة</span>';
+            }
+        }
+
+        document.getElementById('exportAllTemplatesBtn').addEventListener('click', async () => {
+            if (!templatesCache.length) { showToast('لا توجد قوالب محملة', true); return; }
+
+            showLoading('جاري توليد الخلفيات المفرغة...', 'قد يستغرق هذا دقيقة لجميع القوالب');
+            const results = [];
+
+            try {
+                for (const t of templatesCache) {
+                    const r = await fetch(`${WORKER_API_URL}/api/template-preview?template_id=${t.template_id}&color_id=${t.color_id}&empty=true`);
+                    if (!r.ok) continue;
+                    const data = await r.json();
+                    if (data && data.success) {
+                        results.push({ name: `${t.template_name}-${t.color_name}`, landscape: data.landscape, portrait: data.portrait });
+                    }
+                }
+
+                const modal = document.getElementById('batchPreviewModal');
+                const preview = document.getElementById('batchPreview');
+                const loading = document.getElementById('batchLoading');
+
+                let html = '';
+                results.forEach(res => {
+                    html += `
+                        <div class="batch-card-item">
+                            <img src="${res.landscape}" alt="${res.name} landscape" />
+                            <div class="meta">
+                                <div class="badge-num">${res.name}</div>
+                                <div>أفقي</div>
+                                <a href="${res.landscape}" download="${res.name}-landscape.png" style="display:block;margin-top:6px;color:var(--primary);font-weight:700;">تحميل</a>
+                            </div>
+                        </div>
+                        <div class="batch-card-item">
+                            <img src="${res.portrait}" alt="${res.name} portrait" />
+                            <div class="meta">
+                                <div class="badge-num">${res.name}</div>
+                                <div>عمودي</div>
+                                <a href="${res.portrait}" download="${res.name}-portrait.png" style="display:block;margin-top:6px;color:var(--success);font-weight:700;">تحميل</a>
+                            </div>
+                        </div>`;
+                });
+
+                preview.innerHTML = html || '<div style="padding:24px;text-align:center;direction:rtl;">لا توجد نتائج</div>';
+                preview.style.display = 'grid';
+                loading.classList.add('hidden');
+                modal.classList.add('visible');
+                document.body.style.overflow = 'hidden';
+            } catch (e) {
+                showToast('حدث خطأ أثناء التصدير', true);
+            } finally {
+                hideLoading();
+            }
+        });
+
+        async function showBatchPreviewModal() {
+            if (!state.templateId || !state.colorId) {
+                showToast('اختر قالباً ولوناً أولاً', true); return;
+            }
+            if (!state.textCards.length) {
+                showToast('أدخل نصاً لإنشاء البطاقات', true); return;
+            }
+
+            const modal = document.getElementById('batchPreviewModal');
+            const loading = document.getElementById('batchLoading');
+            const preview = document.getElementById('batchPreview');
+
+            loading.classList.remove('hidden');
+            loading.innerHTML = '<div class="spinner"></div>';
+            preview.style.display = 'none';
+            preview.innerHTML = '';
+            modal.classList.add('visible');
+            document.body.style.overflow = 'hidden';
+
+            try {
+                const r = await fetch(`${WORKER_API_URL}/api/text-cards-preview`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        text_cards: state.textCards,
+                        template_id: state.templateId,
+                        color_id: state.colorId,
+                        include_portrait: true
+                    })
+                });
+                if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'فشل معاينة البطاقات');
+                const data = await r.json();
+                if (!data.success || !Array.isArray(data.cards)) throw new Error(data.error || 'فشل معاينة البطاقات');
+
+                let html = '';
+                data.cards.forEach((card) => {
+                    html += `
+                    <div class="batch-card-item">
+                        <img src="${card.landscape}" alt="Card ${card.index + 1} landscape" />
+                        <div class="meta">
+                            <div class="badge-num">بطاقة ${card.index + 1} — أفقي</div>
+                            <div style="color:var(--text-secondary);font-size:11px;">${(card.text_preview || '').replace(/</g, '&lt;')}</div>
+                        </div>
+                    </div>`;
+                    if (card.portrait) {
+                        html += `
+                        <div class="batch-card-item">
+                            <img src="${card.portrait}" alt="Card ${card.index + 1} portrait" />
+                            <div class="meta">
+                                <div class="badge-num">بطاقة ${card.index + 1} — عمودي</div>
+                            </div>
+                        </div>`;
+                    }
+                });
+                preview.innerHTML = html;
+                preview.style.display = 'grid';
+            } catch (e) {
+                console.warn('Failed to load batch preview:', e);
+                preview.innerHTML = `
+                    <div style="padding:40px; text-align:center; color:var(--text-secondary); direction:rtl; grid-column:1/-1;">
+                        <div style="font-size:48px; margin-bottom:16px;">📝</div>
+                        <div>فشل تحميل معاينة البطاقات</div>
+                        <div style="font-size:12px; margin-top:8px;">${e.message || e}</div>
+                    </div>`;
+                preview.style.display = 'grid';
+            } finally {
+                loading.classList.add('hidden');
+            }
+        }
+
+        function closeTemplateModal() {
+            document.getElementById('templatePreviewModal').classList.remove('visible');
+            document.body.style.overflow = '';
+            pendingTemplateId = null;
+        }
+
+        function closeBatchPreviewModal() {
+            document.getElementById('batchPreviewModal').classList.remove('visible');
+            document.body.style.overflow = '';
+        }
+
+        // ===== RENDER COLORS =====
+        function renderColors(templates, templateId) {
+            const sec = document.getElementById('colorsSection');
+            const row = document.getElementById('colorsRow');
+            const colors = templates.filter(t => String(t.template_id) === String(templateId));
+            if (!colors.length) { sec.classList.add('hidden'); return }
+            sec.classList.remove('hidden');
+
+            const unique = [];
+            const seen = new Set();
+            for (const c of colors) {
+                const k = `${c.color_id}-${c.color_name}`;
+                if (!seen.has(k)) { seen.add(k); unique.push(c); }
+            }
+
+            row.innerHTML = unique.map(c => {
+                const sel = String(c.color_id) === String(state.colorId) ? 'selected' : '';
+                return `<div class="color-option ${sel}" data-id="${c.color_id}" data-name="${c.color_name}" style="background:radial-gradient(ellipse at center,${c.gradient_mid} 0%,${c.gradient_start} 100%);display:flex;align-items:center;justify-content:center">
+                    <div style="position:absolute;inset:0;background:radial-gradient(circle at center,rgba(255,255,255,0.05) 0%,transparent 70%)"></div>
+                    <div style="width:75%;padding:14px 10px;background:rgba(0,0,0,0.25);border:1px solid ${c.accent}33;border-radius:8px;text-align:center;position:relative;z-index:1">
+                        <div style="width:30%;height:1px;background:${c.accent}55;margin:0 auto 8px"></div>
+                    <div style="font-size:14px;font-weight:700;color:${c.text_color};text-shadow:0 2px 8px rgba(0,0,0,0.6);line-height:1.5">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
+                    <div style="font-size:8px;color:rgba(255,255,255,0.25);margin-top:6px">myroqia.com</div>
+                    </div>
+                    <div class="template-check">✓</div>
+                    <div class="color-name-tag">${c.color_name}</div>
+                </div>`;
+            }).join('');
+
+            row.querySelectorAll('.color-option').forEach(el => {
+                el.addEventListener('click', () => {
+                    const color = unique.find(c => String(c.color_id) === el.dataset.id);
+                    state.colorId = el.dataset.id;
+                    state.selectedColor = color;
+                    row.querySelectorAll('.color-option').forEach(s => s.classList.remove('selected'));
+                    el.classList.add('selected');
+                    updateDualPreview();
+                    if (color) {
+                        showTemplatePreviewModal(
+                            state.selectedTemplate || { template_id: state.templateId },
+                            color,
+                            'color'
+                        );
+                    }
+                });
+            });
+
+            if (!state.colorId && unique.length) {
+                state.colorId = String(unique[0].color_id);
+                state.selectedColor = unique[0];
+                row.querySelector('.color-option')?.classList.add('selected');
+            }
+            updateDualPreview();
+        }
+
+        // ===== DUAL PREVIEW (real server PNGs) =====
+        async function updateDualPreview() {
+            const section = document.getElementById('dualPreviewSection');
+            const lImg = document.getElementById('landscapePreview');
+            const pImg = document.getElementById('portraitPreview');
+            const lLoad = document.getElementById('landscapeLoading');
+            const pLoad = document.getElementById('portraitLoading');
+            const lPh = document.getElementById('landscapePlaceholder');
+            const pPh = document.getElementById('portraitPlaceholder');
+
+            if (!state.templateId || !state.colorId) {
+                section.classList.add('hidden');
+                return;
+            }
+
+            section.classList.remove('hidden');
+            const reqId = ++previewRequestId;
+            lLoad.classList.remove('hidden');
+            pLoad.classList.remove('hidden');
+            lImg.classList.remove('loaded');
+            pImg.classList.remove('loaded');
+            lPh.style.display = 'none';
+            pPh.style.display = 'none';
+
+            try {
+                const data = await fetchTemplatePreview(state.templateId, state.colorId);
+                if (reqId !== previewRequestId) return;
+                lImg.onload = () => { lLoad.classList.add('hidden'); lImg.classList.add('loaded'); };
+                pImg.onload = () => { pLoad.classList.add('hidden'); pImg.classList.add('loaded'); };
+                lImg.src = data.landscape;
+                pImg.src = data.portrait;
+                state.previewLandscape = data.landscape;
+                state.previewPortrait = data.portrait;
+            } catch (e) {
+                if (reqId !== previewRequestId) return;
+                console.warn('Dual preview failed:', e);
+                lLoad.classList.add('hidden');
+                pLoad.classList.add('hidden');
+                lPh.style.display = 'block';
+                pPh.style.display = 'block';
+                lPh.textContent = 'فشل تحميل المعاينة';
+                pPh.textContent = 'فشل تحميل المعاينة';
+            }
+        }
+
+        // ===== LOAD TEMPLATES =====
+        async function loadTemplates() {
+            try {
+                const r = await fetch(`${WORKER_API_URL}/get-text-templates`);
+                if (r.ok) {
+                    const d = await r.json();
+                    if (d.success && Array.isArray(d.data) && d.data.length) {
+                        templatesCache = d.data;
+                        renderTemplates(templatesCache);
+                        return;
+                    }
+                }
+            } catch (e) { console.warn('API failed'); }
+            templatesCache = FALLBACK_TEMPLATES;
+            renderTemplates(templatesCache);
+        }
+
+        // ===== NAVIGATION =====
+        let currentStep = 1;
+        const totalSteps = 3;
+
+        function updateSteps() {
+            document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+            document.querySelector(`.step-content[data-step="${currentStep}"]`).classList.add('active');
+            document.getElementById('stepNumber').textContent = currentStep;
+            document.getElementById('btnBack').style.display = currentStep > 1 ? 'flex' : 'none';
+            const btnNext = document.getElementById('btnNext');
+            if (currentStep === totalSteps) {
+                btnNext.innerHTML = '<span>🚀</span><span>إرسال</span>';
+                btnNext.className = 'nav-btn btn-submit';
+                btnNext.disabled = false;
+            } else {
+                btnNext.innerHTML = '<span>التالي</span><span>→</span>';
+                btnNext.className = 'nav-btn btn-next';
+                btnNext.disabled = false;
+            }
+            if (currentStep === 3) updateReview();
+        }
+
+        document.getElementById('btnNext').addEventListener('click', async () => {
+            if (currentStep < totalSteps) {
+                if (currentStep === 1) {
+                    if (!state.textContent || state.textContent.trim().length < 5) {
+                        showToast('الرجاء إدخال نص قبل المتابعة', true); return;
+                    }
+                    if (!state.templateId) { showToast('الرجاء اختيار قالب', true); return; }
+                    if (!state.colorId) { showToast('الرجاء اختيار لون', true); return; }
+                }
+                currentStep++;
+                updateSteps();
+                window.scrollTo(0, 0);
+            } else {
+                // SUBMIT
+                const btn = document.getElementById('btnNext');
+                btn.disabled = true;
+                btn.innerHTML = '<span>⏳</span><span>جاري الإرسال...</span>';
+                showLoading('جاري إنشاء الفيديو...', 'Landscape + Portrait');
+                try {
+                    const params = new URLSearchParams(window.location.search);
+                    const processId = params.get('bin') || tg.initDataUnsafe?.start_param || Date.now().toString();
+                    const finalData = {
+                        id: processId,
+                        text_content: state.textContent,
+                        text_cards: state.textCards,
+                        template_id: parseInt(state.templateId, 10),
+                        color_id: parseInt(state.colorId, 10),
+                        seo: { ...state.seo },
+                        captions: [], audioUrl: '', duration: null
+                    };
+                    const r = await fetch(`${WORKER_API_URL}/render-text`, {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(finalData)
+                    });
+                    if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'فشل الإرسال');
+                    try { tg.sendData(JSON.stringify({ type: 'text_content_completed', id: processId, status: 'completed' })); } catch (e) { }
+                    if (tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) {
+                        tg.showAlert('✅ تم الإرسال بنجاح!', () => setTimeout(() => tg.close(), 500));
+                    } else {
+                        showToast('✅ تم الإرسال بنجاح!');
+                        setTimeout(() => tg.close(), 1500);
+                    }
+                } catch (e) {
+                    showToast('❌ ' + e.message, true);
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>🚀</span><span>إرسال</span>';
+                } finally {
+                    hideLoading();
+                }
+            }
+        });
+
+        document.getElementById('btnBack').addEventListener('click', () => {
+            if (currentStep > 1) { currentStep--; updateSteps(); window.scrollTo(0, 0); }
+        });
+
+        // ===== TEXT INPUT =====
+        document.getElementById('textInput').addEventListener('input', e => {
+            state.textContent = e.target.value;
+            const chars = state.textContent.length;
+            const words = state.textContent.trim() ? state.textContent.trim().split(/\s+/).length : 0;
+            document.getElementById('charCount').textContent = chars;
+            document.getElementById('wordCount').textContent = words;
+            updateCards();
+        });
+
+        // ===== SEO =====
+        document.getElementById('seoTitle').addEventListener('input', e => {
+            state.seo.title = e.target.value;
+            document.getElementById('seoTitleCount').textContent = e.target.value.length;
+            updateSeoStats();
+        });
+        document.getElementById('seoDesc').addEventListener('input', e => {
+            state.seo.description = e.target.value;
+            document.getElementById('seoDescCount').textContent = e.target.value.length;
+            updateSeoStats();
+        });
+        document.getElementById('addTagBtn').addEventListener('click', () => {
+            const inp = document.getElementById('tagInput');
+            const val = inp.value.trim().replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '').replace(/\s+/g, ' ');
+            if (val && !state.seo.tags.includes(val)) { state.seo.tags.push(val); inp.value = ''; renderTags(); updateSeoStats(); }
+            else if (state.seo.tags.includes(val)) showToast('هذه الكلمة موجودة بالفعل');
+        });
+        document.getElementById('tagInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('addTagBtn').click(); });
+
+        function renderTags() {
+            const c = document.getElementById('tagsContainer');
+            if (!state.seo.tags.length) { c.innerHTML = '<span style="color:var(--text-secondary);font-size:12px;">لا توجد كلمات مفتاحية بعد</span>'; return; }
+            c.innerHTML = state.seo.tags.map((t, i) =>
+                `<span class="tag-item">${t}<span class="tag-remove" onclick="removeTag(${i})">×</span></span>`
+            ).join('');
+        }
+        window.removeTag = function (i) { state.seo.tags.splice(i, 1); renderTags(); updateSeoStats(); };
+
+        function updateSeoStats() {
+            const s = document.getElementById('seoStats');
+            s.style.display = 'grid';
+            document.getElementById('statWords').textContent = state.seo.title.trim() ? state.seo.title.trim().split(/\s+/).length : 0;
+            document.getElementById('statChars').textContent = state.seo.title.length;
+            document.getElementById('statTags').textContent = state.seo.tags.length;
+            document.getElementById('statDescLen').textContent = state.seo.description.length;
+        }
+
+        document.getElementById('seoGenerateBtn').addEventListener('click', async () => {
+            if (!state.textContent || state.textContent.trim().length < 50) {
+                showToast('الرجاء إدخال نص (50 حرف على الأقل) أولاً', true); return;
+            }
+            showLoading('جاري تحليل النص وتوليد SEO...', 'قد يستغرق ذلك بضع ثوانٍ');
+            try {
+                const r = await fetch(`${WORKER_API_URL}/generate-text-seo`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text: state.textContent.trim() })
+                });
+                if (r.ok) {
+                    const d = await r.json();
+                    if (d.title) { state.seo.title = d.title; document.getElementById('seoTitle').value = d.title; document.getElementById('seoTitleCount').textContent = d.title.length; }
+                    if (d.description) { state.seo.description = d.description; document.getElementById('seoDesc').value = d.description; document.getElementById('seoDescCount').textContent = d.description.length; }
+                    if (d.tags) { state.seo.tags = [...new Set(d.tags.map(t => t.trim().replace(/[\-_]+/g, ' ').replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '').replace(/\s+/g, ' ')).filter(t => t.length > 1))]; renderTags(); }
+                    updateSeoStats();
+                    showToast('✅ تم إنشاء بيانات SEO بنجاح');
+                } else showToast('فشل إنشاء SEO تلقائياً', true);
+            } catch (e) { showToast('فشل الاتصال بالخادم', true); }
+            finally { hideLoading(); }
+        });
+
+        // ===== REVIEW =====
+        async function updateReview() {
+            document.getElementById('rText').textContent = state.textContent.length > 100 ? state.textContent.substring(0, 100) + '...' : state.textContent || '(فارغ)';
+            document.getElementById('rChars').textContent = state.textContent.length;
+            document.getElementById('rWords').textContent = state.textContent.trim() ? state.textContent.trim().split(/\s+/).length : 0;
+            const cardsCount = state.textCards.length;
+            document.getElementById('rCards').textContent = cardsCount === 1 ? 'بطاقة واحدة' : `${cardsCount} بطاقات`;
+            let td = 0;
+            for (const c of state.textCards) { const w = c.trim().split(/\s+/).length; td += Math.max(4, Math.min(15, Math.ceil(w / 2.5) + (w > 20 ? Math.ceil((w - 20) / 10) : 0))); }
+            document.getElementById('rDuration').textContent = td ? `~${td} ثانية` : '-';
+            const t = templatesCache.find(t => String(t.template_id) === String(state.templateId));
+            document.getElementById('rTemplate').textContent = t?.template_name || state.templateId || '-';
+            const clr = templatesCache.find(t => String(t.template_id) === String(state.templateId) && String(t.color_id) === String(state.colorId));
+            document.getElementById('rColor').textContent = clr?.color_name || state.colorId || '-';
+            document.getElementById('rSeoTitle').textContent = state.seo.title || '-';
+            document.getElementById('rSeoDesc').textContent = state.seo.description || '-';
+
+            const reviewL = document.getElementById('reviewLandscapeImage');
+            const reviewP = document.getElementById('reviewPortraitImage');
+            if (state.previewLandscape && state.previewPortrait) {
+                reviewL.src = state.previewLandscape;
+                reviewP.src = state.previewPortrait;
+            } else if (state.templateId && state.colorId) {
+                try {
+                    const data = await fetchTemplatePreview(state.templateId, state.colorId);
+                    state.previewLandscape = data.landscape;
+                    state.previewPortrait = data.portrait;
+                    reviewL.src = data.landscape;
+                    reviewP.src = data.portrait;
+                } catch (e) {
+                    console.warn('Review preview failed:', e);
+                }
+            }
+        }
+
+        // ===== INIT =====
+        async function init() {
+            await loadTemplates();
+            const params = new URLSearchParams(window.location.search);
+            const processId = params.get('bin') || tg.initDataUnsafe?.start_param;
+            if (processId) {
+                try {
+                    showLoading('جاري جلب البيانات...');
+                    const r = await fetch(`${WORKER_API_URL}/get-bin/${processId}`);
+                    if (r.ok) {
+                        const result = await r.json();
+                        const data = result.data || result.record || result;
+                        if (data) {
+                            binData = data;
+                            state.user_id = data.user_id || String(tg.initDataUnsafe?.user?.id || '');
+                            if (data.text_content) { state.textContent = data.text_content; document.getElementById('textInput').value = state.textContent; updateCards(); }
+                            if (data.template_id) { state.templateId = String(data.template_id); renderTemplates(templatesCache); renderColors(templatesCache, state.templateId); }
+                            if (data.color_id) { state.colorId = String(data.color_id); state.selectedColor = templatesCache.find(t => String(t.template_id) === state.templateId && String(t.color_id) === state.colorId) || null; updateDualPreview(); }
+                            if (data.seo) {
+                                state.seo = { title: data.seo.title || '', description: data.seo.description || '', tags: data.seo.tags || [] };
+                                document.getElementById('seoTitle').value = state.seo.title;
+                                document.getElementById('seoDesc').value = state.seo.description;
+                                renderTags();
+                            }
+                        }
+                    }
+                } catch (e) { console.error(e); }
+                finally { hideLoading(); }
+            }
+            updateSteps();
+
+            document.getElementById('previewCardsBtn').addEventListener('click', showBatchPreviewModal);
+
+            document.getElementById('templateModalClose').addEventListener('click', closeTemplateModal);
+            document.getElementById('templatePreviewModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('templatePreviewModal')) closeTemplateModal();
+            });
+            document.getElementById('templateModalConfirm').addEventListener('click', () => {
+                if (modalMode === 'color') {
+                    closeTemplateModal();
+                    updateDualPreview();
+                    return;
+                }
+                closeTemplateModal();
+                if (pendingTemplateId) {
+                    state.templateId = pendingTemplateId;
+                    const templateColors = templatesCache.filter(t => String(t.template_id) === String(pendingTemplateId));
+                    if (templateColors.length > 0) {
+                        const color = templateColors.find(c => String(c.color_id) === String(previewColorId)) || templateColors[0];
+                        state.colorId = String(color.color_id);
+                        state.selectedColor = color;
+                        state.selectedTemplate = templatesCache.find(t => String(t.template_id) === String(pendingTemplateId)) || state.selectedTemplate;
+                    }
+                    renderColors(templatesCache, pendingTemplateId);
+                }
+            });
+
+            document.getElementById('batchModalClose').addEventListener('click', closeBatchPreviewModal);
+            document.getElementById('batchModalConfirm').addEventListener('click', closeBatchPreviewModal);
+            document.getElementById('batchPreviewModal').addEventListener('click', (e) => {
+                if (e.target === document.getElementById('batchPreviewModal')) closeBatchPreviewModal();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeTemplateModal();
+                    closeBatchPreviewModal();
+                }
+            });
+        }
+
+        init();
+    </script>
+</body>
+</html>
