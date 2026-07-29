@@ -3678,6 +3678,207 @@
             margin-right: -8px;
             font-size: 20px;
         }
+
+        /* 🎵 Audio Upload Zone */
+        .audio-upload-section {
+            margin-top: 24px;
+            border-top: 2px dashed var(--border-color);
+            padding-top: 20px;
+        }
+
+        .audio-upload-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .audio-drop-zone {
+            border: 2px dashed var(--primary);
+            border-radius: 12px;
+            padding: 24px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #f0f7ff, #e8f4fd);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .audio-drop-zone:hover,
+        .audio-drop-zone.drag-active {
+            background: var(--primary-lighter);
+            border-color: var(--primary-dark);
+            transform: scale(1.01);
+        }
+
+        .audio-drop-zone-icon {
+            font-size: 36px;
+            margin-bottom: 8px;
+        }
+
+        .audio-drop-zone-text {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+
+        .audio-drop-zone-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        /* 🎵 Audio Preview Card */
+        .audio-preview-card {
+            display: none;
+            background: linear-gradient(135deg, #f0fff4, #e8f8ee);
+            border: 1.5px solid #27AE60;
+            border-radius: 14px;
+            padding: 16px;
+            margin-top: 12px;
+            gap: 14px;
+            align-items: center;
+            direction: rtl;
+        }
+
+        .audio-preview-card.visible {
+            display: flex;
+        }
+
+        .audio-icon-badge {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, #27AE60, #2ECC71);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.35);
+        }
+
+        .audio-preview-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+
+        .audio-preview-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .audio-preview-duration {
+            font-size: 13px;
+            color: #27AE60;
+            font-weight: 600;
+        }
+
+        .audio-preview-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            flex-shrink: 0;
+        }
+
+        .audio-distribute-btn {
+            padding: 8px 14px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+            transition: all 0.2s;
+            box-shadow: 0 3px 10px rgba(74, 144, 226, 0.4);
+        }
+
+        .audio-distribute-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 5px 14px rgba(74, 144, 226, 0.5);
+        }
+
+        .audio-distribute-btn:active {
+            transform: scale(0.96);
+        }
+
+        .audio-remove-btn {
+            padding: 7px 14px;
+            background: white;
+            color: var(--danger);
+            border: 1.5px solid var(--danger);
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .audio-remove-btn:hover {
+            background: var(--danger);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .audio-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: linear-gradient(135deg, #27AE60, #2ECC71);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 20px;
+            margin-right: 8px;
+        }
+
+        .audio-waveform {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            height: 24px;
+            margin-top: 4px;
+        }
+
+        .audio-waveform-bar {
+            width: 3px;
+            background: #27AE60;
+            border-radius: 2px;
+            animation: waveAnim 1.2s ease-in-out infinite;
+        }
+
+        .audio-waveform-bar:nth-child(1) { height: 40%; animation-delay: 0s; }
+        .audio-waveform-bar:nth-child(2) { height: 70%; animation-delay: 0.1s; }
+        .audio-waveform-bar:nth-child(3) { height: 100%; animation-delay: 0.2s; }
+        .audio-waveform-bar:nth-child(4) { height: 60%; animation-delay: 0.3s; }
+        .audio-waveform-bar:nth-child(5) { height: 80%; animation-delay: 0.4s; }
+        .audio-waveform-bar:nth-child(6) { height: 45%; animation-delay: 0.5s; }
+        .audio-waveform-bar:nth-child(7) { height: 90%; animation-delay: 0.6s; }
+        .audio-waveform-bar:nth-child(8) { height: 55%; animation-delay: 0.7s; }
+
+        @keyframes waveAnim {
+            0%, 100% { transform: scaleY(0.4); opacity: 0.6; }
+            50% { transform: scaleY(1); opacity: 1; }
+        }
     </style>
 </head>
 
@@ -3833,6 +4034,50 @@
                     style="color: var(--text-secondary); font-size: 14px; text-align: center; padding: 20px;">لا توجد
                     صور بعد، قم بإضافة رابط صورة للبدء</div>
             </div>
+
+            <!-- 🎵 Audio Upload Section -->
+            <div class="audio-upload-section">
+                <div class="audio-upload-title">
+                    <span>🎵</span>
+                    <span>ملف صوتي للفيديو</span>
+                    <span style="font-size:11px; font-weight:500; color:var(--text-secondary);">(اختياري)</span>
+                </div>
+
+                <div id="audioDropZone" class="audio-drop-zone">
+                    <div class="audio-drop-zone-icon">🎧</div>
+                    <div class="audio-drop-zone-text">اضغط هنا لرفع ملف صوتي</div>
+                    <div class="audio-drop-zone-hint">MP3 · M4A · WAV · OGG · AAC — الصوت سيُوزَّع على مدة الصور</div>
+                    <input type="file" id="audioFileInput" accept="audio/*" style="display: none;">
+                </div>
+
+                <div class="audio-preview-card" id="audioPreviewCard">
+                    <div class="audio-icon-badge">🎵</div>
+                    <div class="audio-preview-info">
+                        <div class="audio-preview-name" id="audioPreviewName">—</div>
+                        <div class="audio-preview-duration" id="audioPreviewDuration">0:00</div>
+                        <div class="audio-waveform">
+                            <div class="audio-waveform-bar"></div>
+                            <div class="audio-waveform-bar"></div>
+                            <div class="audio-waveform-bar"></div>
+                            <div class="audio-waveform-bar"></div>
+                            <div class="audio-waveform-bar"></div>
+                            <div class="audio-waveform-bar"></div>
+                            <div class="audio-waveform-bar"></div>
+                            <div class="audio-waveform-bar"></div>
+                        </div>
+                    </div>
+                    <div class="audio-preview-actions">
+                        <button class="audio-distribute-btn" id="audioDistributeBtn">
+                            <span>⏱️</span>
+                            <span>توزيع المدد</span>
+                        </button>
+                        <button class="audio-remove-btn" id="audioRemoveBtn">
+                            <span>🗑️</span>
+                            <span>حذف</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- الخطوة 2: SEO -->
@@ -3931,6 +4176,10 @@
                         id="reviewImagesCount">0</span></div>
                 <div class="review-item"><span class="review-label">المدة الإجمالية:</span><span class="review-value"
                         id="reviewTotalDuration">0 ثانية</span></div>
+                <div class="review-item" id="reviewAudioRow" style="display:none;">
+                    <span class="review-label">🎵 الصوت:</span>
+                    <span class="review-value" id="reviewAudioValue" style="color:#27AE60; font-weight:700;">—</span>
+                </div>
             </div>
 
             <div class="review-section">
@@ -4055,7 +4304,8 @@
         const state = {
             images: [],
             seo: { title: '', description: '', tags: [], hashtags: [] },
-            user_id: ''
+            user_id: '',
+            audio: { base64: null, duration: null, filename: '' }
         };
 
         // نسخة كاملة من بيانات الـ BIN الأصلية (تُحدَّث عند التحميل وتُدمج مع التعديلات عند الإرسال)
@@ -4066,12 +4316,21 @@
                 || binData.user_id
                 || (tg.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : '');
 
-            return {
+            const data = {
                 ...binData,
                 images: state.images,
                 seo: { ...state.seo },
                 user_id: userId
             };
+
+            // إضافة بيانات الصوت إن وُجد
+            if (state.audio && state.audio.base64) {
+                data.audioBase64 = state.audio.base64;
+                data.audioDuration = state.audio.duration;
+                data.audioFilename = state.audio.filename;
+            }
+
+            return data;
         }
 
         // --- Helpers ---
@@ -4456,12 +4715,14 @@
             const itemToMove = state.images.splice(fromIndex, 1)[0];
             state.images.splice(toIndex, 0, itemToMove);
             renderImagesList();
+            applyAudioSync(); // 🔄 إعادة توزيع المدد إن وُجد صوت
         }
 
         window.updateDuration = (idx, value) => {
             let duration = parseInt(value) || 2;
             if (duration < 2) duration = 2;
             state.images[idx].duration = duration;
+            // لا نعيد التوزيع هنا لأن المستخدم يضبط يدوياً
         };
 
         window.moveImageUp = (idx) => {
@@ -4480,6 +4741,7 @@
             state.images.splice(idx, 1);
             renderImagesList();
             showToast('تم حذف الصورة');
+            applyAudioSync(); // 🔄 إعادة توزيع المدد إن وُجد صوت
         };
 
         document.getElementById('addImageBtn').addEventListener('click', async () => {
@@ -4491,6 +4753,7 @@
                 const smartDuration = await analyzeImageComplexity(url);
                 state.images.push({ url, duration: smartDuration });
                 input.value = '';
+                applyAudioSync(); // 🔄 إعادة توزيع المدد إن وُجد صوت (قبل renderImagesList)
                 renderImagesList();
                 hideLoading();
                 showToast('تمت إضافة الصورة بنجاح');
@@ -4566,6 +4829,7 @@
                 }
 
                 state.images.push(...newImages);
+                applyAudioSync(); // 🔄 إعادة توزيع المدد إن وُجد صوت
                 renderImagesList();
                 showToast(`تمت إضافة ${newImages.length} صور بنجاح`);
             } catch (err) {
@@ -4575,6 +4839,166 @@
                 hideLoading();
             }
         }
+
+        // ==================== 🎵 AUDIO HANDLING ====================
+
+        function formatAudioTime(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00';
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m}:${String(s).padStart(2, '0')}`;
+        }
+
+        function audioFileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = err => reject(err);
+                reader.readAsDataURL(file);
+            });
+        }
+
+        function getAudioFileDuration(base64DataUrl) {
+            return new Promise((resolve) => {
+                const audio = new Audio();
+                audio.preload = 'metadata';
+                audio.onloadedmetadata = () => {
+                    resolve(isFinite(audio.duration) ? audio.duration : null);
+                };
+                audio.onerror = () => resolve(null);
+                audio.src = base64DataUrl;
+            });
+        }
+
+        async function handleAudioFile(file) {
+            if (!file || !file.type.startsWith('audio/')) {
+                showToast('يرجى اختيار ملف صوتي صالح (mp3, m4a, wav...)', true);
+                return;
+            }
+
+            // حد أقصى 80 ميجابايت
+            const MAX_SIZE_MB = 80;
+            if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+                showToast(`❌ حجم الملف الصوتي كبير جداً (الحد: ${MAX_SIZE_MB} MB)`, true);
+                return;
+            }
+
+            showLoading('جاري تحميل الملف الصوتي...', 'يرجى الانتظار');
+            try {
+                const base64 = await audioFileToBase64(file);
+                const duration = await getAudioFileDuration(base64);
+
+                state.audio.base64 = base64;
+                state.audio.duration = duration;
+                state.audio.filename = file.name;
+
+                // تحديث الـ UI
+                document.getElementById('audioPreviewName').textContent = file.name;
+                document.getElementById('audioPreviewDuration').textContent =
+                    duration ? `⏱️ ${formatAudioTime(duration)} (${duration.toFixed(1)} ثانية)` : '⏱️ غير معروفة';
+                document.getElementById('audioPreviewCard').classList.add('visible');
+                document.getElementById('audioDropZone').style.display = 'none';
+
+                showToast(`✅ تم رفع الصوت: ${file.name}`);
+
+                // إذا كانت هناك صور موجودة، نُوزّع المدد تلقائياً فوراً
+                if (state.images.length > 0 && duration) {
+                    distributeImageDurationsByAudio(false); // يعرض toast التوزيع
+                }
+            } catch (err) {
+                console.error('Audio load error:', err);
+                showToast('❌ خطأ أثناء تحميل الملف الصوتي', true);
+            } finally {
+                hideLoading();
+            }
+        }
+
+        /**
+         * توزيع مدد الصور بالتساوي حسب مدة الصوت
+         * @param {boolean} silent - إذا true لا يظهر toast (للتوزيع التلقائي)
+         */
+        function distributeImageDurationsByAudio(silent = false) {
+            const audioDuration = state.audio?.duration;
+            if (!audioDuration || audioDuration <= 0) {
+                if (!silent) showToast('لا يوجد ملف صوتي أو مدته غير معروفة', true);
+                return false;
+            }
+            if (state.images.length === 0) {
+                if (!silent) showToast('يرجى إضافة صور أولاً', true);
+                return false;
+            }
+
+            // توزيع المدة بالتساوي على الصور
+            // نضيف الانتقالات (0.8ث) لأن الـ API سيخصمها من المدة الإجمالية
+            const transitionDuration = 0.8;
+            const transitionTotal = state.images.length > 1 ? (state.images.length - 1) * transitionDuration : 0;
+            const availableDuration = audioDuration + transitionTotal;
+            const perImage = availableDuration / state.images.length;
+            // تقريب دقيق لعُشر ثانية مع حد أدنى 2 ثانية
+            const rounded = Math.max(2, Math.round(perImage * 10) / 10);
+
+            state.images.forEach(img => { img.duration = rounded; });
+
+            if (!silent) {
+                renderImagesList();
+                const totalAfter = state.images.reduce((sum, img) => sum + img.duration, 0);
+                showToast(`✅ تم التوزيع: ${rounded.toFixed(1)}ث/صورة | إجمالي: ${totalAfter.toFixed(1)}ث`);
+            }
+            return true;
+        }
+
+        /**
+         * يُطبّق التوزيع التلقائي صامتاً إذا كان هناك صوت وصور
+         * يُستدعى تلقائياً عند أي تغيير في الصور (إضافة/حذف/ترتيب)
+         */
+        function applyAudioSync() {
+            if (state.audio?.base64 && state.audio?.duration && state.images.length > 0) {
+                distributeImageDurationsByAudio(true); // صامت - بدون toast
+            }
+        }
+
+        function removeAudio() {
+            state.audio = { base64: null, duration: null, filename: '' };
+            document.getElementById('audioPreviewCard').classList.remove('visible');
+            document.getElementById('audioDropZone').style.display = '';
+            document.getElementById('audioFileInput').value = '';
+            showToast('تم حذف الملف الصوتي');
+        }
+
+        // --- Audio Event Listeners ---
+        const audioDropZone = document.getElementById('audioDropZone');
+        const audioFileInput = document.getElementById('audioFileInput');
+
+        if (audioDropZone && audioFileInput) {
+            audioDropZone.addEventListener('click', () => audioFileInput.click());
+
+            audioDropZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                audioDropZone.classList.add('drag-active');
+            });
+
+            audioDropZone.addEventListener('dragleave', () => {
+                audioDropZone.classList.remove('drag-active');
+            });
+
+            audioDropZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                audioDropZone.classList.remove('drag-active');
+                const file = e.dataTransfer.files?.[0];
+                if (file) handleAudioFile(file);
+            });
+
+            audioFileInput.addEventListener('change', (e) => {
+                const file = e.target.files?.[0];
+                if (file) handleAudioFile(file);
+                audioFileInput.value = '';
+            });
+        }
+
+        document.getElementById('audioDistributeBtn')?.addEventListener('click', distributeImageDurationsByAudio);
+        document.getElementById('audioRemoveBtn')?.addEventListener('click', removeAudio);
+
+        // ==================== END AUDIO HANDLING ====================
 
         // --- Load from Telegram or URL Param ---
         async function fetchInitData() {
@@ -4902,6 +5326,17 @@
             document.getElementById('reviewImagesCount').textContent = state.images.length;
             const totalDuration = state.images.reduce((acc, img) => acc + img.duration, 0);
             document.getElementById('reviewTotalDuration').textContent = totalDuration + ' ثانية';
+
+            // عرض معلومات الصوت في المراجعة
+            const audioRow = document.getElementById('reviewAudioRow');
+            const audioValue = document.getElementById('reviewAudioValue');
+            if (state.audio && state.audio.base64) {
+                audioRow.style.display = 'flex';
+                const durStr = state.audio.duration ? formatAudioTime(state.audio.duration) : '—';
+                audioValue.textContent = `${state.audio.filename} (${durStr})`;
+            } else {
+                audioRow.style.display = 'none';
+            }
 
             document.getElementById('reviewSerpTitle').textContent = state.seo.title || 'عنوان الفيديو';
             document.getElementById('reviewSerpDescription').textContent =
