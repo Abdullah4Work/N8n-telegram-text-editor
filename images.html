@@ -4222,8 +4222,7 @@
                 style="border: 2px dashed var(--primary); border-radius: 12px; padding: 30px 20px; text-align: center; background: var(--bg-secondary); cursor: pointer; transition: all 0.3s; margin-top: 15px;">
                 <div style="font-size: 32px; margin-bottom: 10px;">📤</div>
                 <div style="font-size: 16px; font-weight: bold; color: var(--primary);">اضغط هنا لرفع صور من جهازك</div>
-                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 5px;">PNG · JPG · WebP · <span style="color:#FF6B35;font-weight:700;">GIF</span> متحرك مدعوم ✨
-                </div>
+                <div style="font-size: 12px; color: var(--text-secondary); margin-top: 5px;">أو قم بسحب وإفلات الصور هنا</div>
                 <input type="file" id="fileInput" accept="image/*,.gif" multiple style="display: none;">
             </div>
 
@@ -4284,16 +4283,16 @@
                             <span class="audio-time-total" id="audioTotalTime">0:00</span>
                         </div>
 
-                        <!-- Controls: seek back | play/pause | seek forward -->
+                        <!-- Controls: seek back | play/pause | seek forward (RTL Order) -->
                         <div class="audio-controls-row">
-                            <div class="audio-seek-wrap">
-                                <button class="audio-ctrl-btn" id="audioSeekFwd" title="+10 ثوانٍ">⏩</button>
-                                <div class="audio-seek-label">+10</div>
-                            </div>
-                            <button class="audio-play-btn" id="audioPlayPauseBtn" title="تشغيل">▶</button>
                             <div class="audio-seek-wrap">
                                 <button class="audio-ctrl-btn" id="audioSeekBack" title="-10 ثوانٍ">⏪</button>
                                 <div class="audio-seek-label">-10</div>
+                            </div>
+                            <button class="audio-play-btn" id="audioPlayPauseBtn" title="تشغيل">▶</button>
+                            <div class="audio-seek-wrap">
+                                <button class="audio-ctrl-btn" id="audioSeekFwd" title="+10 ثوانٍ">⏩</button>
+                                <div class="audio-seek-label">+10</div>
                             </div>
                         </div>
 
@@ -4985,7 +4984,8 @@
             if (url) {
                 showLoading('جاري تحليل الرابط...', 'يرجى الانتظار');
                 const smartDuration = await analyzeImageComplexity(url);
-                state.images.push({ url, duration: smartDuration });
+                const isGif = url.toLowerCase().includes('.gif') || url.startsWith('data:image/gif');
+                state.images.push({ url, duration: smartDuration, isGif });
                 input.value = '';
                 applyAudioSync(); // 🔄 إعادة توزيع المدد إن وُجد صوت (قبل renderImagesList)
                 renderImagesList();
@@ -5037,10 +5037,10 @@
 
         async function handleFiles(files) {
             if (!files || files.length === 0) return;
-            showLoading('جاري رفع وتحليل الصور...', 'يرجى الانتظار');
+            showLoading('جاري تحميل الصور...', 'يرجى الانتظار');
 
             const newImages = [];
-            const filesArray = Array.from(files).filter(f => f.type.startsWith('image/'));
+            const filesArray = Array.from(files).filter(f => f.type.startsWith('image/') || f.name.toLowerCase().endsWith('.gif'));
 
             if (filesArray.length === 0) {
                 hideLoading();
@@ -5051,15 +5051,9 @@
                 for (const file of filesArray) {
                     const base64Data = await fileToBase64(file);
                     let smartDuration = await analyzeImageComplexity(null, base64Data);
+                    const isGif = file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif') || base64Data.startsWith('data:image/gif');
 
-                    let finalImageUrl = base64Data;
-                    const uploadResult = await tryUploadImage(base64Data);
-                    if (uploadResult) {
-                        finalImageUrl = uploadResult.fullUrl;
-                        if (uploadResult.duration) smartDuration = uploadResult.duration;
-                    }
-
-                    newImages.push({ url: finalImageUrl, duration: smartDuration, isGif: file.type === 'image/gif' });
+                    newImages.push({ url: base64Data, duration: smartDuration, isGif });
                 }
 
                 state.images.push(...newImages);
@@ -5068,7 +5062,7 @@
                 showToast(`تمت إضافة ${newImages.length} صور بنجاح`);
             } catch (err) {
                 console.error(err);
-                showToast(`❌ خطأ أثناء رفع الصور: ${err.message}`, true);
+                showToast(`❌ خطأ أثناء إضافة الصور: ${err.message}`, true);
             } finally {
                 hideLoading();
             }
