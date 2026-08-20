@@ -849,22 +849,106 @@
 
         const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.net';
 
-        // قائمة القوالب المستقلة المفرغة مع مسارات الصور المباشرة (تُحدث بروابط Drive عند توفرها)
+        // قائمة القوالب المستقلة المفرغة مع روابط Google Drive المباشرة
         const TEMPLATES_LIST = [
-            { id: 1, template_id: 1, template_name: "ليلي أنيق", name: "ليلي-انيق", landscape_file: "template_1_ليلي-انيق_landscape.png", portrait_file: "template_1_ليلي-انيق_portrait.png", gradient_start: "#0c1445", gradient_mid: "#1a2980", accent: "#60a5fa", text_color: "#ffffff" },
-            { id: 2, template_id: 2, template_name: "ليلي نيلي", name: "ليلي-نيلي", landscape_file: "template_2_ليلي-نيلي_landscape.png", portrait_file: "template_2_ليلي-نيلي_portrait.png", gradient_start: "#0f0c29", gradient_mid: "#302b63", accent: "#a78bfa", text_color: "#ffffff" },
-            { id: 3, template_id: 3, template_name: "ذهبي عنبري", name: "ذهبي-عنبري", landscape_file: "template_3_ذهبي-عنبري_landscape.png", portrait_file: "template_3_ذهبي-عنبري_portrait.png", gradient_start: "#1a0f00", gradient_mid: "#3d2000", accent: "#fbbf24", text_color: "#fef3c7" },
-            { id: 4, template_id: 4, template_name: "ذهبي فاتح", name: "ذهبي-فاتح", landscape_file: "template_4_ذهبي-فاتح_landscape.png", portrait_file: "template_4_ذهبي-فاتح_portrait.png", gradient_start: "#2d1f00", gradient_mid: "#5c3d00", accent: "#fcd34d", text_color: "#fffbeb" },
-            { id: 5, template_id: 5, template_name: "ذهبي نحاسي", name: "ذهبي-نحاسي", landscape_file: "template_5_ذهبي-نحاسي_landscape.png", portrait_file: "template_5_ذهبي-نحاسي_portrait.png", gradient_start: "#1a0a00", gradient_mid: "#4a1f00", accent: "#fb923c", text_color: "#fff7ed" },
-            { id: 6, template_id: 6, template_name: "طبيعي زيتوني", name: "طبيعي-زيتوني", landscape_file: "template_6_طبيعي-زيتوني_landscape.png", portrait_file: "template_6_طبيعي-زيتوني_portrait.png", gradient_start: "#0a1a0a", gradient_mid: "#1a3d1a", accent: "#4ade80", text_color: "#f0fdf4" },
-            { id: 7, template_id: 7, template_name: "طبيعي زمردي", name: "طبيعي-زمردي", landscape_file: "template_7_طبيعي-زمردي_landscape.png", portrait_file: "template_7_طبيعي-زمردي_portrait.png", gradient_start: "#022c22", gradient_mid: "#065f46", accent: "#34d399", text_color: "#ecfdf5" },
-            { id: 8, template_id: 8, template_name: "طبيعي طحلبي", name: "طبيعي-طحلبي", landscape_file: "template_8_طبيعي-طحلبي_landscape.png", portrait_file: "template_8_طبيعي-طحلبي_portrait.png", gradient_start: "#0f1a14", gradient_mid: "#1a3d2e", accent: "#2dd4bf", text_color: "#f0fdfa" },
-            { id: 9, template_id: 9, template_name: "حديث كحلي", name: "حديث-كحلي", landscape_file: "template_9_حديث-كحلي_landscape.png", portrait_file: "template_9_حديث-كحلي_portrait.png", gradient_start: "#0a1628", gradient_mid: "#162d50", accent: "#93c5fd", text_color: "#eff6ff" },
-            { id: 10, template_id: 10, template_name: "حديث رمادي", name: "حديث-رمادي", landscape_file: "template_10_حديث-رمادي_landscape.png", portrait_file: "template_10_حديث-رمادي_portrait.png", gradient_start: "#0f131a", gradient_mid: "#1f2937", accent: "#e2e8f0", text_color: "#f8fafc" },
-            { id: 11, template_id: 11, template_name: "مشرق برتقالي", name: "مشرق-برتقالي", landscape_file: "template_11_مشرق-برتقالي_landscape.png", portrait_file: "template_11_مشرق-برتقالي_portrait.png", gradient_start: "#1f0a00", gradient_mid: "#4a1f00", accent: "#fdba74", text_color: "#fff7ed" },
-            { id: 12, template_id: 12, template_name: "سماء أزرق", name: "سماء-ازرق", landscape_file: "template_12_سماء-ازرق_landscape.png", portrait_file: "template_12_سماء-ازرق_portrait.png", gradient_start: "#0c1f3d", gradient_mid: "#1a3d6b", accent: "#7dd3fc", text_color: "#f0f9ff" },
-            { id: 13, template_id: 13, template_name: "سماء فيروزي", name: "سماء-فيروزي", landscape_file: "template_13_سماء-فيروزي_landscape.png", portrait_file: "template_13_سماء-فيروزي_portrait.png", gradient_start: "#0a1f1a", gradient_mid: "#0f3d3d", accent: "#5eead4", text_color: "#f0fdfa" },
-            { id: 14, template_id: 14, template_name: "ليلة ملكية", name: "ليلة-ملكية", landscape_file: "template_14_ليلة-ملكية_landscape.png", portrait_file: "template_14_ليلة-ملكية_portrait.png", gradient_start: "#000d1a", gradient_mid: "#001a3d", accent: "#818cf8", text_color: "#eef2ff" }
+            { 
+                id: 1, template_id: 1, template_name: "ليلي أنيق", name: "ليلي-انيق",
+                landscape_file: "template_1_ليلي-انيق_landscape.png", portrait_file: "template_1_ليلي-انيق_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1J1HjVYyR4USUsMa-Nv1JfEnuen_bF497",
+                portrait_link: "https://lh3.googleusercontent.com/d/1hAtE-X3SE6eSiAPqWENOBdC8K9gPkll_",
+                gradient_start: "#0c1445", gradient_mid: "#1a2980", accent: "#60a5fa", text_color: "#ffffff" 
+            },
+            { 
+                id: 2, template_id: 2, template_name: "ليلي نيلي", name: "ليلي-نيلي",
+                landscape_file: "template_2_ليلي-نيلي_landscape.png", portrait_file: "template_2_ليلي-نيلي_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1gSgJNtiuAwxxeAVv7PA9hIQ7WNfBZ0a0",
+                portrait_link: "https://lh3.googleusercontent.com/d/1aWyour85RS5zKtIJ5Oa72d9Eee2P281h",
+                gradient_start: "#0f0c29", gradient_mid: "#302b63", accent: "#a78bfa", text_color: "#ffffff" 
+            },
+            { 
+                id: 3, template_id: 3, template_name: "ذهبي عنبري", name: "ذهبي-عنبري",
+                landscape_file: "template_3_ذهبي-عنبري_landscape.png", portrait_file: "template_3_ذهبي-عنبري_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1MyNlMa7NWkunI17gAqCOpLEA-RsfjS0Z",
+                portrait_link: "https://lh3.googleusercontent.com/d/1jP7ijm0NnnUp3sm1UtQo6-0yAkNGvpKw",
+                gradient_start: "#1a0f00", gradient_mid: "#3d2000", accent: "#fbbf24", text_color: "#fef3c7" 
+            },
+            { 
+                id: 4, template_id: 4, template_name: "ذهبي فاتح", name: "ذهبي-فاتح",
+                landscape_file: "template_4_ذهبي-فاتح_landscape.png", portrait_file: "template_4_ذهبي-فاتح_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1eQ-PhZNY4Q1x0rdK3c9QuO6WCbOfrP4F",
+                portrait_link: "https://lh3.googleusercontent.com/d/13v2WsudXMdlR_0LliFTCHUiaFOY_-8V5",
+                gradient_start: "#2d1f00", gradient_mid: "#5c3d00", accent: "#fcd34d", text_color: "#fffbeb" 
+            },
+            { 
+                id: 5, template_id: 5, template_name: "ذهبي نحاسي", name: "ذهبي-نحاسي",
+                landscape_file: "template_5_ذهبي-نحاسي_landscape.png", portrait_file: "template_5_ذهبي-نحاسي_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1zaCN6pnsoWHiVX3AyhrCDvxxxnekzrwN",
+                portrait_link: "https://lh3.googleusercontent.com/d/1UFNrtVmo6TebQ7aaT23YHtt95yoBew7I",
+                gradient_start: "#1a0a00", gradient_mid: "#4a1f00", accent: "#fb923c", text_color: "#fff7ed" 
+            },
+            { 
+                id: 6, template_id: 6, template_name: "طبيعي زيتوني", name: "طبيعي-زيتوني",
+                landscape_file: "template_6_طبيعي-زيتوني_landscape.png", portrait_file: "template_6_طبيعي-زيتوني_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1XoyWfm8OmuXRQCRZN3Ix6qKIdJnjay0N",
+                portrait_link: "https://lh3.googleusercontent.com/d/120OflyD_Xfi9ov9N9LcO09E1QtYD6bTT",
+                gradient_start: "#0a1a0a", gradient_mid: "#1a3d1a", accent: "#4ade80", text_color: "#f0fdf4" 
+            },
+            { 
+                id: 7, template_id: 7, template_name: "طبيعي زمردي", name: "طبيعي-زمردي",
+                landscape_file: "template_7_طبيعي-زمردي_landscape.png", portrait_file: "template_7_طبيعي-زمردي_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1v76b1K_rlUVK6Ux6EoaBiIERD8eNvP9G",
+                portrait_link: "https://lh3.googleusercontent.com/d/1HupOpMEoie0IEJXY6CTxCc1MBvuci3bL",
+                gradient_start: "#022c22", gradient_mid: "#065f46", accent: "#34d399", text_color: "#ecfdf5" 
+            },
+            { 
+                id: 8, template_id: 8, template_name: "طبيعي طحلبي", name: "طبيعي-طحلبي",
+                landscape_file: "template_8_طبيعي-طحلبي_landscape.png", portrait_file: "template_8_طبيعي-طحلبي_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1RfLBYN0ImmDYFfrcHJVLGQc9xxwV3s7V",
+                portrait_link: "https://lh3.googleusercontent.com/d/1UZ953KjBa5NXQ5sgnH7-x7Pt3qrJArA7",
+                gradient_start: "#0f1a14", gradient_mid: "#1a3d2e", accent: "#2dd4bf", text_color: "#f0fdfa" 
+            },
+            { 
+                id: 9, template_id: 9, template_name: "حديث كحلي", name: "حديث-كحلي",
+                landscape_file: "template_9_حديث-كحلي_landscape.png", portrait_file: "template_9_حديث-كحلي_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1qwF4BMv7PGSzQTDw38vYiPLkVohF-zMP",
+                portrait_link: "https://lh3.googleusercontent.com/d/1C_H_SDqW4ZP84kOmYLYX92AVu2p4r7h1",
+                gradient_start: "#0a1628", gradient_mid: "#162d50", accent: "#93c5fd", text_color: "#eff6ff" 
+            },
+            { 
+                id: 10, template_id: 10, template_name: "حديث رمادي", name: "حديث-رمادي",
+                landscape_file: "template_10_حديث-رمادي_landscape.png", portrait_file: "template_10_حديث-رمادي_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1-O-6M16I5KMES2_R_86EJ1tUUJ5rRXhW",
+                portrait_link: "https://lh3.googleusercontent.com/d/1mcVvp3A8Rv_LxArMXGz1asnvBrrk4jL0",
+                gradient_start: "#0f131a", gradient_mid: "#1f2937", accent: "#e2e8f0", text_color: "#f8fafc" 
+            },
+            { 
+                id: 11, template_id: 11, template_name: "مشرق برتقالي", name: "مشرق-برتقالي",
+                landscape_file: "template_11_مشرق-برتقالي_landscape.png", portrait_file: "template_11_مشرق-برتقالي_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1GbZYCQZ5nutSJs0E_MTRgq9nFJVLqHVa",
+                portrait_link: "https://lh3.googleusercontent.com/d/1Q2Tc5006tmQgxP0y0T-O9e9bQko_aB_2",
+                gradient_start: "#1f0a00", gradient_mid: "#4a1f00", accent: "#fdba74", text_color: "#fff7ed" 
+            },
+            { 
+                id: 12, template_id: 12, template_name: "سماء أزرق", name: "سماء-ازرق",
+                landscape_file: "template_12_سماء-ازرق_landscape.png", portrait_file: "template_12_سماء-ازرق_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1_C09_t18ABzhF6SDfY1TcD9LvTPEmRUQ",
+                portrait_link: "https://lh3.googleusercontent.com/d/1j7v4B32m4yyNjHU5d_4R13SL2QseSko3",
+                gradient_start: "#0c1f3d", gradient_mid: "#1a3d6b", accent: "#7dd3fc", text_color: "#f0f9ff" 
+            },
+            { 
+                id: 13, template_id: 13, template_name: "سماء فيروزي", name: "سماء-فيروزي",
+                landscape_file: "template_13_سماء-فيروزي_landscape.png", portrait_file: "template_13_سماء-فيروزي_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1ce2ipTAroZxwG2g1ZwJtU3AlXGt_3L0P",
+                portrait_link: "https://lh3.googleusercontent.com/d/1U2eSSKQJtEJkBjMGx3J4-JYA6Q_cV73D",
+                gradient_start: "#0a1f1a", gradient_mid: "#0f3d3d", accent: "#5eead4", text_color: "#f0fdfa" 
+            },
+            { 
+                id: 14, template_id: 14, template_name: "ليلة ملكية", name: "ليلة-ملكية",
+                landscape_file: "template_14_ليلة-ملكية_landscape.png", portrait_file: "template_14_ليلة-ملكية_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1jbNXLOBKERs5-Lw2lFslrlrCK3vclLvA",
+                portrait_link: "https://lh3.googleusercontent.com/d/12CBos13ZvKdRZBWPYbUjGh0QWyiMFdpy",
+                gradient_start: "#000d1a", gradient_mid: "#001a3d", accent: "#818cf8", text_color: "#eef2ff" 
+            }
         ];
 
         function getTemplateImageUrl(t, orientation) {
