@@ -1228,14 +1228,15 @@
         }
 
         document.getElementById('seoGenerateBtn').addEventListener('click', async () => {
-            if (!state.textContent || state.textContent.trim().length < 20) {
-                showToast('الرجاء إدخال نص كافي أولاً', true); return;
+            const rawText = (state.textContent || '').trim();
+            if (!rawText) {
+                showToast('الرجاء إدخال نص أولاً', true); return;
             }
             showLoading('جاري تحليل النص وتوليد SEO...', 'قد يستغرق ذلك بضع ثوانٍ');
             try {
                 const r = await fetch(`${WORKER_API_URL}/generate-text-seo`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: state.textContent.trim() })
+                    body: JSON.stringify({ text: rawText })
                 });
                 if (r.ok) {
                     const d = await r.json();
