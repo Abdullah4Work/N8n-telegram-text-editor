@@ -163,7 +163,7 @@
         }
         .form-textarea {
             width: 100%;
-            min-height: 200px;
+            min-height: 180px;
             padding: 16px;
             border: 2px solid var(--border-color);
             border-radius: 10px;
@@ -197,14 +197,6 @@
             border-right: 3px solid var(--primary);
             direction: rtl;
         }
-        .section-title .badge {
-            margin-right: auto;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-        }
 
         .templates-grid {
             display: grid;
@@ -236,12 +228,14 @@
             justify-content: center;
             position: relative;
             overflow: hidden;
+            background-size: cover;
+            background-position: center;
         }
-        .template-number {
-            position: relative;
-            z-index: 2;
-            font-weight: 800;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+        .template-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
         .template-check {
             position: absolute;
@@ -259,124 +253,13 @@
         .template-card.selected .template-check { display: flex; animation: scaleIn 0.3s ease; }
         @keyframes scaleIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .template-name {
-            padding: 14px;
+            padding: 12px;
             text-align: center;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             color: var(--text-primary);
             background: linear-gradient(to bottom, white, #F8F9FA);
         }
-
-        .colors-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            direction: rtl;
-        }
-        .color-option {
-            width: 100%;
-            aspect-ratio: 16/9;
-            border-radius: 14px;
-            border: 3px solid var(--border-color);
-            cursor: pointer;
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-            background-size: cover;
-            background-position: center;
-            box-shadow: var(--shadow-sm);
-        }
-        .color-option:active { transform: scale(0.98); }
-        .color-option.selected {
-            border-color: var(--primary);
-            box-shadow: 0 4px 16px rgba(74, 144, 226, 0.4);
-        }
-        .color-option .template-check { display: none; }
-        .color-option.selected .template-check { display: flex; }
-        .color-name-tag {
-            position: absolute;
-            bottom: 10px; right: 10px;
-            background: rgba(0,0,0,0.5);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            z-index: 2;
-        }
-
-        .dual-preview-section {
-            margin-top: 20px;
-            margin-bottom: 20px;
-            direction: rtl;
-        }
-        .dual-preview-container {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            border-radius: 14px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: var(--shadow-lg);
-            position: relative;
-            overflow: hidden;
-            border: 3px solid #2d3748;
-        }
-        .dual-preview-inner {
-            display: flex;
-            gap: 16px;
-            justify-content: center;
-            align-items: center;
-        }
-        .dual-preview-item {
-            flex: 1;
-            max-width: 240px;
-        }
-        .dual-preview-item .label {
-            font-size: 11px;
-            color: rgba(255,255,255,0.6);
-            margin-bottom: 8px;
-            font-weight: 700;
-        }
-        .preview-card {
-            width: 100%;
-            aspect-ratio: 16/9;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.1);
-            background: var(--bg-primary);
-        }
-        .preview-card.portrait { aspect-ratio: 9/16; max-width: 140px; margin: 0 auto; }
-        .preview-card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
-        }
-        .preview-card img.loaded { display: block; }
-        .preview-card .preview-loading {
-            position: absolute;
-            inset: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0,0,0,0.35);
-        }
-        .preview-card .preview-loading.hidden { display: none; }
-        .preview-card .preview-placeholder {
-            color: rgba(255,255,255,0.55);
-            font-size: 12px;
-            padding: 8px;
-            text-align: center;
-        }
-        .preview-cards-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 12px;
-        }
-        .preview-cards-actions .btn-secondary { flex: 1; }
 
         .review-template-images {
             display: flex;
@@ -407,40 +290,6 @@
         }
         .review-image-box.portrait { max-width: 120px; }
 
-        .batch-cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 14px;
-            padding: 8px;
-            max-height: 65vh;
-            overflow-y: auto;
-            direction: rtl;
-        }
-        .batch-card-item {
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            border: 1px solid var(--border-color);
-        }
-        .batch-card-item img { width: 100%; display: block; }
-        .batch-card-item .meta {
-            padding: 10px;
-            text-align: center;
-            font-size: 12px;
-            direction: rtl;
-        }
-        .batch-card-item .badge-num {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: #fff;
-            padding: 4px 10px;
-            border-radius: 16px;
-            font-weight: 700;
-            font-size: 11px;
-            margin-bottom: 6px;
-        }
-
         .stats-row {
             display: flex;
             gap: 16px;
@@ -464,27 +313,11 @@
             border-radius: 12px;
             border: 1px solid var(--border-color);
         }
-        .cards-split-section .header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
-            font-weight: bold;
-            color: var(--text-primary);
-        }
-        .cards-split-section .badge {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 13px;
-            margin-right: auto;
-        }
         .cards-split-list {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            max-height: 300px;
+            max-height: 250px;
             overflow-y: auto;
         }
         .cards-item {
@@ -554,7 +387,6 @@
         }
         .btn-primary:active { transform: scale(0.98); }
         .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-        .btn-primary.generated { background: linear-gradient(135deg, var(--success), var(--success-light)); }
 
         .btn-secondary {
             flex: 1;
@@ -766,7 +598,7 @@
 
         .hidden { display: none !important; }
 
-        /* Modal Styles - مطابقة لـ index.html */
+        /* Modal Styles */
         .template-preview-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -821,16 +653,8 @@
 
         .preview-image {
             width: 100%; border-radius: 12px; box-shadow: var(--shadow-lg);
-            display: none; border: 1px solid var(--border-color);
+            display: block; border: 1px solid var(--border-color);
         }
-        .preview-image.loaded { display: block; }
-
-        .preview-image-loading {
-            width: 100%; aspect-ratio: 16/9;
-            display: flex; align-items: center; justify-content: center;
-            background: var(--bg-primary); border-radius: 12px;
-        }
-        .preview-image-loading.hidden { display: none; }
 
         .preview-next-btn {
             width: 100%; padding: 16px; margin-top: 18px;
@@ -844,7 +668,7 @@
 
         @media (max-width: 480px) {
             .templates-grid { grid-template-columns: 1fr; }
-            .form-textarea { font-size: 17px; min-height: 180px; }
+            .form-textarea { font-size: 17px; min-height: 160px; }
             .stats-row { flex-wrap: wrap; gap: 8px; }
         }
     </style>
@@ -880,53 +704,18 @@
 
             <!-- CARDS PREVIEW -->
             <div id="cardsSection" class="hidden">
-                <div class="section-title">📑 معاينة البطاقات <span class="badge" id="cardsBadge">0</span></div>
+                <div class="section-title">📑 تقسيم البطاقات <span class="badge" id="cardsBadge" style="margin-right:auto; background:var(--primary); color:white; padding:2px 10px; border-radius:20px; font-size:12px;">0</span></div>
                 <div class="cards-split-section" style="margin-top:0;">
                     <div class="cards-split-list" id="cardsList"></div>
                     <div class="cards-total" id="cardsTotal"></div>
-                    <div class="preview-cards-actions">
-                        <button type="button" class="btn-secondary" id="previewCardsBtn"><span>🖼️</span><span>معاينة البطاقات كصور</span></button>
-                    </div>
                 </div>
             </div>
 
             <!-- TEMPLATES -->
-            <div class="section-title">
+            <div class="section-title" style="margin-top:16px;">
                 <span>🎨 اختر القالب</span>
-                <button class="badge" id="exportAllTemplatesBtn" style="cursor:pointer; border:none; margin-right:auto;">📥 تصدير الخلفيات مفرغة</button>
             </div>
             <div class="templates-grid" id="templatesGrid"></div>
-
-            <!-- COLORS -->
-            <div id="colorsSection" class="hidden">
-                <div class="section-title">🌈 اختر اللون</div>
-                <div class="colors-grid" id="colorsRow"></div>
-            </div>
-
-            <!-- DUAL LIVE PREVIEW -->
-            <div id="dualPreviewSection" class="dual-preview-section hidden">
-                <div class="section-title">🖥️ معاينة Landscape و Portrait</div>
-                <div class="dual-preview-container">
-                    <div class="dual-preview-inner">
-                        <div class="dual-preview-item">
-                            <div class="label">Landscape (16:9)</div>
-                            <div class="preview-card" id="landscapePreviewBox">
-                                <div class="preview-loading hidden" id="landscapeLoading"><div class="spinner"></div></div>
-                                <img id="landscapePreview" alt="Landscape preview" />
-                                <div class="preview-placeholder" id="landscapePlaceholder">اختر قالباً ولوناً</div>
-                            </div>
-                        </div>
-                        <div class="dual-preview-item">
-                            <div class="label">Portrait (9:16)</div>
-                            <div class="preview-card portrait" id="portraitPreviewBox">
-                                <div class="preview-loading hidden" id="portraitLoading"><div class="spinner"></div></div>
-                                <img id="portraitPreview" alt="Portrait preview" />
-                                <div class="preview-placeholder" id="portraitPlaceholder">اختر قالباً ولوناً</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
         </div>
 
@@ -993,16 +782,15 @@
             </div>
 
             <div class="review-section">
-                <div class="review-section-title"><span>🎨</span><span>القالب</span></div>
+                <div class="review-section-title"><span>🎨</span><span>القالب المختار</span></div>
                 <div class="review-item"><span class="review-label">القالب:</span><span class="review-value" id="rTemplate">-</span></div>
-                <div class="review-item"><span class="review-label">اللون:</span><span class="review-value" id="rColor">-</span></div>
                 <div class="review-template-images">
                     <div class="review-image-box">
-                        <div class="label">Landscape</div>
+                        <div class="label">Landscape (16:9)</div>
                         <img id="reviewLandscapeImage" alt="Review Landscape" src="">
                     </div>
                     <div class="review-image-box portrait">
-                        <div class="label">Portrait</div>
+                        <div class="label">Portrait (9:16)</div>
                         <img id="reviewPortraitImage" alt="Review Portrait" src="">
                     </div>
                 </div>
@@ -1034,21 +822,6 @@
         </div>
     </div>
 
-    <!-- Batch Preview Modal -->
-    <div class="template-preview-modal" id="batchPreviewModal">
-        <div class="preview-content" style="max-width:920px;">
-            <div class="preview-header">
-                <div class="preview-title">✅ معاينة البطاقات</div>
-                <button class="close-preview" id="batchModalClose" type="button">×</button>
-            </div>
-            <div class="preview-image-loading" id="batchLoading">
-                <div class="spinner"></div>
-            </div>
-            <div id="batchPreview" class="batch-cards-grid" style="display:none;"></div>
-            <button class="preview-next-btn" id="batchModalConfirm" type="button"><span>إغلاق</span><span>✓</span></button>
-        </div>
-    </div>
-
     <!-- Template Preview Modal -->
     <div class="template-preview-modal" id="templatePreviewModal">
         <div class="preview-content">
@@ -1059,20 +832,14 @@
             <div class="preview-images">
                 <div class="preview-image-wrapper">
                     <div class="preview-image-label"><span>🖥️</span><span>Landscape (16:9)</span></div>
-                    <div class="preview-image-loading" id="modalLandscapeLoading">
-                        <div class="spinner"></div>
-                    </div>
                     <img src="" alt="Landscape" class="preview-image" id="modalLandscapePreview">
                 </div>
                 <div class="preview-image-wrapper">
                     <div class="preview-image-label"><span>📱</span><span>Portrait (9:16)</span></div>
-                    <div class="preview-image-loading" id="modalPortraitLoading">
-                        <div class="spinner"></div>
-                    </div>
-                    <img src="" alt="Portrait" class="preview-image" id="modalPortraitPreview">
+                    <img src="" alt="Portrait" class="preview-image" id="modalPortraitPreview" style="max-width:180px; margin:0 auto;">
                 </div>
             </div>
-            <button class="preview-next-btn" id="templateModalConfirm" type="button"><span>اختيار هذا القالب</span><span>→</span></button>
+            <button class="preview-next-btn" id="templateModalConfirm" type="button"><span>اختيار هذا القالب والمتابعة</span><span>✓</span></button>
         </div>
     </div>
 
@@ -1082,38 +849,40 @@
 
         const WORKER_API_URL = 'https://n8n-video-worker.abdullah4work.deno.net';
 
-        // ===== FALLBACK TEMPLATES (synced with TEXT_TEMPLATES_CONFIG on server) =====
-        const FALLBACK_TEMPLATES = [
-            { template_id: 1, template_name: "ليلي أنيق", color_id: 2, color_name: "كحلي", gradient_start: "#0c1445", gradient_mid: "#1a2980", gradient_end: "#0c1445", accent: "#60a5fa", text_color: "#ffffff" },
-            { template_id: 1, template_name: "ليلي أنيق", color_id: 3, color_name: "نيلي", gradient_start: "#0f0c29", gradient_mid: "#302b63", gradient_end: "#0f0c29", accent: "#a78bfa", text_color: "#ffffff" },
-            { template_id: 2, template_name: "ذهبي فاخر", color_id: 1, color_name: "عنبري غامق", gradient_start: "#1a0f00", gradient_mid: "#3d2000", gradient_end: "#1a0f00", accent: "#fbbf24", text_color: "#fef3c7" },
-            { template_id: 2, template_name: "ذهبي فاخر", color_id: 2, color_name: "ذهبي فاتح", gradient_start: "#2d1f00", gradient_mid: "#5c3d00", gradient_end: "#2d1f00", accent: "#fcd34d", text_color: "#fffbeb" },
-            { template_id: 2, template_name: "ذهبي فاخر", color_id: 3, color_name: "نحاسي", gradient_start: "#1a0a00", gradient_mid: "#4a1f00", gradient_end: "#1a0a00", accent: "#fb923c", text_color: "#fff7ed" },
-            { template_id: 3, template_name: "طبيعي هادئ", color_id: 1, color_name: "زيتوني", gradient_start: "#0a1a0a", gradient_mid: "#1a3d1a", gradient_end: "#0a1a0a", accent: "#4ade80", text_color: "#f0fdf4" },
-            { template_id: 3, template_name: "طبيعي هادئ", color_id: 2, color_name: "أخضر زمردي", gradient_start: "#022c22", gradient_mid: "#065f46", gradient_end: "#022c22", accent: "#34d399", text_color: "#ecfdf5" },
-            { template_id: 3, template_name: "طبيعي هادئ", color_id: 3, color_name: "طحلبي", gradient_start: "#0f1a14", gradient_mid: "#1a3d2e", gradient_end: "#0f1a14", accent: "#2dd4bf", text_color: "#f0fdfa" },
-            { template_id: 5, template_name: "حديث أنيق", color_id: 1, color_name: "كحلي فاتح", gradient_start: "#0a1628", gradient_mid: "#162d50", gradient_end: "#0a1628", accent: "#93c5fd", text_color: "#eff6ff" },
-            { template_id: 5, template_name: "حديث أنيق", color_id: 2, color_name: "رمادي أنيق", gradient_start: "#0f131a", gradient_mid: "#1f2937", gradient_end: "#0f131a", accent: "#e2e8f0", text_color: "#f8fafc" },
-            { template_id: 6, template_name: "مشرق جذاب", color_id: 2, color_name: "برتقالي حيوي", gradient_start: "#1f0a00", gradient_mid: "#4a1f00", gradient_end: "#1f0a00", accent: "#fdba74", text_color: "#fff7ed" },
-            { template_id: 7, template_name: "سماء صافية", color_id: 1, color_name: "أزرق ساطع", gradient_start: "#0c1f3d", gradient_mid: "#1a3d6b", gradient_end: "#0c1f3d", accent: "#7dd3fc", text_color: "#f0f9ff" },
-            { template_id: 7, template_name: "سماء صافية", color_id: 2, color_name: "فيروزي", gradient_start: "#0a1f1a", gradient_mid: "#0f3d3d", gradient_end: "#0a1f1a", accent: "#5eead4", text_color: "#f0fdfa" },
-            { template_id: 8, template_name: "ليلة ملكية", color_id: 2, color_name: "أزرق ملكي", gradient_start: "#000d1a", gradient_mid: "#001a3d", gradient_end: "#000d1a", accent: "#818cf8", text_color: "#eef2ff" },
+        // قائمة القوالب المستقلة المفرغة مع مسارات الصور المباشرة (تُحدث بروابط Drive عند توفرها)
+        const TEMPLATES_LIST = [
+            { id: 1, template_id: 1, template_name: "ليلي أنيق", name: "ليلي-انيق", landscape_file: "template_1_ليلي-انيق_landscape.png", portrait_file: "template_1_ليلي-انيق_portrait.png", gradient_start: "#0c1445", gradient_mid: "#1a2980", accent: "#60a5fa", text_color: "#ffffff" },
+            { id: 2, template_id: 2, template_name: "ليلي نيلي", name: "ليلي-نيلي", landscape_file: "template_2_ليلي-نيلي_landscape.png", portrait_file: "template_2_ليلي-نيلي_portrait.png", gradient_start: "#0f0c29", gradient_mid: "#302b63", accent: "#a78bfa", text_color: "#ffffff" },
+            { id: 3, template_id: 3, template_name: "ذهبي عنبري", name: "ذهبي-عنبري", landscape_file: "template_3_ذهبي-عنبري_landscape.png", portrait_file: "template_3_ذهبي-عنبري_portrait.png", gradient_start: "#1a0f00", gradient_mid: "#3d2000", accent: "#fbbf24", text_color: "#fef3c7" },
+            { id: 4, template_id: 4, template_name: "ذهبي فاتح", name: "ذهبي-فاتح", landscape_file: "template_4_ذهبي-فاتح_landscape.png", portrait_file: "template_4_ذهبي-فاتح_portrait.png", gradient_start: "#2d1f00", gradient_mid: "#5c3d00", accent: "#fcd34d", text_color: "#fffbeb" },
+            { id: 5, template_id: 5, template_name: "ذهبي نحاسي", name: "ذهبي-نحاسي", landscape_file: "template_5_ذهبي-نحاسي_landscape.png", portrait_file: "template_5_ذهبي-نحاسي_portrait.png", gradient_start: "#1a0a00", gradient_mid: "#4a1f00", accent: "#fb923c", text_color: "#fff7ed" },
+            { id: 6, template_id: 6, template_name: "طبيعي زيتوني", name: "طبيعي-زيتوني", landscape_file: "template_6_طبيعي-زيتوني_landscape.png", portrait_file: "template_6_طبيعي-زيتوني_portrait.png", gradient_start: "#0a1a0a", gradient_mid: "#1a3d1a", accent: "#4ade80", text_color: "#f0fdf4" },
+            { id: 7, template_id: 7, template_name: "طبيعي زمردي", name: "طبيعي-زمردي", landscape_file: "template_7_طبيعي-زمردي_landscape.png", portrait_file: "template_7_طبيعي-زمردي_portrait.png", gradient_start: "#022c22", gradient_mid: "#065f46", accent: "#34d399", text_color: "#ecfdf5" },
+            { id: 8, template_id: 8, template_name: "طبيعي طحلبي", name: "طبيعي-طحلبي", landscape_file: "template_8_طبيعي-طحلبي_landscape.png", portrait_file: "template_8_طبيعي-طحلبي_portrait.png", gradient_start: "#0f1a14", gradient_mid: "#1a3d2e", accent: "#2dd4bf", text_color: "#f0fdfa" },
+            { id: 9, template_id: 9, template_name: "حديث كحلي", name: "حديث-كحلي", landscape_file: "template_9_حديث-كحلي_landscape.png", portrait_file: "template_9_حديث-كحلي_portrait.png", gradient_start: "#0a1628", gradient_mid: "#162d50", accent: "#93c5fd", text_color: "#eff6ff" },
+            { id: 10, template_id: 10, template_name: "حديث رمادي", name: "حديث-رمادي", landscape_file: "template_10_حديث-رمادي_landscape.png", portrait_file: "template_10_حديث-رمادي_portrait.png", gradient_start: "#0f131a", gradient_mid: "#1f2937", accent: "#e2e8f0", text_color: "#f8fafc" },
+            { id: 11, template_id: 11, template_name: "مشرق برتقالي", name: "مشرق-برتقالي", landscape_file: "template_11_مشرق-برتقالي_landscape.png", portrait_file: "template_11_مشرق-برتقالي_portrait.png", gradient_start: "#1f0a00", gradient_mid: "#4a1f00", accent: "#fdba74", text_color: "#fff7ed" },
+            { id: 12, template_id: 12, template_name: "سماء أزرق", name: "سماء-ازرق", landscape_file: "template_12_سماء-ازرق_landscape.png", portrait_file: "template_12_سماء-ازرق_portrait.png", gradient_start: "#0c1f3d", gradient_mid: "#1a3d6b", accent: "#7dd3fc", text_color: "#f0f9ff" },
+            { id: 13, template_id: 13, template_name: "سماء فيروزي", name: "سماء-فيروزي", landscape_file: "template_13_سماء-فيروزي_landscape.png", portrait_file: "template_13_سماء-فيروزي_portrait.png", gradient_start: "#0a1f1a", gradient_mid: "#0f3d3d", accent: "#5eead4", text_color: "#f0fdfa" },
+            { id: 14, template_id: 14, template_name: "ليلة ملكية", name: "ليلة-ملكية", landscape_file: "template_14_ليلة-ملكية_landscape.png", portrait_file: "template_14_ليلة-ملكية_portrait.png", gradient_start: "#000d1a", gradient_mid: "#001a3d", accent: "#818cf8", text_color: "#eef2ff" }
         ];
+
+        function getTemplateImageUrl(t, orientation) {
+            if (orientation === 'landscape' && t.landscape_link) return t.landscape_link;
+            if (orientation === 'portrait' && t.portrait_link) return t.portrait_link;
+            const file = orientation === 'landscape' ? t.landscape_file : t.portrait_file;
+            return `template-previews/${encodeURIComponent(file)}`;
+        }
 
         // ===== STATE =====
         const state = {
-            textContent: '', templateId: '', colorId: '',
-            selectedTemplate: null, selectedColor: null,
+            textContent: '', templateId: '', colorId: '1',
+            selectedTemplate: null,
             seo: { title: '', description: '', tags: [] },
             textCards: [], user_id: '',
             previewLandscape: '', previewPortrait: ''
         };
-        let templatesCache = [];
-        let binData = {};
-        let previewRequestId = 0;
-        let pendingTemplateId = null;
-        let previewColorId = null;
-        let modalMode = 'template'; // 'template' | 'color'
+        let pendingTemplate = null;
 
         // ===== UTILS =====
         function showLoading(text, sub) {
@@ -1129,14 +898,6 @@
             t.style.cssText = `position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:${err?'#E74C3C':'#27AE60'};color:white;padding:12px 24px;border-radius:8px;z-index:99999;font-weight:700;text-align:center;max-width:80%;box-shadow:0 4px 20px rgba(0,0,0,0.3);direction:rtl`;
             document.body.appendChild(t);
             setTimeout(() => t.remove(), 2000);
-        }
-
-        async function fetchTemplatePreview(templateId, colorId) {
-            const response = await fetch(`${WORKER_API_URL}/api/template-preview?template_id=${templateId}&color_id=${colorId}`);
-            if (!response.ok) throw new Error('فشل جلب المعاينة');
-            const data = await response.json();
-            if (!data.success) throw new Error(data.error || 'فشل جلب المعاينة');
-            return data;
         }
 
         // ===== TEXT SPLIT =====
@@ -1187,7 +948,7 @@
             const cards = splitTextIntoCards(text);
             state.textCards = cards;
             sec.classList.remove('hidden');
-            badge.textContent = cards.length === 1 ? '1 بطاقة' : `${cards.length} بطاقات`;
+            badge.textContent = cards.length === 1 ? 'بطاقة واحدة' : `${cards.length} بطاقات`;
             cardsCount.textContent = cards.length;
 
             list.innerHTML = cards.map((c, i) => {
@@ -1209,25 +970,14 @@
         }
 
         // ===== RENDER TEMPLATES =====
-        function renderTemplates(templates) {
+        function renderTemplates() {
             const grid = document.getElementById('templatesGrid');
-            const seen = new Set();
-            const tmpls = [];
-            for (const t of templates) {
-                if (!seen.has(t.template_id)) { seen.add(t.template_id); tmpls.push(t); }
-            }
-            grid.innerHTML = tmpls.map(t => {
-                const sel = String(t.template_id) === String(state.templateId) ? 'selected' : '';
-                return `<div class="template-card ${sel}" data-id="${t.template_id}" data-name="${t.template_name}">
-                    <div class="template-preview" style="background:radial-gradient(ellipse at center,${t.gradient_mid} 0%,${t.gradient_start} 80%);border-radius:14px 14px 0 0">
-                        <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 45%,${t.accent}08 0%,transparent 60%)"></div>
-                        <div style="position:absolute;top:20%;left:12%;right:12%;bottom:20%;background:rgba(0,0,0,0.25);border-radius:8px;box-shadow:0 10px 30px rgba(0,0,0,0.4)"></div>
-                        <div style="position:absolute;top:20%;left:12%;right:12%;bottom:20%;border:1.5px solid ${t.accent}25;border-radius:8px"></div>
-                        <div style="position:absolute;top:calc(20% + 8%);left:50%;transform:translateX(-50%);width:12%;height:2px;background:linear-gradient(90deg,transparent,${t.accent}35,transparent)"></div>
-                        <div style="position:absolute;top:calc(20% + 14%);left:calc(12% + 18px);right:calc(12% + 18px);bottom:calc(20% + 8%);display:flex;align-items:center;justify-content:center;text-align:center;direction:rtl">
-                            <span style="font-family:-apple-system,BlinkMacSystemFont,sans-serif;font-weight:bold;font-size:14px;color:${t.text_color};text-shadow:0 2px 8px rgba(0,0,0,0.6);line-height:1.8">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</span>
-                        </div>
-                        <div style="position:absolute;bottom:4px;left:50%;transform:translateX(-50%);font-size:7px;color:${t.accent}15">myroqia.com</div>
+            grid.innerHTML = TEMPLATES_LIST.map(t => {
+                const sel = String(t.id) === String(state.templateId) ? 'selected' : '';
+                const lImgUrl = getTemplateImageUrl(t, 'landscape');
+                return `<div class="template-card ${sel}" data-id="${t.id}">
+                    <div class="template-preview" style="background: radial-gradient(ellipse at center, ${t.gradient_mid} 0%, ${t.gradient_start} 100%);">
+                        <img src="${lImgUrl}" alt="${t.template_name}" onerror="this.style.display='none'" />
                         <div class="template-check">✓</div>
                     </div>
                     <div class="template-name">${t.template_name}</div>
@@ -1237,320 +987,34 @@
             grid.querySelectorAll('.template-card').forEach(el => {
                 el.addEventListener('click', () => {
                     const id = el.dataset.id;
-                    state.templateId = id;
-                    state.colorId = '';
-                    state.selectedTemplate = tmpls.find(t => String(t.template_id) === id);
-                    grid.querySelectorAll('.template-card').forEach(c => c.classList.remove('selected'));
-                    el.classList.add('selected');
-                    showTemplatePreviewModal(state.selectedTemplate);
+                    const tmpl = TEMPLATES_LIST.find(t => String(t.id) === id);
+                    if (tmpl) {
+                        showTemplatePreviewModal(tmpl);
+                    }
                 });
             });
         }
 
         // ===== TEMPLATE PREVIEW MODAL =====
-        async function showTemplatePreviewModal(template, colorOverride, mode) {
-            pendingTemplateId = template.template_id;
-            modalMode = mode || 'template';
+        function showTemplatePreviewModal(template) {
+            pendingTemplate = template;
             const modal = document.getElementById('templatePreviewModal');
             const titleEl = document.getElementById('templateModalTitle');
-            const confirmBtn = document.getElementById('templateModalConfirm');
-            const landscapeLoading = document.getElementById('modalLandscapeLoading');
-            const portraitLoading = document.getElementById('modalPortraitLoading');
             const landscapeImg = document.getElementById('modalLandscapePreview');
             const portraitImg = document.getElementById('modalPortraitPreview');
 
-            titleEl.textContent = modalMode === 'color' ? '✅ معاينة اللون' : '✅ معاينة القالب';
-            confirmBtn.innerHTML = modalMode === 'color'
-                ? '<span>اختيار هذا اللون</span><span>✓</span>'
-                : '<span>اختيار هذا القالب</span><span>→</span>';
-
-            landscapeLoading.classList.remove('hidden');
-            portraitLoading.classList.remove('hidden');
-            landscapeLoading.innerHTML = '<div class="spinner"></div>';
-            portraitLoading.innerHTML = '<div class="spinner"></div>';
-            landscapeImg.classList.remove('loaded');
-            portraitImg.classList.remove('loaded');
-            landscapeImg.src = '';
-            portraitImg.src = '';
+            titleEl.textContent = `معاينة قالب: ${template.template_name}`;
+            landscapeImg.src = getTemplateImageUrl(template, 'landscape');
+            portraitImg.src = getTemplateImageUrl(template, 'portrait');
 
             modal.classList.add('visible');
             document.body.style.overflow = 'hidden';
-
-            try {
-                const templateColors = templatesCache.filter(t => String(t.template_id) === String(template.template_id));
-                const color = colorOverride || templateColors[0];
-                if (!color) throw new Error('لا يوجد لون لهذا القالب');
-                previewColorId = color.color_id;
-
-                const data = await fetchTemplatePreview(template.template_id, previewColorId);
-                landscapeImg.onload = () => {
-                    landscapeLoading.classList.add('hidden');
-                    landscapeImg.classList.add('loaded');
-                };
-                portraitImg.onload = () => {
-                    portraitLoading.classList.add('hidden');
-                    portraitImg.classList.add('loaded');
-                };
-                landscapeImg.src = data.landscape;
-                portraitImg.src = data.portrait;
-                state.previewLandscape = data.landscape;
-                state.previewPortrait = data.portrait;
-            } catch (e) {
-                console.error('Error loading preview:', e);
-                landscapeLoading.innerHTML = '<span style="color:red">فشل تحميل المعاينة</span>';
-                portraitLoading.innerHTML = '<span style="color:red">فشل تحميل المعاينة</span>';
-            }
-        }
-
-        document.getElementById('exportAllTemplatesBtn').addEventListener('click', async () => {
-            if (!templatesCache.length) { showToast('لا توجد قوالب محملة', true); return; }
-
-            showLoading('جاري توليد الخلفيات المفرغة...', 'قد يستغرق هذا دقيقة لجميع القوالب');
-            const results = [];
-
-            try {
-                for (const t of templatesCache) {
-                    const r = await fetch(`${WORKER_API_URL}/api/template-preview?template_id=${t.template_id}&color_id=${t.color_id}&empty=true`);
-                    if (!r.ok) continue;
-                    const data = await r.json();
-                    if (data && data.success) {
-                        results.push({ name: `${t.template_name}-${t.color_name}`, landscape: data.landscape, portrait: data.portrait });
-                    }
-                }
-
-                const modal = document.getElementById('batchPreviewModal');
-                const preview = document.getElementById('batchPreview');
-                const loading = document.getElementById('batchLoading');
-
-                let html = '';
-                results.forEach(res => {
-                    html += `
-                        <div class="batch-card-item">
-                            <img src="${res.landscape}" alt="${res.name} landscape" />
-                            <div class="meta">
-                                <div class="badge-num">${res.name}</div>
-                                <div>أفقي</div>
-                                <a href="${res.landscape}" download="${res.name}-landscape.png" style="display:block;margin-top:6px;color:var(--primary);font-weight:700;">تحميل</a>
-                            </div>
-                        </div>
-                        <div class="batch-card-item">
-                            <img src="${res.portrait}" alt="${res.name} portrait" />
-                            <div class="meta">
-                                <div class="badge-num">${res.name}</div>
-                                <div>عمودي</div>
-                                <a href="${res.portrait}" download="${res.name}-portrait.png" style="display:block;margin-top:6px;color:var(--success);font-weight:700;">تحميل</a>
-                            </div>
-                        </div>`;
-                });
-
-                preview.innerHTML = html || '<div style="padding:24px;text-align:center;direction:rtl;">لا توجد نتائج</div>';
-                preview.style.display = 'grid';
-                loading.classList.add('hidden');
-                modal.classList.add('visible');
-                document.body.style.overflow = 'hidden';
-            } catch (e) {
-                showToast('حدث خطأ أثناء التصدير', true);
-            } finally {
-                hideLoading();
-            }
-        });
-
-        async function showBatchPreviewModal() {
-            if (!state.templateId || !state.colorId) {
-                showToast('اختر قالباً ولوناً أولاً', true); return;
-            }
-            if (!state.textCards.length) {
-                showToast('أدخل نصاً لإنشاء البطاقات', true); return;
-            }
-
-            const modal = document.getElementById('batchPreviewModal');
-            const loading = document.getElementById('batchLoading');
-            const preview = document.getElementById('batchPreview');
-
-            loading.classList.remove('hidden');
-            loading.innerHTML = '<div class="spinner"></div>';
-            preview.style.display = 'none';
-            preview.innerHTML = '';
-            modal.classList.add('visible');
-            document.body.style.overflow = 'hidden';
-
-            try {
-                const r = await fetch(`${WORKER_API_URL}/api/text-cards-preview`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        text_cards: state.textCards,
-                        template_id: state.templateId,
-                        color_id: state.colorId,
-                        include_portrait: true
-                    })
-                });
-                if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'فشل معاينة البطاقات');
-                const data = await r.json();
-                if (!data.success || !Array.isArray(data.cards)) throw new Error(data.error || 'فشل معاينة البطاقات');
-
-                let html = '';
-                data.cards.forEach((card) => {
-                    html += `
-                    <div class="batch-card-item">
-                        <img src="${card.landscape}" alt="Card ${card.index + 1} landscape" />
-                        <div class="meta">
-                            <div class="badge-num">بطاقة ${card.index + 1} — أفقي</div>
-                            <div style="color:var(--text-secondary);font-size:11px;">${(card.text_preview || '').replace(/</g, '&lt;')}</div>
-                        </div>
-                    </div>`;
-                    if (card.portrait) {
-                        html += `
-                        <div class="batch-card-item">
-                            <img src="${card.portrait}" alt="Card ${card.index + 1} portrait" />
-                            <div class="meta">
-                                <div class="badge-num">بطاقة ${card.index + 1} — عمودي</div>
-                            </div>
-                        </div>`;
-                    }
-                });
-                preview.innerHTML = html;
-                preview.style.display = 'grid';
-            } catch (e) {
-                console.warn('Failed to load batch preview:', e);
-                preview.innerHTML = `
-                    <div style="padding:40px; text-align:center; color:var(--text-secondary); direction:rtl; grid-column:1/-1;">
-                        <div style="font-size:48px; margin-bottom:16px;">📝</div>
-                        <div>فشل تحميل معاينة البطاقات</div>
-                        <div style="font-size:12px; margin-top:8px;">${e.message || e}</div>
-                    </div>`;
-                preview.style.display = 'grid';
-            } finally {
-                loading.classList.add('hidden');
-            }
         }
 
         function closeTemplateModal() {
             document.getElementById('templatePreviewModal').classList.remove('visible');
             document.body.style.overflow = '';
-            pendingTemplateId = null;
-        }
-
-        function closeBatchPreviewModal() {
-            document.getElementById('batchPreviewModal').classList.remove('visible');
-            document.body.style.overflow = '';
-        }
-
-        // ===== RENDER COLORS =====
-        function renderColors(templates, templateId) {
-            const sec = document.getElementById('colorsSection');
-            const row = document.getElementById('colorsRow');
-            const colors = templates.filter(t => String(t.template_id) === String(templateId));
-            if (!colors.length) { sec.classList.add('hidden'); return }
-            sec.classList.remove('hidden');
-
-            const unique = [];
-            const seen = new Set();
-            for (const c of colors) {
-                const k = `${c.color_id}-${c.color_name}`;
-                if (!seen.has(k)) { seen.add(k); unique.push(c); }
-            }
-
-            row.innerHTML = unique.map(c => {
-                const sel = String(c.color_id) === String(state.colorId) ? 'selected' : '';
-                return `<div class="color-option ${sel}" data-id="${c.color_id}" data-name="${c.color_name}" style="background:radial-gradient(ellipse at center,${c.gradient_mid} 0%,${c.gradient_start} 100%);display:flex;align-items:center;justify-content:center">
-                    <div style="position:absolute;inset:0;background:radial-gradient(circle at center,rgba(255,255,255,0.05) 0%,transparent 70%)"></div>
-                    <div style="width:75%;padding:14px 10px;background:rgba(0,0,0,0.25);border:1px solid ${c.accent}33;border-radius:8px;text-align:center;position:relative;z-index:1">
-                        <div style="width:30%;height:1px;background:${c.accent}55;margin:0 auto 8px"></div>
-                    <div style="font-size:14px;font-weight:700;color:${c.text_color};text-shadow:0 2px 8px rgba(0,0,0,0.6);line-height:1.5">بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ</div>
-                    <div style="font-size:8px;color:rgba(255,255,255,0.25);margin-top:6px">myroqia.com</div>
-                    </div>
-                    <div class="template-check">✓</div>
-                    <div class="color-name-tag">${c.color_name}</div>
-                </div>`;
-            }).join('');
-
-            row.querySelectorAll('.color-option').forEach(el => {
-                el.addEventListener('click', () => {
-                    const color = unique.find(c => String(c.color_id) === el.dataset.id);
-                    state.colorId = el.dataset.id;
-                    state.selectedColor = color;
-                    row.querySelectorAll('.color-option').forEach(s => s.classList.remove('selected'));
-                    el.classList.add('selected');
-                    updateDualPreview();
-                    if (color) {
-                        showTemplatePreviewModal(
-                            state.selectedTemplate || { template_id: state.templateId },
-                            color,
-                            'color'
-                        );
-                    }
-                });
-            });
-
-            if (!state.colorId && unique.length) {
-                state.colorId = String(unique[0].color_id);
-                state.selectedColor = unique[0];
-                row.querySelector('.color-option')?.classList.add('selected');
-            }
-            updateDualPreview();
-        }
-
-        // ===== DUAL PREVIEW (real server PNGs) =====
-        async function updateDualPreview() {
-            const section = document.getElementById('dualPreviewSection');
-            const lImg = document.getElementById('landscapePreview');
-            const pImg = document.getElementById('portraitPreview');
-            const lLoad = document.getElementById('landscapeLoading');
-            const pLoad = document.getElementById('portraitLoading');
-            const lPh = document.getElementById('landscapePlaceholder');
-            const pPh = document.getElementById('portraitPlaceholder');
-
-            if (!state.templateId || !state.colorId) {
-                section.classList.add('hidden');
-                return;
-            }
-
-            section.classList.remove('hidden');
-            const reqId = ++previewRequestId;
-            lLoad.classList.remove('hidden');
-            pLoad.classList.remove('hidden');
-            lImg.classList.remove('loaded');
-            pImg.classList.remove('loaded');
-            lPh.style.display = 'none';
-            pPh.style.display = 'none';
-
-            try {
-                const data = await fetchTemplatePreview(state.templateId, state.colorId);
-                if (reqId !== previewRequestId) return;
-                lImg.onload = () => { lLoad.classList.add('hidden'); lImg.classList.add('loaded'); };
-                pImg.onload = () => { pLoad.classList.add('hidden'); pImg.classList.add('loaded'); };
-                lImg.src = data.landscape;
-                pImg.src = data.portrait;
-                state.previewLandscape = data.landscape;
-                state.previewPortrait = data.portrait;
-            } catch (e) {
-                if (reqId !== previewRequestId) return;
-                console.warn('Dual preview failed:', e);
-                lLoad.classList.add('hidden');
-                pLoad.classList.add('hidden');
-                lPh.style.display = 'block';
-                pPh.style.display = 'block';
-                lPh.textContent = 'فشل تحميل المعاينة';
-                pPh.textContent = 'فشل تحميل المعاينة';
-            }
-        }
-
-        // ===== LOAD TEMPLATES =====
-        async function loadTemplates() {
-            try {
-                const r = await fetch(`${WORKER_API_URL}/get-text-templates`);
-                if (r.ok) {
-                    const d = await r.json();
-                    if (d.success && Array.isArray(d.data) && d.data.length) {
-                        templatesCache = d.data;
-                        renderTemplates(templatesCache);
-                        return;
-                    }
-                }
-            } catch (e) { console.warn('API failed'); }
-            templatesCache = FALLBACK_TEMPLATES;
-            renderTemplates(templatesCache);
+            pendingTemplate = null;
         }
 
         // ===== NAVIGATION =====
@@ -1581,8 +1045,9 @@
                     if (!state.textContent || state.textContent.trim().length < 5) {
                         showToast('الرجاء إدخال نص قبل المتابعة', true); return;
                     }
-                    if (!state.templateId) { showToast('الرجاء اختيار قالب', true); return; }
-                    if (!state.colorId) { showToast('الرجاء اختيار لون', true); return; }
+                    if (!state.templateId) {
+                        showToast('الرجاء اختيار قالب', true); return;
+                    }
                 }
                 currentStep++;
                 updateSteps();
@@ -1595,13 +1060,13 @@
                 showLoading('جاري إنشاء الفيديو...', 'Landscape + Portrait');
                 try {
                     const params = new URLSearchParams(window.location.search);
-                    const processId = params.get('bin') || tg.initDataUnsafe?.start_param || Date.now().toString();
+                    const processId = params.get('bin') || tg.initDataUnsafe?.start_param || `TEXT_${Date.now()}`;
                     const finalData = {
                         id: processId,
                         text_content: state.textContent,
                         text_cards: state.textCards,
-                        template_id: parseInt(state.templateId, 10),
-                        color_id: parseInt(state.colorId, 10),
+                        template_id: parseInt(state.templateId, 10) || 1,
+                        color_id: parseInt(state.colorId, 10) || 1,
                         seo: { ...state.seo },
                         captions: [], audioUrl: '', duration: null
                     };
@@ -1612,9 +1077,9 @@
                     if (!r.ok) throw new Error((await r.json().catch(() => ({}))).error || 'فشل الإرسال');
                     try { tg.sendData(JSON.stringify({ type: 'text_content_completed', id: processId, status: 'completed' })); } catch (e) { }
                     if (tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) {
-                        tg.showAlert('✅ تم الإرسال بنجاح!', () => setTimeout(() => tg.close(), 500));
+                        tg.showAlert('✅ تم إرسال الفيديو بنجاح!', () => setTimeout(() => tg.close(), 500));
                     } else {
-                        showToast('✅ تم الإرسال بنجاح!');
+                        showToast('✅ تم إرسال الفيديو بنجاح!');
                         setTimeout(() => tg.close(), 1500);
                     }
                 } catch (e) {
@@ -1679,8 +1144,8 @@
         }
 
         document.getElementById('seoGenerateBtn').addEventListener('click', async () => {
-            if (!state.textContent || state.textContent.trim().length < 50) {
-                showToast('الرجاء إدخال نص (50 حرف على الأقل) أولاً', true); return;
+            if (!state.textContent || state.textContent.trim().length < 20) {
+                showToast('الرجاء إدخال نص كافي أولاً', true); return;
             }
             showLoading('جاري تحليل النص وتوليد SEO...', 'قد يستغرق ذلك بضع ثوانٍ');
             try {
@@ -1701,7 +1166,7 @@
         });
 
         // ===== REVIEW =====
-        async function updateReview() {
+        function updateReview() {
             document.getElementById('rText').textContent = state.textContent.length > 100 ? state.textContent.substring(0, 100) + '...' : state.textContent || '(فارغ)';
             document.getElementById('rChars').textContent = state.textContent.length;
             document.getElementById('rWords').textContent = state.textContent.trim() ? state.textContent.trim().split(/\s+/).length : 0;
@@ -1710,34 +1175,24 @@
             let td = 0;
             for (const c of state.textCards) { const w = c.trim().split(/\s+/).length; td += Math.max(4, Math.min(15, Math.ceil(w / 2.5) + (w > 20 ? Math.ceil((w - 20) / 10) : 0))); }
             document.getElementById('rDuration').textContent = td ? `~${td} ثانية` : '-';
-            const t = templatesCache.find(t => String(t.template_id) === String(state.templateId));
-            document.getElementById('rTemplate').textContent = t?.template_name || state.templateId || '-';
-            const clr = templatesCache.find(t => String(t.template_id) === String(state.templateId) && String(t.color_id) === String(state.colorId));
-            document.getElementById('rColor').textContent = clr?.color_name || state.colorId || '-';
+            
+            const t = state.selectedTemplate || TEMPLATES_LIST.find(t => String(t.id) === String(state.templateId));
+            document.getElementById('rTemplate').textContent = t?.template_name || '-';
             document.getElementById('rSeoTitle').textContent = state.seo.title || '-';
             document.getElementById('rSeoDesc').textContent = state.seo.description || '-';
 
             const reviewL = document.getElementById('reviewLandscapeImage');
             const reviewP = document.getElementById('reviewPortraitImage');
-            if (state.previewLandscape && state.previewPortrait) {
-                reviewL.src = state.previewLandscape;
-                reviewP.src = state.previewPortrait;
-            } else if (state.templateId && state.colorId) {
-                try {
-                    const data = await fetchTemplatePreview(state.templateId, state.colorId);
-                    state.previewLandscape = data.landscape;
-                    state.previewPortrait = data.portrait;
-                    reviewL.src = data.landscape;
-                    reviewP.src = data.portrait;
-                } catch (e) {
-                    console.warn('Review preview failed:', e);
-                }
+            if (t) {
+                reviewL.src = getTemplateImageUrl(t, 'landscape');
+                reviewP.src = getTemplateImageUrl(t, 'portrait');
             }
         }
 
         // ===== INIT =====
         async function init() {
-            await loadTemplates();
+            renderTemplates();
+
             const params = new URLSearchParams(window.location.search);
             const processId = params.get('bin') || tg.initDataUnsafe?.start_param;
             if (processId) {
@@ -1748,11 +1203,21 @@
                         const result = await r.json();
                         const data = result.data || result.record || result;
                         if (data) {
-                            binData = data;
                             state.user_id = data.user_id || String(tg.initDataUnsafe?.user?.id || '');
-                            if (data.text_content) { state.textContent = data.text_content; document.getElementById('textInput').value = state.textContent; updateCards(); }
-                            if (data.template_id) { state.templateId = String(data.template_id); renderTemplates(templatesCache); renderColors(templatesCache, state.templateId); }
-                            if (data.color_id) { state.colorId = String(data.color_id); state.selectedColor = templatesCache.find(t => String(t.template_id) === state.templateId && String(t.color_id) === state.colorId) || null; updateDualPreview(); }
+                            if (data.text_content) { 
+                                state.textContent = data.text_content; 
+                                document.getElementById('textInput').value = state.textContent; 
+                                const chars = state.textContent.length;
+                                const words = state.textContent.trim() ? state.textContent.trim().split(/\s+/).length : 0;
+                                document.getElementById('charCount').textContent = chars;
+                                document.getElementById('wordCount').textContent = words;
+                                updateCards(); 
+                            }
+                            if (data.template_id) { 
+                                state.templateId = String(data.template_id); 
+                                state.selectedTemplate = TEMPLATES_LIST.find(t => String(t.id) === state.templateId) || null;
+                                renderTemplates();
+                            }
                             if (data.seo) {
                                 state.seo = { title: data.seo.title || '', description: data.seo.description || '', tags: data.seo.tags || [] };
                                 document.getElementById('seoTitle').value = state.seo.title;
@@ -1766,42 +1231,23 @@
             }
             updateSteps();
 
-            document.getElementById('previewCardsBtn').addEventListener('click', showBatchPreviewModal);
-
             document.getElementById('templateModalClose').addEventListener('click', closeTemplateModal);
             document.getElementById('templatePreviewModal').addEventListener('click', (e) => {
                 if (e.target === document.getElementById('templatePreviewModal')) closeTemplateModal();
             });
             document.getElementById('templateModalConfirm').addEventListener('click', () => {
-                if (modalMode === 'color') {
-                    closeTemplateModal();
-                    updateDualPreview();
-                    return;
+                if (pendingTemplate) {
+                    state.templateId = String(pendingTemplate.id);
+                    state.colorId = '1';
+                    state.selectedTemplate = pendingTemplate;
+                    renderTemplates();
                 }
                 closeTemplateModal();
-                if (pendingTemplateId) {
-                    state.templateId = pendingTemplateId;
-                    const templateColors = templatesCache.filter(t => String(t.template_id) === String(pendingTemplateId));
-                    if (templateColors.length > 0) {
-                        const color = templateColors.find(c => String(c.color_id) === String(previewColorId)) || templateColors[0];
-                        state.colorId = String(color.color_id);
-                        state.selectedColor = color;
-                        state.selectedTemplate = templatesCache.find(t => String(t.template_id) === String(pendingTemplateId)) || state.selectedTemplate;
-                    }
-                    renderColors(templatesCache, pendingTemplateId);
-                }
-            });
-
-            document.getElementById('batchModalClose').addEventListener('click', closeBatchPreviewModal);
-            document.getElementById('batchModalConfirm').addEventListener('click', closeBatchPreviewModal);
-            document.getElementById('batchPreviewModal').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('batchPreviewModal')) closeBatchPreviewModal();
             });
 
             document.addEventListener('keydown', (e) => {
                 if (e.key === 'Escape') {
                     closeTemplateModal();
-                    closeBatchPreviewModal();
                 }
             });
         }
@@ -1810,4 +1256,3 @@
     </script>
 </body>
 </html>
- 
