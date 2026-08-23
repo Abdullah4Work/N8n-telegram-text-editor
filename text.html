@@ -757,10 +757,22 @@
                 </div>
             </div>
 
+            <div class="seo-section">
+                <div class="seo-section-title"><span>#️⃣</span><span>هاشتاقات الـ SEO</span></div>
+                <div style="display:flex;gap:8px;margin-bottom:12px;">
+                    <input type="text" class="form-input" id="hashtagInput" placeholder="أدخل هاشتاق (بدون #)..." maxlength="30" style="flex:1;">
+                    <button class="btn-secondary" id="addHashtagBtn" style="flex:0;padding:13px 20px;white-space:nowrap;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white;">➕ إضافة</button>
+                </div>
+                <div class="tags-container" id="hashtagsContainer">
+                    <span style="color:var(--text-secondary);font-size:12px;">لا توجد هاشتاقات بعد</span>
+                </div>
+            </div>
+
             <div class="seo-stats" id="seoStats" style="display:none;">
                 <div class="seo-stat-item"><div class="seo-stat-value" id="statWords">0</div><div class="seo-stat-label">الكلمات</div></div>
                 <div class="seo-stat-item"><div class="seo-stat-value" id="statChars">0</div><div class="seo-stat-label">الأحرف</div></div>
                 <div class="seo-stat-item"><div class="seo-stat-value" id="statTags">0</div><div class="seo-stat-label">الكلمات المفتاحية</div></div>
+                <div class="seo-stat-item"><div class="seo-stat-value" id="statHashtags">0</div><div class="seo-stat-label">الهاشتاقات</div></div>
                 <div class="seo-stat-item"><div class="seo-stat-value" id="statDescLen">0</div><div class="seo-stat-label">طول الوصف</div></div>
             </div>
         </div>
@@ -800,6 +812,7 @@
                 <div class="review-section-title"><span>🔍</span><span>SEO</span></div>
                 <div class="review-item"><span class="review-label">العنوان:</span><span class="review-value" id="rSeoTitle">-</span></div>
                 <div class="review-item"><span class="review-label">الوصف:</span><span class="review-value" id="rSeoDesc" style="font-size:12px;max-height:40px;overflow:hidden;text-align:right;">-</span></div>
+                <div class="review-item"><span class="review-label">الهاشتاقات:</span><span class="review-value" id="rSeoHashtags" style="font-size:12px;text-align:right;">-</span></div>
             </div>
         </div>
 
@@ -962,7 +975,7 @@
         const state = {
             textContent: '', templateId: '', colorId: '1',
             selectedTemplate: null,
-            seo: { title: '', description: '', tags: [] },
+            seo: { title: '', description: '', tags: [], hashtags: [] },
             textCards: [], user_id: '',
             previewLandscape: '', previewPortrait: ''
         };
@@ -1209,6 +1222,36 @@
         });
         document.getElementById('tagInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('addTagBtn').click(); });
 
+        // ===== HASHTAGS =====
+        function normalizeHashtag(h) {
+            // إزالة # من البداية، استبدال المسافات بـ _، وحذف الرموز غير المسموحة مع الحفاظ على _
+            return String(h || '').trim()
+                .replace(/^#+/, '')
+                .replace(/\s+/g, '_')
+                .replace(/_+/g, '_')
+                .replace(/[^\u0600-\u06FFa-zA-Z0-9_]/g, '');
+        }
+        document.getElementById('addHashtagBtn').addEventListener('click', () => {
+            const inp = document.getElementById('hashtagInput');
+            const val = normalizeHashtag(inp.value);
+            if (!val || val.length < 2) return;
+            if (state.seo.hashtags.includes(val)) { showToast('هذا الهاشتاق موجود بالفعل'); inp.value = ''; return; }
+            state.seo.hashtags.push(val);
+            inp.value = '';
+            renderHashtags();
+            updateSeoStats();
+        });
+        document.getElementById('hashtagInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('addHashtagBtn').click(); });
+
+        function renderHashtags() {
+            const c = document.getElementById('hashtagsContainer');
+            if (!state.seo.hashtags.length) { c.innerHTML = '<span style="color:var(--text-secondary);font-size:12px;">لا توجد هاشتاقات بعد</span>'; return; }
+            c.innerHTML = state.seo.hashtags.map((h, i) =>
+                `<span class="tag-item">#${h}<span class="tag-remove" onclick="removeHashtag(${i})">×</span></span>`
+            ).join('');
+        }
+        window.removeHashtag = function (i) { state.seo.hashtags.splice(i, 1); renderHashtags(); updateSeoStats(); };
+
         function renderTags() {
             const c = document.getElementById('tagsContainer');
             if (!state.seo.tags.length) { c.innerHTML = '<span style="color:var(--text-secondary);font-size:12px;">لا توجد كلمات مفتاحية بعد</span>'; return; }
@@ -1224,6 +1267,7 @@
             document.getElementById('statWords').textContent = state.seo.title.trim() ? state.seo.title.trim().split(/\s+/).length : 0;
             document.getElementById('statChars').textContent = state.seo.title.length;
             document.getElementById('statTags').textContent = state.seo.tags.length;
+            document.getElementById('statHashtags').textContent = state.seo.hashtags.length;
             document.getElementById('statDescLen').textContent = state.seo.description.length;
         }
 
@@ -1243,6 +1287,12 @@
                     if (d.title) { state.seo.title = d.title; document.getElementById('seoTitle').value = d.title; document.getElementById('seoTitleCount').textContent = d.title.length; }
                     if (d.description) { state.seo.description = d.description; document.getElementById('seoDesc').value = d.description; document.getElementById('seoDescCount').textContent = d.description.length; }
                     if (d.tags) { state.seo.tags = [...new Set(d.tags.map(t => t.trim().replace(/[\-_]+/g, ' ').replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '').replace(/\s+/g, ' ')).filter(t => t.length > 1))]; renderTags(); }
+                    if (Array.isArray(d.hashtags)) {
+                        state.seo.hashtags = [...new Set(
+                            d.hashtags.map(h => normalizeHashtag(h)).filter(h => h.length > 1)
+                        )];
+                        renderHashtags();
+                    }
                     updateSeoStats();
                     showToast('✅ تم إنشاء بيانات SEO بنجاح');
                 } else showToast('فشل إنشاء SEO تلقائياً', true);
@@ -1265,6 +1315,9 @@
             document.getElementById('rTemplate').textContent = t?.template_name || '-';
             document.getElementById('rSeoTitle').textContent = state.seo.title || '-';
             document.getElementById('rSeoDesc').textContent = state.seo.description || '-';
+            document.getElementById('rSeoHashtags').textContent = state.seo.hashtags.length
+                ? state.seo.hashtags.map(h => '#' + h).join('  ')
+                : '-';
 
             const reviewL = document.getElementById('reviewLandscapeImage');
             const reviewP = document.getElementById('reviewPortraitImage');
@@ -1304,10 +1357,16 @@
                                 renderTemplates();
                             }
                             if (data.seo) {
-                                state.seo = { title: data.seo.title || '', description: data.seo.description || '', tags: data.seo.tags || [] };
+                                state.seo = {
+                                    title: data.seo.title || '',
+                                    description: data.seo.description || '',
+                                    tags: Array.isArray(data.seo.tags) ? [...data.seo.tags] : [],
+                                    hashtags: Array.isArray(data.seo.hashtags) ? [...data.seo.hashtags] : []
+                                };
                                 document.getElementById('seoTitle').value = state.seo.title;
                                 document.getElementById('seoDesc').value = state.seo.description;
                                 renderTags();
+                                renderHashtags();
                             }
                         }
                     }
