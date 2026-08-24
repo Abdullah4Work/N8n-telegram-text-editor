@@ -1068,7 +1068,8 @@
             seo: { title: '', description: '', tags: [], hashtags: [] },
             textCards: [], cardDurations: [], user_id: '',
             previewLandscape: '', previewPortrait: '',
-            audio: { base64: null, duration: null, filename: '' }
+            audio: { base64: null, url: null, duration: null, filename: '' }
+
         };
         let pendingTemplate = null;
         let binData = {};
@@ -1371,7 +1372,7 @@
             }
         }
 
-        // ===== AUDIO (مطابق لمحرر الصور تماماً) =====
+        // ===== AUDIO =====
         function audioFileToBase64(file) {
             return new Promise((resolve, reject) => {
                 const reader = new FileReader();
@@ -1379,6 +1380,22 @@
                 reader.onerror = err => reject(err);
                 reader.readAsDataURL(file);
             });
+        }
+        // رفع الملف الصوتي إلى السيرفر مباشرةً وإرجاع URL
+        async function uploadAudioToServer(file) {
+            const base64 = await audioFileToBase64(file);
+            const resp = await fetch('/upload-audio', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ audio: base64 })
+            });
+            if (!resp.ok) {
+                const err = await resp.text().catch(() => '');
+                throw new Error('فشل رفع الصوت للسيرفر: ' + (err || resp.status));
+            }
+            const result = await resp.json();
+            if (!result.success) throw new Error(result.error || 'فشل رفع الصوت');
+            return result.url; // مثال: /uploads/audio_xxx.mp3
         }
         function getAudioFileDuration(base64DataUrl) {
             return new Promise((resolve) => {
@@ -1399,11 +1416,23 @@
             if (!file || !file.type.startsWith('audio/')) { showToast('يرجى اختيار ملف صوتي صالح', true); return; }
             const MAX_SIZE_MB = 80;
             if (file.size > MAX_SIZE_MB * 1024 * 1024) { showToast(`❌ حجم الملف كبير جداً (الحد: ${MAX_SIZE_MB} MB)`, true); return; }
-            showLoading('جاري تحميل الملف الصوتي...','يرجى الانتظار');
+            showLoading('جاري رفع الملف الصوتي...','يرجى الانتظار');
             try {
+                // نحوّل إلى base64 للمعاينة المحلية فقط
                 const base64 = await audioFileToBase64(file);
                 const duration = await getAudioFileDuration(base64);
-                state.audio.base64 = base64;
+
+                // رفع الملف إلى السيرفر والحصول على URL خفيف (بدلاً من إرسال base64 لـ n8n)
+                let uploadedUrl = null;
+                try {
+                    uploadedUrl = await uploadAudioToServer(file);
+                    console.log('✅ تم رفع الصوت للسيرفر:', uploadedUrl);
+                } catch (uploadErr) {
+                    console.warn('⚠️ فشل رفع الصوت للسيرفر، سيُستخدم base64 احتياطياً:', uploadErr.message);
+                }
+
+                state.audio.base64 = base64;            // للمعاينة المحلية
+                state.audio.url = uploadedUrl;          // URL للإرسال لـ n8n
                 state.audio.duration = duration;
                 state.audio.filename = file.name;
                 document.getElementById('audioPreviewName').textContent = file.name;
@@ -1419,7 +1448,6 @@
                 document.getElementById('audioPlayPauseBtn').textContent = '▶';
                 document.getElementById('audioWaveform').classList.add('paused');
                 if (state.textCards.length > 0 && duration) {
-                    // زامن البطاقات فوراً على مدة الصوت واجعل الفيديو ينتهي مع نهاية الصوت (بدون رسائل)
                     setTimeout(() => distributeCardDurationsByAudio(true), 50);
                 }
             } catch (err) { console.error('Audio load error:', err); showToast('❌ خطأ أثناء تحميل الملف الصوتي', true); }
@@ -1428,7 +1456,7 @@
         function removeAudio() {
             const audioEl = document.getElementById('inEditorAudio');
             if (audioEl) { audioEl.pause(); audioEl.currentTime = 0; audioEl.src = ''; }
-            state.audio = { base64: null, duration: null, filename: '' };
+            state.audio = { base64: null, url: null, duration: null, filename: '' };
             const card = document.getElementById('audioPreviewCard');
             if (card) card.classList.remove('visible');
             const dz = document.getElementById('audioDropZone');
@@ -1537,6 +1565,8 @@
                     const totalCardsDuration = (state.cardDurations && state.cardDurations.length === state.textCards.length)
                         ? state.cardDurations.reduce((a,b)=>a+b,0)
                         : state.textCards.reduce((s,c)=> s + heuristicDur(c), 0);
+                    // تحديد مصدر الصوت: URL مرفوع مسبقاً (خفيف) أو base64 احتياطي
+                    const audioUrl = state.audio?.url || '';
                     const webhookData = {
                         ...binData,
                         text_content: state.textContent,
@@ -1548,15 +1578,16 @@
                         seo: { ...state.seo },
                         user_id: userId,
                         captions: [],
-                        audioUrl: '',
-                        audioBase64: state.audio?.base64 || null,
+                        audioUrl: audioUrl,
+                        audio_url: audioUrl,
                         audioDuration: state.audio?.duration || null,
+                        audio_duration: state.audio?.duration || null,
                         audioFilename: state.audio?.filename || '',
+                        // لا نُرسل base64 إطلاقاً لـ n8n — نستخدم URL فقط لتفادي 500
+                        audioBase64: null,
+                        audio_base64: null,
                         duration: totalCardsDuration
                     };
-                    if (state.audio?.base64) {
-                        webhookData.audio_base64 = state.audio.base64;
-                    }
 
                     const finalData = {
                         type: 'text_cards',
