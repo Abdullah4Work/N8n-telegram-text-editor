@@ -2208,10 +2208,13 @@
                         const processId = params.get('bin') || tg.initDataUnsafe?.start_param || `TEXT_${Date.now()}`;
                         const userId = state.user_id || binData.user_id || (tg.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : '');
 
-                        // التأكد من رفع الصوت إلى السيرفر عبر الوركر للحصول على رابط خفيف وتفادي أخطاء n8n
+                        // ✅ رفع الصوت مباشرة للسيرفر الأساسي عبر base64 (أضمن وأسرع)
                         let effectiveAudioUrl = state.audio?.url || '';
-                        if (!effectiveAudioUrl && state.audio?.base64) {
-                            showLoading('جاري رفع ومعالجة الصوت...', 'يرجى الانتظار');
+                        
+                        // فقط إذا كان الملف صغير (< 15MB)، نحاول رفعه على Worker
+                        const audioSizeMB = state.audio?.base64 ? (state.audio.base64.length * 0.75) / (1024 * 1024) : 0;
+                        if (!effectiveAudioUrl && state.audio?.base64 && audioSizeMB < 15) {
+                            showLoading('جاري رفع الصوت...', 'يرجى الانتظار');
                             effectiveAudioUrl = await uploadAudioToWorker(state.audio.base64) || '';
                             if (effectiveAudioUrl) state.audio.url = effectiveAudioUrl;
                         }
@@ -2241,9 +2244,9 @@
                             audio_duration: audioDuration,
                             audioFilename: audioFilename,
                             audio_filename: audioFilename,
-                            // لا نرسل base64 إلا إذا تعذر رفع الملف تماماً
-                            audioBase64: effectiveAudioUrl ? null : (state.audio?.base64 || null),
-                            audio_base64: effectiveAudioUrl ? null : (state.audio?.base64 || null),
+                            // ✅ نرسل base64 دائماً كاحتياطي (السيرفر ذكي - يستخدم URL أولاً، ثم base64)
+                            audioBase64: state.audio?.base64 || null,
+                            audio_base64: state.audio?.base64 || null,
                             duration: audioDuration || totalCardsDuration
                         };
 
