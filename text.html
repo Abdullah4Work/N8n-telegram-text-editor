@@ -1080,14 +1080,19 @@
             const subEl = document.getElementById('loadingSubtext');
             if (subEl) subEl.textContent = sub || '';
             document.getElementById('loadingOverlay').classList.add('visible');
-        }
         function hideLoading() { document.getElementById('loadingOverlay').classList.remove('visible'); }
         function showToast(msg, err) {
+            const existing = document.getElementById('appToast');
+            if (existing) existing.remove();
+
             const t = document.createElement('div');
+            t.id = 'appToast';
             t.textContent = msg;
-            t.style.cssText = `position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:${err?'#E74C3C':'#27AE60'};color:white;padding:12px 24px;border-radius:8px;z-index:99999;font-weight:700;text-align:center;max-width:80%;box-shadow:0 4px 20px rgba(0,0,0,0.3);direction:rtl`;
+            t.style.cssText = `position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:${err?'#E74C3C':'#27AE60'};color:white;padding:12px 24px;border-radius:10px;z-index:99999;font-weight:700;text-align:center;max-width:85%;box-shadow:0 6px 20px rgba(0,0,0,0.25);direction:rtl;font-size:14px;`;
             document.body.appendChild(t);
-            setTimeout(() => t.remove(), 2000);
+            setTimeout(() => {
+                if (t.parentElement) t.remove();
+            }, 2500);
         }
 
         // ===== TEXT SPLIT =====
@@ -1408,11 +1413,28 @@
             const s = Math.floor(seconds % 60);
             return `${m}:${String(s).padStart(2,'0')}`;
         }
+        async function uploadAudioToWorker(base64Data) {
+            try {
+                const resp = await fetch(`${WORKER_API_URL}/upload-audio`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ audio: base64Data })
+                });
+                if (resp.ok) {
+                    const data = await resp.json();
+                    if (data && data.url) return data.url;
+                }
+            } catch (err) {
+                console.warn('⚠️ فشل رفع الصوت عبر الوركر:', err);
+            }
+            return null;
+        }
+
         async function handleAudioFile(file) {
             if (!file || !file.type.startsWith('audio/')) { showToast('يرجى اختيار ملف صوتي صالح (mp3, m4a, wav...)', true); return; }
             const MAX_SIZE_MB = 80;
             if (file.size > MAX_SIZE_MB * 1024 * 1024) { showToast(`❌ حجم الملف كبير جداً (الحد: ${MAX_SIZE_MB} MB)`, true); return; }
-            showLoading('جاري تحميل الملف الصوتي...', 'يرجى الانتظار');
+            showLoading('جاري قراءة ومعالجة الملف الصوتي...', 'يرجى الانتظار');
             try {
                 const base64 = await audioFileToBase64(file);
                 const duration = await getAudioFileDuration(base64);
@@ -1420,6 +1442,7 @@
                 state.audio.base64 = base64;
                 state.audio.duration = duration;
                 state.audio.filename = file.name;
+                state.audio.url = null;
                 
                 document.getElementById('audioPreviewName').textContent = file.name;
                 document.getElementById('audioPreviewDuration').textContent = duration ? formatAudioTime(duration) : '—';
@@ -1440,12 +1463,19 @@
                 const wave = document.getElementById('audioWaveform');
                 if (wave) wave.classList.add('paused');
 
-                showToast(`✅ تم رفع الصوت: ${file.name}`);
-
-                // مزامنة البطاقات فوراً على مدة الصوت
+                // مزامنة مدد البطاقات فوراً وبصمت على مدة الصوت
                 if (state.textCards.length > 0 && duration && duration > 0) {
-                    distributeCardDurationsByAudio(false);
+                    distributeCardDurationsByAudio(true);
                 }
+
+                // رفع الصوت في الخلفية عبر Deno Worker
+                uploadAudioToWorker(base64).then(url => {
+                    if (url) {
+                        state.audio.url = url;
+                        console.log('✅ تم رفع الصوت إلى السيرفر عبر الوركر:', url);
+                    }
+                });
+
             } catch (err) {
                 console.error('Audio load error:', err);
                 showToast('❌ خطأ أثناء تحميل الملف الصوتي', true);
@@ -1562,12 +1592,19 @@
                     const processId = params.get('bin') || tg.initDataUnsafe?.start_param || `TEXT_${Date.now()}`;
                     const userId = state.user_id || binData.user_id || (tg.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : '');
 
+                    // التأكد من رفع الصوت إلى السيرفر عبر الوركر للحصول على رابط خفيف وتفادي أخطاء n8n
+                    let effectiveAudioUrl = state.audio?.url || '';
+                    if (!effectiveAudioUrl && state.audio?.base64) {
+                        showLoading('جاري رفع ومعالجة الصوت...', 'يرجى الانتظار');
+                        effectiveAudioUrl = await uploadAudioToWorker(state.audio.base64) || '';
+                        if (effectiveAudioUrl) state.audio.url = effectiveAudioUrl;
+                    }
+
                     // إجمالي مدة البطاقات أو مدة الصوت إن وُجد
                     const totalCardsDuration = (state.cardDurations && state.cardDurations.length === state.textCards.length)
                         ? state.cardDurations.reduce((a,b)=>a+b,0)
                         : (state.audio?.duration || state.textCards.reduce((s,c)=> s + heuristicDur(c), 0));
                     
-                    const audioBase64 = state.audio?.base64 || null;
                     const audioDuration = state.audio?.duration || null;
                     const audioFilename = state.audio?.filename || '';
 
@@ -1582,14 +1619,15 @@
                         seo: { ...state.seo },
                         user_id: userId,
                         captions: [],
-                        audioUrl: state.audio?.url || '',
-                        audio_url: state.audio?.url || '',
-                        audioBase64: audioBase64,
-                        audio_base64: audioBase64,
+                        audioUrl: effectiveAudioUrl,
+                        audio_url: effectiveAudioUrl,
                         audioDuration: audioDuration,
                         audio_duration: audioDuration,
                         audioFilename: audioFilename,
                         audio_filename: audioFilename,
+                        // لا نرسل base64 إلا إذا تعذر رفع الملف تماماً
+                        audioBase64: effectiveAudioUrl ? null : (state.audio?.base64 || null),
+                        audio_base64: effectiveAudioUrl ? null : (state.audio?.base64 || null),
                         duration: audioDuration || totalCardsDuration
                     };
 
