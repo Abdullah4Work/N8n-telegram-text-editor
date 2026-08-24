@@ -671,6 +671,41 @@
             .form-textarea { font-size: 17px; min-height: 160px; }
             .stats-row { flex-wrap: wrap; gap: 8px; }
         }
+
+        /* Audio Upload - مطابق لمحرر الصور */
+        .audio-upload-section { margin-top:16px; background:var(--bg-secondary); border-radius:12px; padding:16px; box-shadow:var(--shadow-md); border:2px solid var(--border-color); }
+        .audio-upload-title { font-size:14px; font-weight:800; color:var(--text-primary); display:flex; align-items:center; gap:8px; margin-bottom:12px; }
+        .audio-drop-zone { border:1.5px dashed var(--primary); border-radius:10px; padding:18px; text-align:center; cursor:pointer; background:rgba(74,144,226,0.04); transition:all 0.2s; }
+        .audio-drop-zone:hover { background:rgba(74,144,226,0.08); border-color:var(--primary-dark); }
+        .audio-drop-zone-icon { font-size:28px; margin-bottom:6px; }
+        .audio-drop-zone-text { font-size:14px; font-weight:700; color:var(--text-primary); }
+        .audio-drop-zone-hint { font-size:11px; color:var(--text-secondary); margin-top:4px; }
+        .audio-preview-card { display:none; margin-top:12px; background:var(--bg-primary); border-radius:10px; padding:12px; border:1px solid var(--border-color); }
+        .audio-preview-card.visible { display:block; }
+        .audio-player-inner { display:flex; flex-direction:column; gap:10px; }
+        .audio-player-top-row { display:flex; align-items:center; gap:10px; }
+        .audio-icon-badge { width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg,var(--primary),var(--primary-light)); color:white; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
+        .audio-player-name { font-size:13px; font-weight:700; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+        .audio-player-dur-badge { background:var(--primary); color:white; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:800; flex-shrink:0; }
+        .audio-progress-row { display:flex; align-items:center; gap:8px; }
+        .audio-time-current, .audio-time-total { font-size:11px; color:var(--text-secondary); font-weight:700; min-width:32px; text-align:center; }
+        .audio-progress-track { flex:1; height:6px; background:var(--border-color); border-radius:10px; position:relative; cursor:pointer; overflow:hidden; }
+        .audio-progress-fill { position:absolute; top:0; right:0; height:100%; background:linear-gradient(90deg,var(--primary),var(--primary-light)); border-radius:10px; width:0%; transition:width 0.1s linear; }
+        .audio-progress-thumb { position:absolute; top:50%; transform:translate(50%,-50%); width:10px; height:10px; background:white; border:2px solid var(--primary); border-radius:50%; right:0%; transition:right 0.1s linear; }
+        .audio-controls-row { display:flex; align-items:center; justify-content:center; gap:18px; }
+        .audio-seek-wrap { display:flex; flex-direction:column; align-items:center; gap:2px; }
+        .audio-ctrl-btn { width:32px; height:32px; border-radius:50%; border:1px solid var(--border-color); background:white; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; }
+        .audio-seek-label { font-size:10px; color:var(--text-secondary); font-weight:700; }
+        .audio-play-btn { width:44px; height:44px; border-radius:50%; border:none; background:linear-gradient(135deg,var(--primary),var(--primary-light)); color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; box-shadow:0 4px 12px rgba(74,144,226,0.35); }
+        .audio-actions-row { display:flex; gap:8px; }
+        .audio-distribute-btn { padding:10px; border:none; border-radius:10px; background:var(--bg-tertiary); color:var(--text-primary); font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; font-size:13px; }
+        .audio-remove-btn { padding:10px 16px; border:1px solid #FECACA; border-radius:10px; background:#FEF2F2; color:var(--danger); font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; font-size:13px; }
+        .audio-waveform { display:flex; align-items:center; gap:2px; height:18px; }
+        .audio-waveform-bar { width:3px; height:6px; background:var(--primary-light); border-radius:10px; animation:wave 1s ease-in-out infinite; }
+        .audio-waveform.paused .audio-waveform-bar { animation-play-state:paused; opacity:0.4; }
+        .audio-waveform-bar:nth-child(2){animation-delay:0.1s;height:10px;} .audio-waveform-bar:nth-child(3){animation-delay:0.2s;height:14px;} .audio-waveform-bar:nth-child(4){animation-delay:0.3s;height:10px;} .audio-waveform-bar:nth-child(5){animation-delay:0.15s;height:16px;} .audio-waveform-bar:nth-child(6){animation-delay:0.25s;height:8px;} .audio-waveform-bar:nth-child(7){animation-delay:0.05s;height:12px;} .audio-waveform-bar:nth-child(8){animation-delay:0.35s;height:6px;}
+        @keyframes wave { 0%,100%{transform:scaleY(0.6);} 50%{transform:scaleY(1);} }
+        .cards-edit-input:focus { outline:none; border-color:var(--primary) !important; box-shadow:0 0 0 3px rgba(74,144,226,0.1); }
     </style>
 </head>
 
@@ -716,6 +751,60 @@
                 <span>🎨 اختر القالب</span>
             </div>
             <div class="templates-grid" id="templatesGrid"></div>
+
+            <!-- 🎵 Audio Upload Section - مطابق لمحرر الصور -->
+            <div class="audio-upload-section">
+                <div class="audio-upload-title">
+                    <span>🎵</span>
+                    <span>ملف صوتي للفيديو</span>
+                    <span style="font-size:11px; font-weight:500; color:var(--text-secondary);">(اختياري)</span>
+                </div>
+                <div id="audioDropZone" class="audio-drop-zone">
+                    <div class="audio-drop-zone-icon">🎧</div>
+                    <div class="audio-drop-zone-text">اضغط هنا لرفع ملف صوتي</div>
+                    <div class="audio-drop-zone-hint">MP3 · M4A · WAV · OGG · AAC — سيضاف كخلفية للفيديو</div>
+                    <input type="file" id="audioFileInput" accept="audio/*" style="display: none;">
+                </div>
+                <div class="audio-preview-card" id="audioPreviewCard">
+                    <audio id="inEditorAudio" preload="auto" style="display:none;"></audio>
+                    <div class="audio-player-inner">
+                        <div class="audio-player-top-row">
+                            <div class="audio-icon-badge">🎵</div>
+                            <div style="flex:1; min-width:0;">
+                                <div class="audio-player-name" id="audioPreviewName">—</div>
+                                <div class="audio-waveform paused" id="audioWaveform" style="margin-top:4px;">
+                                    <div class="audio-waveform-bar"></div><div class="audio-waveform-bar"></div><div class="audio-waveform-bar"></div><div class="audio-waveform-bar"></div><div class="audio-waveform-bar"></div><div class="audio-waveform-bar"></div><div class="audio-waveform-bar"></div><div class="audio-waveform-bar"></div>
+                                </div>
+                            </div>
+                            <div class="audio-player-dur-badge" id="audioPreviewDuration">0:00</div>
+                        </div>
+                        <div class="audio-progress-row">
+                            <span class="audio-time-current" id="audioCurrentTime">0:00</span>
+                            <div class="audio-progress-track" id="audioProgressTrack">
+                                <div class="audio-progress-fill" id="audioProgressFill"></div>
+                                <div class="audio-progress-thumb" id="audioProgressThumb"></div>
+                            </div>
+                            <span class="audio-time-total" id="audioTotalTime">0:00</span>
+                        </div>
+                        <div class="audio-controls-row">
+                            <div class="audio-seek-wrap">
+                                <button class="audio-ctrl-btn" id="audioSeekBack" title="-10 ثوانٍ">⏩</button>
+                                <div class="audio-seek-label">-10</div>
+                            </div>
+                            <button class="audio-play-btn" id="audioPlayPauseBtn" title="تشغيل">▶</button>
+                            <div class="audio-seek-wrap">
+                                <button class="audio-ctrl-btn" id="audioSeekFwd" title="+10 ثوانٍ">⏪</button>
+                                <div class="audio-seek-label">+10</div>
+                            </div>
+                        </div>
+                        <div class="audio-actions-row">
+                            <button class="audio-remove-btn" id="audioRemoveBtn">
+                                <span>🗑️</span><span>حذف</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
 
@@ -978,7 +1067,8 @@
             selectedTemplate: null,
             seo: { title: '', description: '', tags: [], hashtags: [] },
             textCards: [], cardDurations: [], user_id: '',
-            previewLandscape: '', previewPortrait: ''
+            previewLandscape: '', previewPortrait: '',
+            audio: { base64: null, duration: null, filename: '' }
         };
         let pendingTemplate = null;
         let binData = {};
@@ -1037,6 +1127,18 @@
             if (/https?:\/\//.test(text) && w <= 3) d = Math.min(d, 5);
             return Math.max(4, Math.min(15, d));
         }
+        let autoAIDebounce = null;
+        let lastAITextHash = '';
+        function scheduleAutoAI() {
+            clearTimeout(autoAIDebounce);
+            if (!state.textCards.length) return;
+            const hash = state.textCards.join('|');
+            if (hash === lastAITextHash) return;
+            autoAIDebounce = setTimeout(() => {
+                lastAITextHash = hash;
+                calculateDurationsAI(true);
+            }, 1200);
+        }
         function updateCards() {
             const text = state.textContent.trim();
             const sec = document.getElementById('cardsSection');
@@ -1049,13 +1151,16 @@
             if (!text || text.length < 5) {
                 sec.classList.add('hidden'); state.textCards = []; state.cardDurations = [];
                 cardsCount.textContent = '0'; estDur.textContent = '0';
+                if (list) list.innerHTML = '';
+                lastAITextHash = '';
                 return;
             }
             const cards = splitTextIntoCards(text);
+            const prevLen = state.textCards.length;
             state.textCards = cards;
-            // إذا تغيّر عدد البطاقات، أعد تهيئة المدد بالحساب الافتراضي مع الحفاظ على القيم السابقة إن أمكن
             if (!Array.isArray(state.cardDurations) || state.cardDurations.length !== cards.length) {
-                state.cardDurations = cards.map(c => heuristicDur(c));
+                const old = Array.isArray(state.cardDurations) ? state.cardDurations : [];
+                state.cardDurations = cards.map((c, i) => (i < old.length && typeof old[i] === 'number') ? old[i] : heuristicDur(c));
             }
             sec.classList.remove('hidden');
             badge.textContent = cards.length === 1 ? 'بطاقة واحدة' : `${cards.length} بطاقات`;
@@ -1071,32 +1176,33 @@
             }
             estDur.textContent = totalDur;
             total.innerHTML = `<span>📊</span><span><strong>${cards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${totalDur}</strong> ثانية</span>`;
+            if (prevLen !== cards.length || cards.join('|') !== lastAITextHash) scheduleAutoAI();
         }
         function renderCardsList() {
             const list = document.getElementById('cardsList');
-            if (!list || !state.textCards.length) return;
+            if (!list) return;
+            if (!state.textCards.length) { list.innerHTML = ''; return; }
             list.innerHTML = state.textCards.map((c, i) => {
                 const w = c.trim().split(/\s+/).filter(Boolean).length || 1;
                 const ch = c.length;
-                const prev = c.length > 120 ? c.substring(0, 120) + '...' : c;
                 const dur = state.cardDurations[i] != null ? state.cardDurations[i] : heuristicDur(c);
-                return `<div class="cards-item"><div class="cards-num">${i+1}</div><div style="flex:1;min-width:0;"><div class="cards-text">${escapeHtml(prev).replace(/\n/g,'<br>')}</div><div class="cards-meta">${ch} حرف | ${w} كلمة</div></div><div style="display:flex;align-items:center;gap:6px;flex-shrink:0;background:var(--bg-primary);border-radius:10px;padding:4px 6px;border:1px solid var(--border-color);"><button type="button" onclick="changeCardDuration(${i},-1)" style="width:28px;height:28px;border-radius:8px;border:1px solid var(--border-color);background:white;cursor:pointer;font-weight:900;display:flex;align-items:center;justify-content:center;">−</button><span style="min-width:38px;text-align:center;font-weight:800;color:var(--primary);font-size:13px;">${dur}ث</span><button type="button" onclick="changeCardDuration(${i},1)" style="width:28px;height:28px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white;cursor:pointer;font-weight:900;display:flex;align-items:center;justify-content:center;">+</button></div></div>`;
-            }).join('');
-            // زر حساب AI
-            const existingAiBtn = document.getElementById('aiDurBtn');
-            if (state.textCards.length > 1 && !existingAiBtn) {
-                const aiBtn = document.createElement('button');
-                aiBtn.id = 'aiDurBtn';
-                aiBtn.type = 'button';
-                aiBtn.innerHTML = '🤖 حساب المدد بالذكاء الاصطناعي (قراءة متدرجة)';
-                aiBtn.style.cssText = 'width:100%;margin-top:10px;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;font-weight:800;cursor:pointer;box-shadow:0 4px 15px rgba(102,126,234,0.35);';
-                aiBtn.onclick = calculateDurationsAI;
-                list.parentElement.appendChild(aiBtn);
-            } else if (state.textCards.length <= 1 && existingAiBtn) {
-                existingAiBtn.remove();
-            } else if (existingAiBtn) {
-                existingAiBtn.onclick = calculateDurationsAI;
-            }
+                return `<div class="cards-item" style="gap:10px;">
+                    <div class="cards-num">${i+1}</div>
+                    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;">
+                        <textarea class="cards-edit-input" data-idx="${i}" rows="2" oninput="onCardTextInput(${i}, this)" placeholder="نص البطاقة..." style="width:100%;padding:10px 12px;border:1.5px solid var(--border-color);border-radius:10px;font-size:14px;line-height:1.6;resize:vertical;font-family:inherit;direction:rtl;text-align:right;background:white;transition:border-color 0.2s;min-height:56px;">${escapeHtml(c)}</textarea>
+                        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
+                            <span class="cards-meta" style="margin:0;">${ch} حرف | ${w} كلمة</span>
+                            <div style="display:flex;align-items:center;gap:5px;background:var(--bg-primary);border-radius:10px;padding:3px 5px;border:1px solid var(--border-color);">
+                                <button type="button" onclick="changeCardDuration(${i},-1)" style="width:26px;height:26px;border-radius:7px;border:1px solid var(--border-color);background:white;cursor:pointer;font-weight:900;display:flex;align-items:center;justify-content:center;color:var(--text-primary);">−</button>
+                                <input type="number" min="3" max="20" value="${dur}" data-dur-idx="${i}" oninput="onDurationInput(${i}, this)" onchange="onDurationInput(${i}, this)" style="width:52px;text-align:center;border:1px solid var(--border-color);border-radius:7px;padding:4px 2px;font-weight:800;color:var(--primary);font-size:13px;background:white;">
+                                <span style="font-size:11px;color:var(--text-secondary);font-weight:700;">ث</span>
+                                <button type="button" onclick="changeCardDuration(${i},1)" style="width:26px;height:26px;border-radius:7px;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white;cursor:pointer;font-weight:900;display:flex;align-items:center;justify-content:center;">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="removeCard(${i})" title="حذف البطاقة" style="width:30px;height:30px;border-radius:8px;border:1px solid #FECACA;background:#FEF2F2;color:var(--danger);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;">×</button>
+                </div>`;
+            }).join('') + `<button type="button" onclick="addNewCard()" style="width:100%;margin-top:10px;padding:12px;border:1.5px dashed var(--primary);border-radius:10px;background:rgba(74,144,226,0.06);color:var(--primary);font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">➕ إضافة بطاقة جديدة</button>`;
             // تحديث الإجمالي
             const estDur = document.getElementById('estDuration');
             const total = document.getElementById('cardsTotal');
@@ -1114,16 +1220,84 @@
             let v = (state.cardDurations[i] || 4) + delta;
             v = Math.max(3, Math.min(20, v));
             state.cardDurations[i] = v;
+            const inp = document.querySelector(`input[data-dur-idx="${i}"]`);
+            if (inp) inp.value = v;
             renderCardsList();
+            syncMainTextFromCards(true);
         };
+        window.onDurationInput = function(i, el) {
+            let v = Math.round(Number(el.value));
+            if (isNaN(v)) return;
+            v = Math.max(3, Math.min(20, v));
+            state.cardDurations[i] = v;
+            el.value = v;
+            const estDur = document.getElementById('estDuration');
+            const total = document.getElementById('cardsTotal');
+            let totalDur = 0;
+            for (let k = 0; k < state.textCards.length; k++) totalDur += state.cardDurations[k] || heuristicDur(state.textCards[k]);
+            if (estDur) estDur.textContent = totalDur;
+            if (total) {
+                let totalWords = 0, totalChars = 0;
+                for (const c of state.textCards) { totalWords += c.trim().split(/\s+/).filter(Boolean).length || 0; totalChars += c.length; }
+                total.innerHTML = `<span>📊</span><span><strong>${state.textCards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${totalDur}</strong> ثانية</span>`;
+            }
+        };
+        window.onCardTextInput = function(i, el) {
+            state.textCards[i] = el.value;
+            syncMainTextFromCards(false);
+            // تحديث عداد الحروف/الكلمات للبطاقة نفسها بدون إعادة رسم كامل للحفاظ على التركيز
+            const meta = el.parentElement.querySelector('.cards-meta');
+            if (meta) {
+                const w = el.value.trim().split(/\s+/).filter(Boolean).length || 0;
+                meta.textContent = `${el.value.length} حرف | ${w} كلمة`;
+            }
+        };
+        window.removeCard = function(i) {
+            if (!confirm('حذف هذه البطاقة؟')) return;
+            state.textCards.splice(i, 1);
+            state.cardDurations.splice(i, 1);
+            if (!state.textCards.length) { state.textCards = []; state.cardDurations = []; }
+            syncMainTextFromCards(true);
+            renderCardsList();
+            if (state.textCards.length) scheduleAutoAI();
+        };
+        window.addNewCard = function() {
+            state.textCards.push('نص جديد');
+            state.cardDurations.push(4);
+            syncMainTextFromCards(true);
+            renderCardsList();
+            setTimeout(() => {
+                const ta = document.querySelector(`textarea[data-idx="${state.textCards.length - 1}"]`);
+                if (ta) { ta.focus(); ta.select(); }
+            }, 50);
+        };
+        function syncMainTextFromCards(skipAI) {
+            state.textContent = state.textCards.join('\n\n');
+            const inp = document.getElementById('textInput');
+            if (inp) inp.value = state.textContent;
+            const chars = state.textContent.length;
+            const words = state.textContent.trim() ? state.textContent.trim().split(/\s+/).filter(Boolean).length : 0;
+            const cc = document.getElementById('charCount');
+            const wc = document.getElementById('wordCount');
+            if (cc) cc.textContent = chars;
+            if (wc) wc.textContent = words;
+            // إعادة رسم القائمة لتحديث الإجماليات (لكن نحافظ على التركيز)
+            const estDur = document.getElementById('estDuration');
+            let totalDur = 0;
+            for (let k = 0; k < state.textCards.length; k++) totalDur += state.cardDurations[k] || heuristicDur(state.textCards[k]);
+            if (estDur) estDur.textContent = totalDur;
+            if (!skipAI) {
+                clearTimeout(autoAIDebounce);
+                autoAIDebounce = setTimeout(() => calculateDurationsAI(true), 800);
+            }
+        }
         function escapeHtml(s) {
             return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
         }
-        async function calculateDurationsAI() {
-            if (!state.textCards.length) { showToast('لا توجد بطاقات', true); return; }
-            const btn = document.getElementById('aiDurBtn');
-            if (btn) { btn.disabled = true; btn.textContent = '⏳ جاري الحساب بالذكاء الاصطناعي...'; }
-            showLoading('جاري حساب مدد البطاقات...','يقدّر الذكاء الاصطناعي مدة قراءة كل بطاقة بشكل متدرج');
+        async function calculateDurationsAI(silent) {
+            if (!state.textCards.length) { if (!silent) showToast('لا توجد بطاقات', true); return; }
+            const isSilent = !!silent;
+            if (!isSilent) showLoading('جاري حساب مدد البطاقات...','يقدّر الذكاء الاصطناعي مدة قراءة كل بطاقة بشكل متدرج');
             try {
                 const r = await fetch(`${WORKER_API_URL}/calculate-text-durations`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -1131,7 +1305,6 @@
                 });
                 const data = await r.json();
                 if (!r.ok || !data.success || !Array.isArray(data.durations)) throw new Error(data.error || 'فشل الحساب');
-                // data.durations: [{index, duration_seconds}]
                 for (const d of data.durations) {
                     const idx = Number(d.index);
                     let dur = Math.round(Number(d.duration_seconds));
@@ -1140,13 +1313,76 @@
                     }
                 }
                 renderCardsList();
-                showToast(`✅ تم تحديث المدد (${data.method === 'ai' ? 'بالذكاء الاصطناعي' : 'تقديري'})`);
+                if (!isSilent) showToast(`✅ تم تحديث المدد (${data.method === 'ai' ? 'بالذكاء الاصطناعي' : 'تقديري'})`);
             } catch (e) {
-                showToast('❌ فشل حساب AI: ' + (e.message || ''), true);
+                if (!isSilent) showToast('❌ فشل حساب AI: ' + (e.message || ''), true);
             } finally {
-                hideLoading();
-                if (btn) { btn.disabled = false; btn.textContent = '🤖 حساب المدد بالذكاء الاصطناعي (قراءة متدرجة)'; }
+                if (!isSilent) hideLoading();
             }
+        }
+
+        // ===== AUDIO (مطابق لمحرر الصور تماماً) =====
+        function audioFileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = err => reject(err);
+                reader.readAsDataURL(file);
+            });
+        }
+        function getAudioFileDuration(base64DataUrl) {
+            return new Promise((resolve) => {
+                const audio = new Audio();
+                audio.preload = 'metadata';
+                audio.onloadedmetadata = () => resolve(isFinite(audio.duration) ? audio.duration : null);
+                audio.onerror = () => resolve(null);
+                audio.src = base64DataUrl;
+            });
+        }
+        function formatAudioTime(seconds) {
+            if (!seconds || isNaN(seconds)) return '0:00';
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${m}:${String(s).padStart(2,'0')}`;
+        }
+        async function handleAudioFile(file) {
+            if (!file || !file.type.startsWith('audio/')) { showToast('يرجى اختيار ملف صوتي صالح', true); return; }
+            const MAX_SIZE_MB = 80;
+            if (file.size > MAX_SIZE_MB * 1024 * 1024) { showToast(`❌ حجم الملف كبير جداً (الحد: ${MAX_SIZE_MB} MB)`, true); return; }
+            showLoading('جاري تحميل الملف الصوتي...','يرجى الانتظار');
+            try {
+                const base64 = await audioFileToBase64(file);
+                const duration = await getAudioFileDuration(base64);
+                state.audio.base64 = base64;
+                state.audio.duration = duration;
+                state.audio.filename = file.name;
+                document.getElementById('audioPreviewName').textContent = file.name;
+                document.getElementById('audioPreviewDuration').textContent = duration ? formatAudioTime(duration) : '—';
+                document.getElementById('audioTotalTime').textContent = duration ? formatAudioTime(duration) : '—';
+                document.getElementById('audioCurrentTime').textContent = '0:00';
+                document.getElementById('audioProgressFill').style.width = '0%';
+                document.getElementById('audioProgressThumb').style.right = '0%';
+                document.getElementById('audioPreviewCard').classList.add('visible');
+                document.getElementById('audioDropZone').style.display = 'none';
+                const audioEl = document.getElementById('inEditorAudio');
+                audioEl.src = base64; audioEl.load();
+                document.getElementById('audioPlayPauseBtn').textContent = '▶';
+                document.getElementById('audioWaveform').classList.add('paused');
+                showToast(`✅ تم رفع الصوت: ${file.name}`);
+            } catch (err) { console.error('Audio load error:', err); showToast('❌ خطأ أثناء تحميل الملف الصوتي', true); }
+            finally { hideLoading(); }
+        }
+        function removeAudio() {
+            const audioEl = document.getElementById('inEditorAudio');
+            if (audioEl) { audioEl.pause(); audioEl.currentTime = 0; audioEl.src = ''; }
+            state.audio = { base64: null, duration: null, filename: '' };
+            const card = document.getElementById('audioPreviewCard');
+            if (card) card.classList.remove('visible');
+            const dz = document.getElementById('audioDropZone');
+            if (dz) dz.style.display = '';
+            const inp = document.getElementById('audioFileInput');
+            if (inp) inp.value = '';
+            showToast('تم حذف الملف الصوتي');
         }
 
         // ===== RENDER TEMPLATES =====
@@ -1260,8 +1496,14 @@
                         user_id: userId,
                         captions: [],
                         audioUrl: '',
+                        audioBase64: state.audio?.base64 || null,
+                        audioDuration: state.audio?.duration || null,
+                        audioFilename: state.audio?.filename || '',
                         duration: totalCardsDuration
                     };
+                    if (state.audio?.base64) {
+                        webhookData.audio_base64 = state.audio.base64;
+                    }
 
                     const finalData = {
                         type: 'text_cards',
@@ -1500,6 +1742,27 @@
                                 renderTags();
                                 renderHashtags();
                             }
+                            // استرجاع الملف الصوتي إن وجد (مطابق لمحرر الصور)
+                            const b64 = data.audioBase64 || data.audio_base64 || data.audioBase64Data;
+                            const aDur = data.audioDuration || data.audio_duration;
+                            const aName = data.audioFilename || data.audio_filename;
+                            if (b64) {
+                                state.audio.base64 = b64;
+                                state.audio.duration = aDur || null;
+                                state.audio.filename = aName || 'audio.mp3';
+                                const nameEl = document.getElementById('audioPreviewName');
+                                const durEl = document.getElementById('audioPreviewDuration');
+                                const totEl = document.getElementById('audioTotalTime');
+                                const cardEl = document.getElementById('audioPreviewCard');
+                                const dzEl = document.getElementById('audioDropZone');
+                                if (nameEl) nameEl.textContent = state.audio.filename;
+                                if (durEl) durEl.textContent = aDur ? formatAudioTime(aDur) : '—';
+                                if (totEl) totEl.textContent = aDur ? formatAudioTime(aDur) : '—';
+                                if (cardEl) cardEl.classList.add('visible');
+                                if (dzEl) dzEl.style.display = 'none';
+                                const audioEl = document.getElementById('inEditorAudio');
+                                if (audioEl) { audioEl.src = b64; audioEl.load(); }
+                            }
                         }
                     }
                 } catch (e) { console.error(e); }
@@ -1526,6 +1789,78 @@
                     closeTemplateModal();
                 }
             });
+
+            // ===== AUDIO EVENTS (مطابق لمحرر الصور) =====
+            const dz = document.getElementById('audioDropZone');
+            const fileInp = document.getElementById('audioFileInput');
+            if (dz && fileInp) {
+                dz.addEventListener('click', () => fileInp.click());
+                dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.style.borderColor = 'var(--primary-dark)'; dz.style.background = 'rgba(74,144,226,0.08)'; });
+                dz.addEventListener('dragleave', () => { dz.style.borderColor = ''; dz.style.background = ''; });
+                dz.addEventListener('drop', (e) => {
+                    e.preventDefault(); dz.style.borderColor = ''; dz.style.background = '';
+                    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+                    if (f) handleAudioFile(f);
+                });
+                fileInp.addEventListener('change', (e) => {
+                    const f = e.target.files && e.target.files[0];
+                    if (f) handleAudioFile(f);
+                });
+            }
+            document.getElementById('audioRemoveBtn')?.addEventListener('click', removeAudio);
+            const audioEl = document.getElementById('inEditorAudio');
+            const playBtn = document.getElementById('audioPlayPauseBtn');
+            const seekBack = document.getElementById('audioSeekBack');
+            const seekFwd = document.getElementById('audioSeekFwd');
+            const track = document.getElementById('audioProgressTrack');
+            const fill = document.getElementById('audioProgressFill');
+            const thumb = document.getElementById('audioProgressThumb');
+            const curEl = document.getElementById('audioCurrentTime');
+            const totEl = document.getElementById('audioTotalTime');
+            const wave = document.getElementById('audioWaveform');
+            if (audioEl && playBtn) {
+                playBtn.addEventListener('click', () => {
+                    if (audioEl.paused) { audioEl.play(); } else { audioEl.pause(); }
+                });
+                audioEl.addEventListener('play', () => { playBtn.textContent = '⏸'; wave?.classList.remove('paused'); });
+                audioEl.addEventListener('pause', () => { playBtn.textContent = '▶'; wave?.classList.add('paused'); });
+                audioEl.addEventListener('timeupdate', () => {
+                    const cur = audioEl.currentTime || 0;
+                    const tot = audioEl.duration || state.audio.duration || 0;
+                    if (tot > 0) {
+                        const pct = (cur / tot) * 100;
+                        if (fill) fill.style.width = pct + '%';
+                        if (thumb) thumb.style.right = (100 - pct) + '%';
+                    }
+                    if (curEl) curEl.textContent = formatAudioTime(cur);
+                    if (totEl && tot) totEl.textContent = formatAudioTime(tot);
+                });
+                audioEl.addEventListener('ended', () => { playBtn.textContent = '▶'; wave?.classList.add('paused'); });
+                audioEl.addEventListener('loadedmetadata', () => {
+                    if (totEl) totEl.textContent = formatAudioTime(audioEl.duration);
+                    state.audio.duration = audioEl.duration;
+                });
+            }
+            if (seekBack && audioEl) seekBack.addEventListener('click', () => { audioEl.currentTime = Math.max(0, audioEl.currentTime - 10); });
+            if (seekFwd && audioEl) seekFwd.addEventListener('click', () => { audioEl.currentTime = Math.min(audioEl.duration || Infinity, audioEl.currentTime + 10); });
+            if (track && audioEl) {
+                const seek = (e) => {
+                    const rect = track.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const pct = Math.max(0, Math.min(1, x / rect.width));
+                    // RTL: track fill from right, so invert
+                    const invPct = 1 - pct;
+                    if (audioEl.duration) audioEl.currentTime = invPct * audioEl.duration;
+                };
+                let dragging = false;
+                track.addEventListener('click', seek);
+                track.addEventListener('mousedown', (e) => { dragging = true; seek(e); });
+                window.addEventListener('mouseup', () => dragging = false);
+                window.addEventListener('mousemove', (e) => { if (dragging) seek(e); });
+                track.addEventListener('touchstart', (e) => { dragging = true; const t = e.touches[0]; if (t) seek(t); }, { passive: true });
+                window.addEventListener('touchend', () => dragging = false);
+                window.addEventListener('touchmove', (e) => { if (dragging) { const t = e.touches[0]; if (t) seek(t); } }, { passive: true });
+            }
         }
 
         init();
