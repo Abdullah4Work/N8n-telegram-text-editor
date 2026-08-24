@@ -55,13 +55,25 @@
             direction: rtl;
         }
 
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: var(--bg-tertiary); }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
 
         .loading-overlay {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(255, 255, 255, 0.98);
             display: none;
             align-items: center;
@@ -70,18 +82,45 @@
             flex-direction: column;
             gap: 16px;
         }
-        .loading-overlay.visible { display: flex; }
+
+        .loading-overlay.visible {
+            display: flex;
+        }
+
         .spinner {
-            width: 50px; height: 50px;
+            width: 50px;
+            height: 50px;
             border: 5px solid var(--primary-lighter);
             border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .loading-text { font-size: 16px; color: var(--text-primary); font-weight: 700; }
-        .loading-subtext { font-size: 14px; color: var(--text-secondary); text-align: center; max-width: 280px; }
-        .loading-step { font-size: 13px; color: var(--primary); font-weight: 700; margin-top: 8px; }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .loading-text {
+            font-size: 16px;
+            color: var(--text-primary);
+            font-weight: 700;
+        }
+
+        .loading-subtext {
+            font-size: 14px;
+            color: var(--text-secondary);
+            text-align: center;
+            max-width: 280px;
+        }
+
+        .loading-step {
+            font-size: 13px;
+            color: var(--primary);
+            font-weight: 700;
+            margin-top: 8px;
+        }
 
         .container {
             flex: 1;
@@ -100,11 +139,22 @@
             -webkit-overflow-scrolling: touch;
             direction: rtl;
         }
-        .step-content.active { display: flex; flex-direction: column; }
+
+        .step-content.active {
+            display: flex;
+            flex-direction: column;
+        }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .step-header {
@@ -115,6 +165,7 @@
             border-right: 4px solid var(--primary);
             direction: rtl;
         }
+
         .step-title {
             font-size: 18px;
             font-weight: 800;
@@ -125,6 +176,7 @@
             gap: 8px;
             direction: rtl;
         }
+
         .step-description {
             font-size: 12px;
             color: var(--text-secondary);
@@ -132,7 +184,11 @@
             direction: rtl;
         }
 
-        .form-group { margin-bottom: 20px; direction: rtl; }
+        .form-group {
+            margin-bottom: 20px;
+            direction: rtl;
+        }
+
         .form-label {
             font-size: 14px;
             font-weight: 700;
@@ -143,7 +199,14 @@
             gap: 6px;
             direction: rtl;
         }
-        .form-hint { font-size: 12px; color: var(--text-secondary); margin-top: 4px; direction: rtl; }
+
+        .form-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+            direction: rtl;
+        }
+
         .form-input {
             width: 100%;
             padding: 13px;
@@ -156,11 +219,13 @@
             direction: rtl;
             text-align: right;
         }
+
         .form-input:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
         }
+
         .form-textarea {
             width: 100%;
             min-height: 180px;
@@ -176,6 +241,7 @@
             direction: rtl;
             text-align: right;
         }
+
         .form-textarea:focus {
             outline: none;
             border-color: var(--primary);
@@ -205,6 +271,7 @@
             margin-bottom: 24px;
             direction: rtl;
         }
+
         .template-card {
             background: var(--bg-secondary);
             border: 3px solid var(--border-color);
@@ -215,11 +282,16 @@
             position: relative;
             box-shadow: var(--shadow-sm);
         }
-        .template-card:active { transform: scale(0.98); }
+
+        .template-card:active {
+            transform: scale(0.98);
+        }
+
         .template-card.selected {
             border-color: var(--primary);
             box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
         }
+
         .template-preview {
             width: 100%;
             aspect-ratio: 16/9;
@@ -231,16 +303,20 @@
             background-size: cover;
             background-position: center;
         }
+
         .template-preview img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
         }
+
         .template-check {
             position: absolute;
-            top: 10px; left: 10px;
-            width: 32px; height: 32px;
+            top: 10px;
+            left: 10px;
+            width: 32px;
+            height: 32px;
             background: var(--success);
             border-radius: 50%;
             display: none;
@@ -250,8 +326,24 @@
             font-size: 18px;
             z-index: 3;
         }
-        .template-card.selected .template-check { display: flex; animation: scaleIn 0.3s ease; }
-        @keyframes scaleIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        .template-card.selected .template-check {
+            display: flex;
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
         .template-name {
             padding: 12px;
             text-align: center;
@@ -269,18 +361,21 @@
             align-items: flex-start;
             flex-wrap: wrap;
         }
+
         .review-image-box {
             flex: 1;
             min-width: 120px;
             max-width: 220px;
             text-align: center;
         }
+
         .review-image-box .label {
             font-size: 11px;
             color: var(--text-secondary);
             font-weight: 700;
             margin-bottom: 8px;
         }
+
         .review-image-box img {
             width: 100%;
             border-radius: 10px;
@@ -288,7 +383,10 @@
             background: #111;
             display: block;
         }
-        .review-image-box.portrait { max-width: 120px; }
+
+        .review-image-box.portrait {
+            max-width: 120px;
+        }
 
         .stats-row {
             display: flex;
@@ -297,6 +395,7 @@
             padding-top: 12px;
             border-top: 2px solid var(--border-light);
         }
+
         .stat-item {
             font-size: 13px;
             color: var(--text-secondary);
@@ -304,7 +403,11 @@
             align-items: center;
             gap: 4px;
         }
-        .stat-item strong { color: var(--primary); font-weight: 700; }
+
+        .stat-item strong {
+            color: var(--primary);
+            font-weight: 700;
+        }
 
         .cards-split-section {
             margin-top: 16px;
@@ -313,6 +416,7 @@
             border-radius: 12px;
             border: 1px solid var(--border-color);
         }
+
         .cards-split-list {
             display: flex;
             flex-direction: column;
@@ -320,6 +424,7 @@
             max-height: 250px;
             overflow-y: auto;
         }
+
         .cards-item {
             display: flex;
             gap: 12px;
@@ -329,10 +434,12 @@
             border: 1px solid var(--border-color);
             align-items: flex-start;
         }
+
         .cards-num {
             background: var(--primary);
             color: white;
-            width: 28px; height: 28px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -342,6 +449,7 @@
             flex-shrink: 0;
             margin-top: 2px;
         }
+
         .cards-text {
             font-size: 14px;
             color: var(--text-primary);
@@ -349,18 +457,20 @@
             word-break: break-word;
             flex: 1;
         }
+
         .cards-meta {
             font-size: 11px;
             color: var(--text-secondary);
             margin-top: 4px;
         }
+
         .cards-total {
             display: flex;
             align-items: center;
             gap: 8px;
             margin-top: 12px;
             padding: 10px 14px;
-            background: linear-gradient(135deg, rgba(74,144,226,0.1), rgba(138,180,248,0.1));
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(138, 180, 248, 0.1));
             border-radius: 8px;
             font-size: 13px;
             color: var(--text-primary);
@@ -385,8 +495,15 @@
             direction: rtl;
             margin-bottom: 20px;
         }
-        .btn-primary:active { transform: scale(0.98); }
-        .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
 
         .btn-secondary {
             flex: 1;
@@ -404,46 +521,71 @@
             justify-content: center;
             gap: 8px;
         }
-        .btn-secondary:active { transform: scale(0.98); }
+
+        .btn-secondary:active {
+            transform: scale(0.98);
+        }
 
         .bottom-nav-wrapper {
             position: fixed;
-            bottom: 0; left: 0; right: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
             background: white;
             box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
             z-index: 100;
             direction: rtl;
             padding: 12px 16px;
         }
+
         .nav-container {
             display: flex;
             align-items: center;
             gap: 16px;
             direction: rtl;
         }
+
         .step-indicator-badge {
             position: relative;
-            width: 56px; height: 56px;
+            width: 56px;
+            height: 56px;
             flex-shrink: 0;
         }
+
         .step-pulse-ring {
             position: absolute;
-            top: 50%; left: 50%;
+            top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             border: 3px solid var(--primary);
             animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
             opacity: 0.6;
         }
+
         @keyframes pulse-ring {
-            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
-            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.4; }
-            100% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+            0% {
+                transform: translate(-50%, -50%) scale(0.9);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 0.4;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(0.9);
+                opacity: 0.8;
+            }
         }
+
         .step-circle-main {
             position: relative;
-            width: 100%; height: 100%;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             display: flex;
@@ -453,14 +595,27 @@
             box-shadow: 0 4px 20px rgba(74, 144, 226, 0.5);
             z-index: 2;
         }
-        .step-number { font-size: 20px; font-weight: 900; color: white; line-height: 1; }
-        .step-total { font-size: 9px; color: rgba(255,255,255,0.9); font-weight: 700; }
+
+        .step-number {
+            font-size: 20px;
+            font-weight: 900;
+            color: white;
+            line-height: 1;
+        }
+
+        .step-total {
+            font-size: 9px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 700;
+        }
+
         .nav-buttons {
             display: flex;
             gap: 12px;
             flex: 1;
             direction: rtl;
         }
+
         .nav-btn {
             flex: 1;
             padding: 14px;
@@ -475,18 +630,28 @@
             justify-content: center;
             gap: 8px;
         }
-        .nav-btn:active { transform: scale(0.98); }
-        .nav-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .nav-btn:active {
+            transform: scale(0.98);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .btn-back {
             background: white;
             border: 2px solid var(--border-color);
             color: var(--text-primary);
         }
+
         .btn-next {
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             box-shadow: var(--shadow-md);
         }
+
         .btn-submit {
             background: linear-gradient(135deg, var(--success), var(--success-light));
             color: white;
@@ -501,6 +666,7 @@
             box-shadow: var(--shadow-md);
             direction: rtl;
         }
+
         .review-section-title {
             font-size: 14px;
             font-weight: 700;
@@ -510,6 +676,7 @@
             align-items: center;
             gap: 6px;
         }
+
         .review-item {
             padding: 10px 0;
             border-bottom: 1px solid var(--border-light);
@@ -518,9 +685,25 @@
             align-items: flex-start;
             gap: 12px;
         }
-        .review-item:last-child { border-bottom: none; }
-        .review-label { font-size: 13px; color: var(--text-secondary); min-width: 80px; }
-        .review-value { font-size: 14px; font-weight: 600; color: var(--text-primary); text-align: left; flex: 1; word-break: break-word; }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+            min-width: 80px;
+        }
+
+        .review-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: left;
+            flex: 1;
+            word-break: break-word;
+        }
 
         .seo-section {
             background: var(--bg-secondary);
@@ -531,7 +714,12 @@
             border: 2px solid var(--border-color);
             direction: rtl;
         }
-        .seo-section.highlight { border-color: var(--primary); box-shadow: 0 4px 20px rgba(74, 144, 226, 0.2); }
+
+        .seo-section.highlight {
+            border-color: var(--primary);
+            box-shadow: 0 4px 20px rgba(74, 144, 226, 0.2);
+        }
+
         .seo-section-title {
             font-size: 15px;
             font-weight: 700;
@@ -541,20 +729,32 @@
             align-items: center;
             gap: 8px;
         }
+
         .seo-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-top: 12px;
         }
+
         .seo-stat-item {
             background: var(--bg-primary);
             border-radius: 8px;
             padding: 10px;
             text-align: center;
         }
-        .seo-stat-value { font-size: 18px; font-weight: 800; color: var(--primary); }
-        .seo-stat-label { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+        .seo-stat-value {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .seo-stat-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
 
         .char-counter {
             text-align: left;
@@ -572,6 +772,7 @@
             border-radius: 8px;
             min-height: 50px;
         }
+
         .tag-item {
             background: white;
             border: 2px solid var(--border-color);
@@ -582,6 +783,7 @@
             align-items: center;
             gap: 6px;
         }
+
         .tag-remove {
             background: none;
             border: none;
@@ -589,19 +791,25 @@
             cursor: pointer;
             font-size: 16px;
             padding: 0;
-            width: 20px; height: 20px;
+            width: 20px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
         }
 
-        .hidden { display: none !important; }
+        .hidden {
+            display: none !important;
+        }
 
         /* Modal Styles */
         .template-preview-modal {
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(0, 0, 0, 0.95);
             display: none;
             align-items: center;
@@ -609,7 +817,10 @@
             z-index: 9999;
             padding: 20px;
         }
-        .template-preview-modal.visible { display: flex; }
+
+        .template-preview-modal.visible {
+            display: flex;
+        }
 
         .preview-content {
             background: white;
@@ -622,7 +833,18 @@
             animation: slideUp 0.4s ease;
             direction: rtl;
         }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
         .preview-header {
             display: flex;
@@ -631,81 +853,411 @@
             margin-bottom: 20px;
             direction: rtl;
         }
-        .preview-title { font-size: 18px; font-weight: 700; color: var(--text-primary); }
+
+        .preview-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
         .close-preview {
-            width: 36px; height: 36px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: var(--bg-tertiary);
-            border: none; color: var(--text-primary);
-            font-size: 24px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
+            border: none;
+            color: var(--text-primary);
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: all 0.2s;
         }
-        .close-preview:active { transform: scale(0.95); }
 
-        .preview-images { display: flex; flex-direction: column; gap: 18px; }
-        .preview-image-wrapper { text-align: center; }
+        .close-preview:active {
+            transform: scale(0.95);
+        }
+
+        .preview-images {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .preview-image-wrapper {
+            text-align: center;
+        }
+
         .preview-image-label {
-            font-size: 14px; font-weight: 700; color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-secondary);
             margin-bottom: 12px;
-            display: flex; align-items: center; justify-content: center; gap: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
         .preview-image {
-            width: 100%; border-radius: 12px; box-shadow: var(--shadow-lg);
-            display: block; border: 1px solid var(--border-color);
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            display: block;
+            border: 1px solid var(--border-color);
         }
 
         .preview-next-btn {
-            width: 100%; padding: 16px; margin-top: 18px;
+            width: 100%;
+            padding: 16px;
+            margin-top: 18px;
             background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white; border: none; border-radius: 12px;
-            font-size: 16px; font-weight: 700; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; gap: 8px;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
             transition: all 0.2s;
         }
-        .preview-next-btn:active { transform: scale(0.98); }
+
+        .preview-next-btn:active {
+            transform: scale(0.98);
+        }
 
         @media (max-width: 480px) {
-            .templates-grid { grid-template-columns: 1fr; }
-            .form-textarea { font-size: 17px; min-height: 160px; }
-            .stats-row { flex-wrap: wrap; gap: 8px; }
+            .templates-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-textarea {
+                font-size: 17px;
+                min-height: 160px;
+            }
+
+            .stats-row {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
         }
 
         /* Audio Upload - مطابق لمحرر الصور */
-        .audio-upload-section { margin-top:16px; background:var(--bg-secondary); border-radius:12px; padding:16px; box-shadow:var(--shadow-md); border:2px solid var(--border-color); }
-        .audio-upload-title { font-size:14px; font-weight:800; color:var(--text-primary); display:flex; align-items:center; gap:8px; margin-bottom:12px; }
-        .audio-drop-zone { border:1.5px dashed var(--primary); border-radius:10px; padding:18px; text-align:center; cursor:pointer; background:rgba(74,144,226,0.04); transition:all 0.2s; }
-        .audio-drop-zone:hover { background:rgba(74,144,226,0.08); border-color:var(--primary-dark); }
-        .audio-drop-zone-icon { font-size:28px; margin-bottom:6px; }
-        .audio-drop-zone-text { font-size:14px; font-weight:700; color:var(--text-primary); }
-        .audio-drop-zone-hint { font-size:11px; color:var(--text-secondary); margin-top:4px; }
-        .audio-preview-card { display:none; margin-top:12px; background:var(--bg-primary); border-radius:10px; padding:12px; border:1px solid var(--border-color); }
-        .audio-preview-card.visible { display:block; }
-        .audio-player-inner { display:flex; flex-direction:column; gap:10px; }
-        .audio-player-top-row { display:flex; align-items:center; gap:10px; }
-        .audio-icon-badge { width:36px; height:36px; border-radius:10px; background:linear-gradient(135deg,var(--primary),var(--primary-light)); color:white; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0; }
-        .audio-player-name { font-size:13px; font-weight:700; color:var(--text-primary); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-        .audio-player-dur-badge { background:var(--primary); color:white; padding:4px 10px; border-radius:20px; font-size:12px; font-weight:800; flex-shrink:0; }
-        .audio-progress-row { display:flex; align-items:center; gap:8px; }
-        .audio-time-current, .audio-time-total { font-size:11px; color:var(--text-secondary); font-weight:700; min-width:32px; text-align:center; }
-        .audio-progress-track { flex:1; height:6px; background:var(--border-color); border-radius:10px; position:relative; cursor:pointer; overflow:hidden; }
-        .audio-progress-fill { position:absolute; top:0; right:0; height:100%; background:linear-gradient(90deg,var(--primary),var(--primary-light)); border-radius:10px; width:0%; transition:width 0.1s linear; }
-        .audio-progress-thumb { position:absolute; top:50%; transform:translate(50%,-50%); width:10px; height:10px; background:white; border:2px solid var(--primary); border-radius:50%; right:0%; transition:right 0.1s linear; }
-        .audio-controls-row { display:flex; align-items:center; justify-content:center; gap:18px; }
-        .audio-seek-wrap { display:flex; flex-direction:column; align-items:center; gap:2px; }
-        .audio-ctrl-btn { width:32px; height:32px; border-radius:50%; border:1px solid var(--border-color); background:white; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:14px; }
-        .audio-seek-label { font-size:10px; color:var(--text-secondary); font-weight:700; }
-        .audio-play-btn { width:44px; height:44px; border-radius:50%; border:none; background:linear-gradient(135deg,var(--primary),var(--primary-light)); color:white; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:18px; box-shadow:0 4px 12px rgba(74,144,226,0.35); }
-        .audio-actions-row { display:flex; gap:8px; }
-        .audio-distribute-btn { padding:10px; border:none; border-radius:10px; background:var(--bg-tertiary); color:var(--text-primary); font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; font-size:13px; }
-        .audio-remove-btn { padding:10px 16px; border:1px solid #FECACA; border-radius:10px; background:#FEF2F2; color:var(--danger); font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; font-size:13px; }
-        .audio-waveform { display:flex; align-items:center; gap:2px; height:18px; }
-        .audio-waveform-bar { width:3px; height:6px; background:var(--primary-light); border-radius:10px; animation:wave 1s ease-in-out infinite; }
-        .audio-waveform.paused .audio-waveform-bar { animation-play-state:paused; opacity:0.4; }
-        .audio-waveform-bar:nth-child(2){animation-delay:0.1s;height:10px;} .audio-waveform-bar:nth-child(3){animation-delay:0.2s;height:14px;} .audio-waveform-bar:nth-child(4){animation-delay:0.3s;height:10px;} .audio-waveform-bar:nth-child(5){animation-delay:0.15s;height:16px;} .audio-waveform-bar:nth-child(6){animation-delay:0.25s;height:8px;} .audio-waveform-bar:nth-child(7){animation-delay:0.05s;height:12px;} .audio-waveform-bar:nth-child(8){animation-delay:0.35s;height:6px;}
-        @keyframes wave { 0%,100%{transform:scaleY(0.6);} 50%{transform:scaleY(1);} }
-        .cards-edit-input:focus { outline:none; border-color:var(--primary) !important; box-shadow:0 0 0 3px rgba(74,144,226,0.1); }
+        .audio-upload-section {
+            margin-top: 16px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: var(--shadow-md);
+            border: 2px solid var(--border-color);
+        }
+
+        .audio-upload-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .audio-drop-zone {
+            border: 1.5px dashed var(--primary);
+            border-radius: 10px;
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+            background: rgba(74, 144, 226, 0.04);
+            transition: all 0.2s;
+        }
+
+        .audio-drop-zone:hover {
+            background: rgba(74, 144, 226, 0.08);
+            border-color: var(--primary-dark);
+        }
+
+        .audio-drop-zone-icon {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+        .audio-drop-zone-text {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .audio-drop-zone-hint {
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .audio-preview-card {
+            display: none;
+            margin-top: 12px;
+            background: var(--bg-primary);
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .audio-preview-card.visible {
+            display: block;
+        }
+
+        .audio-player-inner {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .audio-player-top-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .audio-icon-badge {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .audio-player-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .audio-player-dur-badge {
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .audio-progress-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .audio-time-current,
+        .audio-time-total {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            min-width: 32px;
+            text-align: center;
+        }
+
+        .audio-progress-track {
+            flex: 1;
+            height: 6px;
+            background: var(--border-color);
+            border-radius: 10px;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .audio-progress-fill {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        .audio-progress-thumb {
+            position: absolute;
+            top: 50%;
+            transform: translate(50%, -50%);
+            width: 10px;
+            height: 10px;
+            background: white;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            right: 0%;
+            transition: right 0.1s linear;
+        }
+
+        .audio-controls-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+        }
+
+        .audio-seek-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .audio-ctrl-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--border-color);
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .audio-seek-label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-weight: 700;
+        }
+
+        .audio-play-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.35);
+        }
+
+        .audio-actions-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .audio-distribute-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+
+        .audio-remove-btn {
+            padding: 10px 16px;
+            border: 1px solid #FECACA;
+            border-radius: 10px;
+            background: #FEF2F2;
+            color: var(--danger);
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+
+        .audio-waveform {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            height: 18px;
+        }
+
+        .audio-waveform-bar {
+            width: 3px;
+            height: 6px;
+            background: var(--primary-light);
+            border-radius: 10px;
+            animation: wave 1s ease-in-out infinite;
+        }
+
+        .audio-waveform.paused .audio-waveform-bar {
+            animation-play-state: paused;
+            opacity: 0.4;
+        }
+
+        .audio-waveform-bar:nth-child(2) {
+            animation-delay: 0.1s;
+            height: 10px;
+        }
+
+        .audio-waveform-bar:nth-child(3) {
+            animation-delay: 0.2s;
+            height: 14px;
+        }
+
+        .audio-waveform-bar:nth-child(4) {
+            animation-delay: 0.3s;
+            height: 10px;
+        }
+
+        .audio-waveform-bar:nth-child(5) {
+            animation-delay: 0.15s;
+            height: 16px;
+        }
+
+        .audio-waveform-bar:nth-child(6) {
+            animation-delay: 0.25s;
+            height: 8px;
+        }
+
+        .audio-waveform-bar:nth-child(7) {
+            animation-delay: 0.05s;
+            height: 12px;
+        }
+
+        .audio-waveform-bar:nth-child(8) {
+            animation-delay: 0.35s;
+            height: 6px;
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                transform: scaleY(0.6);
+            }
+
+            50% {
+                transform: scaleY(1);
+            }
+        }
+
+        .cards-edit-input:focus {
+            outline: none;
+            border-color: var(--primary) !important;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
     </style>
 </head>
 
@@ -728,7 +1280,8 @@
 
             <div class="form-group">
                 <label class="form-label">📝 النص</label>
-                <textarea class="form-textarea" id="textInput" placeholder="أدخل النص هنا..." maxlength="5000"></textarea>
+                <textarea class="form-textarea" id="textInput" placeholder="أدخل النص هنا..."
+                    maxlength="5000"></textarea>
                 <div class="stats-row">
                     <span class="stat-item">الأحرف: <strong id="charCount">0</strong></span>
                     <span class="stat-item">الكلمات: <strong id="wordCount">0</strong></span>
@@ -739,7 +1292,9 @@
 
             <!-- CARDS PREVIEW -->
             <div id="cardsSection" class="hidden">
-                <div class="section-title">📑 تقسيم البطاقات <span class="badge" id="cardsBadge" style="margin-right:auto; background:var(--primary); color:white; padding:2px 10px; border-radius:20px; font-size:12px;">0</span></div>
+                <div class="section-title">📑 تقسيم البطاقات <span class="badge" id="cardsBadge"
+                        style="margin-right:auto; background:var(--primary); color:white; padding:2px 10px; border-radius:20px; font-size:12px;">0</span>
+                </div>
                 <div class="cards-split-section" style="margin-top:0;">
                     <div class="cards-split-list" id="cardsList"></div>
                     <div class="cards-total" id="cardsTotal"></div>
@@ -767,7 +1322,14 @@
                             <div style="flex:1; min-width:0;">
                                 <div class="audio-player-name" id="audioPreviewName">—</div>
                                 <div class="audio-waveform paused" id="audioWaveform" style="margin-top:4px;">
-                                    <div class="audio-waveform-bar"></div><div class="audio-waveform-bar"></div><div class="audio-waveform-bar"></div><div class="audio-waveform-bar"></div><div class="audio-waveform-bar"></div><div class="audio-waveform-bar"></div><div class="audio-waveform-bar"></div><div class="audio-waveform-bar"></div>
+                                    <div class="audio-waveform-bar"></div>
+                                    <div class="audio-waveform-bar"></div>
+                                    <div class="audio-waveform-bar"></div>
+                                    <div class="audio-waveform-bar"></div>
+                                    <div class="audio-waveform-bar"></div>
+                                    <div class="audio-waveform-bar"></div>
+                                    <div class="audio-waveform-bar"></div>
+                                    <div class="audio-waveform-bar"></div>
                                 </div>
                             </div>
                             <div class="audio-player-dur-badge" id="audioPreviewDuration">0:00</div>
@@ -815,12 +1377,14 @@
                 <div class="step-description">عنوان ووصف وكلمات مفتاحية للفيديو</div>
             </div>
 
-            <button class="btn-primary" id="seoGenerateBtn"><span>🤖</span><span>إنشاء SEO بالذكاء الاصطناعي</span></button>
+            <button class="btn-primary" id="seoGenerateBtn"><span>🤖</span><span>إنشاء SEO بالذكاء
+                    الاصطناعي</span></button>
 
             <div class="seo-section highlight">
                 <div class="seo-section-title"><span>🗃</span><span>عنوان الفيديو</span></div>
                 <div class="form-group">
-                    <textarea class="form-textarea" id="seoTitle" placeholder="أدخل عنوان الفيديو..." rows="2" style="min-height:60px;"></textarea>
+                    <textarea class="form-textarea" id="seoTitle" placeholder="أدخل عنوان الفيديو..." rows="2"
+                        style="min-height:60px;"></textarea>
                     <div class="form-hint">الأفضل: 60-70 حرف</div>
                     <div class="char-counter"><span id="seoTitleCount">0</span> / 100</div>
                 </div>
@@ -829,7 +1393,8 @@
             <div class="seo-section highlight">
                 <div class="seo-section-title"><span>📝</span><span>وصف الفيديو</span></div>
                 <div class="form-group">
-                    <textarea class="form-textarea" id="seoDesc" placeholder="أدخل وصف الفيديو..." style="min-height:180px;"></textarea>
+                    <textarea class="form-textarea" id="seoDesc" placeholder="أدخل وصف الفيديو..."
+                        style="min-height:180px;"></textarea>
                     <div class="form-hint">وصف احترافي شامل</div>
                     <div class="char-counter"><span id="seoDescCount">0</span> / 5000</div>
                 </div>
@@ -838,8 +1403,11 @@
             <div class="seo-section">
                 <div class="seo-section-title"><span>🏷️</span><span>الكلمات المفتاحية</span></div>
                 <div style="display:flex;gap:8px;margin-bottom:12px;">
-                    <input type="text" class="form-input" id="tagInput" placeholder="أدخل كلمة مفتاحية..." maxlength="30" style="flex:1;">
-                    <button class="btn-secondary" id="addTagBtn" style="flex:0;padding:13px 20px;white-space:nowrap;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white;">➕ إضافة</button>
+                    <input type="text" class="form-input" id="tagInput" placeholder="أدخل كلمة مفتاحية..."
+                        maxlength="30" style="flex:1;">
+                    <button class="btn-secondary" id="addTagBtn"
+                        style="flex:0;padding:13px 20px;white-space:nowrap;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white;">➕
+                        إضافة</button>
                 </div>
                 <div class="tags-container" id="tagsContainer">
                     <span style="color:var(--text-secondary);font-size:12px;">لا توجد كلمات مفتاحية بعد</span>
@@ -849,8 +1417,11 @@
             <div class="seo-section">
                 <div class="seo-section-title"><span>#️⃣</span><span>هاشتاقات الـ SEO</span></div>
                 <div style="display:flex;gap:8px;margin-bottom:12px;">
-                    <input type="text" class="form-input" id="hashtagInput" placeholder="أدخل هاشتاق (بدون #)..." maxlength="30" style="flex:1;">
-                    <button class="btn-secondary" id="addHashtagBtn" style="flex:0;padding:13px 20px;white-space:nowrap;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white;">➕ إضافة</button>
+                    <input type="text" class="form-input" id="hashtagInput" placeholder="أدخل هاشتاق (بدون #)..."
+                        maxlength="30" style="flex:1;">
+                    <button class="btn-secondary" id="addHashtagBtn"
+                        style="flex:0;padding:13px 20px;white-space:nowrap;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white;">➕
+                        إضافة</button>
                 </div>
                 <div class="tags-container" id="hashtagsContainer">
                     <span style="color:var(--text-secondary);font-size:12px;">لا توجد هاشتاقات بعد</span>
@@ -858,11 +1429,26 @@
             </div>
 
             <div class="seo-stats" id="seoStats" style="display:none;">
-                <div class="seo-stat-item"><div class="seo-stat-value" id="statWords">0</div><div class="seo-stat-label">الكلمات</div></div>
-                <div class="seo-stat-item"><div class="seo-stat-value" id="statChars">0</div><div class="seo-stat-label">الأحرف</div></div>
-                <div class="seo-stat-item"><div class="seo-stat-value" id="statTags">0</div><div class="seo-stat-label">الكلمات المفتاحية</div></div>
-                <div class="seo-stat-item"><div class="seo-stat-value" id="statHashtags">0</div><div class="seo-stat-label">الهاشتاقات</div></div>
-                <div class="seo-stat-item"><div class="seo-stat-value" id="statDescLen">0</div><div class="seo-stat-label">طول الوصف</div></div>
+                <div class="seo-stat-item">
+                    <div class="seo-stat-value" id="statWords">0</div>
+                    <div class="seo-stat-label">الكلمات</div>
+                </div>
+                <div class="seo-stat-item">
+                    <div class="seo-stat-value" id="statChars">0</div>
+                    <div class="seo-stat-label">الأحرف</div>
+                </div>
+                <div class="seo-stat-item">
+                    <div class="seo-stat-value" id="statTags">0</div>
+                    <div class="seo-stat-label">الكلمات المفتاحية</div>
+                </div>
+                <div class="seo-stat-item">
+                    <div class="seo-stat-value" id="statHashtags">0</div>
+                    <div class="seo-stat-label">الهاشتاقات</div>
+                </div>
+                <div class="seo-stat-item">
+                    <div class="seo-stat-value" id="statDescLen">0</div>
+                    <div class="seo-stat-label">طول الوصف</div>
+                </div>
             </div>
         </div>
 
@@ -875,16 +1461,22 @@
 
             <div class="review-section">
                 <div class="review-section-title"><span>✍️</span><span>ملخص النص</span></div>
-                <div class="review-item"><span class="review-label">النص:</span><span class="review-value" id="rText" style="font-size:13px;max-height:60px;overflow:hidden;text-align:right;"></span></div>
-                <div class="review-item"><span class="review-label">الأحرف:</span><span class="review-value" id="rChars">0</span></div>
-                <div class="review-item"><span class="review-label">الكلمات:</span><span class="review-value" id="rWords">0</span></div>
-                <div class="review-item"><span class="review-label">البطاقات:</span><span class="review-value" id="rCards">0</span></div>
-                <div class="review-item"><span class="review-label">المدة:</span><span class="review-value" id="rDuration">-</span></div>
+                <div class="review-item"><span class="review-label">النص:</span><span class="review-value" id="rText"
+                        style="font-size:13px;max-height:60px;overflow:hidden;text-align:right;"></span></div>
+                <div class="review-item"><span class="review-label">الأحرف:</span><span class="review-value"
+                        id="rChars">0</span></div>
+                <div class="review-item"><span class="review-label">الكلمات:</span><span class="review-value"
+                        id="rWords">0</span></div>
+                <div class="review-item"><span class="review-label">البطاقات:</span><span class="review-value"
+                        id="rCards">0</span></div>
+                <div class="review-item"><span class="review-label">المدة:</span><span class="review-value"
+                        id="rDuration">-</span></div>
             </div>
 
             <div class="review-section">
                 <div class="review-section-title"><span>🎨</span><span>القالب المختار</span></div>
-                <div class="review-item"><span class="review-label">القالب:</span><span class="review-value" id="rTemplate">-</span></div>
+                <div class="review-item"><span class="review-label">القالب:</span><span class="review-value"
+                        id="rTemplate">-</span></div>
                 <div class="review-template-images">
                     <div class="review-image-box">
                         <div class="label">Landscape (16:9)</div>
@@ -899,9 +1491,13 @@
 
             <div class="review-section">
                 <div class="review-section-title"><span>🔍</span><span>SEO</span></div>
-                <div class="review-item"><span class="review-label">العنوان:</span><span class="review-value" id="rSeoTitle">-</span></div>
-                <div class="review-item"><span class="review-label">الوصف:</span><span class="review-value" id="rSeoDesc" style="font-size:12px;max-height:40px;overflow:hidden;text-align:right;">-</span></div>
-                <div class="review-item"><span class="review-label">الهاشتاقات:</span><span class="review-value" id="rSeoHashtags" style="font-size:12px;text-align:right;">-</span></div>
+                <div class="review-item"><span class="review-label">العنوان:</span><span class="review-value"
+                        id="rSeoTitle">-</span></div>
+                <div class="review-item"><span class="review-label">الوصف:</span><span class="review-value"
+                        id="rSeoDesc" style="font-size:12px;max-height:40px;overflow:hidden;text-align:right;">-</span>
+                </div>
+                <div class="review-item"><span class="review-label">الهاشتاقات:</span><span class="review-value"
+                        id="rSeoHashtags" style="font-size:12px;text-align:right;">-</span></div>
             </div>
         </div>
 
@@ -918,7 +1514,8 @@
                 </div>
             </div>
             <div class="nav-buttons">
-                <button class="nav-btn btn-back" id="btnBack" style="display:none;"><span>←</span><span>السابق</span></button>
+                <button class="nav-btn btn-back" id="btnBack"
+                    style="display:none;"><span>←</span><span>السابق</span></button>
                 <button class="nav-btn btn-next" id="btnNext"><span>التالي</span><span>→</span></button>
             </div>
         </div>
@@ -938,10 +1535,12 @@
                 </div>
                 <div class="preview-image-wrapper">
                     <div class="preview-image-label"><span>📱</span><span>Portrait (9:16)</span></div>
-                    <img src="" alt="Portrait" class="preview-image" id="modalPortraitPreview" style="max-width:180px; margin:0 auto;">
+                    <img src="" alt="Portrait" class="preview-image" id="modalPortraitPreview"
+                        style="max-width:180px; margin:0 auto;">
                 </div>
             </div>
-            <button class="preview-next-btn" id="templateModalConfirm" type="button"><span>اختيار هذا القالب والمتابعة</span><span>✓</span></button>
+            <button class="preview-next-btn" id="templateModalConfirm" type="button"><span>اختيار هذا القالب
+                    والمتابعة</span><span>✓</span></button>
         </div>
     </div>
 
@@ -954,103 +1553,103 @@
 
         // قائمة القوالب المستقلة المفرغة مع روابط Google Drive المباشرة
         const TEMPLATES_LIST = [
-            { 
+            {
                 id: 1, template_id: 1, template_name: "ليلي أنيق", name: "ليلي-انيق",
                 landscape_file: "template_1_ليلي-انيق_landscape.png", portrait_file: "template_1_ليلي-انيق_portrait.png",
                 landscape_link: "https://lh3.googleusercontent.com/d/1J1HjVYyR4USUsMa-Nv1JfEnuen_bF497",
                 portrait_link: "https://lh3.googleusercontent.com/d/1hAtE-X3SE6eSiAPqWENOBdC8K9gPkll_",
-                gradient_start: "#0c1445", gradient_mid: "#1a2980", accent: "#60a5fa", text_color: "#ffffff" 
+                gradient_start: "#0c1445", gradient_mid: "#1a2980", accent: "#60a5fa", text_color: "#ffffff"
             },
-            { 
+            {
                 id: 2, template_id: 2, template_name: "ليلي نيلي", name: "ليلي-نيلي",
                 landscape_file: "template_2_ليلي-نيلي_landscape.png", portrait_file: "template_2_ليلي-نيلي_portrait.png",
                 landscape_link: "https://lh3.googleusercontent.com/d/1gSgJNtiuAwxxeAVv7PA9hIQ7WNfBZ0a0",
                 portrait_link: "https://lh3.googleusercontent.com/d/1aWyour85RS5zKtIJ5Oa72d9Eee2P281h",
-                gradient_start: "#0f0c29", gradient_mid: "#302b63", accent: "#a78bfa", text_color: "#ffffff" 
+                gradient_start: "#0f0c29", gradient_mid: "#302b63", accent: "#a78bfa", text_color: "#ffffff"
             },
-            { 
+            {
                 id: 3, template_id: 3, template_name: "ذهبي عنبري", name: "ذهبي-عنبري",
                 landscape_file: "template_3_ذهبي-عنبري_landscape.png", portrait_file: "template_3_ذهبي-عنبري_portrait.png",
                 landscape_link: "https://lh3.googleusercontent.com/d/1MyNlMa7NWkunI17gAqCOpLEA-RsfjS0Z",
                 portrait_link: "https://lh3.googleusercontent.com/d/1jP7ijm0NnnUp3sm1UtQo6-0yAkNGvpKw",
-                gradient_start: "#1a0f00", gradient_mid: "#3d2000", accent: "#fbbf24", text_color: "#fef3c7" 
+                gradient_start: "#1a0f00", gradient_mid: "#3d2000", accent: "#fbbf24", text_color: "#fef3c7"
             },
-            { 
+            {
                 id: 4, template_id: 4, template_name: "ذهبي فاتح", name: "ذهبي-فاتح",
                 landscape_file: "template_4_ذهبي-فاتح_landscape.png", portrait_file: "template_4_ذهبي-فاتح_portrait.png",
                 landscape_link: "https://lh3.googleusercontent.com/d/1eQ-PhZNY4Q1x0rdK3c9QuO6WCbOfrP4F",
                 portrait_link: "https://lh3.googleusercontent.com/d/13v2WsudXMdlR_0LliFTCHUiaFOY_-8V5",
-                gradient_start: "#2d1f00", gradient_mid: "#5c3d00", accent: "#fcd34d", text_color: "#fffbeb" 
+                gradient_start: "#2d1f00", gradient_mid: "#5c3d00", accent: "#fcd34d", text_color: "#fffbeb"
             },
-            { 
+            {
                 id: 5, template_id: 5, template_name: "ذهبي نحاسي", name: "ذهبي-نحاسي",
                 landscape_file: "template_5_ذهبي-نحاسي_landscape.png", portrait_file: "template_5_ذهبي-نحاسي_portrait.png",
                 landscape_link: "https://lh3.googleusercontent.com/d/1zaCN6pnsoWHiVX3AyhrCDvxxxnekzrwN",
                 portrait_link: "https://lh3.googleusercontent.com/d/1UFNrtVmo6TebQ7aaT23YHtt95yoBew7I",
-                gradient_start: "#1a0a00", gradient_mid: "#4a1f00", accent: "#fb923c", text_color: "#fff7ed" 
+                gradient_start: "#1a0a00", gradient_mid: "#4a1f00", accent: "#fb923c", text_color: "#fff7ed"
             },
-            { 
+            {
                 id: 6, template_id: 6, template_name: "طبيعي زيتوني", name: "طبيعي-زيتوني",
                 landscape_file: "template_6_طبيعي-زيتوني_landscape.png", portrait_file: "template_6_طبيعي-زيتوني_portrait.png",
                 landscape_link: "https://lh3.googleusercontent.com/d/1XoyWfm8OmuXRQCRZN3Ix6qKIdJnjay0N",
                 portrait_link: "https://lh3.googleusercontent.com/d/120OflyD_Xfi9ov9N9LcO09E1QtYD6bTT",
-                gradient_start: "#0a1a0a", gradient_mid: "#1a3d1a", accent: "#4ade80", text_color: "#f0fdf4" 
+                gradient_start: "#0a1a0a", gradient_mid: "#1a3d1a", accent: "#4ade80", text_color: "#f0fdf4"
             },
-            { 
+            {
                 id: 7, template_id: 7, template_name: "طبيعي زمردي", name: "طبيعي-زمردي",
                 landscape_file: "template_7_طبيعي-زمردي_landscape.png", portrait_file: "template_7_طبيعي-زمردي_portrait.png",
                 landscape_link: "https://lh3.googleusercontent.com/d/1v76b1K_rlUVK6Ux6EoaBiIERD8eNvP9G",
                 portrait_link: "https://lh3.googleusercontent.com/d/1HupOpMEoie0IEJXY6CTxCc1MBvuci3bL",
-                gradient_start: "#022c22", gradient_mid: "#065f46", accent: "#34d399", text_color: "#ecfdf5" 
+                gradient_start: "#022c22", gradient_mid: "#065f46", accent: "#34d399", text_color: "#ecfdf5"
             },
-            { 
+            {
                 id: 8, template_id: 8, template_name: "طبيعي طحلبي", name: "طبيعي-طحلبي",
                 landscape_file: "template_8_طبيعي-طحلبي_landscape.png", portrait_file: "template_8_طبيعي-طحلبي_portrait.png",
                 landscape_link: "https://lh3.googleusercontent.com/d/1RfLBYN0ImmDYFfrcHJVLGQc9xxwV3s7V",
                 portrait_link: "https://lh3.googleusercontent.com/d/1UZ953KjBa5NXQ5sgnH7-x7Pt3qrJArA7",
-                gradient_start: "#0f1a14", gradient_mid: "#1a3d2e", accent: "#2dd4bf", text_color: "#f0fdfa" 
+                gradient_start: "#0f1a14", gradient_mid: "#1a3d2e", accent: "#2dd4bf", text_color: "#f0fdfa"
             },
-            { 
+            {
                 id: 9, template_id: 9, template_name: "حديث كحلي", name: "حديث-كحلي",
                 landscape_file: "template_9_حديث-كحلي_landscape.png", portrait_file: "template_9_حديث-كحلي_portrait.png",
                 landscape_link: "https://lh3.googleusercontent.com/d/1qwF4BMv7PGSzQTDw38vYiPLkVohF-zMP",
                 portrait_link: "https://lh3.googleusercontent.com/d/1C_H_SDqW4ZP84kOmYLYX92AVu2p4r7h1",
-                gradient_start: "#0a1628", gradient_mid: "#162d50", accent: "#93c5fd", text_color: "#eff6ff" 
+                gradient_start: "#0a1628", gradient_mid: "#162d50", accent: "#93c5fd", text_color: "#eff6ff"
             },
-            { 
+            {
                 id: 10, template_id: 10, template_name: "حديث رمادي", name: "حديث-رمادي",
                 landscape_file: "template_10_حديث-رمادي_landscape.png", portrait_file: "template_10_حديث-رمادي_portrait.png",
                 landscape_link: "https://lh3.googleusercontent.com/d/1-O-6M16I5KMES2_R_86EJ1tUUJ5rRXhW",
                 portrait_link: "https://lh3.googleusercontent.com/d/1mcVvp3A8Rv_LxArMXGz1asnvBrrk4jL0",
-                gradient_start: "#0f131a", gradient_mid: "#1f2937", accent: "#e2e8f0", text_color: "#f8fafc" 
+                gradient_start: "#0f131a", gradient_mid: "#1f2937", accent: "#e2e8f0", text_color: "#f8fafc"
             },
-            { 
+            {
                 id: 11, template_id: 11, template_name: "مشرق برتقالي", name: "مشرق-برتقالي",
                 landscape_file: "template_11_مشرق-برتقالي_landscape.png", portrait_file: "template_11_مشرق-برتقالي_portrait.png",
                 landscape_link: "https://lh3.googleusercontent.com/d/1GbZYCQZ5nutSJs0E_MTRgq9nFJVLqHVa",
                 portrait_link: "https://lh3.googleusercontent.com/d/1Q2Tc5006tmQgxP0y0T-O9e9bQko_aB_2",
-                gradient_start: "#1f0a00", gradient_mid: "#4a1f00", accent: "#fdba74", text_color: "#fff7ed" 
+                gradient_start: "#1f0a00", gradient_mid: "#4a1f00", accent: "#fdba74", text_color: "#fff7ed"
             },
-            { 
+            {
                 id: 12, template_id: 12, template_name: "سماء أزرق", name: "سماء-ازرق",
                 landscape_file: "template_12_سماء-ازرق_landscape.png", portrait_file: "template_12_سماء-ازرق_portrait.png",
                 landscape_link: "https://lh3.googleusercontent.com/d/1_C09_t18ABzhF6SDfY1TcD9LvTPEmRUQ",
                 portrait_link: "https://lh3.googleusercontent.com/d/1j7v4B32m4yyNjHU5d_4R13SL2QseSko3",
-                gradient_start: "#0c1f3d", gradient_mid: "#1a3d6b", accent: "#7dd3fc", text_color: "#f0f9ff" 
+                gradient_start: "#0c1f3d", gradient_mid: "#1a3d6b", accent: "#7dd3fc", text_color: "#f0f9ff"
             },
-            { 
+            {
                 id: 13, template_id: 13, template_name: "سماء فيروزي", name: "سماء-فيروزي",
                 landscape_file: "template_13_سماء-فيروزي_landscape.png", portrait_file: "template_13_سماء-فيروزي_portrait.png",
                 landscape_link: "https://lh3.googleusercontent.com/d/1ce2ipTAroZxwG2g1ZwJtU3AlXGt_3L0P",
                 portrait_link: "https://lh3.googleusercontent.com/d/1U2eSSKQJtEJkBjMGx3J4-JYA6Q_cV73D",
-                gradient_start: "#0a1f1a", gradient_mid: "#0f3d3d", accent: "#5eead4", text_color: "#f0fdfa" 
+                gradient_start: "#0a1f1a", gradient_mid: "#0f3d3d", accent: "#5eead4", text_color: "#f0fdfa"
             },
-            { 
+            {
                 id: 14, template_id: 14, template_name: "ليلة ملكية", name: "ليلة-ملكية",
                 landscape_file: "template_14_ليلة-ملكية_landscape.png", portrait_file: "template_14_ليلة-ملكية_portrait.png",
                 landscape_link: "https://lh3.googleusercontent.com/d/1jbNXLOBKERs5-Lw2lFslrlrCK3vclLvA",
                 portrait_link: "https://lh3.googleusercontent.com/d/12CBos13ZvKdRZBWPYbUjGh0QWyiMFdpy",
-                gradient_start: "#000d1a", gradient_mid: "#001a3d", accent: "#818cf8", text_color: "#eef2ff" 
+                gradient_start: "#000d1a", gradient_mid: "#001a3d", accent: "#818cf8", text_color: "#eef2ff"
             }
         ];
 
@@ -1080,7 +1679,10 @@
             const subEl = document.getElementById('loadingSubtext');
             if (subEl) subEl.textContent = sub || '';
             document.getElementById('loadingOverlay').classList.add('visible');
-        function hideLoading() { document.getElementById('loadingOverlay').classList.remove('visible'); }
+        }
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.remove('visible');
+        }
         function showToast(msg, err) {
             const existing = document.getElementById('appToast');
             if (existing) existing.remove();
@@ -1088,136 +1690,136 @@
             const t = document.createElement('div');
             t.id = 'appToast';
             t.textContent = msg;
-            t.style.cssText = `position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:${err?'#E74C3C':'#27AE60'};color:white;padding:12px 24px;border-radius:10px;z-index:99999;font-weight:700;text-align:center;max-width:85%;box-shadow:0 6px 20px rgba(0,0,0,0.25);direction:rtl;font-size:14px;`;
+            t.style.cssText = `position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:${err ? '#E74C3C' : '#27AE60'};color:white;padding:12px 24px;border-radius:10px;z-index:99999;font-weight:700;text-align:center;max-width:85%;box-shadow:0 6px 20px rgba(0,0,0,0.25);direction:rtl;font-size:14px;`;
             document.body.appendChild(t);
             setTimeout(() => {
                 if (t.parentElement) t.remove();
             }, 2500);
         }
 
-        // ===== TEXT SPLIT =====
-        function splitTextIntoCards(text, max = 140) {
-            if (!text || !text.trim()) return [];
-            const t = text.trim();
-            if (t.length <= max) return [t];
-            let paras = t.split(/\n\s*\n/).filter(p => p.trim());
-            if (paras.length <= 1) paras = t.split(/\n/).filter(p => p.trim());
-            const cards = [];
-            let cur = '';
-            for (const p of paras) {
-                const tp = p.trim(); if (!tp) continue;
-                if (tp.length > max) {
-                    if (cur && (cur.length + tp.length + 1) <= max) { cur = cur + '\n\n' + tp; continue }
-                    if (cur.trim()) { cards.push(cur.trim()); cur = '' }
-                    const sents = tp.match(/[^.!?؟\n]+[.!?؟\n]*/g) || [tp];
-                    for (const s of sents) {
-                        const ts = s.trim(); if (!ts) continue;
-                        if (!cur) cur = ts;
-                        else if ((cur.length + ts.length + 1) <= max) cur = cur + ' ' + ts;
-                        else { if (cur.trim()) cards.push(cur.trim()); cur = ts }
+            // ===== TEXT SPLIT =====
+            function splitTextIntoCards(text, max = 140) {
+                if (!text || !text.trim()) return [];
+                const t = text.trim();
+                if (t.length <= max) return [t];
+                let paras = t.split(/\n\s*\n/).filter(p => p.trim());
+                if (paras.length <= 1) paras = t.split(/\n/).filter(p => p.trim());
+                const cards = [];
+                let cur = '';
+                for (const p of paras) {
+                    const tp = p.trim(); if (!tp) continue;
+                    if (tp.length > max) {
+                        if (cur && (cur.length + tp.length + 1) <= max) { cur = cur + '\n\n' + tp; continue }
+                        if (cur.trim()) { cards.push(cur.trim()); cur = '' }
+                        const sents = tp.match(/[^.!?؟\n]+[.!?؟\n]*/g) || [tp];
+                        for (const s of sents) {
+                            const ts = s.trim(); if (!ts) continue;
+                            if (!cur) cur = ts;
+                            else if ((cur.length + ts.length + 1) <= max) cur = cur + ' ' + ts;
+                            else { if (cur.trim()) cards.push(cur.trim()); cur = ts }
+                        }
+                    } else {
+                        if (cur && (cur.length + tp.length + 2) > max) { if (cur.trim()) cards.push(cur.trim()); cur = tp }
+                        else cur = cur ? cur + '\n\n' + tp : tp;
                     }
-                } else {
-                    if (cur && (cur.length + tp.length + 2) > max) { if (cur.trim()) cards.push(cur.trim()); cur = tp }
-                    else cur = cur ? cur + '\n\n' + tp : tp;
                 }
+                if (cur.trim()) cards.push(cur.trim());
+                return cards.length ? cards : [t];
             }
-            if (cur.trim()) cards.push(cur.trim());
-            return cards.length ? cards : [t];
-        }
 
-        // ===== UPDATE CARDS =====
-        function heuristicDur(text) {
-            const w = text.trim().split(/\s+/).filter(Boolean).length || 1;
-            let d = Math.ceil(w / 2.5);
-            if (w > 20) d += Math.ceil((w - 20) / 10);
-            if (/https?:\/\//.test(text) && w <= 3) d = Math.min(d, 5);
-            return Math.max(4, Math.min(15, d));
-        }
-        function formatDurationDisplay(sec) {
-            const s = Math.round(Number(sec) || 0);
-            if (s < 60) return `${s} ثانية`;
-            const m = Math.floor(s / 60);
-            const r = s % 60;
-            if (r === 0) return `${m} دقيقة`;
-            return `${m}:${String(r).padStart(2,'0')} دقيقة`;
-        }
-        let autoAIDebounce = null;
-        let lastAITextHash = '';
-        function scheduleAutoAI() {
-            clearTimeout(autoAIDebounce);
-            if (!state.textCards.length) return;
-            const hash = state.textCards.join('|');
-            if (hash === lastAITextHash) return;
-            autoAIDebounce = setTimeout(() => {
-                lastAITextHash = hash;
-                calculateDurationsAI(true);
-            }, 1200);
-        }
-        function updateCards() {
-            const text = state.textContent.trim();
-            const sec = document.getElementById('cardsSection');
-            const list = document.getElementById('cardsList');
-            const badge = document.getElementById('cardsBadge');
-            const total = document.getElementById('cardsTotal');
-            const cardsCount = document.getElementById('cardsCount');
-            const estDur = document.getElementById('estDuration');
-
-            if (!text || text.length < 5) {
-                sec.classList.add('hidden'); state.textCards = []; state.cardDurations = [];
-                cardsCount.textContent = '0'; estDur.textContent = '0';
-                if (list) list.innerHTML = '';
-                lastAITextHash = '';
-                return;
+            // ===== UPDATE CARDS =====
+            function heuristicDur(text) {
+                const w = text.trim().split(/\s+/).filter(Boolean).length || 1;
+                let d = Math.ceil(w / 2.5);
+                if (w > 20) d += Math.ceil((w - 20) / 10);
+                if (/https?:\/\//.test(text) && w <= 3) d = Math.min(d, 5);
+                return Math.max(4, Math.min(15, d));
             }
-            const cards = splitTextIntoCards(text);
-            const prevLen = state.textCards.length;
-            state.textCards = cards;
-            if (!Array.isArray(state.cardDurations) || state.cardDurations.length !== cards.length) {
-                const old = Array.isArray(state.cardDurations) ? state.cardDurations : [];
-                state.cardDurations = cards.map((c, i) => (i < old.length && typeof old[i] === 'number') ? old[i] : heuristicDur(c));
-                // إذا كان هناك صوت، زامن المدد الجديدة عليه فوراً
-                if (state.audio?.duration && state.audio.duration > 0) {
-                    const n = cards.length;
-                    const transTotal = n > 1 ? (n - 1) * 0.4 : 0;
-                    const target = state.audio.duration + transTotal;
-                    const sumOld = state.cardDurations.reduce((a,b)=>a+(b||0),0) || n*4;
-                    const factor = target / sumOld;
-                    state.cardDurations = state.cardDurations.map(d => Math.max(3, Math.round((d||4)*factor*10)/10));
+            function formatDurationDisplay(sec) {
+                const s = Math.round(Number(sec) || 0);
+                if (s < 60) return `${s} ثانية`;
+                const m = Math.floor(s / 60);
+                const r = s % 60;
+                if (r === 0) return `${m} دقيقة`;
+                return `${m}:${String(r).padStart(2, '0')} دقيقة`;
+            }
+            let autoAIDebounce = null;
+            let lastAITextHash = '';
+            function scheduleAutoAI() {
+                clearTimeout(autoAIDebounce);
+                if (!state.textCards.length) return;
+                const hash = state.textCards.join('|');
+                if (hash === lastAITextHash) return;
+                autoAIDebounce = setTimeout(() => {
+                    lastAITextHash = hash;
+                    calculateDurationsAI(true);
+                }, 1200);
+            }
+            function updateCards() {
+                const text = state.textContent.trim();
+                const sec = document.getElementById('cardsSection');
+                const list = document.getElementById('cardsList');
+                const badge = document.getElementById('cardsBadge');
+                const total = document.getElementById('cardsTotal');
+                const cardsCount = document.getElementById('cardsCount');
+                const estDur = document.getElementById('estDuration');
+
+                if (!text || text.length < 5) {
+                    sec.classList.add('hidden'); state.textCards = []; state.cardDurations = [];
+                    cardsCount.textContent = '0'; estDur.textContent = '0';
+                    if (list) list.innerHTML = '';
+                    lastAITextHash = '';
+                    return;
                 }
-            } else if (state.audio?.duration && state.audio.duration > 0) {
-                // حتى لو لم يتغير العدد، إذا كان هناك صوت والصوت حديث، أعد المزامنة صامتة
-                // سيتم التعامل معها عبر distributeCardDurationsByAudio في الاستدعاءات التالية
-            }
-            sec.classList.remove('hidden');
-            badge.textContent = cards.length === 1 ? 'بطاقة واحدة' : `${cards.length} بطاقات`;
-            cardsCount.textContent = cards.length;
-            renderCardsList();
-            // إذا كان هناك صوت، تأكد أن المدد مزامنة بعد الرسم (للحالات التي تغير النص بدون تغيير العدد)
-            if (state.audio?.duration && state.audio.duration > 0 && !state.cardDurations._syncedWithAudio) {
-                // لا نزامن تلقائياً هنا إلا إذا كانت المدد تقديرية ولم تُزامن بعد لتجنب الكتابة فوق تعديل يدوي
-            }
+                const cards = splitTextIntoCards(text);
+                const prevLen = state.textCards.length;
+                state.textCards = cards;
+                if (!Array.isArray(state.cardDurations) || state.cardDurations.length !== cards.length) {
+                    const old = Array.isArray(state.cardDurations) ? state.cardDurations : [];
+                    state.cardDurations = cards.map((c, i) => (i < old.length && typeof old[i] === 'number') ? old[i] : heuristicDur(c));
+                    // إذا كان هناك صوت، زامن المدد الجديدة عليه فوراً
+                    if (state.audio?.duration && state.audio.duration > 0) {
+                        const n = cards.length;
+                        const transTotal = n > 1 ? (n - 1) * 0.4 : 0;
+                        const target = state.audio.duration + transTotal;
+                        const sumOld = state.cardDurations.reduce((a, b) => a + (b || 0), 0) || n * 4;
+                        const factor = target / sumOld;
+                        state.cardDurations = state.cardDurations.map(d => Math.max(3, Math.round((d || 4) * factor * 10) / 10));
+                    }
+                } else if (state.audio?.duration && state.audio.duration > 0) {
+                    // حتى لو لم يتغير العدد، إذا كان هناك صوت والصوت حديث، أعد المزامنة صامتة
+                    // سيتم التعامل معها عبر distributeCardDurationsByAudio في الاستدعاءات التالية
+                }
+                sec.classList.remove('hidden');
+                badge.textContent = cards.length === 1 ? 'بطاقة واحدة' : `${cards.length} بطاقات`;
+                cardsCount.textContent = cards.length;
+                renderCardsList();
+                // إذا كان هناك صوت، تأكد أن المدد مزامنة بعد الرسم (للحالات التي تغير النص بدون تغيير العدد)
+                if (state.audio?.duration && state.audio.duration > 0 && !state.cardDurations._syncedWithAudio) {
+                    // لا نزامن تلقائياً هنا إلا إذا كانت المدد تقديرية ولم تُزامن بعد لتجنب الكتابة فوق تعديل يدوي
+                }
 
-            let totalDur = 0, totalWords = 0, totalChars = 0;
-            for (let i = 0; i < cards.length; i++) {
-                const c = cards[i];
-                const w = c.trim().split(/\s+/).filter(Boolean).length || 0;
-                totalWords += w; totalChars += c.length;
-                totalDur += state.cardDurations[i] || heuristicDur(c);
+                let totalDur = 0, totalWords = 0, totalChars = 0;
+                for (let i = 0; i < cards.length; i++) {
+                    const c = cards[i];
+                    const w = c.trim().split(/\s+/).filter(Boolean).length || 0;
+                    totalWords += w; totalChars += c.length;
+                    totalDur += state.cardDurations[i] || heuristicDur(c);
+                }
+                estDur.textContent = formatDurationDisplay(totalDur);
+                total.innerHTML = `<span>📊</span><span><strong>${cards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${formatDurationDisplay(totalDur)}</strong></span>`;
+                if (prevLen !== cards.length || cards.join('|') !== lastAITextHash) scheduleAutoAI();
             }
-            estDur.textContent = formatDurationDisplay(totalDur);
-            total.innerHTML = `<span>📊</span><span><strong>${cards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${formatDurationDisplay(totalDur)}</strong></span>`;
-            if (prevLen !== cards.length || cards.join('|') !== lastAITextHash) scheduleAutoAI();
-        }
-        function renderCardsList() {
-            const list = document.getElementById('cardsList');
-            if (!list) return;
-            if (!state.textCards.length) { list.innerHTML = ''; return; }
-            list.innerHTML = state.textCards.map((c, i) => {
-                const w = c.trim().split(/\s+/).filter(Boolean).length || 1;
-                const ch = c.length;
-                const dur = state.cardDurations[i] != null ? state.cardDurations[i] : heuristicDur(c);
-                return `<div class="cards-item" style="gap:10px;">
-                    <div class="cards-num">${i+1}</div>
+            function renderCardsList() {
+                const list = document.getElementById('cardsList');
+                if (!list) return;
+                if (!state.textCards.length) { list.innerHTML = ''; return; }
+                list.innerHTML = state.textCards.map((c, i) => {
+                    const w = c.trim().split(/\s+/).filter(Boolean).length || 1;
+                    const ch = c.length;
+                    const dur = state.cardDurations[i] != null ? state.cardDurations[i] : heuristicDur(c);
+                    return `<div class="cards-item" style="gap:10px;">
+                    <div class="cards-num">${i + 1}</div>
                     <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;">
                         <textarea class="cards-edit-input" data-idx="${i}" rows="2" oninput="onCardTextInput(${i}, this)" placeholder="نص البطاقة..." style="width:100%;padding:10px 12px;border:1.5px solid var(--border-color);border-radius:10px;font-size:14px;line-height:1.6;resize:vertical;font-family:inherit;direction:rtl;text-align:right;background:white;transition:border-color 0.2s;min-height:56px;">${escapeHtml(c)}</textarea>
                         <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;">
@@ -1232,771 +1834,772 @@
                     </div>
                     <button type="button" onclick="removeCard(${i})" title="حذف البطاقة" style="width:30px;height:30px;border-radius:8px;border:1px solid #FECACA;background:#FEF2F2;color:var(--danger);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;">×</button>
                 </div>`;
-            }).join('') + `<button type="button" onclick="addNewCard()" style="width:100%;margin-top:10px;padding:12px;border:1.5px dashed var(--primary);border-radius:10px;background:rgba(74,144,226,0.06);color:var(--primary);font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">➕ إضافة بطاقة جديدة</button>`;
-            // تحديث الإجمالي
-            const estDur = document.getElementById('estDuration');
-            const total = document.getElementById('cardsTotal');
-            let totalDur = 0;
-            for (let i = 0; i < state.textCards.length; i++) totalDur += state.cardDurations[i] || heuristicDur(state.textCards[i]);
-            if (estDur) estDur.textContent = formatDurationDisplay(totalDur);
-            if (total) {
-                let totalWords = 0, totalChars = 0;
-                for (const c of state.textCards) { totalWords += c.trim().split(/\s+/).filter(Boolean).length || 0; totalChars += c.length; }
-                total.innerHTML = `<span>📊</span><span><strong>${state.textCards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${formatDurationDisplay(totalDur)}</strong></span>`;
-            }
-        }
-        window.changeCardDuration = function(i, delta) {
-            if (!Array.isArray(state.cardDurations) || i < 0 || i >= state.cardDurations.length) return;
-            let v = (state.cardDurations[i] || 4) + delta;
-            v = Math.max(3, Math.min(20, v));
-            state.cardDurations[i] = v;
-            const inp = document.querySelector(`input[data-dur-idx="${i}"]`);
-            if (inp) inp.value = v;
-            renderCardsList();
-            syncMainTextFromCards(true);
-        };
-        window.onDurationInput = function(i, el) {
-            let v = Math.round(Number(el.value));
-            if (isNaN(v)) return;
-            v = Math.max(3, Math.min(20, v));
-            state.cardDurations[i] = v;
-            el.value = v;
-            const estDur = document.getElementById('estDuration');
-            const total = document.getElementById('cardsTotal');
-            let totalDur = 0;
-            for (let k = 0; k < state.textCards.length; k++) totalDur += state.cardDurations[k] || heuristicDur(state.textCards[k]);
-            if (estDur) estDur.textContent = formatDurationDisplay(totalDur);
-            if (total) {
-                let totalWords = 0, totalChars = 0;
-                for (const c of state.textCards) { totalWords += c.trim().split(/\s+/).filter(Boolean).length || 0; totalChars += c.length; }
-                total.innerHTML = `<span>📊</span><span><strong>${state.textCards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${formatDurationDisplay(totalDur)}</strong></span>`;
-            }
-        };
-        // ===== مزامنة البطاقات على مدة الصوت (مثل محرر الصور) =====
-        function distributeCardDurationsByAudio(silent) {
-            const audioDur = state.audio?.duration;
-            if (!audioDur || audioDur <= 0 || !state.textCards.length) return false;
-            const n = state.textCards.length;
-            const transTotal = n > 1 ? (n - 1) * 0.4 : 0;
-            const target = audioDur + transTotal;
-            const perCard = target / n;
-            const rounded = Math.max(1.5, Math.round(perCard * 10) / 10);
-            state.cardDurations = new Array(n).fill(rounded);
-            // تصحيح الانحراف العشري لضمان المجموع = target
-            const sumNew = state.cardDurations.reduce((a,b)=>a+b,0);
-            const diff = Math.round((target - sumNew) * 10) / 10;
-            state.cardDurations[n - 1] = Math.max(1.5, Math.round((state.cardDurations[n - 1] + diff) * 10) / 10);
-            
-            renderCardsList();
-            if (!silent) {
-                showToast(`✅ تمت مزامنة ${n} بطاقات مع مدة الصوت (${audioDur.toFixed(1)} ثانية)`);
-            }
-            return true;
-        }
-        window.onCardTextInput = function(i, el) {
-            state.textCards[i] = el.value;
-            syncMainTextFromCards(false);
-            // تحديث عداد الحروف/الكلمات للبطاقة نفسها بدون إعادة رسم كامل للحفاظ على التركيز
-            const meta = el.parentElement.querySelector('.cards-meta');
-            if (meta) {
-                const w = el.value.trim().split(/\s+/).filter(Boolean).length || 0;
-                meta.textContent = `${el.value.length} حرف | ${w} كلمة`;
-            }
-        };
-        window.removeCard = function(i) {
-            if (!confirm('حذف هذه البطاقة؟')) return;
-            state.textCards.splice(i, 1);
-            state.cardDurations.splice(i, 1);
-            if (!state.textCards.length) { state.textCards = []; state.cardDurations = []; }
-            syncMainTextFromCards(true);
-            if (state.audio?.duration && state.audio.duration > 0) {
-                distributeCardDurationsByAudio(true);
-            } else {
-                renderCardsList();
-                if (state.textCards.length) scheduleAutoAI();
-            }
-        };
-        window.addNewCard = function() {
-            state.textCards.push('نص جديد');
-            state.cardDurations.push(4);
-            syncMainTextFromCards(true);
-            if (state.audio?.duration && state.audio.duration > 0) {
-                distributeCardDurationsByAudio(true);
-            } else {
-                renderCardsList();
-            }
-            setTimeout(() => {
-                const ta = document.querySelector(`textarea[data-idx="${state.textCards.length - 1}"]`);
-                if (ta) { ta.focus(); ta.select(); }
-            }, 50);
-        };
-        function syncMainTextFromCards(skipAI) {
-            state.textContent = state.textCards.join('\n\n');
-            const inp = document.getElementById('textInput');
-            if (inp) inp.value = state.textContent;
-            const chars = state.textContent.length;
-            const words = state.textContent.trim() ? state.textContent.trim().split(/\s+/).filter(Boolean).length : 0;
-            const cc = document.getElementById('charCount');
-            const wc = document.getElementById('wordCount');
-            if (cc) cc.textContent = chars;
-            if (wc) wc.textContent = words;
-            // تحديث عرض المدة الإجمالية
-            const estDur = document.getElementById('estDuration');
-            let totalDur = 0;
-            if (state.audio?.duration && state.audio.duration > 0) {
-                totalDur = state.audio.duration;
-            } else {
-                for (let k = 0; k < state.textCards.length; k++) totalDur += state.cardDurations[k] || heuristicDur(state.textCards[k]);
-            }
-            if (estDur) estDur.textContent = formatDurationDisplay(totalDur);
-            if (!skipAI && (!state.audio?.duration || state.audio.duration <= 0)) {
-                clearTimeout(autoAIDebounce);
-                autoAIDebounce = setTimeout(() => calculateDurationsAI(true), 800);
-            }
-        }
-        function escapeHtml(s) {
-            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-        }
-        async function calculateDurationsAI(silent) {
-            if (!state.textCards.length) { if (!silent) showToast('لا توجد بطاقات', true); return; }
-            const isSilent = !!silent;
-            if (!isSilent) showLoading('جاري حساب مدد البطاقات...','يقدّر الذكاء الاصطناعي مدة قراءة كل بطاقة بشكل متدرج');
-            try {
-                const r = await fetch(`${WORKER_API_URL}/calculate-text-durations`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text_cards: state.textCards })
-                });
-                const data = await r.json();
-                if (!r.ok || !data.success || !Array.isArray(data.durations)) throw new Error(data.error || 'فشل الحساب');
-                for (const d of data.durations) {
-                    const idx = Number(d.index);
-                    let dur = Math.round(Number(d.duration_seconds));
-                    if (!isNaN(idx) && idx >= 0 && idx < state.cardDurations.length && !isNaN(dur)) {
-                        state.cardDurations[idx] = Math.max(3, Math.min(20, dur));
-                    }
+                }).join('') + `<button type="button" onclick="addNewCard()" style="width:100%;margin-top:10px;padding:12px;border:1.5px dashed var(--primary);border-radius:10px;background:rgba(74,144,226,0.06);color:var(--primary);font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">➕ إضافة بطاقة جديدة</button>`;
+                // تحديث الإجمالي
+                const estDur = document.getElementById('estDuration');
+                const total = document.getElementById('cardsTotal');
+                let totalDur = 0;
+                for (let i = 0; i < state.textCards.length; i++) totalDur += state.cardDurations[i] || heuristicDur(state.textCards[i]);
+                if (estDur) estDur.textContent = formatDurationDisplay(totalDur);
+                if (total) {
+                    let totalWords = 0, totalChars = 0;
+                    for (const c of state.textCards) { totalWords += c.trim().split(/\s+/).filter(Boolean).length || 0; totalChars += c.length; }
+                    total.innerHTML = `<span>📊</span><span><strong>${state.textCards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${formatDurationDisplay(totalDur)}</strong></span>`;
                 }
-                // إذا كان هناك صوت، أعد مزامنة المدد عليه ليتناسب الفيديو مع الصوت
+            }
+            window.changeCardDuration = function (i, delta) {
+                if (!Array.isArray(state.cardDurations) || i < 0 || i >= state.cardDurations.length) return;
+                let v = (state.cardDurations[i] || 4) + delta;
+                v = Math.max(3, Math.min(20, v));
+                state.cardDurations[i] = v;
+                const inp = document.querySelector(`input[data-dur-idx="${i}"]`);
+                if (inp) inp.value = v;
+                renderCardsList();
+                syncMainTextFromCards(true);
+            };
+            window.onDurationInput = function (i, el) {
+                let v = Math.round(Number(el.value));
+                if (isNaN(v)) return;
+                v = Math.max(3, Math.min(20, v));
+                state.cardDurations[i] = v;
+                el.value = v;
+                const estDur = document.getElementById('estDuration');
+                const total = document.getElementById('cardsTotal');
+                let totalDur = 0;
+                for (let k = 0; k < state.textCards.length; k++) totalDur += state.cardDurations[k] || heuristicDur(state.textCards[k]);
+                if (estDur) estDur.textContent = formatDurationDisplay(totalDur);
+                if (total) {
+                    let totalWords = 0, totalChars = 0;
+                    for (const c of state.textCards) { totalWords += c.trim().split(/\s+/).filter(Boolean).length || 0; totalChars += c.length; }
+                    total.innerHTML = `<span>📊</span><span><strong>${state.textCards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${formatDurationDisplay(totalDur)}</strong></span>`;
+                }
+            };
+            // ===== مزامنة البطاقات على مدة الصوت (مثل محرر الصور) =====
+            function distributeCardDurationsByAudio(silent) {
+                const audioDur = state.audio?.duration;
+                if (!audioDur || audioDur <= 0 || !state.textCards.length) return false;
+                const n = state.textCards.length;
+                const transTotal = n > 1 ? (n - 1) * 0.4 : 0;
+                const target = audioDur + transTotal;
+                const perCard = target / n;
+                const rounded = Math.max(1.5, Math.round(perCard * 10) / 10);
+                state.cardDurations = new Array(n).fill(rounded);
+                // تصحيح الانحراف العشري لضمان المجموع = target
+                const sumNew = state.cardDurations.reduce((a, b) => a + b, 0);
+                const diff = Math.round((target - sumNew) * 10) / 10;
+                state.cardDurations[n - 1] = Math.max(1.5, Math.round((state.cardDurations[n - 1] + diff) * 10) / 10);
+
+                renderCardsList();
+                if (!silent) {
+                    showToast(`✅ تمت مزامنة ${n} بطاقات مع مدة الصوت (${audioDur.toFixed(1)} ثانية)`);
+                }
+                return true;
+            }
+            window.onCardTextInput = function (i, el) {
+                state.textCards[i] = el.value;
+                syncMainTextFromCards(false);
+                // تحديث عداد الحروف/الكلمات للبطاقة نفسها بدون إعادة رسم كامل للحفاظ على التركيز
+                const meta = el.parentElement.querySelector('.cards-meta');
+                if (meta) {
+                    const w = el.value.trim().split(/\s+/).filter(Boolean).length || 0;
+                    meta.textContent = `${el.value.length} حرف | ${w} كلمة`;
+                }
+            };
+            window.removeCard = function (i) {
+                if (!confirm('حذف هذه البطاقة؟')) return;
+                state.textCards.splice(i, 1);
+                state.cardDurations.splice(i, 1);
+                if (!state.textCards.length) { state.textCards = []; state.cardDurations = []; }
+                syncMainTextFromCards(true);
+                if (state.audio?.duration && state.audio.duration > 0) {
+                    distributeCardDurationsByAudio(true);
+                } else {
+                    renderCardsList();
+                    if (state.textCards.length) scheduleAutoAI();
+                }
+            };
+            window.addNewCard = function () {
+                state.textCards.push('نص جديد');
+                state.cardDurations.push(4);
+                syncMainTextFromCards(true);
                 if (state.audio?.duration && state.audio.duration > 0) {
                     distributeCardDurationsByAudio(true);
                 } else {
                     renderCardsList();
                 }
-                if (!isSilent) showToast(`✅ تم تحديث المدد (${data.method === 'ai' ? 'بالذكاء الاصطناعي' : 'تقديري'})` + (state.audio?.duration ? ' ومزامنة على الصوت' : ''));
-            } catch (e) {
-                if (!isSilent) showToast('❌ فشل حساب AI: ' + (e.message || ''), true);
-            } finally {
-                if (!isSilent) hideLoading();
+                setTimeout(() => {
+                    const ta = document.querySelector(`textarea[data-idx="${state.textCards.length - 1}"]`);
+                    if (ta) { ta.focus(); ta.select(); }
+                }, 50);
+            };
+            function syncMainTextFromCards(skipAI) {
+                state.textContent = state.textCards.join('\n\n');
+                const inp = document.getElementById('textInput');
+                if (inp) inp.value = state.textContent;
+                const chars = state.textContent.length;
+                const words = state.textContent.trim() ? state.textContent.trim().split(/\s+/).filter(Boolean).length : 0;
+                const cc = document.getElementById('charCount');
+                const wc = document.getElementById('wordCount');
+                if (cc) cc.textContent = chars;
+                if (wc) wc.textContent = words;
+                // تحديث عرض المدة الإجمالية
+                const estDur = document.getElementById('estDuration');
+                let totalDur = 0;
+                if (state.audio?.duration && state.audio.duration > 0) {
+                    totalDur = state.audio.duration;
+                } else {
+                    for (let k = 0; k < state.textCards.length; k++) totalDur += state.cardDurations[k] || heuristicDur(state.textCards[k]);
+                }
+                if (estDur) estDur.textContent = formatDurationDisplay(totalDur);
+                if (!skipAI && (!state.audio?.duration || state.audio.duration <= 0)) {
+                    clearTimeout(autoAIDebounce);
+                    autoAIDebounce = setTimeout(() => calculateDurationsAI(true), 800);
+                }
             }
-        }
-
-        // ===== AUDIO =====
-        function audioFileToBase64(file) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = err => reject(err);
-                reader.readAsDataURL(file);
-            });
-        }
-        function getAudioFileDuration(base64DataUrl) {
-            return new Promise((resolve) => {
-                const audio = new Audio();
-                audio.preload = 'metadata';
-                audio.onloadedmetadata = () => resolve(isFinite(audio.duration) ? audio.duration : null);
-                audio.onerror = () => resolve(null);
-                audio.src = base64DataUrl;
-            });
-        }
-        function formatAudioTime(seconds) {
-            if (!seconds || isNaN(seconds)) return '0:00';
-            const m = Math.floor(seconds / 60);
-            const s = Math.floor(seconds % 60);
-            return `${m}:${String(s).padStart(2,'0')}`;
-        }
-        async function uploadAudioToWorker(base64Data) {
-            try {
-                const resp = await fetch(`${WORKER_API_URL}/upload-audio`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ audio: base64Data })
-                });
-                if (resp.ok) {
-                    const data = await resp.json();
-                    if (data && data.url) return data.url;
-                }
-            } catch (err) {
-                console.warn('⚠️ فشل رفع الصوت عبر الوركر:', err);
+            function escapeHtml(s) {
+                return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
             }
-            return null;
-        }
-
-        async function handleAudioFile(file) {
-            if (!file || !file.type.startsWith('audio/')) { showToast('يرجى اختيار ملف صوتي صالح (mp3, m4a, wav...)', true); return; }
-            const MAX_SIZE_MB = 80;
-            if (file.size > MAX_SIZE_MB * 1024 * 1024) { showToast(`❌ حجم الملف كبير جداً (الحد: ${MAX_SIZE_MB} MB)`, true); return; }
-            showLoading('جاري قراءة ومعالجة الملف الصوتي...', 'يرجى الانتظار');
-            try {
-                const base64 = await audioFileToBase64(file);
-                const duration = await getAudioFileDuration(base64);
-
-                state.audio.base64 = base64;
-                state.audio.duration = duration;
-                state.audio.filename = file.name;
-                state.audio.url = null;
-                
-                document.getElementById('audioPreviewName').textContent = file.name;
-                document.getElementById('audioPreviewDuration').textContent = duration ? formatAudioTime(duration) : '—';
-                document.getElementById('audioTotalTime').textContent = duration ? formatAudioTime(duration) : '—';
-                document.getElementById('audioCurrentTime').textContent = '0:00';
-                document.getElementById('audioProgressFill').style.width = '0%';
-                document.getElementById('audioProgressThumb').style.right = '0%';
-                document.getElementById('audioPreviewCard').classList.add('visible');
-                document.getElementById('audioDropZone').style.display = 'none';
-                
-                const audioEl = document.getElementById('inEditorAudio');
-                if (audioEl) {
-                    audioEl.src = base64;
-                    audioEl.load();
-                }
-                const playBtn = document.getElementById('audioPlayPauseBtn');
-                if (playBtn) playBtn.textContent = '▶';
-                const wave = document.getElementById('audioWaveform');
-                if (wave) wave.classList.add('paused');
-
-                // مزامنة مدد البطاقات فوراً وبصمت على مدة الصوت
-                if (state.textCards.length > 0 && duration && duration > 0) {
-                    distributeCardDurationsByAudio(true);
-                }
-
-                // رفع الصوت في الخلفية عبر Deno Worker
-                uploadAudioToWorker(base64).then(url => {
-                    if (url) {
-                        state.audio.url = url;
-                        console.log('✅ تم رفع الصوت إلى السيرفر عبر الوركر:', url);
+            async function calculateDurationsAI(silent) {
+                if (!state.textCards.length) { if (!silent) showToast('لا توجد بطاقات', true); return; }
+                const isSilent = !!silent;
+                if (!isSilent) showLoading('جاري حساب مدد البطاقات...', 'يقدّر الذكاء الاصطناعي مدة قراءة كل بطاقة بشكل متدرج');
+                try {
+                    const r = await fetch(`${WORKER_API_URL}/calculate-text-durations`, {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text_cards: state.textCards })
+                    });
+                    const data = await r.json();
+                    if (!r.ok || !data.success || !Array.isArray(data.durations)) throw new Error(data.error || 'فشل الحساب');
+                    for (const d of data.durations) {
+                        const idx = Number(d.index);
+                        let dur = Math.round(Number(d.duration_seconds));
+                        if (!isNaN(idx) && idx >= 0 && idx < state.cardDurations.length && !isNaN(dur)) {
+                            state.cardDurations[idx] = Math.max(3, Math.min(20, dur));
+                        }
                     }
-                });
-
-            } catch (err) {
-                console.error('Audio load error:', err);
-                showToast('❌ خطأ أثناء تحميل الملف الصوتي', true);
-            } finally {
-                hideLoading();
+                    // إذا كان هناك صوت، أعد مزامنة المدد عليه ليتناسب الفيديو مع الصوت
+                    if (state.audio?.duration && state.audio.duration > 0) {
+                        distributeCardDurationsByAudio(true);
+                    } else {
+                        renderCardsList();
+                    }
+                    if (!isSilent) showToast(`✅ تم تحديث المدد (${data.method === 'ai' ? 'بالذكاء الاصطناعي' : 'تقديري'})` + (state.audio?.duration ? ' ومزامنة على الصوت' : ''));
+                } catch (e) {
+                    if (!isSilent) showToast('❌ فشل حساب AI: ' + (e.message || ''), true);
+                } finally {
+                    if (!isSilent) hideLoading();
+                }
             }
-        }
-        function removeAudio() {
-            const audioEl = document.getElementById('inEditorAudio');
-            if (audioEl) { audioEl.pause(); audioEl.currentTime = 0; audioEl.src = ''; }
-            state.audio = { base64: null, url: null, duration: null, filename: '' };
-            const card = document.getElementById('audioPreviewCard');
-            if (card) card.classList.remove('visible');
-            const dz = document.getElementById('audioDropZone');
-            if (dz) dz.style.display = '';
-            const inp = document.getElementById('audioFileInput');
-            if (inp) inp.value = '';
-            showToast('تم حذف الملف الصوتي');
-            renderCardsList();
-        }
 
-        // ===== RENDER TEMPLATES =====
-        function renderTemplates() {
-            const grid = document.getElementById('templatesGrid');
-            grid.innerHTML = TEMPLATES_LIST.map(t => {
-                const sel = String(t.id) === String(state.templateId) ? 'selected' : '';
-                const lImgUrl = getTemplateImageUrl(t, 'landscape');
-                return `<div class="template-card ${sel}" data-id="${t.id}">
+            // ===== AUDIO =====
+            function audioFileToBase64(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.onload = () => resolve(reader.result);
+                    reader.onerror = err => reject(err);
+                    reader.readAsDataURL(file);
+                });
+            }
+            function getAudioFileDuration(base64DataUrl) {
+                return new Promise((resolve) => {
+                    const audio = new Audio();
+                    audio.preload = 'metadata';
+                    audio.onloadedmetadata = () => resolve(isFinite(audio.duration) ? audio.duration : null);
+                    audio.onerror = () => resolve(null);
+                    audio.src = base64DataUrl;
+                });
+            }
+            function formatAudioTime(seconds) {
+                if (!seconds || isNaN(seconds)) return '0:00';
+                const m = Math.floor(seconds / 60);
+                const s = Math.floor(seconds % 60);
+                return `${m}:${String(s).padStart(2, '0')}`;
+            }
+            async function uploadAudioToWorker(base64Data) {
+                try {
+                    const resp = await fetch(`${WORKER_API_URL}/upload-audio`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ audio: base64Data })
+                    });
+                    if (resp.ok) {
+                        const data = await resp.json();
+                        if (data && data.url) return data.url;
+                    }
+                } catch (err) {
+                    console.warn('⚠️ فشل رفع الصوت عبر الوركر:', err);
+                }
+                return null;
+            }
+
+            async function handleAudioFile(file) {
+                if (!file || !file.type.startsWith('audio/')) { showToast('يرجى اختيار ملف صوتي صالح (mp3, m4a, wav...)', true); return; }
+                const MAX_SIZE_MB = 80;
+                if (file.size > MAX_SIZE_MB * 1024 * 1024) { showToast(`❌ حجم الملف كبير جداً (الحد: ${MAX_SIZE_MB} MB)`, true); return; }
+                showLoading('جاري قراءة ومعالجة الملف الصوتي...', 'يرجى الانتظار');
+                try {
+                    const base64 = await audioFileToBase64(file);
+                    const duration = await getAudioFileDuration(base64);
+
+                    state.audio.base64 = base64;
+                    state.audio.duration = duration;
+                    state.audio.filename = file.name;
+                    state.audio.url = null;
+
+                    document.getElementById('audioPreviewName').textContent = file.name;
+                    document.getElementById('audioPreviewDuration').textContent = duration ? formatAudioTime(duration) : '—';
+                    document.getElementById('audioTotalTime').textContent = duration ? formatAudioTime(duration) : '—';
+                    document.getElementById('audioCurrentTime').textContent = '0:00';
+                    document.getElementById('audioProgressFill').style.width = '0%';
+                    document.getElementById('audioProgressThumb').style.right = '0%';
+                    document.getElementById('audioPreviewCard').classList.add('visible');
+                    document.getElementById('audioDropZone').style.display = 'none';
+
+                    const audioEl = document.getElementById('inEditorAudio');
+                    if (audioEl) {
+                        audioEl.src = base64;
+                        audioEl.load();
+                    }
+                    const playBtn = document.getElementById('audioPlayPauseBtn');
+                    if (playBtn) playBtn.textContent = '▶';
+                    const wave = document.getElementById('audioWaveform');
+                    if (wave) wave.classList.add('paused');
+
+                    // مزامنة مدد البطاقات فوراً وبصمت على مدة الصوت
+                    if (state.textCards.length > 0 && duration && duration > 0) {
+                        distributeCardDurationsByAudio(true);
+                    }
+
+                    // رفع الصوت في الخلفية عبر Deno Worker
+                    uploadAudioToWorker(base64).then(url => {
+                        if (url) {
+                            state.audio.url = url;
+                            console.log('✅ تم رفع الصوت إلى السيرفر عبر الوركر:', url);
+                        }
+                    });
+
+                } catch (err) {
+                    console.error('Audio load error:', err);
+                    showToast('❌ خطأ أثناء تحميل الملف الصوتي', true);
+                } finally {
+                    hideLoading();
+                }
+            }
+            function removeAudio() {
+                const audioEl = document.getElementById('inEditorAudio');
+                if (audioEl) { audioEl.pause(); audioEl.currentTime = 0; audioEl.src = ''; }
+                state.audio = { base64: null, url: null, duration: null, filename: '' };
+                const card = document.getElementById('audioPreviewCard');
+                if (card) card.classList.remove('visible');
+                const dz = document.getElementById('audioDropZone');
+                if (dz) dz.style.display = '';
+                const inp = document.getElementById('audioFileInput');
+                if (inp) inp.value = '';
+                showToast('تم حذف الملف الصوتي');
+                renderCardsList();
+            }
+
+            // ===== RENDER TEMPLATES =====
+            function renderTemplates() {
+                const grid = document.getElementById('templatesGrid');
+                grid.innerHTML = TEMPLATES_LIST.map(t => {
+                    const sel = String(t.id) === String(state.templateId) ? 'selected' : '';
+                    const lImgUrl = getTemplateImageUrl(t, 'landscape');
+                    return `<div class="template-card ${sel}" data-id="${t.id}">
                     <div class="template-preview" style="background: radial-gradient(ellipse at center, ${t.gradient_mid} 0%, ${t.gradient_start} 100%);">
                         <img src="${lImgUrl}" alt="${t.template_name}" onerror="this.style.display='none'" />
                         <div class="template-check">✓</div>
                     </div>
                     <div class="template-name">${t.template_name}</div>
                 </div>`;
-            }).join('');
+                }).join('');
 
-            grid.querySelectorAll('.template-card').forEach(el => {
-                el.addEventListener('click', () => {
-                    const id = el.dataset.id;
-                    const tmpl = TEMPLATES_LIST.find(t => String(t.id) === id);
-                    if (tmpl) {
-                        showTemplatePreviewModal(tmpl);
-                    }
-                });
-            });
-        }
-
-        // ===== TEMPLATE PREVIEW MODAL =====
-        function showTemplatePreviewModal(template) {
-            pendingTemplate = template;
-            const modal = document.getElementById('templatePreviewModal');
-            const titleEl = document.getElementById('templateModalTitle');
-            const landscapeImg = document.getElementById('modalLandscapePreview');
-            const portraitImg = document.getElementById('modalPortraitPreview');
-
-            titleEl.textContent = `معاينة قالب: ${template.template_name}`;
-            landscapeImg.src = getTemplateImageUrl(template, 'landscape');
-            portraitImg.src = getTemplateImageUrl(template, 'portrait');
-
-            modal.classList.add('visible');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeTemplateModal() {
-            document.getElementById('templatePreviewModal').classList.remove('visible');
-            document.body.style.overflow = '';
-            pendingTemplate = null;
-        }
-
-        // ===== NAVIGATION =====
-        let currentStep = 1;
-        const totalSteps = 3;
-
-        function updateSteps() {
-            document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
-            document.querySelector(`.step-content[data-step="${currentStep}"]`).classList.add('active');
-            document.getElementById('stepNumber').textContent = currentStep;
-            document.getElementById('btnBack').style.display = currentStep > 1 ? 'flex' : 'none';
-            const btnNext = document.getElementById('btnNext');
-            if (currentStep === totalSteps) {
-                btnNext.innerHTML = '<span>🚀</span><span>إرسال</span>';
-                btnNext.className = 'nav-btn btn-submit';
-                btnNext.disabled = false;
-            } else {
-                btnNext.innerHTML = '<span>التالي</span><span>→</span>';
-                btnNext.className = 'nav-btn btn-next';
-                btnNext.disabled = false;
-            }
-            if (currentStep === 3) updateReview();
-        }
-
-        document.getElementById('btnNext').addEventListener('click', async () => {
-            if (currentStep < totalSteps) {
-                if (currentStep === 1) {
-                    if (!state.textContent || state.textContent.trim().length < 5) {
-                        showToast('الرجاء إدخال نص قبل المتابعة', true); return;
-                    }
-                    if (!state.templateId) {
-                        showToast('الرجاء اختيار قالب', true); return;
-                    }
-                }
-                currentStep++;
-                updateSteps();
-                window.scrollTo(0, 0);
-            } else {
-                // SUBMIT - مثل بقية المحررات: إرسال مباشر لـ n8n وينهي الويب اب
-                const btn = document.getElementById('btnNext');
-                const originalText = btn.innerHTML;
-                btn.disabled = true;
-                btn.innerHTML = '<span>⏳</span><span>جاري الإرسال...</span>';
-                showLoading('جاري الإرسال...', 'الرجاء الانتظار');
-                try {
-                    const params = new URLSearchParams(window.location.search);
-                    const processId = params.get('bin') || tg.initDataUnsafe?.start_param || `TEXT_${Date.now()}`;
-                    const userId = state.user_id || binData.user_id || (tg.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : '');
-
-                    // التأكد من رفع الصوت إلى السيرفر عبر الوركر للحصول على رابط خفيف وتفادي أخطاء n8n
-                    let effectiveAudioUrl = state.audio?.url || '';
-                    if (!effectiveAudioUrl && state.audio?.base64) {
-                        showLoading('جاري رفع ومعالجة الصوت...', 'يرجى الانتظار');
-                        effectiveAudioUrl = await uploadAudioToWorker(state.audio.base64) || '';
-                        if (effectiveAudioUrl) state.audio.url = effectiveAudioUrl;
-                    }
-
-                    // إجمالي مدة البطاقات أو مدة الصوت إن وُجد
-                    const totalCardsDuration = (state.cardDurations && state.cardDurations.length === state.textCards.length)
-                        ? state.cardDurations.reduce((a,b)=>a+b,0)
-                        : (state.audio?.duration || state.textCards.reduce((s,c)=> s + heuristicDur(c), 0));
-                    
-                    const audioDuration = state.audio?.duration || null;
-                    const audioFilename = state.audio?.filename || '';
-
-                    const webhookData = {
-                        ...binData,
-                        text_content: state.textContent,
-                        text_cards: state.textCards,
-                        card_durations: Array.isArray(state.cardDurations) ? [...state.cardDurations] : [],
-                        durations: Array.isArray(state.cardDurations) ? [...state.cardDurations] : [],
-                        template_id: parseInt(state.templateId, 10) || 1,
-                        color_id: parseInt(state.colorId, 10) || 1,
-                        seo: { ...state.seo },
-                        user_id: userId,
-                        captions: [],
-                        audioUrl: effectiveAudioUrl,
-                        audio_url: effectiveAudioUrl,
-                        audioDuration: audioDuration,
-                        audio_duration: audioDuration,
-                        audioFilename: audioFilename,
-                        audio_filename: audioFilename,
-                        // لا نرسل base64 إلا إذا تعذر رفع الملف تماماً
-                        audioBase64: effectiveAudioUrl ? null : (state.audio?.base64 || null),
-                        audio_base64: effectiveAudioUrl ? null : (state.audio?.base64 || null),
-                        duration: audioDuration || totalCardsDuration
-                    };
-
-                    const finalData = {
-                        type: 'text_cards',
-                        data: webhookData,
-                        id: processId,
-                        timestamp: new Date().toISOString()
-                    };
-
-                    console.log('📤 إرسال البيانات عبر Webhook:', finalData);
-
-                    const response = await fetch(N8N_WEBHOOK_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(finalData)
+                grid.querySelectorAll('.template-card').forEach(el => {
+                    el.addEventListener('click', () => {
+                        const id = el.dataset.id;
+                        const tmpl = TEMPLATES_LIST.find(t => String(t.id) === id);
+                        if (tmpl) {
+                            showTemplatePreviewModal(tmpl);
+                        }
                     });
-
-                    if (!response.ok) {
-                        let errText = '';
-                        try { errText = await response.text(); } catch(_){}
-                        console.error('n8n error body:', errText.substring(0, 500));
-                        throw new Error((errText && errText.length < 400 ? errText : '') + ' فشل الإرسال (' + response.status + ')');
-                    }
-
-                    try {
-                        tg.sendData(JSON.stringify({
-                            type: 'text_content_completed',
-                            id: processId,
-                            status: 'completed'
-                        }));
-                    } catch (e) {
-                        console.log('⚠️ لا يمكن إرسال إشعار التليجرام:', e);
-                    }
-
-                    hideLoading();
-
-                    if (tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) {
-                        tg.showAlert('✅ تم الإرسال بنجاح!', () => {
-                            setTimeout(() => tg.close(), 500);
-                        });
-                    } else {
-                        showToast('✅ تم الإرسال بنجاح!');
-                        setTimeout(() => tg.close(), 1500);
-                    }
-                } catch (e) {
-                    console.error('❌ خطأ في الإرسال:', e);
-                    showToast('❌ ' + (e.message || 'حدث خطأ أثناء الإرسال'), true);
-                    btn.disabled = false;
-                    btn.innerHTML = originalText;
-                } finally {
-                    hideLoading();
-                }
-            }
-        });
-
-        document.getElementById('btnBack').addEventListener('click', () => {
-            if (currentStep > 1) { currentStep--; updateSteps(); window.scrollTo(0, 0); }
-        });
-
-        // ===== TEXT INPUT =====
-        document.getElementById('textInput').addEventListener('input', e => {
-            state.textContent = e.target.value;
-            const chars = state.textContent.length;
-            const words = state.textContent.trim() ? state.textContent.trim().split(/\s+/).length : 0;
-            document.getElementById('charCount').textContent = chars;
-            document.getElementById('wordCount').textContent = words;
-            updateCards();
-        });
-
-        // ===== SEO =====
-        document.getElementById('seoTitle').addEventListener('input', e => {
-            state.seo.title = e.target.value;
-            document.getElementById('seoTitleCount').textContent = e.target.value.length;
-            updateSeoStats();
-        });
-        document.getElementById('seoDesc').addEventListener('input', e => {
-            state.seo.description = e.target.value;
-            document.getElementById('seoDescCount').textContent = e.target.value.length;
-            updateSeoStats();
-        });
-        document.getElementById('addTagBtn').addEventListener('click', () => {
-            const inp = document.getElementById('tagInput');
-            const val = inp.value.trim().replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '').replace(/\s+/g, ' ');
-            if (val && !state.seo.tags.includes(val)) { state.seo.tags.push(val); inp.value = ''; renderTags(); updateSeoStats(); }
-            else if (state.seo.tags.includes(val)) showToast('هذه الكلمة موجودة بالفعل');
-        });
-        document.getElementById('tagInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('addTagBtn').click(); });
-
-        // ===== HASHTAGS =====
-        function normalizeHashtag(h) {
-            // إزالة # من البداية، استبدال المسافات بـ _، وحذف الرموز غير المسموحة مع الحفاظ على _
-            return String(h || '').trim()
-                .replace(/^#+/, '')
-                .replace(/\s+/g, '_')
-                .replace(/_+/g, '_')
-                .replace(/[^\u0600-\u06FFa-zA-Z0-9_]/g, '');
-        }
-        document.getElementById('addHashtagBtn').addEventListener('click', () => {
-            const inp = document.getElementById('hashtagInput');
-            const val = normalizeHashtag(inp.value);
-            if (!val || val.length < 2) return;
-            if (state.seo.hashtags.includes(val)) { showToast('هذا الهاشتاق موجود بالفعل'); inp.value = ''; return; }
-            state.seo.hashtags.push(val);
-            inp.value = '';
-            renderHashtags();
-            updateSeoStats();
-        });
-        document.getElementById('hashtagInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('addHashtagBtn').click(); });
-
-        function renderHashtags() {
-            const c = document.getElementById('hashtagsContainer');
-            if (!state.seo.hashtags.length) { c.innerHTML = '<span style="color:var(--text-secondary);font-size:12px;">لا توجد هاشتاقات بعد</span>'; return; }
-            c.innerHTML = state.seo.hashtags.map((h, i) =>
-                `<span class="tag-item">#${h}<span class="tag-remove" onclick="removeHashtag(${i})">×</span></span>`
-            ).join('');
-        }
-        window.removeHashtag = function (i) { state.seo.hashtags.splice(i, 1); renderHashtags(); updateSeoStats(); };
-
-        function renderTags() {
-            const c = document.getElementById('tagsContainer');
-            if (!state.seo.tags.length) { c.innerHTML = '<span style="color:var(--text-secondary);font-size:12px;">لا توجد كلمات مفتاحية بعد</span>'; return; }
-            c.innerHTML = state.seo.tags.map((t, i) =>
-                `<span class="tag-item">${t}<span class="tag-remove" onclick="removeTag(${i})">×</span></span>`
-            ).join('');
-        }
-        window.removeTag = function (i) { state.seo.tags.splice(i, 1); renderTags(); updateSeoStats(); };
-
-        function updateSeoStats() {
-            const s = document.getElementById('seoStats');
-            s.style.display = 'grid';
-            document.getElementById('statWords').textContent = state.seo.title.trim() ? state.seo.title.trim().split(/\s+/).length : 0;
-            document.getElementById('statChars').textContent = state.seo.title.length;
-            document.getElementById('statTags').textContent = state.seo.tags.length;
-            document.getElementById('statHashtags').textContent = state.seo.hashtags.length;
-            document.getElementById('statDescLen').textContent = state.seo.description.length;
-        }
-
-        document.getElementById('seoGenerateBtn').addEventListener('click', async () => {
-            const rawText = (state.textContent || '').trim();
-            if (!rawText) {
-                showToast('الرجاء إدخال نص أولاً', true); return;
-            }
-            showLoading('جاري تحليل النص وتوليد SEO...', 'قد يستغرق ذلك بضع ثوانٍ');
-            try {
-                const r = await fetch(`${WORKER_API_URL}/generate-text-seo`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ text: rawText })
                 });
-                if (r.ok) {
-                    const d = await r.json();
-                    if (d.title) { state.seo.title = d.title; document.getElementById('seoTitle').value = d.title; document.getElementById('seoTitleCount').textContent = d.title.length; }
-                    if (d.description) { state.seo.description = d.description; document.getElementById('seoDesc').value = d.description; document.getElementById('seoDescCount').textContent = d.description.length; }
-                    if (d.tags) { state.seo.tags = [...new Set(d.tags.map(t => t.trim().replace(/[\-_]+/g, ' ').replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '').replace(/\s+/g, ' ')).filter(t => t.length > 1))]; renderTags(); }
-                    if (Array.isArray(d.hashtags)) {
-                        state.seo.hashtags = [...new Set(
-                            d.hashtags.map(h => normalizeHashtag(h)).filter(h => h.length > 1)
-                        )];
-                        renderHashtags();
-                    }
-                    updateSeoStats();
-                    showToast('✅ تم إنشاء بيانات SEO بنجاح');
-                } else showToast('فشل إنشاء SEO تلقائياً', true);
-            } catch (e) { showToast('فشل الاتصال بالخادم', true); }
-            finally { hideLoading(); }
-        });
-
-        // ===== REVIEW =====
-        function updateReview() {
-            document.getElementById('rText').textContent = state.textContent.length > 100 ? state.textContent.substring(0, 100) + '...' : state.textContent || '(فارغ)';
-            document.getElementById('rChars').textContent = state.textContent.length;
-            document.getElementById('rWords').textContent = state.textContent.trim() ? state.textContent.trim().split(/\s+/).length : 0;
-            const cardsCount = state.textCards.length;
-            document.getElementById('rCards').textContent = cardsCount === 1 ? 'بطاقة واحدة' : `${cardsCount} بطاقات`;
-            let td = 0;
-            if (state.audio?.duration && state.audio.duration > 0) {
-                td = state.audio.duration;
-            } else if (Array.isArray(state.cardDurations) && state.cardDurations.length === state.textCards.length) {
-                td = state.cardDurations.reduce((a,b)=>a+(Number(b)||0),0);
-            } else {
-                for (const c of state.textCards) { const w = c.trim().split(/\s+/).filter(Boolean).length || 1; td += Math.max(4, Math.min(15, Math.ceil(w / 2.5) + (w > 20 ? Math.ceil((w - 20) / 10) : 0))); }
             }
-            document.getElementById('rDuration').textContent = td ? `~${formatDurationDisplay(td)}` : '-';
-            
-            const t = state.selectedTemplate || TEMPLATES_LIST.find(t => String(t.id) === String(state.templateId));
-            document.getElementById('rTemplate').textContent = t?.template_name || '-';
-            document.getElementById('rSeoTitle').textContent = state.seo.title || '-';
-            document.getElementById('rSeoDesc').textContent = state.seo.description || '-';
-            document.getElementById('rSeoHashtags').textContent = state.seo.hashtags.length
-                ? state.seo.hashtags.map(h => '#' + h).join('  ')
-                : '-';
 
-            const reviewL = document.getElementById('reviewLandscapeImage');
-            const reviewP = document.getElementById('reviewPortraitImage');
-            if (t) {
-                reviewL.src = getTemplateImageUrl(t, 'landscape');
-                reviewP.src = getTemplateImageUrl(t, 'portrait');
+            // ===== TEMPLATE PREVIEW MODAL =====
+            function showTemplatePreviewModal(template) {
+                pendingTemplate = template;
+                const modal = document.getElementById('templatePreviewModal');
+                const titleEl = document.getElementById('templateModalTitle');
+                const landscapeImg = document.getElementById('modalLandscapePreview');
+                const portraitImg = document.getElementById('modalPortraitPreview');
+
+                titleEl.textContent = `معاينة قالب: ${template.template_name}`;
+                landscapeImg.src = getTemplateImageUrl(template, 'landscape');
+                portraitImg.src = getTemplateImageUrl(template, 'portrait');
+
+                modal.classList.add('visible');
+                document.body.style.overflow = 'hidden';
             }
-        }
 
-        // ===== INIT =====
-        async function init() {
-            renderTemplates();
+            function closeTemplateModal() {
+                document.getElementById('templatePreviewModal').classList.remove('visible');
+                document.body.style.overflow = '';
+                pendingTemplate = null;
+            }
 
-            const params = new URLSearchParams(window.location.search);
-            const processId = params.get('bin') || tg.initDataUnsafe?.start_param;
-            if (processId) {
-                try {
-                    showLoading('جاري جلب البيانات...');
-                    const r = await fetch(`${WORKER_API_URL}/get-bin/${processId}`);
-                    if (r.ok) {
-                        const result = await r.json();
-                        const data = result.data || result.record || result;
-                        if (data) {
-                            binData = { ...data };
-                            state.user_id = data.user_id || String(tg.initDataUnsafe?.user?.id || '');
-                            if (data.text_content) { 
-                                state.textContent = data.text_content; 
-                                document.getElementById('textInput').value = state.textContent; 
-                                const chars = state.textContent.length;
-                                const words = state.textContent.trim() ? state.textContent.trim().split(/\s+/).length : 0;
-                                document.getElementById('charCount').textContent = chars;
-                                document.getElementById('wordCount').textContent = words;
-                                updateCards(); 
-                                const savedDurs = data.card_durations || data.durations || data.cardDurations;
-                                if (Array.isArray(savedDurs) && savedDurs.length === state.textCards.length) {
-                                    state.cardDurations = savedDurs.map(v => Math.max(3, Math.min(20, Math.round(Number(v)) || 4)));
-                                    renderCardsList();
-                                }
-                            }
-                            if (data.template_id) { 
-                                state.templateId = String(data.template_id); 
-                                state.selectedTemplate = TEMPLATES_LIST.find(t => String(t.id) === state.templateId) || null;
-                                renderTemplates();
-                            }
-                            if (data.seo) {
-                                state.seo = {
-                                    title: data.seo.title || '',
-                                    description: data.seo.description || '',
-                                    tags: Array.isArray(data.seo.tags) ? [...data.seo.tags] : [],
-                                    hashtags: Array.isArray(data.seo.hashtags) ? [...data.seo.hashtags] : []
-                                };
-                                document.getElementById('seoTitle').value = state.seo.title;
-                                document.getElementById('seoDesc').value = state.seo.description;
-                                renderTags();
-                                renderHashtags();
-                            }
-                            // استرجاع الملف الصوتي إن وجد (مطابق لمحرر الصور)
-                            const b64 = data.audioBase64 || data.audio_base64 || data.audioBase64Data;
-                            const aDur = data.audioDuration || data.audio_duration;
-                            const aName = data.audioFilename || data.audio_filename;
-                            if (b64) {
-                                state.audio.base64 = b64;
-                                state.audio.duration = aDur || null;
-                                state.audio.filename = aName || 'audio.mp3';
-                                const nameEl = document.getElementById('audioPreviewName');
-                                const durEl = document.getElementById('audioPreviewDuration');
-                                const totEl = document.getElementById('audioTotalTime');
-                                const cardEl = document.getElementById('audioPreviewCard');
-                                const dzEl = document.getElementById('audioDropZone');
-                                if (nameEl) nameEl.textContent = state.audio.filename;
-                                if (durEl) durEl.textContent = aDur ? formatAudioTime(aDur) : '—';
-                                if (totEl) totEl.textContent = aDur ? formatAudioTime(aDur) : '—';
-                                if (cardEl) cardEl.classList.add('visible');
-                                if (dzEl) dzEl.style.display = 'none';
-                                const audioEl = document.getElementById('inEditorAudio');
-                                if (audioEl) { audioEl.src = b64; audioEl.load(); }
-                            }
+            // ===== NAVIGATION =====
+            let currentStep = 1;
+            const totalSteps = 3;
+
+            function updateSteps() {
+                document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
+                document.querySelector(`.step-content[data-step="${currentStep}"]`).classList.add('active');
+                document.getElementById('stepNumber').textContent = currentStep;
+                document.getElementById('btnBack').style.display = currentStep > 1 ? 'flex' : 'none';
+                const btnNext = document.getElementById('btnNext');
+                if (currentStep === totalSteps) {
+                    btnNext.innerHTML = '<span>🚀</span><span>إرسال</span>';
+                    btnNext.className = 'nav-btn btn-submit';
+                    btnNext.disabled = false;
+                } else {
+                    btnNext.innerHTML = '<span>التالي</span><span>→</span>';
+                    btnNext.className = 'nav-btn btn-next';
+                    btnNext.disabled = false;
+                }
+                if (currentStep === 3) updateReview();
+            }
+
+            document.getElementById('btnNext').addEventListener('click', async () => {
+                if (currentStep < totalSteps) {
+                    if (currentStep === 1) {
+                        if (!state.textContent || state.textContent.trim().length < 5) {
+                            showToast('الرجاء إدخال نص قبل المتابعة', true); return;
+                        }
+                        if (!state.templateId) {
+                            showToast('الرجاء اختيار قالب', true); return;
                         }
                     }
-                } catch (e) { console.error(e); }
-                finally { hideLoading(); }
-            }
-            updateSteps();
+                    currentStep++;
+                    updateSteps();
+                    window.scrollTo(0, 0);
+                } else {
+                    // SUBMIT - مثل بقية المحررات: إرسال مباشر لـ n8n وينهي الويب اب
+                    const btn = document.getElementById('btnNext');
+                    const originalText = btn.innerHTML;
+                    btn.disabled = true;
+                    btn.innerHTML = '<span>⏳</span><span>جاري الإرسال...</span>';
+                    showLoading('جاري الإرسال...', 'الرجاء الانتظار');
+                    try {
+                        const params = new URLSearchParams(window.location.search);
+                        const processId = params.get('bin') || tg.initDataUnsafe?.start_param || `TEXT_${Date.now()}`;
+                        const userId = state.user_id || binData.user_id || (tg.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : '');
 
-            document.getElementById('templateModalClose').addEventListener('click', closeTemplateModal);
-            document.getElementById('templatePreviewModal').addEventListener('click', (e) => {
-                if (e.target === document.getElementById('templatePreviewModal')) closeTemplateModal();
-            });
-            document.getElementById('templateModalConfirm').addEventListener('click', () => {
-                if (pendingTemplate) {
-                    state.templateId = String(pendingTemplate.id);
-                    state.colorId = '1';
-                    state.selectedTemplate = pendingTemplate;
-                    renderTemplates();
-                }
-                closeTemplateModal();
-            });
+                        // التأكد من رفع الصوت إلى السيرفر عبر الوركر للحصول على رابط خفيف وتفادي أخطاء n8n
+                        let effectiveAudioUrl = state.audio?.url || '';
+                        if (!effectiveAudioUrl && state.audio?.base64) {
+                            showLoading('جاري رفع ومعالجة الصوت...', 'يرجى الانتظار');
+                            effectiveAudioUrl = await uploadAudioToWorker(state.audio.base64) || '';
+                            if (effectiveAudioUrl) state.audio.url = effectiveAudioUrl;
+                        }
 
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeTemplateModal();
-                }
-            });
+                        // إجمالي مدة البطاقات أو مدة الصوت إن وُجد
+                        const totalCardsDuration = (state.cardDurations && state.cardDurations.length === state.textCards.length)
+                            ? state.cardDurations.reduce((a, b) => a + b, 0)
+                            : (state.audio?.duration || state.textCards.reduce((s, c) => s + heuristicDur(c), 0));
 
-            // ===== AUDIO EVENTS (مطابق لمحرر الصور) =====
-            const dz = document.getElementById('audioDropZone');
-            const fileInp = document.getElementById('audioFileInput');
-            if (dz && fileInp) {
-                dz.addEventListener('click', () => fileInp.click());
-                dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.style.borderColor = 'var(--primary-dark)'; dz.style.background = 'rgba(74,144,226,0.08)'; });
-                dz.addEventListener('dragleave', () => { dz.style.borderColor = ''; dz.style.background = ''; });
-                dz.addEventListener('drop', (e) => {
-                    e.preventDefault(); dz.style.borderColor = ''; dz.style.background = '';
-                    const f = e.dataTransfer.files && e.dataTransfer.files[0];
-                    if (f) handleAudioFile(f);
-                });
-                fileInp.addEventListener('change', (e) => {
-                    const f = e.target.files && e.target.files[0];
-                    if (f) handleAudioFile(f);
-                });
-            }
-            document.getElementById('audioRemoveBtn')?.addEventListener('click', removeAudio);
-            const audioEl = document.getElementById('inEditorAudio');
-            const playBtn = document.getElementById('audioPlayPauseBtn');
-            const seekBack = document.getElementById('audioSeekBack');
-            const seekFwd = document.getElementById('audioSeekFwd');
-            const track = document.getElementById('audioProgressTrack');
-            const fill = document.getElementById('audioProgressFill');
-            const thumb = document.getElementById('audioProgressThumb');
-            const curEl = document.getElementById('audioCurrentTime');
-            const totEl = document.getElementById('audioTotalTime');
-            const wave = document.getElementById('audioWaveform');
-            if (audioEl && playBtn) {
-                playBtn.addEventListener('click', () => {
-                    if (audioEl.paused) { audioEl.play(); } else { audioEl.pause(); }
-                });
-                audioEl.addEventListener('play', () => { playBtn.textContent = '⏸'; wave?.classList.remove('paused'); });
-                audioEl.addEventListener('pause', () => { playBtn.textContent = '▶'; wave?.classList.add('paused'); });
-                audioEl.addEventListener('timeupdate', () => {
-                    const cur = audioEl.currentTime || 0;
-                    const tot = audioEl.duration || state.audio.duration || 0;
-                    if (tot > 0) {
-                        const pct = (cur / tot) * 100;
-                        if (fill) fill.style.width = pct + '%';
-                        if (thumb) thumb.style.right = (100 - pct) + '%';
+                        const audioDuration = state.audio?.duration || null;
+                        const audioFilename = state.audio?.filename || '';
+
+                        const webhookData = {
+                            ...binData,
+                            text_content: state.textContent,
+                            text_cards: state.textCards,
+                            card_durations: Array.isArray(state.cardDurations) ? [...state.cardDurations] : [],
+                            durations: Array.isArray(state.cardDurations) ? [...state.cardDurations] : [],
+                            template_id: parseInt(state.templateId, 10) || 1,
+                            color_id: parseInt(state.colorId, 10) || 1,
+                            seo: { ...state.seo },
+                            user_id: userId,
+                            captions: [],
+                            audioUrl: effectiveAudioUrl,
+                            audio_url: effectiveAudioUrl,
+                            audioDuration: audioDuration,
+                            audio_duration: audioDuration,
+                            audioFilename: audioFilename,
+                            audio_filename: audioFilename,
+                            // لا نرسل base64 إلا إذا تعذر رفع الملف تماماً
+                            audioBase64: effectiveAudioUrl ? null : (state.audio?.base64 || null),
+                            audio_base64: effectiveAudioUrl ? null : (state.audio?.base64 || null),
+                            duration: audioDuration || totalCardsDuration
+                        };
+
+                        const finalData = {
+                            type: 'text_cards',
+                            data: webhookData,
+                            id: processId,
+                            timestamp: new Date().toISOString()
+                        };
+
+                        console.log('📤 إرسال البيانات عبر Webhook:', finalData);
+
+                        const response = await fetch(N8N_WEBHOOK_URL, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(finalData)
+                        });
+
+                        if (!response.ok) {
+                            let errText = '';
+                            try { errText = await response.text(); } catch (_) { }
+                            console.error('n8n error body:', errText.substring(0, 500));
+                            throw new Error((errText && errText.length < 400 ? errText : '') + ' فشل الإرسال (' + response.status + ')');
+                        }
+
+                        try {
+                            tg.sendData(JSON.stringify({
+                                type: 'text_content_completed',
+                                id: processId,
+                                status: 'completed'
+                            }));
+                        } catch (e) {
+                            console.log('⚠️ لا يمكن إرسال إشعار التليجرام:', e);
+                        }
+
+                        hideLoading();
+
+                        if (tg.isVersionAtLeast && tg.isVersionAtLeast('6.2')) {
+                            tg.showAlert('✅ تم الإرسال بنجاح!', () => {
+                                setTimeout(() => tg.close(), 500);
+                            });
+                        } else {
+                            showToast('✅ تم الإرسال بنجاح!');
+                            setTimeout(() => tg.close(), 1500);
+                        }
+                    } catch (e) {
+                        console.error('❌ خطأ في الإرسال:', e);
+                        showToast('❌ ' + (e.message || 'حدث خطأ أثناء الإرسال'), true);
+                        btn.disabled = false;
+                        btn.innerHTML = originalText;
+                    } finally {
+                        hideLoading();
                     }
-                    if (curEl) curEl.textContent = formatAudioTime(cur);
-                    if (totEl && tot) totEl.textContent = formatAudioTime(tot);
-                });
-                audioEl.addEventListener('ended', () => { playBtn.textContent = '▶'; wave?.classList.add('paused'); });
-                audioEl.addEventListener('loadedmetadata', () => {
-                    if (totEl) totEl.textContent = formatAudioTime(audioEl.duration);
-                    state.audio.duration = audioEl.duration;
-                });
-            }
-            if (seekBack && audioEl) seekBack.addEventListener('click', () => { audioEl.currentTime = Math.max(0, audioEl.currentTime - 10); });
-            if (seekFwd && audioEl) seekFwd.addEventListener('click', () => { audioEl.currentTime = Math.min(audioEl.duration || Infinity, audioEl.currentTime + 10); });
-            if (track && audioEl) {
-                const seek = (e) => {
-                    const rect = track.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const pct = Math.max(0, Math.min(1, x / rect.width));
-                    // RTL: track fill from right, so invert
-                    const invPct = 1 - pct;
-                    if (audioEl.duration) audioEl.currentTime = invPct * audioEl.duration;
-                };
-                let dragging = false;
-                track.addEventListener('click', seek);
-                track.addEventListener('mousedown', (e) => { dragging = true; seek(e); });
-                window.addEventListener('mouseup', () => dragging = false);
-                window.addEventListener('mousemove', (e) => { if (dragging) seek(e); });
-                track.addEventListener('touchstart', (e) => { dragging = true; const t = e.touches[0]; if (t) seek(t); }, { passive: true });
-                window.addEventListener('touchend', () => dragging = false);
-                window.addEventListener('touchmove', (e) => { if (dragging) { const t = e.touches[0]; if (t) seek(t); } }, { passive: true });
-            }
-        }
+                }
+            });
 
-        init();
+            document.getElementById('btnBack').addEventListener('click', () => {
+                if (currentStep > 1) { currentStep--; updateSteps(); window.scrollTo(0, 0); }
+            });
+
+            // ===== TEXT INPUT =====
+            document.getElementById('textInput').addEventListener('input', e => {
+                state.textContent = e.target.value;
+                const chars = state.textContent.length;
+                const words = state.textContent.trim() ? state.textContent.trim().split(/\s+/).length : 0;
+                document.getElementById('charCount').textContent = chars;
+                document.getElementById('wordCount').textContent = words;
+                updateCards();
+            });
+
+            // ===== SEO =====
+            document.getElementById('seoTitle').addEventListener('input', e => {
+                state.seo.title = e.target.value;
+                document.getElementById('seoTitleCount').textContent = e.target.value.length;
+                updateSeoStats();
+            });
+            document.getElementById('seoDesc').addEventListener('input', e => {
+                state.seo.description = e.target.value;
+                document.getElementById('seoDescCount').textContent = e.target.value.length;
+                updateSeoStats();
+            });
+            document.getElementById('addTagBtn').addEventListener('click', () => {
+                const inp = document.getElementById('tagInput');
+                const val = inp.value.trim().replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '').replace(/\s+/g, ' ');
+                if (val && !state.seo.tags.includes(val)) { state.seo.tags.push(val); inp.value = ''; renderTags(); updateSeoStats(); }
+                else if (state.seo.tags.includes(val)) showToast('هذه الكلمة موجودة بالفعل');
+            });
+            document.getElementById('tagInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('addTagBtn').click(); });
+
+            // ===== HASHTAGS =====
+            function normalizeHashtag(h) {
+                // إزالة # من البداية، استبدال المسافات بـ _، وحذف الرموز غير المسموحة مع الحفاظ على _
+                return String(h || '').trim()
+                    .replace(/^#+/, '')
+                    .replace(/\s+/g, '_')
+                    .replace(/_+/g, '_')
+                    .replace(/[^\u0600-\u06FFa-zA-Z0-9_]/g, '');
+            }
+            document.getElementById('addHashtagBtn').addEventListener('click', () => {
+                const inp = document.getElementById('hashtagInput');
+                const val = normalizeHashtag(inp.value);
+                if (!val || val.length < 2) return;
+                if (state.seo.hashtags.includes(val)) { showToast('هذا الهاشتاق موجود بالفعل'); inp.value = ''; return; }
+                state.seo.hashtags.push(val);
+                inp.value = '';
+                renderHashtags();
+                updateSeoStats();
+            });
+            document.getElementById('hashtagInput').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('addHashtagBtn').click(); });
+
+            function renderHashtags() {
+                const c = document.getElementById('hashtagsContainer');
+                if (!state.seo.hashtags.length) { c.innerHTML = '<span style="color:var(--text-secondary);font-size:12px;">لا توجد هاشتاقات بعد</span>'; return; }
+                c.innerHTML = state.seo.hashtags.map((h, i) =>
+                    `<span class="tag-item">#${h}<span class="tag-remove" onclick="removeHashtag(${i})">×</span></span>`
+                ).join('');
+            }
+            window.removeHashtag = function (i) { state.seo.hashtags.splice(i, 1); renderHashtags(); updateSeoStats(); };
+
+            function renderTags() {
+                const c = document.getElementById('tagsContainer');
+                if (!state.seo.tags.length) { c.innerHTML = '<span style="color:var(--text-secondary);font-size:12px;">لا توجد كلمات مفتاحية بعد</span>'; return; }
+                c.innerHTML = state.seo.tags.map((t, i) =>
+                    `<span class="tag-item">${t}<span class="tag-remove" onclick="removeTag(${i})">×</span></span>`
+                ).join('');
+            }
+            window.removeTag = function (i) { state.seo.tags.splice(i, 1); renderTags(); updateSeoStats(); };
+
+            function updateSeoStats() {
+                const s = document.getElementById('seoStats');
+                s.style.display = 'grid';
+                document.getElementById('statWords').textContent = state.seo.title.trim() ? state.seo.title.trim().split(/\s+/).length : 0;
+                document.getElementById('statChars').textContent = state.seo.title.length;
+                document.getElementById('statTags').textContent = state.seo.tags.length;
+                document.getElementById('statHashtags').textContent = state.seo.hashtags.length;
+                document.getElementById('statDescLen').textContent = state.seo.description.length;
+            }
+
+            document.getElementById('seoGenerateBtn').addEventListener('click', async () => {
+                const rawText = (state.textContent || '').trim();
+                if (!rawText) {
+                    showToast('الرجاء إدخال نص أولاً', true); return;
+                }
+                showLoading('جاري تحليل النص وتوليد SEO...', 'قد يستغرق ذلك بضع ثوانٍ');
+                try {
+                    const r = await fetch(`${WORKER_API_URL}/generate-text-seo`, {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ text: rawText })
+                    });
+                    if (r.ok) {
+                        const d = await r.json();
+                        if (d.title) { state.seo.title = d.title; document.getElementById('seoTitle').value = d.title; document.getElementById('seoTitleCount').textContent = d.title.length; }
+                        if (d.description) { state.seo.description = d.description; document.getElementById('seoDesc').value = d.description; document.getElementById('seoDescCount').textContent = d.description.length; }
+                        if (d.tags) { state.seo.tags = [...new Set(d.tags.map(t => t.trim().replace(/[\-_]+/g, ' ').replace(/[^\u0600-\u06FFa-zA-Z0-9\s]/g, '').replace(/\s+/g, ' ')).filter(t => t.length > 1))]; renderTags(); }
+                        if (Array.isArray(d.hashtags)) {
+                            state.seo.hashtags = [...new Set(
+                                d.hashtags.map(h => normalizeHashtag(h)).filter(h => h.length > 1)
+                            )];
+                            renderHashtags();
+                        }
+                        updateSeoStats();
+                        showToast('✅ تم إنشاء بيانات SEO بنجاح');
+                    } else showToast('فشل إنشاء SEO تلقائياً', true);
+                } catch (e) { showToast('فشل الاتصال بالخادم', true); }
+                finally { hideLoading(); }
+            });
+
+            // ===== REVIEW =====
+            function updateReview() {
+                document.getElementById('rText').textContent = state.textContent.length > 100 ? state.textContent.substring(0, 100) + '...' : state.textContent || '(فارغ)';
+                document.getElementById('rChars').textContent = state.textContent.length;
+                document.getElementById('rWords').textContent = state.textContent.trim() ? state.textContent.trim().split(/\s+/).length : 0;
+                const cardsCount = state.textCards.length;
+                document.getElementById('rCards').textContent = cardsCount === 1 ? 'بطاقة واحدة' : `${cardsCount} بطاقات`;
+                let td = 0;
+                if (state.audio?.duration && state.audio.duration > 0) {
+                    td = state.audio.duration;
+                } else if (Array.isArray(state.cardDurations) && state.cardDurations.length === state.textCards.length) {
+                    td = state.cardDurations.reduce((a, b) => a + (Number(b) || 0), 0);
+                } else {
+                    for (const c of state.textCards) { const w = c.trim().split(/\s+/).filter(Boolean).length || 1; td += Math.max(4, Math.min(15, Math.ceil(w / 2.5) + (w > 20 ? Math.ceil((w - 20) / 10) : 0))); }
+                }
+                document.getElementById('rDuration').textContent = td ? `~${formatDurationDisplay(td)}` : '-';
+
+                const t = state.selectedTemplate || TEMPLATES_LIST.find(t => String(t.id) === String(state.templateId));
+                document.getElementById('rTemplate').textContent = t?.template_name || '-';
+                document.getElementById('rSeoTitle').textContent = state.seo.title || '-';
+                document.getElementById('rSeoDesc').textContent = state.seo.description || '-';
+                document.getElementById('rSeoHashtags').textContent = state.seo.hashtags.length
+                    ? state.seo.hashtags.map(h => '#' + h).join('  ')
+                    : '-';
+
+                const reviewL = document.getElementById('reviewLandscapeImage');
+                const reviewP = document.getElementById('reviewPortraitImage');
+                if (t) {
+                    reviewL.src = getTemplateImageUrl(t, 'landscape');
+                    reviewP.src = getTemplateImageUrl(t, 'portrait');
+                }
+            }
+
+            // ===== INIT =====
+            async function init() {
+                renderTemplates();
+
+                const params = new URLSearchParams(window.location.search);
+                const processId = params.get('bin') || tg.initDataUnsafe?.start_param;
+                if (processId) {
+                    try {
+                        showLoading('جاري جلب البيانات...');
+                        const r = await fetch(`${WORKER_API_URL}/get-bin/${processId}`);
+                        if (r.ok) {
+                            const result = await r.json();
+                            const data = result.data || result.record || result;
+                            if (data) {
+                                binData = { ...data };
+                                state.user_id = data.user_id || String(tg.initDataUnsafe?.user?.id || '');
+                                if (data.text_content) {
+                                    state.textContent = data.text_content;
+                                    document.getElementById('textInput').value = state.textContent;
+                                    const chars = state.textContent.length;
+                                    const words = state.textContent.trim() ? state.textContent.trim().split(/\s+/).length : 0;
+                                    document.getElementById('charCount').textContent = chars;
+                                    document.getElementById('wordCount').textContent = words;
+                                    updateCards();
+                                    const savedDurs = data.card_durations || data.durations || data.cardDurations;
+                                    if (Array.isArray(savedDurs) && savedDurs.length === state.textCards.length) {
+                                        state.cardDurations = savedDurs.map(v => Math.max(3, Math.min(20, Math.round(Number(v)) || 4)));
+                                        renderCardsList();
+                                    }
+                                }
+                                if (data.template_id) {
+                                    state.templateId = String(data.template_id);
+                                    state.selectedTemplate = TEMPLATES_LIST.find(t => String(t.id) === state.templateId) || null;
+                                    renderTemplates();
+                                }
+                                if (data.seo) {
+                                    state.seo = {
+                                        title: data.seo.title || '',
+                                        description: data.seo.description || '',
+                                        tags: Array.isArray(data.seo.tags) ? [...data.seo.tags] : [],
+                                        hashtags: Array.isArray(data.seo.hashtags) ? [...data.seo.hashtags] : []
+                                    };
+                                    document.getElementById('seoTitle').value = state.seo.title;
+                                    document.getElementById('seoDesc').value = state.seo.description;
+                                    renderTags();
+                                    renderHashtags();
+                                }
+                                // استرجاع الملف الصوتي إن وجد (مطابق لمحرر الصور)
+                                const b64 = data.audioBase64 || data.audio_base64 || data.audioBase64Data;
+                                const aDur = data.audioDuration || data.audio_duration;
+                                const aName = data.audioFilename || data.audio_filename;
+                                if (b64) {
+                                    state.audio.base64 = b64;
+                                    state.audio.duration = aDur || null;
+                                    state.audio.filename = aName || 'audio.mp3';
+                                    const nameEl = document.getElementById('audioPreviewName');
+                                    const durEl = document.getElementById('audioPreviewDuration');
+                                    const totEl = document.getElementById('audioTotalTime');
+                                    const cardEl = document.getElementById('audioPreviewCard');
+                                    const dzEl = document.getElementById('audioDropZone');
+                                    if (nameEl) nameEl.textContent = state.audio.filename;
+                                    if (durEl) durEl.textContent = aDur ? formatAudioTime(aDur) : '—';
+                                    if (totEl) totEl.textContent = aDur ? formatAudioTime(aDur) : '—';
+                                    if (cardEl) cardEl.classList.add('visible');
+                                    if (dzEl) dzEl.style.display = 'none';
+                                    const audioEl = document.getElementById('inEditorAudio');
+                                    if (audioEl) { audioEl.src = b64; audioEl.load(); }
+                                }
+                            }
+                        }
+                    } catch (e) { console.error(e); }
+                    finally { hideLoading(); }
+                }
+                updateSteps();
+
+                document.getElementById('templateModalClose').addEventListener('click', closeTemplateModal);
+                document.getElementById('templatePreviewModal').addEventListener('click', (e) => {
+                    if (e.target === document.getElementById('templatePreviewModal')) closeTemplateModal();
+                });
+                document.getElementById('templateModalConfirm').addEventListener('click', () => {
+                    if (pendingTemplate) {
+                        state.templateId = String(pendingTemplate.id);
+                        state.colorId = '1';
+                        state.selectedTemplate = pendingTemplate;
+                        renderTemplates();
+                    }
+                    closeTemplateModal();
+                });
+
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        closeTemplateModal();
+                    }
+                });
+
+                // ===== AUDIO EVENTS (مطابق لمحرر الصور) =====
+                const dz = document.getElementById('audioDropZone');
+                const fileInp = document.getElementById('audioFileInput');
+                if (dz && fileInp) {
+                    dz.addEventListener('click', () => fileInp.click());
+                    dz.addEventListener('dragover', (e) => { e.preventDefault(); dz.style.borderColor = 'var(--primary-dark)'; dz.style.background = 'rgba(74,144,226,0.08)'; });
+                    dz.addEventListener('dragleave', () => { dz.style.borderColor = ''; dz.style.background = ''; });
+                    dz.addEventListener('drop', (e) => {
+                        e.preventDefault(); dz.style.borderColor = ''; dz.style.background = '';
+                        const f = e.dataTransfer.files && e.dataTransfer.files[0];
+                        if (f) handleAudioFile(f);
+                    });
+                    fileInp.addEventListener('change', (e) => {
+                        const f = e.target.files && e.target.files[0];
+                        if (f) handleAudioFile(f);
+                    });
+                }
+                document.getElementById('audioRemoveBtn')?.addEventListener('click', removeAudio);
+                const audioEl = document.getElementById('inEditorAudio');
+                const playBtn = document.getElementById('audioPlayPauseBtn');
+                const seekBack = document.getElementById('audioSeekBack');
+                const seekFwd = document.getElementById('audioSeekFwd');
+                const track = document.getElementById('audioProgressTrack');
+                const fill = document.getElementById('audioProgressFill');
+                const thumb = document.getElementById('audioProgressThumb');
+                const curEl = document.getElementById('audioCurrentTime');
+                const totEl = document.getElementById('audioTotalTime');
+                const wave = document.getElementById('audioWaveform');
+                if (audioEl && playBtn) {
+                    playBtn.addEventListener('click', () => {
+                        if (audioEl.paused) { audioEl.play(); } else { audioEl.pause(); }
+                    });
+                    audioEl.addEventListener('play', () => { playBtn.textContent = '⏸'; wave?.classList.remove('paused'); });
+                    audioEl.addEventListener('pause', () => { playBtn.textContent = '▶'; wave?.classList.add('paused'); });
+                    audioEl.addEventListener('timeupdate', () => {
+                        const cur = audioEl.currentTime || 0;
+                        const tot = audioEl.duration || state.audio.duration || 0;
+                        if (tot > 0) {
+                            const pct = (cur / tot) * 100;
+                            if (fill) fill.style.width = pct + '%';
+                            if (thumb) thumb.style.right = (100 - pct) + '%';
+                        }
+                        if (curEl) curEl.textContent = formatAudioTime(cur);
+                        if (totEl && tot) totEl.textContent = formatAudioTime(tot);
+                    });
+                    audioEl.addEventListener('ended', () => { playBtn.textContent = '▶'; wave?.classList.add('paused'); });
+                    audioEl.addEventListener('loadedmetadata', () => {
+                        if (totEl) totEl.textContent = formatAudioTime(audioEl.duration);
+                        state.audio.duration = audioEl.duration;
+                    });
+                }
+                if (seekBack && audioEl) seekBack.addEventListener('click', () => { audioEl.currentTime = Math.max(0, audioEl.currentTime - 10); });
+                if (seekFwd && audioEl) seekFwd.addEventListener('click', () => { audioEl.currentTime = Math.min(audioEl.duration || Infinity, audioEl.currentTime + 10); });
+                if (track && audioEl) {
+                    const seek = (e) => {
+                        const rect = track.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const pct = Math.max(0, Math.min(1, x / rect.width));
+                        // RTL: track fill from right, so invert
+                        const invPct = 1 - pct;
+                        if (audioEl.duration) audioEl.currentTime = invPct * audioEl.duration;
+                    };
+                    let dragging = false;
+                    track.addEventListener('click', seek);
+                    track.addEventListener('mousedown', (e) => { dragging = true; seek(e); });
+                    window.addEventListener('mouseup', () => dragging = false);
+                    window.addEventListener('mousemove', (e) => { if (dragging) seek(e); });
+                    track.addEventListener('touchstart', (e) => { dragging = true; const t = e.touches[0]; if (t) seek(t); }, { passive: true });
+                    window.addEventListener('touchend', () => dragging = false);
+                    window.addEventListener('touchmove', (e) => { if (dragging) { const t = e.touches[0]; if (t) seek(t); } }, { passive: true });
+                }
+            }
+
+            init();
     </script>
 </body>
+
 </html>
