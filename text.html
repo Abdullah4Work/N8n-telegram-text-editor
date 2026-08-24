@@ -1774,30 +1774,22 @@
                 const cards = splitTextIntoCards(text);
                 const prevLen = state.textCards.length;
                 state.textCards = cards;
+
+                // حساب المدد مع مراعاة الصوت
                 if (!Array.isArray(state.cardDurations) || state.cardDurations.length !== cards.length) {
                     const old = Array.isArray(state.cardDurations) ? state.cardDurations : [];
                     state.cardDurations = cards.map((c, i) => (i < old.length && typeof old[i] === 'number') ? old[i] : heuristicDur(c));
-                    // إذا كان هناك صوت، زامن المدد الجديدة عليه فوراً
-                    if (state.audio?.duration && state.audio.duration > 0) {
-                        const n = cards.length;
-                        const transTotal = n > 1 ? (n - 1) * 0.4 : 0;
-                        const target = state.audio.duration + transTotal;
-                        const sumOld = state.cardDurations.reduce((a, b) => a + (b || 0), 0) || n * 4;
-                        const factor = target / sumOld;
-                        state.cardDurations = state.cardDurations.map(d => Math.max(3, Math.round((d || 4) * factor * 10) / 10));
-                    }
-                } else if (state.audio?.duration && state.audio.duration > 0) {
-                    // حتى لو لم يتغير العدد، إذا كان هناك صوت والصوت حديث، أعد المزامنة صامتة
-                    // سيتم التعامل معها عبر distributeCardDurationsByAudio في الاستدعاءات التالية
                 }
+                // دائماً زامن على الصوت إذا كان موجوداً
+                if (state.audio?.duration && state.audio.duration > 0) {
+                    distributeCardDurationsByAudio(true);
+                    return; // distributeCardDurationsByAudio سيتولى renderCardsList وتحديث العرض
+                }
+
                 sec.classList.remove('hidden');
                 badge.textContent = cards.length === 1 ? 'بطاقة واحدة' : `${cards.length} بطاقات`;
                 cardsCount.textContent = cards.length;
                 renderCardsList();
-                // إذا كان هناك صوت، تأكد أن المدد مزامنة بعد الرسم (للحالات التي تغير النص بدون تغيير العدد)
-                if (state.audio?.duration && state.audio.duration > 0 && !state.cardDurations._syncedWithAudio) {
-                    // لا نزامن تلقائياً هنا إلا إذا كانت المدد تقديرية ولم تُزامن بعد لتجنب الكتابة فوق تعديل يدوي
-                }
 
                 let totalDur = 0, totalWords = 0, totalChars = 0;
                 for (let i = 0; i < cards.length; i++) {
@@ -1835,11 +1827,12 @@
                     <button type="button" onclick="removeCard(${i})" title="حذف البطاقة" style="width:30px;height:30px;border-radius:8px;border:1px solid #FECACA;background:#FEF2F2;color:var(--danger);cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px;">×</button>
                 </div>`;
                 }).join('') + `<button type="button" onclick="addNewCard()" style="width:100%;margin-top:10px;padding:12px;border:1.5px dashed var(--primary);border-radius:10px;background:rgba(74,144,226,0.06);color:var(--primary);font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">➕ إضافة بطاقة جديدة</button>`;
-                // تحديث الإجمالي
+                // تحديث الإجمالي - المدة الكلية = مدة الصوت إن وجد
                 const estDur = document.getElementById('estDuration');
                 const total = document.getElementById('cardsTotal');
-                let totalDur = 0;
-                for (let i = 0; i < state.textCards.length; i++) totalDur += state.cardDurations[i] || heuristicDur(state.textCards[i]);
+                const totalDur = state.audio?.duration && state.audio.duration > 0
+                    ? state.audio.duration
+                    : state.textCards.reduce((s, c, i) => s + (state.cardDurations[i] || heuristicDur(c)), 0);
                 if (estDur) estDur.textContent = formatDurationDisplay(totalDur);
                 if (total) {
                     let totalWords = 0, totalChars = 0;
@@ -1874,21 +1867,35 @@
                     total.innerHTML = `<span>📊</span><span><strong>${state.textCards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${formatDurationDisplay(totalDur)}</strong></span>`;
                 }
             };
-            // ===== مزامنة البطاقات على مدة الصوت (مثل محرر الصور) =====
+            // ===== مزامنة البطاقات على مدة الصوت =====
             function distributeCardDurationsByAudio(silent) {
                 const audioDur = state.audio?.duration;
                 if (!audioDur || audioDur <= 0 || !state.textCards.length) return false;
                 const n = state.textCards.length;
-                const transTotal = n > 1 ? (n - 1) * 0.4 : 0;
-                const target = audioDur + transTotal;
-                const perCard = target / n;
-                const rounded = Math.max(1.5, Math.round(perCard * 10) / 10);
+                // المجموع = مدة الصوت بالكامل (ليس أكثر ولا أقل)
+                const perCard = audioDur / n;
+                const rounded = Math.max(1, Math.round(perCard * 10) / 10);
                 state.cardDurations = new Array(n).fill(rounded);
-                // تصحيح الانحراف العشري لضمان المجموع = target
+                // تصحيح الانحراف العشري لضمان مجموع المدد = مدة الصوت تماماً
                 const sumNew = state.cardDurations.reduce((a, b) => a + b, 0);
-                const diff = Math.round((target - sumNew) * 10) / 10;
-                state.cardDurations[n - 1] = Math.max(1.5, Math.round((state.cardDurations[n - 1] + diff) * 10) / 10);
+                const diff = Math.round((audioDur - sumNew) * 10) / 10;
+                if (diff !== 0) state.cardDurations[n - 1] = Math.max(1, Math.round((state.cardDurations[n - 1] + diff) * 10) / 10);
 
+                // تحديث عرض الواجهة
+                const sec = document.getElementById('cardsSection');
+                const badge = document.getElementById('cardsBadge');
+                const cardsCount = document.getElementById('cardsCount');
+                const estDur = document.getElementById('estDuration');
+                const total = document.getElementById('cardsTotal');
+                if (sec) sec.classList.remove('hidden');
+                if (badge) badge.textContent = n === 1 ? 'بطاقة واحدة' : `${n} بطاقات`;
+                if (cardsCount) cardsCount.textContent = n;
+                if (estDur) estDur.textContent = formatDurationDisplay(audioDur);
+                if (total) {
+                    let tw = 0, tc = 0;
+                    for (const c of state.textCards) { tw += c.trim().split(/\s+/).filter(Boolean).length || 0; tc += c.length; }
+                    total.innerHTML = `<span>📊</span><span><strong>${n}</strong> بطاقات | <strong>${tw}</strong> كلمة | <strong>${tc}</strong> حرف | ~<strong>${formatDurationDisplay(audioDur)}</strong></span>`;
+                }
                 renderCardsList();
                 if (!silent) {
                     showToast(`✅ تمت مزامنة ${n} بطاقات مع مدة الصوت (${audioDur.toFixed(1)} ثانية)`);
