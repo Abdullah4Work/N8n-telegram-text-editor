@@ -1161,11 +1161,27 @@
             if (!Array.isArray(state.cardDurations) || state.cardDurations.length !== cards.length) {
                 const old = Array.isArray(state.cardDurations) ? state.cardDurations : [];
                 state.cardDurations = cards.map((c, i) => (i < old.length && typeof old[i] === 'number') ? old[i] : heuristicDur(c));
+                // إذا كان هناك صوت، زامن المدد الجديدة عليه فوراً
+                if (state.audio?.duration && state.audio.duration > 0) {
+                    const n = cards.length;
+                    const transTotal = n > 1 ? (n - 1) * 0.4 : 0;
+                    const target = state.audio.duration + transTotal;
+                    const sumOld = state.cardDurations.reduce((a,b)=>a+(b||0),0) || n*4;
+                    const factor = target / sumOld;
+                    state.cardDurations = state.cardDurations.map(d => Math.max(3, Math.round((d||4)*factor*10)/10));
+                }
+            } else if (state.audio?.duration && state.audio.duration > 0) {
+                // حتى لو لم يتغير العدد، إذا كان هناك صوت والصوت حديث، أعد المزامنة صامتة
+                // سيتم التعامل معها عبر distributeCardDurationsByAudio في الاستدعاءات التالية
             }
             sec.classList.remove('hidden');
             badge.textContent = cards.length === 1 ? 'بطاقة واحدة' : `${cards.length} بطاقات`;
             cardsCount.textContent = cards.length;
             renderCardsList();
+            // إذا كان هناك صوت، تأكد أن المدد مزامنة بعد الرسم (للحالات التي تغير النص بدون تغيير العدد)
+            if (state.audio?.duration && state.audio.duration > 0 && !state.cardDurations._syncedWithAudio) {
+                // لا نزامن تلقائياً هنا إلا إذا كانت المدد تقديرية ولم تُزامن بعد لتجنب الكتابة فوق تعديل يدوي
+            }
 
             let totalDur = 0, totalWords = 0, totalChars = 0;
             for (let i = 0; i < cards.length; i++) {
@@ -1242,6 +1258,27 @@
                 total.innerHTML = `<span>📊</span><span><strong>${state.textCards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${totalDur}</strong> ثانية</span>`;
             }
         };
+        // ===== مزامنة البطاقات على مدة الصوت (مثل محرر الصور) =====
+        function distributeCardDurationsByAudio(silent) {
+            const audioDur = state.audio?.duration;
+            if (!audioDur || audioDur <= 0 || !state.textCards.length) return false;
+            const n = state.textCards.length;
+            const transTotal = n > 1 ? (n - 1) * 0.4 : 0;
+            const target = audioDur + transTotal;
+            const sumOld = state.cardDurations.reduce((a,b)=>a+(b||0),0) || n * 4;
+            const factor = target / sumOld;
+            state.cardDurations = state.cardDurations.map(d => Math.max(3, Math.round((d||4) * factor * 10)/10));
+            // تصحيح الانحراف العشري لضمان المجموع = target
+            const sumNew = state.cardDurations.reduce((a,b)=>a+b,0);
+            const diff = Math.round((target - sumNew)*10)/10;
+            if (Math.abs(diff) >= 0.1) state.cardDurations[state.cardDurations.length-1] = Math.max(3, Math.round((state.cardDurations[state.cardDurations.length-1] + diff)*10)/10);
+            renderCardsList();
+            if (!silent) {
+                const totalVideo = state.cardDurations.reduce((a,b)=>a+b,0) - transTotal;
+                showToast(`✅ تمت مزامنة ${n} بطاقات على مدة الصوت ${audioDur.toFixed(1)}ث → فيديو ${totalVideo.toFixed(1)}ث`);
+            }
+            return true;
+        }
         window.onCardTextInput = function(i, el) {
             state.textCards[i] = el.value;
             syncMainTextFromCards(false);
@@ -1312,8 +1349,13 @@
                         state.cardDurations[idx] = Math.max(3, Math.min(20, dur));
                     }
                 }
-                renderCardsList();
-                if (!isSilent) showToast(`✅ تم تحديث المدد (${data.method === 'ai' ? 'بالذكاء الاصطناعي' : 'تقديري'})`);
+                // إذا كان هناك صوت، أعد مزامنة المدد عليه ليتناسب الفيديو مع الصوت
+                if (state.audio?.duration && state.audio.duration > 0) {
+                    distributeCardDurationsByAudio(true);
+                } else {
+                    renderCardsList();
+                }
+                if (!isSilent) showToast(`✅ تم تحديث المدد (${data.method === 'ai' ? 'بالذكاء الاصطناعي' : 'تقديري'})` + (state.audio?.duration ? ' ومزامنة على الصوت' : ''));
             } catch (e) {
                 if (!isSilent) showToast('❌ فشل حساب AI: ' + (e.message || ''), true);
             } finally {
@@ -1369,6 +1411,10 @@
                 document.getElementById('audioPlayPauseBtn').textContent = '▶';
                 document.getElementById('audioWaveform').classList.add('paused');
                 showToast(`✅ تم رفع الصوت: ${file.name}`);
+                if (state.textCards.length > 0 && duration) {
+                    // زامن البطاقات فوراً على مدة الصوت واجعل الفيديو ينتهي مع نهاية الصوت
+                    setTimeout(() => distributeCardDurationsByAudio(false), 50);
+                }
             } catch (err) { console.error('Audio load error:', err); showToast('❌ خطأ أثناء تحميل الملف الصوتي', true); }
             finally { hideLoading(); }
         }
