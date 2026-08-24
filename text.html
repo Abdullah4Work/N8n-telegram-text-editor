@@ -1573,7 +1573,12 @@
                         body: JSON.stringify(finalData)
                     });
 
-                    if (!response.ok) throw new Error('فشل الإرسال (' + response.status + ')');
+                    if (!response.ok) {
+                        let errText = '';
+                        try { errText = await response.text(); } catch(_){}
+                        console.error('n8n error body:', errText.substring(0, 500));
+                        throw new Error((errText && errText.length < 400 ? errText : '') + ' فشل الإرسال (' + response.status + ')');
+                    }
 
                     try {
                         tg.sendData(JSON.stringify({
