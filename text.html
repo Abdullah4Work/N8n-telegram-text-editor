@@ -2238,15 +2238,17 @@
                             seo: { ...state.seo },
                             user_id: userId,
                             captions: [],
+                            // ✅ أولوية 1: base64 (مباشر وموثوق)
+                            audioBase64: state.audio?.base64 || null,
+                            audio_base64: state.audio?.base64 || null,
+                            // ✅ أولوية 2: URL (احتياطي)
                             audioUrl: effectiveAudioUrl,
                             audio_url: effectiveAudioUrl,
+                            // معلومات الصوت
                             audioDuration: audioDuration,
                             audio_duration: audioDuration,
                             audioFilename: audioFilename,
                             audio_filename: audioFilename,
-                            // ✅ نرسل base64 دائماً كاحتياطي (السيرفر ذكي - يستخدم URL أولاً، ثم base64)
-                            audioBase64: state.audio?.base64 || null,
-                            audio_base64: state.audio?.base64 || null,
                             duration: audioDuration || totalCardsDuration
                         };
 
