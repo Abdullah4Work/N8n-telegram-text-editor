@@ -1274,17 +1274,17 @@
             const n = state.textCards.length;
             const transTotal = n > 1 ? (n - 1) * 0.4 : 0;
             const target = audioDur + transTotal;
-            const sumOld = state.cardDurations.reduce((a,b)=>a+(b||0),0) || n * 4;
-            const factor = target / sumOld;
-            state.cardDurations = state.cardDurations.map(d => Math.max(3, Math.round((d||4) * factor * 10)/10));
+            const perCard = target / n;
+            const rounded = Math.max(1.5, Math.round(perCard * 10) / 10);
+            state.cardDurations = new Array(n).fill(rounded);
             // تصحيح الانحراف العشري لضمان المجموع = target
             const sumNew = state.cardDurations.reduce((a,b)=>a+b,0);
-            const diff = Math.round((target - sumNew)*10)/10;
-            if (Math.abs(diff) >= 0.1) state.cardDurations[state.cardDurations.length-1] = Math.max(3, Math.round((state.cardDurations[state.cardDurations.length-1] + diff)*10)/10);
+            const diff = Math.round((target - sumNew) * 10) / 10;
+            state.cardDurations[n - 1] = Math.max(1.5, Math.round((state.cardDurations[n - 1] + diff) * 10) / 10);
+            
             renderCardsList();
             if (!silent) {
-                const totalVideo = state.cardDurations.reduce((a,b)=>a+b,0) - transTotal;
-                showToast(`✅ تمت مزامنة ${n} بطاقات على مدة الصوت ${audioDur.toFixed(1)}ث → فيديو ${totalVideo.toFixed(1)}ث`);
+                showToast(`✅ تمت مزامنة ${n} بطاقات مع مدة الصوت (${audioDur.toFixed(1)} ثانية)`);
             }
             return true;
         }
@@ -1304,14 +1304,22 @@
             state.cardDurations.splice(i, 1);
             if (!state.textCards.length) { state.textCards = []; state.cardDurations = []; }
             syncMainTextFromCards(true);
-            renderCardsList();
-            if (state.textCards.length) scheduleAutoAI();
+            if (state.audio?.duration && state.audio.duration > 0) {
+                distributeCardDurationsByAudio(true);
+            } else {
+                renderCardsList();
+                if (state.textCards.length) scheduleAutoAI();
+            }
         };
         window.addNewCard = function() {
             state.textCards.push('نص جديد');
             state.cardDurations.push(4);
             syncMainTextFromCards(true);
-            renderCardsList();
+            if (state.audio?.duration && state.audio.duration > 0) {
+                distributeCardDurationsByAudio(true);
+            } else {
+                renderCardsList();
+            }
             setTimeout(() => {
                 const ta = document.querySelector(`textarea[data-idx="${state.textCards.length - 1}"]`);
                 if (ta) { ta.focus(); ta.select(); }
@@ -1327,12 +1335,16 @@
             const wc = document.getElementById('wordCount');
             if (cc) cc.textContent = chars;
             if (wc) wc.textContent = words;
-            // إعادة رسم القائمة لتحديث الإجماليات (لكن نحافظ على التركيز)
+            // تحديث عرض المدة الإجمالية
             const estDur = document.getElementById('estDuration');
             let totalDur = 0;
-            for (let k = 0; k < state.textCards.length; k++) totalDur += state.cardDurations[k] || heuristicDur(state.textCards[k]);
+            if (state.audio?.duration && state.audio.duration > 0) {
+                totalDur = state.audio.duration;
+            } else {
+                for (let k = 0; k < state.textCards.length; k++) totalDur += state.cardDurations[k] || heuristicDur(state.textCards[k]);
+            }
             if (estDur) estDur.textContent = formatDurationDisplay(totalDur);
-            if (!skipAI) {
+            if (!skipAI && (!state.audio?.duration || state.audio.duration <= 0)) {
                 clearTimeout(autoAIDebounce);
                 autoAIDebounce = setTimeout(() => calculateDurationsAI(true), 800);
             }
@@ -1381,22 +1393,6 @@
                 reader.readAsDataURL(file);
             });
         }
-        // رفع الملف الصوتي إلى السيرفر مباشرةً وإرجاع URL
-        async function uploadAudioToServer(file) {
-            const base64 = await audioFileToBase64(file);
-            const resp = await fetch('/upload-audio', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ audio: base64 })
-            });
-            if (!resp.ok) {
-                const err = await resp.text().catch(() => '');
-                throw new Error('فشل رفع الصوت للسيرفر: ' + (err || resp.status));
-            }
-            const result = await resp.json();
-            if (!result.success) throw new Error(result.error || 'فشل رفع الصوت');
-            return result.url; // مثال: /uploads/audio_xxx.mp3
-        }
         function getAudioFileDuration(base64DataUrl) {
             return new Promise((resolve) => {
                 const audio = new Audio();
@@ -1413,28 +1409,18 @@
             return `${m}:${String(s).padStart(2,'0')}`;
         }
         async function handleAudioFile(file) {
-            if (!file || !file.type.startsWith('audio/')) { showToast('يرجى اختيار ملف صوتي صالح', true); return; }
+            if (!file || !file.type.startsWith('audio/')) { showToast('يرجى اختيار ملف صوتي صالح (mp3, m4a, wav...)', true); return; }
             const MAX_SIZE_MB = 80;
             if (file.size > MAX_SIZE_MB * 1024 * 1024) { showToast(`❌ حجم الملف كبير جداً (الحد: ${MAX_SIZE_MB} MB)`, true); return; }
-            showLoading('جاري رفع الملف الصوتي...','يرجى الانتظار');
+            showLoading('جاري تحميل الملف الصوتي...', 'يرجى الانتظار');
             try {
-                // نحوّل إلى base64 للمعاينة المحلية فقط
                 const base64 = await audioFileToBase64(file);
                 const duration = await getAudioFileDuration(base64);
 
-                // رفع الملف إلى السيرفر والحصول على URL خفيف (بدلاً من إرسال base64 لـ n8n)
-                let uploadedUrl = null;
-                try {
-                    uploadedUrl = await uploadAudioToServer(file);
-                    console.log('✅ تم رفع الصوت للسيرفر:', uploadedUrl);
-                } catch (uploadErr) {
-                    console.warn('⚠️ فشل رفع الصوت للسيرفر، سيُستخدم base64 احتياطياً:', uploadErr.message);
-                }
-
-                state.audio.base64 = base64;            // للمعاينة المحلية
-                state.audio.url = uploadedUrl;          // URL للإرسال لـ n8n
+                state.audio.base64 = base64;
                 state.audio.duration = duration;
                 state.audio.filename = file.name;
+                
                 document.getElementById('audioPreviewName').textContent = file.name;
                 document.getElementById('audioPreviewDuration').textContent = duration ? formatAudioTime(duration) : '—';
                 document.getElementById('audioTotalTime').textContent = duration ? formatAudioTime(duration) : '—';
@@ -1443,15 +1429,29 @@
                 document.getElementById('audioProgressThumb').style.right = '0%';
                 document.getElementById('audioPreviewCard').classList.add('visible');
                 document.getElementById('audioDropZone').style.display = 'none';
+                
                 const audioEl = document.getElementById('inEditorAudio');
-                audioEl.src = base64; audioEl.load();
-                document.getElementById('audioPlayPauseBtn').textContent = '▶';
-                document.getElementById('audioWaveform').classList.add('paused');
-                if (state.textCards.length > 0 && duration) {
-                    setTimeout(() => distributeCardDurationsByAudio(true), 50);
+                if (audioEl) {
+                    audioEl.src = base64;
+                    audioEl.load();
                 }
-            } catch (err) { console.error('Audio load error:', err); showToast('❌ خطأ أثناء تحميل الملف الصوتي', true); }
-            finally { hideLoading(); }
+                const playBtn = document.getElementById('audioPlayPauseBtn');
+                if (playBtn) playBtn.textContent = '▶';
+                const wave = document.getElementById('audioWaveform');
+                if (wave) wave.classList.add('paused');
+
+                showToast(`✅ تم رفع الصوت: ${file.name}`);
+
+                // مزامنة البطاقات فوراً على مدة الصوت
+                if (state.textCards.length > 0 && duration && duration > 0) {
+                    distributeCardDurationsByAudio(false);
+                }
+            } catch (err) {
+                console.error('Audio load error:', err);
+                showToast('❌ خطأ أثناء تحميل الملف الصوتي', true);
+            } finally {
+                hideLoading();
+            }
         }
         function removeAudio() {
             const audioEl = document.getElementById('inEditorAudio');
@@ -1464,6 +1464,7 @@
             const inp = document.getElementById('audioFileInput');
             if (inp) inp.value = '';
             showToast('تم حذف الملف الصوتي');
+            renderCardsList();
         }
 
         // ===== RENDER TEMPLATES =====
@@ -1561,12 +1562,15 @@
                     const processId = params.get('bin') || tg.initDataUnsafe?.start_param || `TEXT_${Date.now()}`;
                     const userId = state.user_id || binData.user_id || (tg.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : '');
 
-                    // total duration from per-card controls (AI or manual)
+                    // إجمالي مدة البطاقات أو مدة الصوت إن وُجد
                     const totalCardsDuration = (state.cardDurations && state.cardDurations.length === state.textCards.length)
                         ? state.cardDurations.reduce((a,b)=>a+b,0)
-                        : state.textCards.reduce((s,c)=> s + heuristicDur(c), 0);
-                    // تحديد مصدر الصوت: URL مرفوع مسبقاً (خفيف) أو base64 احتياطي
-                    const audioUrl = state.audio?.url || '';
+                        : (state.audio?.duration || state.textCards.reduce((s,c)=> s + heuristicDur(c), 0));
+                    
+                    const audioBase64 = state.audio?.base64 || null;
+                    const audioDuration = state.audio?.duration || null;
+                    const audioFilename = state.audio?.filename || '';
+
                     const webhookData = {
                         ...binData,
                         text_content: state.textContent,
@@ -1578,15 +1582,15 @@
                         seo: { ...state.seo },
                         user_id: userId,
                         captions: [],
-                        audioUrl: audioUrl,
-                        audio_url: audioUrl,
-                        audioDuration: state.audio?.duration || null,
-                        audio_duration: state.audio?.duration || null,
-                        audioFilename: state.audio?.filename || '',
-                        // لا نُرسل base64 إطلاقاً لـ n8n — نستخدم URL فقط لتفادي 500
-                        audioBase64: null,
-                        audio_base64: null,
-                        duration: totalCardsDuration
+                        audioUrl: state.audio?.url || '',
+                        audio_url: state.audio?.url || '',
+                        audioBase64: audioBase64,
+                        audio_base64: audioBase64,
+                        audioDuration: audioDuration,
+                        audio_duration: audioDuration,
+                        audioFilename: audioFilename,
+                        audio_filename: audioFilename,
+                        duration: audioDuration || totalCardsDuration
                     };
 
                     const finalData = {
@@ -1761,7 +1765,9 @@
             const cardsCount = state.textCards.length;
             document.getElementById('rCards').textContent = cardsCount === 1 ? 'بطاقة واحدة' : `${cardsCount} بطاقات`;
             let td = 0;
-            if (Array.isArray(state.cardDurations) && state.cardDurations.length === state.textCards.length) {
+            if (state.audio?.duration && state.audio.duration > 0) {
+                td = state.audio.duration;
+            } else if (Array.isArray(state.cardDurations) && state.cardDurations.length === state.textCards.length) {
                 td = state.cardDurations.reduce((a,b)=>a+(Number(b)||0),0);
             } else {
                 for (const c of state.textCards) { const w = c.trim().split(/\s+/).filter(Boolean).length || 1; td += Math.max(4, Math.min(15, Math.ceil(w / 2.5) + (w > 20 ? Math.ceil((w - 20) / 10) : 0))); }
