@@ -977,7 +977,7 @@
             textContent: '', templateId: '', colorId: '1',
             selectedTemplate: null,
             seo: { title: '', description: '', tags: [], hashtags: [] },
-            textCards: [], user_id: '',
+            textCards: [], cardDurations: [], user_id: '',
             previewLandscape: '', previewPortrait: ''
         };
         let pendingTemplate = null;
@@ -1030,6 +1030,13 @@
         }
 
         // ===== UPDATE CARDS =====
+        function heuristicDur(text) {
+            const w = text.trim().split(/\s+/).filter(Boolean).length || 1;
+            let d = Math.ceil(w / 2.5);
+            if (w > 20) d += Math.ceil((w - 20) / 10);
+            if (/https?:\/\//.test(text) && w <= 3) d = Math.min(d, 5);
+            return Math.max(4, Math.min(15, d));
+        }
         function updateCards() {
             const text = state.textContent.trim();
             const sec = document.getElementById('cardsSection');
@@ -1040,32 +1047,106 @@
             const estDur = document.getElementById('estDuration');
 
             if (!text || text.length < 5) {
-                sec.classList.add('hidden'); state.textCards = [];
+                sec.classList.add('hidden'); state.textCards = []; state.cardDurations = [];
                 cardsCount.textContent = '0'; estDur.textContent = '0';
                 return;
             }
             const cards = splitTextIntoCards(text);
             state.textCards = cards;
+            // إذا تغيّر عدد البطاقات، أعد تهيئة المدد بالحساب الافتراضي مع الحفاظ على القيم السابقة إن أمكن
+            if (!Array.isArray(state.cardDurations) || state.cardDurations.length !== cards.length) {
+                state.cardDurations = cards.map(c => heuristicDur(c));
+            }
             sec.classList.remove('hidden');
             badge.textContent = cards.length === 1 ? 'بطاقة واحدة' : `${cards.length} بطاقات`;
             cardsCount.textContent = cards.length;
-
-            list.innerHTML = cards.map((c, i) => {
-                const w = c.trim().split(/\s+/).length;
-                const ch = c.length;
-                const prev = c.length > 120 ? c.substring(0, 120) + '...' : c;
-                const dur = Math.max(4, Math.min(15, Math.ceil(w / 2.5) + (w > 20 ? Math.ceil((w - 20) / 10) : 0)));
-                return `<div class="cards-item"><div class="cards-num">${i+1}</div><div style="flex:1"><div class="cards-text">${prev.replace(/\n/g,'<br>')}</div><div class="cards-meta">${ch} حرف | ${w} كلمة | ~${dur}ث</div></div></div>`;
-            }).join('');
+            renderCardsList();
 
             let totalDur = 0, totalWords = 0, totalChars = 0;
-            for (const c of cards) {
-                const w = c.trim().split(/\s+/).length;
+            for (let i = 0; i < cards.length; i++) {
+                const c = cards[i];
+                const w = c.trim().split(/\s+/).filter(Boolean).length || 0;
                 totalWords += w; totalChars += c.length;
-                totalDur += Math.max(4, Math.min(15, Math.ceil(w / 2.5) + (w > 20 ? Math.ceil((w - 20) / 10) : 0)));
+                totalDur += state.cardDurations[i] || heuristicDur(c);
             }
             estDur.textContent = totalDur;
             total.innerHTML = `<span>📊</span><span><strong>${cards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${totalDur}</strong> ثانية</span>`;
+        }
+        function renderCardsList() {
+            const list = document.getElementById('cardsList');
+            if (!list || !state.textCards.length) return;
+            list.innerHTML = state.textCards.map((c, i) => {
+                const w = c.trim().split(/\s+/).filter(Boolean).length || 1;
+                const ch = c.length;
+                const prev = c.length > 120 ? c.substring(0, 120) + '...' : c;
+                const dur = state.cardDurations[i] != null ? state.cardDurations[i] : heuristicDur(c);
+                return `<div class="cards-item"><div class="cards-num">${i+1}</div><div style="flex:1;min-width:0;"><div class="cards-text">${escapeHtml(prev).replace(/\n/g,'<br>')}</div><div class="cards-meta">${ch} حرف | ${w} كلمة</div></div><div style="display:flex;align-items:center;gap:6px;flex-shrink:0;background:var(--bg-primary);border-radius:10px;padding:4px 6px;border:1px solid var(--border-color);"><button type="button" onclick="changeCardDuration(${i},-1)" style="width:28px;height:28px;border-radius:8px;border:1px solid var(--border-color);background:white;cursor:pointer;font-weight:900;display:flex;align-items:center;justify-content:center;">−</button><span style="min-width:38px;text-align:center;font-weight:800;color:var(--primary);font-size:13px;">${dur}ث</span><button type="button" onclick="changeCardDuration(${i},1)" style="width:28px;height:28px;border-radius:8px;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white;cursor:pointer;font-weight:900;display:flex;align-items:center;justify-content:center;">+</button></div></div>`;
+            }).join('');
+            // زر حساب AI
+            const existingAiBtn = document.getElementById('aiDurBtn');
+            if (state.textCards.length > 1 && !existingAiBtn) {
+                const aiBtn = document.createElement('button');
+                aiBtn.id = 'aiDurBtn';
+                aiBtn.type = 'button';
+                aiBtn.innerHTML = '🤖 حساب المدد بالذكاء الاصطناعي (قراءة متدرجة)';
+                aiBtn.style.cssText = 'width:100%;margin-top:10px;padding:12px;border:none;border-radius:10px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;font-weight:800;cursor:pointer;box-shadow:0 4px 15px rgba(102,126,234,0.35);';
+                aiBtn.onclick = calculateDurationsAI;
+                list.parentElement.appendChild(aiBtn);
+            } else if (state.textCards.length <= 1 && existingAiBtn) {
+                existingAiBtn.remove();
+            } else if (existingAiBtn) {
+                existingAiBtn.onclick = calculateDurationsAI;
+            }
+            // تحديث الإجمالي
+            const estDur = document.getElementById('estDuration');
+            const total = document.getElementById('cardsTotal');
+            let totalDur = 0;
+            for (let i = 0; i < state.textCards.length; i++) totalDur += state.cardDurations[i] || heuristicDur(state.textCards[i]);
+            if (estDur) estDur.textContent = totalDur;
+            if (total) {
+                let totalWords = 0, totalChars = 0;
+                for (const c of state.textCards) { totalWords += c.trim().split(/\s+/).filter(Boolean).length || 0; totalChars += c.length; }
+                total.innerHTML = `<span>📊</span><span><strong>${state.textCards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${totalDur}</strong> ثانية</span>`;
+            }
+        }
+        window.changeCardDuration = function(i, delta) {
+            if (!Array.isArray(state.cardDurations) || i < 0 || i >= state.cardDurations.length) return;
+            let v = (state.cardDurations[i] || 4) + delta;
+            v = Math.max(3, Math.min(20, v));
+            state.cardDurations[i] = v;
+            renderCardsList();
+        };
+        function escapeHtml(s) {
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+        }
+        async function calculateDurationsAI() {
+            if (!state.textCards.length) { showToast('لا توجد بطاقات', true); return; }
+            const btn = document.getElementById('aiDurBtn');
+            if (btn) { btn.disabled = true; btn.textContent = '⏳ جاري الحساب بالذكاء الاصطناعي...'; }
+            showLoading('جاري حساب مدد البطاقات...','يقدّر الذكاء الاصطناعي مدة قراءة كل بطاقة بشكل متدرج');
+            try {
+                const r = await fetch(`${WORKER_API_URL}/calculate-text-durations`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ text_cards: state.textCards })
+                });
+                const data = await r.json();
+                if (!r.ok || !data.success || !Array.isArray(data.durations)) throw new Error(data.error || 'فشل الحساب');
+                // data.durations: [{index, duration_seconds}]
+                for (const d of data.durations) {
+                    const idx = Number(d.index);
+                    let dur = Math.round(Number(d.duration_seconds));
+                    if (!isNaN(idx) && idx >= 0 && idx < state.cardDurations.length && !isNaN(dur)) {
+                        state.cardDurations[idx] = Math.max(3, Math.min(20, dur));
+                    }
+                }
+                renderCardsList();
+                showToast(`✅ تم تحديث المدد (${data.method === 'ai' ? 'بالذكاء الاصطناعي' : 'تقديري'})`);
+            } catch (e) {
+                showToast('❌ فشل حساب AI: ' + (e.message || ''), true);
+            } finally {
+                hideLoading();
+                if (btn) { btn.disabled = false; btn.textContent = '🤖 حساب المدد بالذكاء الاصطناعي (قراءة متدرجة)'; }
+            }
         }
 
         // ===== RENDER TEMPLATES =====
@@ -1163,17 +1244,23 @@
                     const processId = params.get('bin') || tg.initDataUnsafe?.start_param || `TEXT_${Date.now()}`;
                     const userId = state.user_id || binData.user_id || (tg.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : '');
 
+                    // total duration from per-card controls (AI or manual)
+                    const totalCardsDuration = (state.cardDurations && state.cardDurations.length === state.textCards.length)
+                        ? state.cardDurations.reduce((a,b)=>a+b,0)
+                        : state.textCards.reduce((s,c)=> s + heuristicDur(c), 0);
                     const webhookData = {
                         ...binData,
                         text_content: state.textContent,
                         text_cards: state.textCards,
+                        card_durations: Array.isArray(state.cardDurations) ? [...state.cardDurations] : [],
+                        durations: Array.isArray(state.cardDurations) ? [...state.cardDurations] : [],
                         template_id: parseInt(state.templateId, 10) || 1,
                         color_id: parseInt(state.colorId, 10) || 1,
                         seo: { ...state.seo },
                         user_id: userId,
                         captions: [],
                         audioUrl: '',
-                        duration: null
+                        duration: totalCardsDuration
                     };
 
                     const finalData = {
@@ -1343,7 +1430,11 @@
             const cardsCount = state.textCards.length;
             document.getElementById('rCards').textContent = cardsCount === 1 ? 'بطاقة واحدة' : `${cardsCount} بطاقات`;
             let td = 0;
-            for (const c of state.textCards) { const w = c.trim().split(/\s+/).length; td += Math.max(4, Math.min(15, Math.ceil(w / 2.5) + (w > 20 ? Math.ceil((w - 20) / 10) : 0))); }
+            if (Array.isArray(state.cardDurations) && state.cardDurations.length === state.textCards.length) {
+                td = state.cardDurations.reduce((a,b)=>a+(Number(b)||0),0);
+            } else {
+                for (const c of state.textCards) { const w = c.trim().split(/\s+/).filter(Boolean).length || 1; td += Math.max(4, Math.min(15, Math.ceil(w / 2.5) + (w > 20 ? Math.ceil((w - 20) / 10) : 0))); }
+            }
             document.getElementById('rDuration').textContent = td ? `~${td} ثانية` : '-';
             
             const t = state.selectedTemplate || TEMPLATES_LIST.find(t => String(t.id) === String(state.templateId));
@@ -1386,6 +1477,11 @@
                                 document.getElementById('charCount').textContent = chars;
                                 document.getElementById('wordCount').textContent = words;
                                 updateCards(); 
+                                const savedDurs = data.card_durations || data.durations || data.cardDurations;
+                                if (Array.isArray(savedDurs) && savedDurs.length === state.textCards.length) {
+                                    state.cardDurations = savedDurs.map(v => Math.max(3, Math.min(20, Math.round(Number(v)) || 4)));
+                                    renderCardsList();
+                                }
                             }
                             if (data.template_id) { 
                                 state.templateId = String(data.template_id); 
