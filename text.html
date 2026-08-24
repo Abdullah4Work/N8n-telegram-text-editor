@@ -2082,6 +2082,9 @@
                     // مزامنة مدد البطاقات فوراً وبصمت على مدة الصوت
                     if (state.textCards.length > 0 && duration && duration > 0) {
                         distributeCardDurationsByAudio(true);
+                    } else {
+                        // إذا ما فيه بطاقات بعد، خلي التوزيع يصير تلقائياً أول ما يكتب نص
+                        console.log('📝 سيتم توزيع المدد تلقائياً عند كتابة النص');
                     }
 
                     // رفع الصوت في الخلفية عبر Deno Worker
@@ -2238,19 +2241,15 @@
                             seo: { ...state.seo },
                             user_id: userId,
                             captions: [],
-                            // ✅ أولوية 1: base64 (مباشر وموثوق)
-                            audioBase64: state.audio?.base64 || null,
-                            audio_base64: state.audio?.base64 || null,
-                            // ✅ أولوية 2: URL (احتياطي)
-                            audioUrl: effectiveAudioUrl,
-                            audio_url: effectiveAudioUrl,
-                            // معلومات الصوت
-                            audioDuration: audioDuration,
-                            audio_duration: audioDuration,
-                            audioFilename: audioFilename,
-                            audio_filename: audioFilename,
                             duration: audioDuration || totalCardsDuration
                         };
+
+                        // إضافة بيانات الصوت إن وُجد
+                        if (state.audio && state.audio.base64) {
+                            webhookData.audioBase64 = state.audio.base64;
+                            webhookData.audioDuration = state.audio.duration;
+                            webhookData.audioFilename = state.audio.filename;
+                        }
 
                         const finalData = {
                             type: 'text_cards',
