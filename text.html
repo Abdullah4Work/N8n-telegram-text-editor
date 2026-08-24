@@ -733,7 +733,7 @@
                     <span class="stat-item">الأحرف: <strong id="charCount">0</strong></span>
                     <span class="stat-item">الكلمات: <strong id="wordCount">0</strong></span>
                     <span class="stat-item">البطاقات: <strong id="cardsCount">0</strong></span>
-                    <span class="stat-item">المدة: <strong id="estDuration">0</strong>ث</span>
+                    <span class="stat-item">المدة: <strong id="estDuration">0</strong></span>
                 </div>
             </div>
 
@@ -1127,6 +1127,14 @@
             if (/https?:\/\//.test(text) && w <= 3) d = Math.min(d, 5);
             return Math.max(4, Math.min(15, d));
         }
+        function formatDurationDisplay(sec) {
+            const s = Math.round(Number(sec) || 0);
+            if (s < 60) return `${s} ثانية`;
+            const m = Math.floor(s / 60);
+            const r = s % 60;
+            if (r === 0) return `${m} دقيقة`;
+            return `${m}:${String(r).padStart(2,'0')} دقيقة`;
+        }
         let autoAIDebounce = null;
         let lastAITextHash = '';
         function scheduleAutoAI() {
@@ -1190,8 +1198,8 @@
                 totalWords += w; totalChars += c.length;
                 totalDur += state.cardDurations[i] || heuristicDur(c);
             }
-            estDur.textContent = totalDur;
-            total.innerHTML = `<span>📊</span><span><strong>${cards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${totalDur}</strong> ثانية</span>`;
+            estDur.textContent = formatDurationDisplay(totalDur);
+            total.innerHTML = `<span>📊</span><span><strong>${cards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${formatDurationDisplay(totalDur)}</strong></span>`;
             if (prevLen !== cards.length || cards.join('|') !== lastAITextHash) scheduleAutoAI();
         }
         function renderCardsList() {
@@ -1224,11 +1232,11 @@
             const total = document.getElementById('cardsTotal');
             let totalDur = 0;
             for (let i = 0; i < state.textCards.length; i++) totalDur += state.cardDurations[i] || heuristicDur(state.textCards[i]);
-            if (estDur) estDur.textContent = totalDur;
+            if (estDur) estDur.textContent = formatDurationDisplay(totalDur);
             if (total) {
                 let totalWords = 0, totalChars = 0;
                 for (const c of state.textCards) { totalWords += c.trim().split(/\s+/).filter(Boolean).length || 0; totalChars += c.length; }
-                total.innerHTML = `<span>📊</span><span><strong>${state.textCards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${totalDur}</strong> ثانية</span>`;
+                total.innerHTML = `<span>📊</span><span><strong>${state.textCards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${formatDurationDisplay(totalDur)}</strong></span>`;
             }
         }
         window.changeCardDuration = function(i, delta) {
@@ -1251,11 +1259,11 @@
             const total = document.getElementById('cardsTotal');
             let totalDur = 0;
             for (let k = 0; k < state.textCards.length; k++) totalDur += state.cardDurations[k] || heuristicDur(state.textCards[k]);
-            if (estDur) estDur.textContent = totalDur;
+            if (estDur) estDur.textContent = formatDurationDisplay(totalDur);
             if (total) {
                 let totalWords = 0, totalChars = 0;
                 for (const c of state.textCards) { totalWords += c.trim().split(/\s+/).filter(Boolean).length || 0; totalChars += c.length; }
-                total.innerHTML = `<span>📊</span><span><strong>${state.textCards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${totalDur}</strong> ثانية</span>`;
+                total.innerHTML = `<span>📊</span><span><strong>${state.textCards.length}</strong> بطاقات | <strong>${totalWords}</strong> كلمة | <strong>${totalChars}</strong> حرف | ~<strong>${formatDurationDisplay(totalDur)}</strong></span>`;
             }
         };
         // ===== مزامنة البطاقات على مدة الصوت (مثل محرر الصور) =====
@@ -1322,7 +1330,7 @@
             const estDur = document.getElementById('estDuration');
             let totalDur = 0;
             for (let k = 0; k < state.textCards.length; k++) totalDur += state.cardDurations[k] || heuristicDur(state.textCards[k]);
-            if (estDur) estDur.textContent = totalDur;
+            if (estDur) estDur.textContent = formatDurationDisplay(totalDur);
             if (!skipAI) {
                 clearTimeout(autoAIDebounce);
                 autoAIDebounce = setTimeout(() => calculateDurationsAI(true), 800);
@@ -1410,10 +1418,9 @@
                 audioEl.src = base64; audioEl.load();
                 document.getElementById('audioPlayPauseBtn').textContent = '▶';
                 document.getElementById('audioWaveform').classList.add('paused');
-                showToast(`✅ تم رفع الصوت: ${file.name}`);
                 if (state.textCards.length > 0 && duration) {
-                    // زامن البطاقات فوراً على مدة الصوت واجعل الفيديو ينتهي مع نهاية الصوت
-                    setTimeout(() => distributeCardDurationsByAudio(false), 50);
+                    // زامن البطاقات فوراً على مدة الصوت واجعل الفيديو ينتهي مع نهاية الصوت (بدون رسائل)
+                    setTimeout(() => distributeCardDurationsByAudio(true), 50);
                 }
             } catch (err) { console.error('Audio load error:', err); showToast('❌ خطأ أثناء تحميل الملف الصوتي', true); }
             finally { hideLoading(); }
@@ -1723,7 +1730,7 @@
             } else {
                 for (const c of state.textCards) { const w = c.trim().split(/\s+/).filter(Boolean).length || 1; td += Math.max(4, Math.min(15, Math.ceil(w / 2.5) + (w > 20 ? Math.ceil((w - 20) / 10) : 0))); }
             }
-            document.getElementById('rDuration').textContent = td ? `~${td} ثانية` : '-';
+            document.getElementById('rDuration').textContent = td ? `~${formatDurationDisplay(td)}` : '-';
             
             const t = state.selectedTemplate || TEMPLATES_LIST.find(t => String(t.id) === String(state.templateId));
             document.getElementById('rTemplate').textContent = t?.template_name || '-';
