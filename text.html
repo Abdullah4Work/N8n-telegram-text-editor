@@ -1152,8 +1152,7 @@
                 updateSteps();
                 window.scrollTo(0, 0);
             } else {
-                // SUBMIT - الإرسال عبر الووركر (CORS مفتوح) الذي يمرر البيانات لـ n8n من السيرفر
-                // (الإرسال المباشر لـ n8n من github.io محجوب بسبب CORS)
+                // SUBMIT - مثل بقية المحررات: إرسال مباشر لـ n8n وينهي الويب اب
                 const btn = document.getElementById('btnNext');
                 const originalText = btn.innerHTML;
                 btn.disabled = true;
@@ -1184,17 +1183,15 @@
                         timestamp: new Date().toISOString()
                     };
 
-                    console.log('📤 إرسال البيانات عبر الووركر:', finalData);
+                    console.log('📤 إرسال البيانات عبر Webhook:', finalData);
 
-                    const response = await fetch(`${WORKER_API_URL}/submit-text-cards`, {
+                    const response = await fetch(N8N_WEBHOOK_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(finalData)
                     });
 
                     if (!response.ok) throw new Error('فشل الإرسال (' + response.status + ')');
-                    const submitResult = await response.json().catch(() => ({}));
-                    console.log('✅ نتيجة الإرسال:', submitResult);
 
                     try {
                         tg.sendData(JSON.stringify({
