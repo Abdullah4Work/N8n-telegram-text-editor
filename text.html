@@ -1818,7 +1818,7 @@
                             <span class="cards-meta" style="margin:0;">${ch} حرف | ${w} كلمة</span>
                             <div style="display:flex;align-items:center;gap:5px;background:var(--bg-primary);border-radius:10px;padding:3px 5px;border:1px solid var(--border-color);">
                                 <button type="button" onclick="changeCardDuration(${i},-1)" style="width:26px;height:26px;border-radius:7px;border:1px solid var(--border-color);background:white;cursor:pointer;font-weight:900;display:flex;align-items:center;justify-content:center;color:var(--text-primary);">−</button>
-                                <input type="number" min="3" max="20" value="${dur}" data-dur-idx="${i}" oninput="onDurationInput(${i}, this)" onchange="onDurationInput(${i}, this)" style="width:52px;text-align:center;border:1px solid var(--border-color);border-radius:7px;padding:4px 2px;font-weight:800;color:var(--primary);font-size:13px;background:white;">
+                                <input type="number" min="3" value="${dur}" data-dur-idx="${i}" oninput="onDurationInput(${i}, this)" onchange="onDurationInput(${i}, this)" style="width:52px;text-align:center;border:1px solid var(--border-color);border-radius:7px;padding:4px 2px;font-weight:800;color:var(--primary);font-size:13px;background:white;">
                                 <span style="font-size:11px;color:var(--text-secondary);font-weight:700;">ث</span>
                                 <button type="button" onclick="changeCardDuration(${i},1)" style="width:26px;height:26px;border-radius:7px;border:none;background:linear-gradient(135deg,var(--primary),var(--primary-light));color:white;cursor:pointer;font-weight:900;display:flex;align-items:center;justify-content:center;">+</button>
                             </div>
@@ -1843,7 +1843,9 @@
             window.changeCardDuration = function (i, delta) {
                 if (!Array.isArray(state.cardDurations) || i < 0 || i >= state.cardDurations.length) return;
                 let v = (state.cardDurations[i] || 4) + delta;
-                v = Math.max(3, Math.min(20, v));
+                // ✅ إذا كان هناك صوت، لا حد أقصى. وإلا الحد 20 ثانية
+                const maxDur = (state.audio?.duration && state.audio.duration > 0) ? 9999 : 20;
+                v = Math.max(3, Math.min(maxDur, v));
                 state.cardDurations[i] = v;
                 const inp = document.querySelector(`input[data-dur-idx="${i}"]`);
                 if (inp) inp.value = v;
@@ -1853,7 +1855,9 @@
             window.onDurationInput = function (i, el) {
                 let v = Math.round(Number(el.value));
                 if (isNaN(v)) return;
-                v = Math.max(3, Math.min(20, v));
+                // ✅ إذا كان هناك صوت، لا حد أقصى. وإلا الحد 20 ثانية
+                const maxDur = (state.audio?.duration && state.audio.duration > 0) ? 9999 : 20;
+                v = Math.max(3, Math.min(maxDur, v));
                 state.cardDurations[i] = v;
                 el.value = v;
                 const estDur = document.getElementById('estDuration');
@@ -1874,12 +1878,13 @@
                 const n = state.textCards.length;
                 // المجموع = مدة الصوت بالكامل (ليس أكثر ولا أقل)
                 const perCard = audioDur / n;
-                const rounded = Math.max(1, Math.round(perCard * 10) / 10);
+                // ✅ رفع الدقة لـ 0.01 ثانية بدلاً من 0.1
+                const rounded = Math.max(1, Math.round(perCard * 100) / 100);
                 state.cardDurations = new Array(n).fill(rounded);
                 // تصحيح الانحراف العشري لضمان مجموع المدد = مدة الصوت تماماً
                 const sumNew = state.cardDurations.reduce((a, b) => a + b, 0);
-                const diff = Math.round((audioDur - sumNew) * 10) / 10;
-                if (diff !== 0) state.cardDurations[n - 1] = Math.max(1, Math.round((state.cardDurations[n - 1] + diff) * 10) / 10);
+                const diff = Math.round((audioDur - sumNew) * 100) / 100;
+                if (diff !== 0) state.cardDurations[n - 1] = Math.max(1, Math.round((state.cardDurations[n - 1] + diff) * 100) / 100);
 
                 // تحديث عرض الواجهة
                 const sec = document.getElementById('cardsSection');
@@ -1981,7 +1986,9 @@
                         const idx = Number(d.index);
                         let dur = Math.round(Number(d.duration_seconds));
                         if (!isNaN(idx) && idx >= 0 && idx < state.cardDurations.length && !isNaN(dur)) {
-                            state.cardDurations[idx] = Math.max(3, Math.min(20, dur));
+                            // ✅ إذا كان هناك صوت، لا حد أقصى. وإلا الحد 20 ثانية
+                            const maxDur = (state.audio?.duration && state.audio.duration > 0) ? 9999 : 20;
+                            state.cardDurations[idx] = Math.max(3, Math.min(maxDur, dur));
                         }
                     }
                     // إذا كان هناك صوت، أعد مزامنة المدد عليه ليتناسب الفيديو مع الصوت
@@ -2463,7 +2470,9 @@
                                     updateCards();
                                     const savedDurs = data.card_durations || data.durations || data.cardDurations;
                                     if (Array.isArray(savedDurs) && savedDurs.length === state.textCards.length) {
-                                        state.cardDurations = savedDurs.map(v => Math.max(3, Math.min(20, Math.round(Number(v)) || 4)));
+                                        // ✅ إذا كان هناك صوت، لا حد أقصى. وإلا الحد 20 ثانية
+                                        const maxDur = (state.audio?.duration && state.audio.duration > 0) ? 9999 : 20;
+                                        state.cardDurations = savedDurs.map(v => Math.max(3, Math.min(maxDur, Math.round(Number(v)) || 4)));
                                         renderCardsList();
                                     }
                                 }
