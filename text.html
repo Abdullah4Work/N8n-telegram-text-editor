@@ -526,6 +526,154 @@
             transform: scale(0.98);
         }
 
+        /* ═══════════════════════════════════════════════════════════════════
+           🎴 Card Config Box (Step 2)
+           ═══════════════════════════════════════════════════════════════════ */
+        .card-config-box {
+            background: linear-gradient(145deg, #ffffff, #fbfcfe);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-config-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 6px 20px rgba(74, 144, 226, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .card-config-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--accent-gold));
+            border-radius: 4px 0 0 4px;
+        }
+
+        .card-config-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .card-config-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(74, 144, 226, 0.12), rgba(212, 175, 55, 0.12));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .card-config-meta {
+            flex: 1;
+        }
+
+        .card-config-title {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-config-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .card-placement-pill {
+            display: inline-block;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            background: #EFF6FF;
+            color: #2563EB;
+            border: 1px solid #BFDBFE;
+        }
+
+        .quick-tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            align-items: center;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-color);
+        }
+
+        .quick-tag-label {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 700;
+            margin-left: 4px;
+        }
+
+        .quick-tag-btn {
+            background: #F1F5F9;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 5px 12px;
+            font-size: 11.5px;
+            color: #334155;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .quick-tag-btn:hover {
+            background: #E0E7FF;
+            color: #3730A3;
+            border-color: #C7D2FE;
+            transform: translateY(-1px);
+        }
+
+        .quick-tag-btn:active {
+            transform: scale(0.96);
+        }
+
+        .card-visual-guide {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-visual-guide-icon {
+            font-size: 24px;
+        }
+
+        .card-visual-guide-text {
+            font-size: 12.5px;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        .card-visual-guide-text strong {
+            color: #0F172A;
+        }
+
         .bottom-nav-wrapper {
             position: fixed;
             bottom: 0;
@@ -1279,23 +1427,11 @@
 
     <div class="container">
 
-        <!-- ===== STEP 1: TEXT ===== -->
+        <!-- ===== STEP 1: TEXT & TEMPLATES ===== -->
         <div class="step-content active" data-step="1" id="step1">
             <div class="step-header">
-                <div class="step-title"><span>✍️</span><span>النص</span></div>
-                <div class="step-description">أدخل النص الذي تريد تحويله إلى بطاقات فيديو</div>
-            </div>
-
-            <!-- Dynamic Card Inputs: Series Name & Promo Note -->
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
-                <div>
-                    <label class="form-label" style="font-size:13px; font-weight:700;">🏷️ اسم السلسلة / التصنيف <span style="font-size:11px; color:var(--text-secondary); font-weight:500;">(أعلى يسار)</span></label>
-                    <input type="text" id="seriesNameInput" class="form-input" placeholder="مثال: سلسلة الرقية الشرعية" style="width:100%; padding:10px 12px; border:2px solid var(--border-color); border-radius:10px; font-size:13px; direction:rtl; font-family:inherit; background:white;">
-                </div>
-                <div>
-                    <label class="form-label" style="font-size:13px; font-weight:700;">📢 النص الإعلاني / الملاحظات <span style="font-size:11px; color:var(--text-secondary); font-weight:500;">(أسفل يمين)</span></label>
-                    <input type="text" id="promoNoteInput" class="form-input" placeholder="مثال: متاح الحجز على الخاص" style="width:100%; padding:10px 12px; border:2px solid var(--border-color); border-radius:10px; font-size:13px; direction:rtl; font-family:inherit; background:white;">
-                </div>
+                <div class="step-title"><span>✍️</span><span>نص البطاقات والقالب</span></div>
+                <div class="step-description">أدخل النص الذي تريد تحويله إلى بطاقات فيديو واختر القالب المناسب</div>
             </div>
 
             <div class="form-group">
@@ -1326,7 +1462,7 @@
                 </div>
             </div>
 
-            <!-- 🎵 Audio Upload Section - فوق القوالب كما طلبت -->
+            <!-- 🎵 Audio Upload Section -->
             <div class="audio-upload-section">
                 <div class="audio-upload-title">
                     <span>🎵</span>
@@ -1395,8 +1531,70 @@
 
         </div>
 
-        <!-- ===== STEP 2: SEO ===== -->
+        <!-- ===== STEP 2: DYNAMIC CARD DATA ===== -->
         <div class="step-content" data-step="2" id="step2">
+            <div class="step-header">
+                <div class="step-title"><span>🎴</span><span>بيانات البطاقات المخصصة</span></div>
+                <div class="step-description">تخصيص الشارة العلوية (السلسلة) والمربع الإعلاني السفلي في القالب</div>
+            </div>
+
+            <div class="card-visual-guide">
+                <div class="card-visual-guide-icon">💡</div>
+                <div class="card-visual-guide-text">
+                    هذه النصوص تظهر تلقائياً داخل القالب في الأماكن المخصصة لها (أعلى يسار وأسفل يمين) في كلا الوضعين <strong>العرضي (Landscape)</strong> و <strong>العمودي (Portrait)</strong>.
+                </div>
+            </div>
+
+            <!-- Box 1: Series Name -->
+            <div class="card-config-box">
+                <div class="card-config-header">
+                    <div class="card-config-icon">🏷️</div>
+                    <div class="card-config-meta">
+                        <div class="card-config-title">
+                            <span>اسم السلسلة / التصنيف</span>
+                            <span class="card-placement-pill">أعلى يسار القالب</span>
+                        </div>
+                        <div class="card-config-subtitle">يُعرض داخل الشارة العلوية في أعلى يسار التصميم</div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <input type="text" id="seriesNameInput" class="form-input" placeholder="مثال: سلسلة الرقية الشرعية" style="font-size:14px; font-weight:700;">
+                </div>
+                <div class="quick-tags-container">
+                    <span class="quick-tag-label">نماذج سريعة:</span>
+                    <button type="button" class="quick-tag-btn" onclick="setSeriesQuickTag('سلسلة الرقية الشرعية')">سلسلة الرقية الشرعية</button>
+                    <button type="button" class="quick-tag-btn" onclick="setSeriesQuickTag('آيات الشفاء والسكينة')">آيات الشفاء والسكينة</button>
+                    <button type="button" class="quick-tag-btn" onclick="setSeriesQuickTag('أذكار وتحصين')">أذكار وتحصين</button>
+                    <button type="button" class="quick-tag-btn" onclick="setSeriesQuickTag('برنامج العلاج اليومي')">برنامج العلاج اليومي</button>
+                </div>
+            </div>
+
+            <!-- Box 2: Promo Ad Note -->
+            <div class="card-config-box">
+                <div class="card-config-header">
+                    <div class="card-config-icon">📢</div>
+                    <div class="card-config-meta">
+                        <div class="card-config-title">
+                            <span>النص الإعلاني / الملاحظات</span>
+                            <span class="card-placement-pill">أسفل يمين القالب</span>
+                        </div>
+                        <div class="card-config-subtitle">يُعرض في المربع السفلي بجانب زر الاشتراك مع الراقي</div>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                    <input type="text" id="promoNoteInput" class="form-input" placeholder="مثال: متاح الحجز والاستشارة على الخاص" style="font-size:14px; font-weight:700;">
+                </div>
+                <div class="quick-tags-container">
+                    <span class="quick-tag-label">نماذج سريعة:</span>
+                    <button type="button" class="quick-tag-btn" onclick="setPromoQuickTag('متاح الحجز والاستشارة على الخاص')">متاح الحجز والاستشارة على الخاص</button>
+                    <button type="button" class="quick-tag-btn" onclick="setPromoQuickTag('للتشخيص ومتابعة العلاج راسلنا')">للتشخيص ومتابعة العلاج راسلنا</button>
+                    <button type="button" class="quick-tag-btn" onclick="setPromoQuickTag('تطبيق البرامج العلاجية مجاناً')">تطبيق البرامج العلاجية مجاناً</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== STEP 3: SEO ===== -->
+        <div class="step-content" data-step="3" id="step3">
             <div class="step-header">
                 <div class="step-title"><span>🔍</span><span>تحسين محركات البحث (SEO)</span></div>
                 <div class="step-description">عنوان ووصف وكلمات مفتاحية للفيديو</div>
@@ -1477,8 +1675,8 @@
             </div>
         </div>
 
-        <!-- ===== STEP 3: REVIEW ===== -->
-        <div class="step-content" data-step="3" id="step3">
+        <!-- ===== STEP 4: REVIEW ===== -->
+        <div class="step-content" data-step="4" id="step4">
             <div class="step-header">
                 <div class="step-title"><span>✅</span><span>المراجعة النهائية</span></div>
                 <div class="step-description">راجع جميع البيانات قبل الإرسال</div>
@@ -1537,7 +1735,7 @@
                 <div class="step-pulse-ring"></div>
                 <div class="step-circle-main">
                     <div class="step-number" id="stepNumber">1</div>
-                    <div class="step-total">من 3</div>
+                    <div class="step-total">من 4</div>
                 </div>
             </div>
             <div class="nav-buttons">
@@ -1610,7 +1808,7 @@
                 gradient_start: "#0f0f29", gradient_mid: "#1f1d4d", accent: "#6366f1", text_color: "#181738"
             },
             {
-                id: 5, template_id: 5, template_name: "حديث رمادي فاحم 24K", name: "حديث-رمادي-فاحم-24K",
+                id: 5, template_id: 5, template_name: "رمادي فاحم مذهب", name: "رمادي-فاحم-مذهب",
                 landscape_file: "05_حديث_رمادي_فاحم_24K_landscape.png", portrait_file: "05_حديث_رمادي_فاحم_24K_portrait.png",
                 landscape_link: "https://lh3.googleusercontent.com/d/1l-vKm22VI4CzwOd1LNb7yZplnYVcCEvY",
                 portrait_link: "https://lh3.googleusercontent.com/d/1py9AZZefgj7hPaZo9aNoGWhvlB5bQHtS",
@@ -2301,9 +2499,28 @@
                 pendingTemplate = null;
             }
 
+            // ===== QUICK TAGS FOR CARDS =====
+            window.setSeriesQuickTag = function(val) {
+                const inp = document.getElementById('seriesNameInput');
+                if (inp) {
+                    inp.value = val;
+                    state.seriesName = val;
+                    showToast(`تم اختيار: ${val}`);
+                }
+            };
+
+            window.setPromoQuickTag = function(val) {
+                const inp = document.getElementById('promoNoteInput');
+                if (inp) {
+                    inp.value = val;
+                    state.promoNote = val;
+                    showToast(`تم اختيار: ${val}`);
+                }
+            };
+
             // ===== NAVIGATION =====
             let currentStep = 1;
-            const totalSteps = 3;
+            const totalSteps = 4;
 
             function updateSteps() {
                 document.querySelectorAll('.step-content').forEach(el => el.classList.remove('active'));
@@ -2320,7 +2537,7 @@
                     btnNext.className = 'nav-btn btn-next';
                     btnNext.disabled = false;
                 }
-                if (currentStep === 3) updateReview();
+                if (currentStep === 4) updateReview();
             }
 
             document.getElementById('btnNext').addEventListener('click', async () => {
