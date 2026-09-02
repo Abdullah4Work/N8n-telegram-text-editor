@@ -1267,6 +1267,14 @@
         <div class="loading-text" id="loadingText">جاري تحميل البيانات...</div>
         <div class="loading-subtext" id="loadingSubtext">الرجاء الانتظار</div>
         <div class="loading-step" id="loadingStep">1/2</div>
+        
+        <!-- Progress Bar للفيديو -->
+        <div id="videoProgress" style="display: none; width: 80%; max-width: 400px; margin-top: 20px;">
+            <div style="background: rgba(255,255,255,0.2); border-radius: 10px; height: 8px; overflow: hidden;">
+                <div id="videoProgressBar" style="background: linear-gradient(90deg, #4A90E2, #5BA3F5); height: 100%; width: 0%; transition: width 0.3s;"></div>
+            </div>
+            <div id="videoProgressText" style="color: white; font-size: 14px; font-weight: 700; margin-top: 8px; text-align: center;">0%</div>
+        </div>
     </div>
 
     <div class="container">
@@ -1278,8 +1286,25 @@
                 <div class="step-description">أدخل النص الذي تريد تحويله إلى بطاقات فيديو</div>
             </div>
 
+            <!-- Dynamic Card Inputs: Series Name & Promo Note -->
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:14px;">
+                <div>
+                    <label class="form-label" style="font-size:13px; font-weight:700;">🏷️ اسم السلسلة / التصنيف <span style="font-size:11px; color:var(--text-secondary); font-weight:500;">(أعلى يسار)</span></label>
+                    <input type="text" id="seriesNameInput" class="form-input" placeholder="مثال: سلسلة الرقية الشرعية" style="width:100%; padding:10px 12px; border:2px solid var(--border-color); border-radius:10px; font-size:13px; direction:rtl; font-family:inherit; background:white;">
+                </div>
+                <div>
+                    <label class="form-label" style="font-size:13px; font-weight:700;">📢 النص الإعلاني / الملاحظات <span style="font-size:11px; color:var(--text-secondary); font-weight:500;">(أسفل يمين)</span></label>
+                    <input type="text" id="promoNoteInput" class="form-input" placeholder="مثال: متاح الحجز على الخاص" style="width:100%; padding:10px 12px; border:2px solid var(--border-color); border-radius:10px; font-size:13px; direction:rtl; font-family:inherit; background:white;">
+                </div>
+            </div>
+
             <div class="form-group">
-                <label class="form-label">📝 النص</label>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                    <label class="form-label" style="margin-bottom:0;">📝 نص البطاقات</label>
+                    <button type="button" id="aiFormatBtn" style="padding:6px 14px; background:linear-gradient(135deg, #8B5CF6, #6366F1); color:white; border:none; border-radius:8px; font-size:12px; font-weight:800; cursor:pointer; display:flex; align-items:center; gap:6px; box-shadow:0 3px 10px rgba(139,92,246,0.25); transition:all 0.2s;">
+                        <span>✨</span><span>تنسيق وتباعد الأسطر بالـ AI</span>
+                    </button>
+                </div>
                 <textarea class="form-textarea" id="textInput" placeholder="أدخل النص هنا..."
                     maxlength="5000"></textarea>
                 <div class="stats-row">
@@ -1460,7 +1485,9 @@
             </div>
 
             <div class="review-section">
-                <div class="review-section-title"><span>✍️</span><span>ملخص النص</span></div>
+                <div class="review-section-title"><span>✍️</span><span>ملخص النص والبطاقات</span></div>
+                <div class="review-item"><span class="review-label">اسم السلسلة:</span><span class="review-value" id="rSeriesName" style="color:var(--accent-gold);font-weight:700;">(افتراضي)</span></div>
+                <div class="review-item"><span class="review-label">النص الإعلاني:</span><span class="review-value" id="rPromoNote" style="color:var(--accent-gold);font-weight:700;">(افتراضي)</span></div>
                 <div class="review-item"><span class="review-label">النص:</span><span class="review-value" id="rText"
                         style="font-size:13px;max-height:60px;overflow:hidden;text-align:right;"></span></div>
                 <div class="review-item"><span class="review-label">الأحرف:</span><span class="review-value"
@@ -1552,104 +1579,105 @@
         const N8N_WEBHOOK_URL = 'https://n8n.srv902036.hstgr.cloud/webhook/telegram-text-editor-card';
 
         // قائمة القوالب المستقلة المفرغة مع روابط Google Drive المباشرة
+        // قائمة القوالب الـ 14 الفاخرة المستقلة مع روابط Google Drive المباشرة
         const TEMPLATES_LIST = [
             {
-                id: 1, template_id: 1, template_name: "ليلي أنيق", name: "ليلي-انيق",
-                landscape_file: "template_1_ليلي-انيق_landscape.png", portrait_file: "template_1_ليلي-انيق_portrait.png",
-                landscape_link: "https://lh3.googleusercontent.com/d/1J1HjVYyR4USUsMa-Nv1JfEnuen_bF497",
-                portrait_link: "https://lh3.googleusercontent.com/d/1hAtE-X3SE6eSiAPqWENOBdC8K9gPkll_",
-                gradient_start: "#0c1445", gradient_mid: "#1a2980", accent: "#60a5fa", text_color: "#ffffff"
+                id: 1, template_id: 1, template_name: "طبيعي زمردي ملكي", name: "طبيعي-زمردي-ملكي",
+                landscape_file: "01_طبيعي_زمردي_ملكي_landscape.png", portrait_file: "01_طبيعي_زمردي_ملكي_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1Zky1wsYllLX4GmWVjPcEugYNSI7TWIAs",
+                portrait_link: "https://lh3.googleusercontent.com/d/1CXi5HGwzdvgwFRKVnz0CauGrB_ffDJKU",
+                gradient_start: "#0a2412", gradient_mid: "#0f381c", accent: "#2ecc71", text_color: "#142616"
             },
             {
-                id: 2, template_id: 2, template_name: "ليلي نيلي", name: "ليلي-نيلي",
-                landscape_file: "template_2_ليلي-نيلي_landscape.png", portrait_file: "template_2_ليلي-نيلي_portrait.png",
-                landscape_link: "https://lh3.googleusercontent.com/d/1gSgJNtiuAwxxeAVv7PA9hIQ7WNfBZ0a0",
-                portrait_link: "https://lh3.googleusercontent.com/d/1aWyour85RS5zKtIJ5Oa72d9Eee2P281h",
-                gradient_start: "#0f0c29", gradient_mid: "#302b63", accent: "#a78bfa", text_color: "#ffffff"
+                id: 2, template_id: 2, template_name: "حديث كحلي ملكي", name: "حديث-كحلي-ملكي",
+                landscape_file: "02_حديث_كحلي_ملكي_landscape.png", portrait_file: "02_حديث_كحلي_ملكي_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1PmrHDR0R_6kJv26_OY0acYjxn43LmW-W",
+                portrait_link: "https://lh3.googleusercontent.com/d/1XYyZ9CoLswW4zyW29F8BDchRavzZR1LP",
+                gradient_start: "#0c1726", gradient_mid: "#152840", accent: "#3b82f6", text_color: "#141f2e"
             },
             {
-                id: 3, template_id: 3, template_name: "ذهبي عنبري", name: "ذهبي-عنبري",
-                landscape_file: "template_3_ذهبي-عنبري_landscape.png", portrait_file: "template_3_ذهبي-عنبري_portrait.png",
-                landscape_link: "https://lh3.googleusercontent.com/d/1MyNlMa7NWkunI17gAqCOpLEA-RsfjS0Z",
-                portrait_link: "https://lh3.googleusercontent.com/d/1jP7ijm0NnnUp3sm1UtQo6-0yAkNGvpKw",
-                gradient_start: "#1a0f00", gradient_mid: "#3d2000", accent: "#fbbf24", text_color: "#fef3c7"
+                id: 3, template_id: 3, template_name: "طبيعي زيتوني أندلسي", name: "طبيعي-زيتوني-أندلسي",
+                landscape_file: "03_طبيعي_زيتوني_أندلسي_landscape.png", portrait_file: "03_طبيعي_زيتوني_أندلسي_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1mzjdQOOm5O_Q97iYAWFSGyifBJxJ-Qwz",
+                portrait_link: "https://lh3.googleusercontent.com/d/1ASMtt3NkfVEcBvaR_7JMC41nM4vJ0uqU",
+                gradient_start: "#1a2410", gradient_mid: "#2e3d1c", accent: "#84cc16", text_color: "#202b12"
             },
             {
-                id: 4, template_id: 4, template_name: "ذهبي فاتح", name: "ذهبي-فاتح",
-                landscape_file: "template_4_ذهبي-فاتح_landscape.png", portrait_file: "template_4_ذهبي-فاتح_portrait.png",
-                landscape_link: "https://lh3.googleusercontent.com/d/1eQ-PhZNY4Q1x0rdK3c9QuO6WCbOfrP4F",
-                portrait_link: "https://lh3.googleusercontent.com/d/13v2WsudXMdlR_0LliFTCHUiaFOY_-8V5",
-                gradient_start: "#2d1f00", gradient_mid: "#5c3d00", accent: "#fcd34d", text_color: "#fffbeb"
+                id: 4, template_id: 4, template_name: "ليلي نيلي عثماني", name: "ليلي-نيلي-عثماني",
+                landscape_file: "04_ليلي_نيلي_عثماني_landscape.png", portrait_file: "04_ليلي_نيلي_عثماني_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1RhgZv2fSkKJ-P_0CPrOvhsJQJRHcTROu",
+                portrait_link: "https://lh3.googleusercontent.com/d/19d-Mmwj-PkwJH6SHgEg4lQjC7-6AGf6Q",
+                gradient_start: "#0f0f29", gradient_mid: "#1f1d4d", accent: "#6366f1", text_color: "#181738"
             },
             {
-                id: 5, template_id: 5, template_name: "ذهبي نحاسي", name: "ذهبي-نحاسي",
-                landscape_file: "template_5_ذهبي-نحاسي_landscape.png", portrait_file: "template_5_ذهبي-نحاسي_portrait.png",
-                landscape_link: "https://lh3.googleusercontent.com/d/1zaCN6pnsoWHiVX3AyhrCDvxxxnekzrwN",
-                portrait_link: "https://lh3.googleusercontent.com/d/1UFNrtVmo6TebQ7aaT23YHtt95yoBew7I",
-                gradient_start: "#1a0a00", gradient_mid: "#4a1f00", accent: "#fb923c", text_color: "#fff7ed"
+                id: 5, template_id: 5, template_name: "حديث رمادي فاحم 24K", name: "حديث-رمادي-فاحم-24K",
+                landscape_file: "05_حديث_رمادي_فاحم_24K_landscape.png", portrait_file: "05_حديث_رمادي_فاحم_24K_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1l-vKm22VI4CzwOd1LNb7yZplnYVcCEvY",
+                portrait_link: "https://lh3.googleusercontent.com/d/1py9AZZefgj7hPaZo9aNoGWhvlB5bQHtS",
+                gradient_start: "#121316", gradient_mid: "#22252a", accent: "#94a3b8", text_color: "#1a1c21"
             },
             {
-                id: 6, template_id: 6, template_name: "طبيعي زيتوني", name: "طبيعي-زيتوني",
-                landscape_file: "template_6_طبيعي-زيتوني_landscape.png", portrait_file: "template_6_طبيعي-زيتوني_portrait.png",
-                landscape_link: "https://lh3.googleusercontent.com/d/1XoyWfm8OmuXRQCRZN3Ix6qKIdJnjay0N",
-                portrait_link: "https://lh3.googleusercontent.com/d/120OflyD_Xfi9ov9N9LcO09E1QtYD6bTT",
-                gradient_start: "#0a1a0a", gradient_mid: "#1a3d1a", accent: "#4ade80", text_color: "#f0fdf4"
+                id: 6, template_id: 6, template_name: "عنابي ياقوتي دمشقي", name: "عنابي-ياقوتي-دمشقي",
+                landscape_file: "06_عنابي_ياقوتي_دمشقي_landscape.png", portrait_file: "06_عنابي_ياقوتي_دمشقي_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1K377184GMJg_PMZlJbKfmxSvGUYuTmsD",
+                portrait_link: "https://lh3.googleusercontent.com/d/13h4xiEeF2dL27bWEFu8j9asZYl3C9E-3",
+                gradient_start: "#240a12", gradient_mid: "#421220", accent: "#f43f5e", text_color: "#2d1018"
             },
             {
-                id: 7, template_id: 7, template_name: "طبيعي زمردي", name: "طبيعي-زمردي",
-                landscape_file: "template_7_طبيعي-زمردي_landscape.png", portrait_file: "template_7_طبيعي-زمردي_portrait.png",
-                landscape_link: "https://lh3.googleusercontent.com/d/1v76b1K_rlUVK6Ux6EoaBiIERD8eNvP9G",
-                portrait_link: "https://lh3.googleusercontent.com/d/1HupOpMEoie0IEJXY6CTxCc1MBvuci3bL",
-                gradient_start: "#022c22", gradient_mid: "#065f46", accent: "#34d399", text_color: "#ecfdf5"
+                id: 7, template_id: 7, template_name: "ذهبي عنبري أثري", name: "ذهبي-عنبري-أثري",
+                landscape_file: "07_ذهبي_عنبري_أثري_landscape.png", portrait_file: "07_ذهبي_عنبري_أثري_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1-sjSHA4btfk6-ssFx2J_qBS3Ox5skvgz",
+                portrait_link: "https://lh3.googleusercontent.com/d/1NXUXyL1KiM3rZH1Uu0FaTCZxh_YHr_fP",
+                gradient_start: "#241608", gradient_mid: "#42280d", accent: "#f59e0b", text_color: "#2b1b0e"
             },
             {
-                id: 8, template_id: 8, template_name: "طبيعي طحلبي", name: "طبيعي-طحلبي",
-                landscape_file: "template_8_طبيعي-طحلبي_landscape.png", portrait_file: "template_8_طبيعي-طحلبي_portrait.png",
-                landscape_link: "https://lh3.googleusercontent.com/d/1RfLBYN0ImmDYFfrcHJVLGQc9xxwV3s7V",
-                portrait_link: "https://lh3.googleusercontent.com/d/1UZ953KjBa5NXQ5sgnH7-x7Pt3qrJArA7",
-                gradient_start: "#0f1a14", gradient_mid: "#1a3d2e", accent: "#2dd4bf", text_color: "#f0fdfa"
+                id: 8, template_id: 8, template_name: "سماء فيروزي تراثي", name: "سماء-فيروزي-تراثي",
+                landscape_file: "08_سماء_فيروزي_تراثي_landscape.png", portrait_file: "08_سماء_فيروزي_تراثي_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1rwxjY9CIzC4VQJ1ccGjg_uLSA5bGO0pk",
+                portrait_link: "https://lh3.googleusercontent.com/d/1456jquYHaMbK0MEMI2WxPND178ew3MTM",
+                gradient_start: "#0a2220", gradient_mid: "#123d3a", accent: "#14b8a6", text_color: "#122a27"
             },
             {
-                id: 9, template_id: 9, template_name: "حديث كحلي", name: "حديث-كحلي",
-                landscape_file: "template_9_حديث-كحلي_landscape.png", portrait_file: "template_9_حديث-كحلي_portrait.png",
-                landscape_link: "https://lh3.googleusercontent.com/d/1qwF4BMv7PGSzQTDw38vYiPLkVohF-zMP",
-                portrait_link: "https://lh3.googleusercontent.com/d/1C_H_SDqW4ZP84kOmYLYX92AVu2p4r7h1",
-                gradient_start: "#0a1628", gradient_mid: "#162d50", accent: "#93c5fd", text_color: "#eff6ff"
+                id: 9, template_id: 9, template_name: "ليلكي روحاني مهيب", name: "ليلكي-روحاني-مهيب",
+                landscape_file: "09_ليلكي_روحاني_مهيب_landscape.png", portrait_file: "09_ليلكي_روحاني_مهيب_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1GAH33IK3dJ3hQUI02NOQ-YYPiV5PayV9",
+                portrait_link: "https://lh3.googleusercontent.com/d/1fpVFx6QPpfM5x22EJ1A2TJ6UEBR-dTGX",
+                gradient_start: "#1f0d2b", gradient_mid: "#3b1752", accent: "#a855f7", text_color: "#281338"
             },
             {
-                id: 10, template_id: 10, template_name: "حديث رمادي", name: "حديث-رمادي",
-                landscape_file: "template_10_حديث-رمادي_landscape.png", portrait_file: "template_10_حديث-رمادي_portrait.png",
-                landscape_link: "https://lh3.googleusercontent.com/d/1-O-6M16I5KMES2_R_86EJ1tUUJ5rRXhW",
-                portrait_link: "https://lh3.googleusercontent.com/d/1mcVvp3A8Rv_LxArMXGz1asnvBrrk4jL0",
-                gradient_start: "#0f131a", gradient_mid: "#1f2937", accent: "#e2e8f0", text_color: "#f8fafc"
+                id: 10, template_id: 10, template_name: "طبيعي طحلبي داكن", name: "طبيعي-طحلبي-داكن",
+                landscape_file: "10_طبيعي_طحلبي_داكن_landscape.png", portrait_file: "10_طبيعي_طحلبي_داكن_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1Hrm_0jOQPSmwi9iTrFwZ4GJ-tHRvFDpn",
+                portrait_link: "https://lh3.googleusercontent.com/d/18W8O-FtSUOccCKlQXClvy-gkLM5_QPCW",
+                gradient_start: "#0a1f16", gradient_mid: "#143b2a", accent: "#10b981", text_color: "#132b1f"
             },
             {
-                id: 11, template_id: 11, template_name: "مشرق برتقالي", name: "مشرق-برتقالي",
-                landscape_file: "template_11_مشرق-برتقالي_landscape.png", portrait_file: "template_11_مشرق-برتقالي_portrait.png",
-                landscape_link: "https://lh3.googleusercontent.com/d/1GbZYCQZ5nutSJs0E_MTRgq9nFJVLqHVa",
-                portrait_link: "https://lh3.googleusercontent.com/d/1Q2Tc5006tmQgxP0y0T-O9e9bQko_aB_2",
-                gradient_start: "#1f0a00", gradient_mid: "#4a1f00", accent: "#fdba74", text_color: "#fff7ed"
+                id: 11, template_id: 11, template_name: "مشرق برتقالي نحاسي", name: "مشرق-برتقالي-نحاسي",
+                landscape_file: "11_مشرق_برتقالي_نحاسي_landscape.png", portrait_file: "11_مشرق_برتقالي_نحاسي_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/19h7Bhka033CkBhf-x4LE3YeB1EkOKoX1",
+                portrait_link: "https://lh3.googleusercontent.com/d/1OzdmZGnJz4Qo8VPMtA8ZgWmkncfmul32",
+                gradient_start: "#291206", gradient_mid: "#4a210b", accent: "#f97316", text_color: "#30180c"
             },
             {
-                id: 12, template_id: 12, template_name: "سماء أزرق", name: "سماء-ازرق",
-                landscape_file: "template_12_سماء-ازرق_landscape.png", portrait_file: "template_12_سماء-ازرق_portrait.png",
-                landscape_link: "https://lh3.googleusercontent.com/d/1_C09_t18ABzhF6SDfY1TcD9LvTPEmRUQ",
-                portrait_link: "https://lh3.googleusercontent.com/d/1j7v4B32m4yyNjHU5d_4R13SL2QseSko3",
-                gradient_start: "#0c1f3d", gradient_mid: "#1a3d6b", accent: "#7dd3fc", text_color: "#f0f9ff"
+                id: 12, template_id: 12, template_name: "سماء أزرق سماوي", name: "سماء-أزرق-سماوي",
+                landscape_file: "12_سماء_أزرق_سماوي_landscape.png", portrait_file: "12_سماء_أزرق_سماوي_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/16KTr29lFTt4jA5dstd8-a5Q85ELWF5qi",
+                portrait_link: "https://lh3.googleusercontent.com/d/1RHlZTCeaiy7dgbmQ0V54EI4ebWLZBK0J",
+                gradient_start: "#0a192c", gradient_mid: "#132d4e", accent: "#0ea5e9", text_color: "#12233b"
             },
             {
-                id: 13, template_id: 13, template_name: "سماء فيروزي", name: "سماء-فيروزي",
-                landscape_file: "template_13_سماء-فيروزي_landscape.png", portrait_file: "template_13_سماء-فيروزي_portrait.png",
-                landscape_link: "https://lh3.googleusercontent.com/d/1ce2ipTAroZxwG2g1ZwJtU3AlXGt_3L0P",
-                portrait_link: "https://lh3.googleusercontent.com/d/1U2eSSKQJtEJkBjMGx3J4-JYA6Q_cV73D",
-                gradient_start: "#0a1f1a", gradient_mid: "#0f3d3d", accent: "#5eead4", text_color: "#f0fdfa"
+                id: 13, template_id: 13, template_name: "ليلي أنيق ملكي", name: "ليلي-أنيق-ملكي",
+                landscape_file: "13_ليلي_أنيق_ملكي_landscape.png", portrait_file: "13_ليلي_أنيق_ملكي_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1SzY6eQxS1TcRdFBZGDeK39H3kZC4UZK8",
+                portrait_link: "https://lh3.googleusercontent.com/d/1M9p3ulOUuBlKUzOioU_xZVje3GDgAPjA",
+                gradient_start: "#091221", gradient_mid: "#12223d", accent: "#38bdf8", text_color: "#131e33"
             },
             {
-                id: 14, template_id: 14, template_name: "ليلة ملكية", name: "ليلة-ملكية",
-                landscape_file: "template_14_ليلة-ملكية_landscape.png", portrait_file: "template_14_ليلة-ملكية_portrait.png",
-                landscape_link: "https://lh3.googleusercontent.com/d/1jbNXLOBKERs5-Lw2lFslrlrCK3vclLvA",
-                portrait_link: "https://lh3.googleusercontent.com/d/12CBos13ZvKdRZBWPYbUjGh0QWyiMFdpy",
-                gradient_start: "#000d1a", gradient_mid: "#001a3d", accent: "#818cf8", text_color: "#eef2ff"
+                id: 14, template_id: 14, template_name: "ذهبي فاتح مشع", name: "ذهبي-فاتح-مشع",
+                landscape_file: "14_ذهبي_فاتح_مشع_landscape.png", portrait_file: "14_ذهبي_فاتح_مشع_portrait.png",
+                landscape_link: "https://lh3.googleusercontent.com/d/1UZVY0_XAKDGR-k_bAzeNX86YreokVYK4",
+                portrait_link: "https://lh3.googleusercontent.com/d/1Suc3BxMuHWORb7vOqxjOM1KDYh8S9eOx",
+                gradient_start: "#261d06", gradient_mid: "#45340a", accent: "#eab308", text_color: "#2e240c"
             }
         ];
 
@@ -1662,13 +1690,15 @@
 
         // ===== STATE =====
         const state = {
-            textContent: '', templateId: '', colorId: '1',
+            textContent: '',
+            seriesName: '',
+            promoNote: '',
+            templateId: '', colorId: '1',
             selectedTemplate: null,
             seo: { title: '', description: '', tags: [], hashtags: [] },
             textCards: [], cardDurations: [], user_id: '',
             previewLandscape: '', previewPortrait: '',
             audio: { base64: null, url: null, duration: null, filename: '' }
-
         };
         let pendingTemplate = null;
         let binData = {};
@@ -1682,7 +1712,25 @@
         }
         function hideLoading() {
             document.getElementById('loadingOverlay').classList.remove('visible');
+            const vpEl = document.getElementById('videoProgress');
+            if (vpEl) vpEl.style.display = 'none';
         }
+        
+        // دالة لعرض تقدم إنشاء الفيديو
+        function showVideoProgress(percent, message) {
+            document.getElementById('loadingOverlay').classList.add('visible');
+            document.getElementById('loadingText').textContent = message || '🎬 جاري إنشاء الفيديو...';
+            document.getElementById('loadingSubtext').textContent = 'يرجى الانتظار، قد يستغرق ذلك بضع دقائق';
+            
+            const vpEl = document.getElementById('videoProgress');
+            const barEl = document.getElementById('videoProgressBar');
+            const textEl = document.getElementById('videoProgressText');
+            
+            if (vpEl) vpEl.style.display = 'block';
+            if (barEl) barEl.style.width = `${percent}%`;
+            if (textEl) textEl.textContent = `${percent}%`;
+        }
+        
         function showToast(msg, err) {
             const existing = document.getElementById('appToast');
             if (existing) existing.remove();
@@ -1697,34 +1745,77 @@
             }, 2500);
         }
 
-            // ===== TEXT SPLIT =====
-            function splitTextIntoCards(text, max = 140) {
+            // ===== AUTOMATIC ARABIC TEXT FORMATTING WITH SPACES & PARAGRAPHS =====
+            function formatArabicTextAuto(rawText) {
+                if (!rawText || typeof rawText !== 'string') return '';
+                let t = rawText.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+                // 1. تنظيف المسافات العشوائية
+                t = t.split('\n').map(l => l.replace(/[ \t]+/g, ' ').trim()).join('\n');
+
+                // 2. فصل التحيات والافتتاحيات في سطر مستقل
+                t = t.replace(/(السلام\s+عليكم(\s+ورحمة\s+الله(\s+وبركاته)?)?|بسم\s+الله\s+الرحمن\s+الرحيم|أهلاً\s+وسهلاً(\s+بكم)?|مرحباً\s+بكم|الحمد\s+لله\s+رب\s+العالمين|الحمد\s+لله\s+والصلاة\s+والسلام\s+على\s+رسول\s+الله)/gi, '\n\n$1\n\n');
+
+                // 3. فصل الخواتيم والأدعية والروابط في سطر مستقل
+                t = t.replace(/(جزاكم\s+الله\s+خيراً|بارك\s+الله\s+فيكم|حفظكم\s+الله\s+ورعاكم|والسلام\s+عليكم(\s+ورحمة\s+الله(\s+وبركاته)?)?|دمتم\s+في\s+حفظ\s+الله(\s+ورعايته)?|وفقكم\s+الله)/gi, '\n\n$1\n\n');
+                t = t.replace(/(للتواصل\s+والاشتراك|رابط\s+القناة|https?:\/\/[^\s]+)/gi, '\n\n$1\n\n');
+
+                // 4. تقسيم الفقرات وتنظيف تكرار السطور الفارغة
+                let rawParagraphs = t.split(/\n+/).map(p => p.trim()).filter(Boolean);
+
+                // 5. إذا كانت الفقرة طويلة، تقسيمها عند علامات الترقيم
+                let finalParas = [];
+                for (const para of rawParagraphs) {
+                    if (para.length > 220 && /[.!?؟]/.test(para)) {
+                        const sents = para.match(/[^.!?؟\n]+[.!?؟\n]*/g) || [para];
+                        let cur = '';
+                        for (const s of sents) {
+                            const ts = s.trim();
+                            if (!ts) continue;
+                            if (!cur) cur = ts;
+                            else if ((cur + ' ' + ts).length <= 200) cur += ' ' + ts;
+                            else {
+                                finalParas.push(cur.trim());
+                                cur = ts;
+                            }
+                        }
+                        if (cur.trim()) finalParas.push(cur.trim());
+                    } else {
+                        finalParas.push(para);
+                    }
+                }
+
+                return finalParas.join('\n\n');
+            }
+
+            // ===== TEXT SPLIT (حجم موسّع يتناسب مع حجم البطاقة المركزي الجديد) =====
+            function splitTextIntoCards(text, max = 350) {
                 if (!text || !text.trim()) return [];
-                const t = text.trim();
-                if (t.length <= max) return [t];
-                let paras = t.split(/\n\s*\n/).filter(p => p.trim());
-                if (paras.length <= 1) paras = t.split(/\n/).filter(p => p.trim());
+                const formattedText = formatArabicTextAuto(text.trim());
+                if (formattedText.length <= max) return [formattedText];
+                let paras = formattedText.split(/\n\s*\n/).filter(p => p.trim());
+                if (paras.length <= 1) paras = formattedText.split(/\n/).filter(p => p.trim());
                 const cards = [];
                 let cur = '';
                 for (const p of paras) {
                     const tp = p.trim(); if (!tp) continue;
                     if (tp.length > max) {
-                        if (cur && (cur.length + tp.length + 1) <= max) { cur = cur + '\n\n' + tp; continue }
-                        if (cur.trim()) { cards.push(cur.trim()); cur = '' }
+                        if (cur && (cur.length + tp.length + 1) <= max) { cur = cur + '\n\n' + tp; continue; }
+                        if (cur.trim()) { cards.push(cur.trim()); cur = ''; }
                         const sents = tp.match(/[^.!?؟\n]+[.!?؟\n]*/g) || [tp];
                         for (const s of sents) {
                             const ts = s.trim(); if (!ts) continue;
                             if (!cur) cur = ts;
                             else if ((cur.length + ts.length + 1) <= max) cur = cur + ' ' + ts;
-                            else { if (cur.trim()) cards.push(cur.trim()); cur = ts }
+                            else { if (cur.trim()) cards.push(cur.trim()); cur = ts; }
                         }
                     } else {
-                        if (cur && (cur.length + tp.length + 2) > max) { if (cur.trim()) cards.push(cur.trim()); cur = tp }
+                        if (cur && (cur.length + tp.length + 2) > max) { if (cur.trim()) cards.push(cur.trim()); cur = tp; }
                         else cur = cur ? cur + '\n\n' + tp : tp;
                     }
                 }
                 if (cur.trim()) cards.push(cur.trim());
-                return cards.length ? cards : [t];
+                return cards.length ? cards : [formattedText];
             }
 
             // ===== UPDATE CARDS =====
@@ -2005,6 +2096,52 @@
                 }
             }
 
+            // ===== AI SMART TEXT FORMATTING =====
+            async function formatTextAI() {
+                const rawText = (state.textContent || document.getElementById('textInput')?.value || '').trim();
+                if (!rawText || rawText.length < 5) {
+                    showToast('الرجاء إدخال نص أولاً لتنسيقه', true);
+                    return;
+                }
+                showLoading('جاري تنسيق وتباعد الأسطر بالذكاء الاصطناعي...', 'ترتيب التحيات والفقرات والمسافات بأناقة');
+                try {
+                    let formatted = '';
+                    try {
+                        const r = await fetch(`${WORKER_API_URL}/format-text-ai`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ text: rawText })
+                        });
+                        if (r.ok) {
+                            const d = await r.json();
+                            if (d.success && d.formatted_text) formatted = d.formatted_text;
+                        }
+                    } catch (_) {}
+
+                    if (!formatted) {
+                        // تنسيق محلي ذكي فوري
+                        let t = rawText.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+                        t = t.replace(/(السلام\s+عليكم(\s+ورحمة\s+الله(\s+وبركاته)?)?|بسم\s+الله\s+الرحمن\s+الرحيم|أهلاً\s+وسهلاً|مرحباً\s+بكم)/gi, '$1\n\n');
+                        t = t.replace(/(جزاكم\s+الله\s+خيراً|بارك\s+الله\s+فيكم|والسلام\s+عليكم(\s+ورحمة\s+الله)?|دمتم\s+في\s+حفظ\s+الله)/gi, '\n\n$1');
+                        formatted = t.split(/\n+/).map(p => p.trim()).filter(Boolean).join('\n\n');
+                    }
+
+                    if (formatted) {
+                        state.textContent = formatted;
+                        const textInp = document.getElementById('textInput');
+                        if (textInp) textInp.value = formatted;
+                        document.getElementById('charCount').textContent = formatted.length;
+                        document.getElementById('wordCount').textContent = formatted.trim().split(/\s+/).filter(Boolean).length;
+                        updateCards();
+                        showToast('✨ تم تنسيق النص وترتيب المسافات بنجاح');
+                    }
+                } catch (e) {
+                    showToast('❌ فشل التنسيق: ' + (e.message || ''), true);
+                } finally {
+                    hideLoading();
+                }
+            }
+
             // ===== AUDIO =====
             function audioFileToBase64(file) {
                 return new Promise((resolve, reject) => {
@@ -2189,9 +2326,17 @@
             document.getElementById('btnNext').addEventListener('click', async () => {
                 if (currentStep < totalSteps) {
                     if (currentStep === 1) {
-                        if (!state.textContent || state.textContent.trim().length < 5) {
+                        const rawText = (state.textContent || document.getElementById('textInput')?.value || '').trim();
+                        if (!rawText || rawText.length < 5) {
                             showToast('الرجاء إدخال نص قبل المتابعة', true); return;
                         }
+                        // ✨ تنسيق النص تلقائياً وضبط المسافات والأسطر قبل الانتقال
+                        const formatted = formatArabicTextAuto(rawText);
+                        state.textContent = formatted;
+                        const textInp = document.getElementById('textInput');
+                        if (textInp) textInp.value = formatted;
+                        updateCards();
+
                         if (!state.templateId) {
                             showToast('الرجاء اختيار قالب', true); return;
                         }
@@ -2207,6 +2352,10 @@
                     btn.innerHTML = '<span>⏳</span><span>جاري الإرسال...</span>';
                     showLoading('جاري الإرسال...', 'الرجاء الانتظار');
                     try {
+                        // التأكد من تنسيق النص والبطاقات بأفضل شكل قبل الإرسال
+                        state.textContent = formatArabicTextAuto(state.textContent);
+                        state.textCards = splitTextIntoCards(state.textContent);
+
                         const params = new URLSearchParams(window.location.search);
                         const processId = params.get('bin') || tg.initDataUnsafe?.start_param || `TEXT_${Date.now()}`;
                         const userId = state.user_id || binData.user_id || (tg.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : '');
@@ -2233,6 +2382,8 @@
                         const webhookData = {
                             ...binData,
                             text_content: state.textContent,
+                            series_name: state.seriesName,
+                            promo_note: state.promoNote,
                             text_cards: state.textCards,
                             card_durations: Array.isArray(state.cardDurations) ? [...state.cardDurations] : [],
                             durations: Array.isArray(state.cardDurations) ? [...state.cardDurations] : [],
@@ -2308,7 +2459,17 @@
                 if (currentStep > 1) { currentStep--; updateSteps(); window.scrollTo(0, 0); }
             });
 
-            // ===== TEXT INPUT =====
+            // ===== DYNAMIC CARD INPUTS =====
+            document.getElementById('seriesNameInput')?.addEventListener('input', e => {
+                state.seriesName = e.target.value;
+            });
+            document.getElementById('promoNoteInput')?.addEventListener('input', e => {
+                state.promoNote = e.target.value;
+            });
+            document.getElementById('aiFormatBtn')?.addEventListener('click', formatTextAI);
+
+            // ===== TEXT INPUT WITH AUTO FORMATTING =====
+            let autoFormatInputTimer = null;
             document.getElementById('textInput').addEventListener('input', e => {
                 state.textContent = e.target.value;
                 const chars = state.textContent.length;
@@ -2316,6 +2477,32 @@
                 document.getElementById('charCount').textContent = chars;
                 document.getElementById('wordCount').textContent = words;
                 updateCards();
+
+                // معالجة وتنسيق المسافات والفقرات تلقائياً بعد اكتمال الكتابة/اللصق
+                clearTimeout(autoFormatInputTimer);
+                if (state.textContent.length >= 30) {
+                    autoFormatInputTimer = setTimeout(() => {
+                        const cur = state.textContent;
+                        const formatted = formatArabicTextAuto(cur);
+                        if (formatted && formatted !== cur && Math.abs(formatted.length - cur.length) <= 15) {
+                            state.textContent = formatted;
+                            e.target.value = formatted;
+                            updateCards();
+                        }
+                    }, 2000);
+                }
+            });
+
+            document.getElementById('textInput').addEventListener('blur', e => {
+                const cur = state.textContent;
+                if (cur && cur.length >= 10) {
+                    const formatted = formatArabicTextAuto(cur);
+                    if (formatted && formatted !== cur) {
+                        state.textContent = formatted;
+                        e.target.value = formatted;
+                        updateCards();
+                    }
+                }
             });
 
             // ===== SEO =====
@@ -2417,6 +2604,10 @@
 
             // ===== REVIEW =====
             function updateReview() {
+                const snEl = document.getElementById('rSeriesName');
+                if (snEl) snEl.textContent = state.seriesName && state.seriesName.trim() ? state.seriesName.trim() : '(افتراضي / فارغ)';
+                const pnEl = document.getElementById('rPromoNote');
+                if (pnEl) pnEl.textContent = state.promoNote && state.promoNote.trim() ? state.promoNote.trim() : '(افتراضي / فارغ)';
                 document.getElementById('rText').textContent = state.textContent.length > 100 ? state.textContent.substring(0, 100) + '...' : state.textContent || '(فارغ)';
                 document.getElementById('rChars').textContent = state.textContent.length;
                 document.getElementById('rWords').textContent = state.textContent.trim() ? state.textContent.trim().split(/\s+/).length : 0;
@@ -2464,6 +2655,16 @@
                             if (data) {
                                 binData = { ...data };
                                 state.user_id = data.user_id || String(tg.initDataUnsafe?.user?.id || '');
+                                if (data.series_name || data.seriesName) {
+                                    state.seriesName = data.series_name || data.seriesName || '';
+                                    const snInp = document.getElementById('seriesNameInput');
+                                    if (snInp) snInp.value = state.seriesName;
+                                }
+                                if (data.promo_note || data.promoNote) {
+                                    state.promoNote = data.promo_note || data.promoNote || '';
+                                    const pnInp = document.getElementById('promoNoteInput');
+                                    if (pnInp) pnInp.value = state.promoNote;
+                                }
                                 if (data.text_content) {
                                     state.textContent = data.text_content;
                                     document.getElementById('textInput').value = state.textContent;
